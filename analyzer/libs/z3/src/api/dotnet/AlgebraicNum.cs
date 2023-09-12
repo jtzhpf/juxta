@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-20
 
 Notes:
-
+    
 --*/
 using System;
 using System.Diagnostics.Contracts;
@@ -32,9 +32,9 @@ namespace Microsoft.Z3
     public class AlgebraicNum : ArithExpr
     {
         /// <summary>
-        /// Return a upper bound for a given real algebraic number.
-        /// The interval isolating the number is smaller than 1/10^<paramref name="precision"/>.
-        /// <seealso cref="Expr.IsAlgebraicNumber"/>
+        /// Return a upper bound for a given real algebraic number. 
+        /// The interval isolating the number is smaller than 1/10^<paramref name="precision"/>.    
+        /// <seealso cref="Expr.IsAlgebraicNumber"/>   
         /// </summary>
         /// <param name="precision">the precision of the result</param>
         /// <returns>A numeral Expr of sort Real</returns>
@@ -46,8 +46,8 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Return a lower bound for the given real algebraic number.
-        /// The interval isolating the number is smaller than 1/10^<paramref name="precision"/>.
+        /// Return a lower bound for the given real algebraic number. 
+        /// The interval isolating the number is smaller than 1/10^<paramref name="precision"/>.    
         /// <seealso cref="Expr.IsAlgebraicNumber"/>
         /// </summary>
         /// <param name="precision"></param>
@@ -62,7 +62,7 @@ namespace Microsoft.Z3
         /// <summary>
         /// Returns a string representation in decimal notation.
         /// </summary>
-        /// <remarks>The result has at most <paramref name="precision"/> decimal places.</remarks>
+        /// <remarks>The result has at most <paramref name="precision"/> decimal places.</remarks>    
         public string ToDecimal(uint precision)
         {
             Contract.Ensures(Contract.Result<string>() != null);

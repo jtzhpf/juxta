@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -92,8 +92,8 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Retrieves a string representation of the vector.
-        /// </summary>
+        /// Retrieves a string representation of the vector. 
+        /// </summary>    
         public override string ToString()
         {
             return Native.Z3_ast_vector_to_string(Context.nCtx, NativeObject);

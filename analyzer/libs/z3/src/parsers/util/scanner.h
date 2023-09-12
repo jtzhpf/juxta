@@ -28,7 +28,7 @@ public:
         LEFT_PAREN = 1,
         RIGHT_PAREN,
         COLON,
-        ID_TOKEN,
+        ID_TOKEN,        
         STRING_TOKEN,
         COMMENT_TOKEN,
         INT_TOKEN,
@@ -36,12 +36,12 @@ public:
         FLOAT_TOKEN,
         EOF_TOKEN,
         ERROR_TOKEN
-    };
+    };    
 
     scanner(std::istream& stream, std::ostream& err, bool smt2, bool bv_token=false);
 
-    ~scanner() {}
-
+    ~scanner() {}    
+    
     int get_line() const { return m_line; }
 
     int get_pos() const { return m_pos; }
@@ -53,9 +53,9 @@ public:
     unsigned get_bv_size() const { return m_bv_size; }
 
     vector<parameter> const & get_params() const { return m_params; }
-
+    
     token scan();
-
+    
 private:
     int                m_line;
     int                m_pos;

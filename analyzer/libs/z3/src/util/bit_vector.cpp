@@ -40,8 +40,8 @@ void bit_vector::resize(unsigned new_size, bool val) {
         m_num_bits = new_size;
         return;
     }
-
-    TRACE("bit_vector", tout << "expanding: " << new_size << " capacity: " << m_capacity << " num words: "
+ 
+    TRACE("bit_vector", tout << "expanding: " << new_size << " capacity: " << m_capacity << " num words: " 
           << num_words(new_size) << "\n";);
 
     if (num_words(new_size) > m_capacity) {
@@ -76,7 +76,7 @@ void bit_vector::resize(unsigned new_size, bool val) {
     if (bwidx < ewidx) {
         memset(begin + 1, cval, (ewidx - bwidx - 1) * sizeof(unsigned));
     }
-
+    
     m_num_bits = new_size;
 }
 
@@ -178,7 +178,7 @@ bit_vector & bit_vector::operator&=(bit_vector const & source) {
                 m_data[i] &= source.m_data[i];
             unsigned mask = MK_MASK(bit_rest);
             m_data[i] &= (source.m_data[i] & mask);
-
+            
         }
         for (i = n2; i < n1; i++)
             m_data[i] = 0;
@@ -203,7 +203,7 @@ void bit_vector::display(std::ostream & out) const {
         else
             out << "0";
         if ((i + 1) % 32 == 0) out << "\n";
-    }
+    } 
 #endif
 }
 

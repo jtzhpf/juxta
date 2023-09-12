@@ -9,14 +9,14 @@ Abstract:
 
     Proof converter to replace asserted leaves by proofs.
 
-    Given a proof P with occurrences of [asserted fml]
-    Replace [asserted fml] by proofs whose conclusions are fml.
+    Given a proof P with occurrences of [asserted fml] 
+    Replace [asserted fml] by proofs whose conclusions are fml. 
 
 Author:
 
     Nikolaj Bjorner (nbjorner) 2012-9-16
 
-Revision History:
+Revision History:  
 
 --*/
 

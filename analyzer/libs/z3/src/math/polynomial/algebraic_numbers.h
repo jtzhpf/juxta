@@ -74,17 +74,17 @@ namespace algebraic_numbers {
         mpbq_manager & bqm() const;
 
         void del(numeral & a);
-
+        
         /**
            \brief a <- 0
         */
         void reset(numeral & a);
-
+        
         /**
            \brief Return true if a is zero.
         */
         bool is_zero(numeral const & a);
-
+        
         /**
            \brief Return true if a is positive.
         */
@@ -104,7 +104,7 @@ namespace algebraic_numbers {
            \brief Return true if a is an integer.
         */
         bool is_int(numeral const & a);
-
+        
         /**
            \brief Degree of the algebraic number.
            That is, degree of the polynomial that is used to encode \c a.
@@ -113,14 +113,14 @@ namespace algebraic_numbers {
 
         /**
            \brief Convert a into a rational number.
-
+           
            \pre is_rational(a)
         */
         void to_rational(numeral const & a, mpq & r);
 
         /**
            \brief Convert a into a rational number.
-
+           
            \pre is_rational(a)
         */
         void to_rational(numeral const & a, rational & r);
@@ -148,7 +148,7 @@ namespace algebraic_numbers {
            Remark: this is not the ceil, but b >= ceil(a)
         */
         void int_gt(numeral const & a, numeral & b);
-
+        
         /**
            \brief Store in result a value in the interval (prev, next)
 
@@ -163,12 +163,12 @@ namespace algebraic_numbers {
         void isolate_roots(polynomial_ref const & p, numeral_vector & roots);
 
         /**
-           \brief Isolate the roots of a multivariate polynomial p such that all but one variable of p is fixed by x2v, and
+           \brief Isolate the roots of a multivariate polynomial p such that all but one variable of p is fixed by x2v, and 
            store them as algebraic numbers in \c root.
-
-           That is, we are viewing p as a polynomial in Z[y_1, ..., y_n][x]:
+           
+           That is, we are viewing p as a polynomial in Z[y_1, ..., y_n][x]: 
                        q_n(y_1, ..., y_n)x^n + ... + q_1(y_1, ..., y_n)*x + q_0
-           And we are returning the roots of
+           And we are returning the roots of 
                        q_n(x2v(y_1), ..., x2v(y_n))x^n + ... + q_1(x2v(y_1), ..., x2v(y_n))*x + q_0
         */
         void isolate_roots(polynomial_ref const & p, polynomial::var2anum const & x2v, numeral_vector & roots);
@@ -180,16 +180,16 @@ namespace algebraic_numbers {
 
         /**
            \brief Store in r the i-th root of p.
-
+           
            This method throws an exception if p does not have at least i roots.
-
+           
            This method is not really used in the nonlinear procedure.
            It is mainly used for debugging purposes, and creating regression tests
 
            \pre i > 0
         */
         void mk_root(polynomial_ref const & p, unsigned i, numeral & r);
-
+        
         /**
            \brief Store in r the i-th root of p.
            This method throws an exception if the s-expression p does not represent
@@ -197,22 +197,22 @@ namespace algebraic_numbers {
 
            This method is not really used in the nonlinear procedure.
            It is mainly used for debugging purposes, and "reading" root objects in the SMT 2.0 front-end.
-
+           
            \pre i > 0
         */
         void mk_root(sexpr const * p, unsigned i, numeral & r);
-
+        
         /**
            \brief Return a^{1/k}
-
+           
            Throws an exception if the result is not a real.
            That is, (a is negative and k is even) or (k is zero).
-        */
+        */           
         void root(numeral const & a, unsigned k, numeral & b);
-
+        
         /**
            \brief Return a^k
-
+           
            Throws an exception if 0^0.
         */
         void power(numeral const & a, unsigned k, numeral & b);
@@ -254,7 +254,7 @@ namespace algebraic_numbers {
            Return 1  if a > b
         */
         int compare(numeral const & a, numeral const & b);
-
+        
         /**
            \brief a == b
         */
@@ -310,7 +310,7 @@ namespace algebraic_numbers {
         int eval_sign_at(polynomial_ref const & p, polynomial::var2anum const & x2v);
 
         void get_polynomial(numeral const & a, svector<mpz> & r);
-
+        
         // Procedures for getting lower and upper bounds for irrational numbers
         void get_lower(numeral const & a, mpbq & l);
         void get_lower(numeral const & a, mpq & l);
@@ -341,7 +341,7 @@ namespace algebraic_numbers {
            That is, 'a' is the i-th root of p.
         */
         void display_root(std::ostream & out, numeral const & a) const;
-
+        
         /**
            \brief Display algebraic number as a root object in SMT 2.0 style: (root-obj p i)
            That is, 'a' is the i-th root of p.
@@ -356,7 +356,7 @@ namespace algebraic_numbers {
         void display(std::ostream & out, numeral const & a) { return display_decimal(out, a); }
 
         void reset_statistics();
-
+        
         void collect_statistics(statistics & st) const;
     };
 

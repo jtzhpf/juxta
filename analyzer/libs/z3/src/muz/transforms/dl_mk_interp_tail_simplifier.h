@@ -48,7 +48,7 @@ namespace datalog {
 
             /**
             Reset substitution and get it ready for working with rule r.
-
+            
             As long as this object is used without a reset, the rule r must exist.
             */
             void reset(rule * r);
@@ -94,7 +94,7 @@ namespace datalog {
 
         /**If rule should be retained, assign transformed version to res and return true;
         if rule can be deleted, return false.
-
+        
         This method is kind of useful, so it's public to allow other rules to use it,
         e.g. on their intermediate results.
         */

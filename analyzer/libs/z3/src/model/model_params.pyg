@@ -1,4 +1,4 @@
-def_module_params('model',
+def_module_params('model', 
                   export=True,
                   params=(('partial', BOOL, False, 'enable/disable partial function interpretations'),
                           ('v1', BOOL, False, 'use Z3 version 1.x pretty printer'),

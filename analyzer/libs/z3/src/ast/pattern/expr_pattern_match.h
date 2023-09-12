@@ -36,7 +36,7 @@ class expr_pattern_match {
         CHECK_VAR,
         CHECK_TERM,
         SET_BOUND,
-        CHECK_BOUND,
+        CHECK_BOUND,        
         YIELD,
     };
 
@@ -66,11 +66,11 @@ class expr_pattern_match {
         bound&          m_bound;
         obj_map<expr, expr*> m_memoize;
         ptr_vector<expr>& m_regs;
-
-
-        inst_proc(ast_manager& m, subst& s, bound& b, ptr_vector<expr>& regs) :
+        
+        
+        inst_proc(ast_manager& m, subst& s, bound& b, ptr_vector<expr>& regs) : 
             m_manager(m), m_pinned(m), m_subst(s), m_bound(b), m_regs(regs) {}
-
+                
 
         void operator()(ast* a) {
         }
@@ -88,8 +88,8 @@ class expr_pattern_match {
                 UNREACHABLE();
             }
         }
-
-        void operator()(app * n) {
+                
+        void operator()(app * n) {  
             unsigned r;
             ptr_vector<expr> args;
             unsigned num_args     = n->get_num_args();
@@ -144,4 +144,4 @@ class expr_pattern_match {
     void display(std::ostream& out, instr const& pc) const;
 };
 
-#endif
+#endif 

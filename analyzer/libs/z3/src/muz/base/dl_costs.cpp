@@ -33,7 +33,7 @@ namespace datalog {
 
     costs::costs() : milliseconds(0), instructions(0) {}
 
-    bool costs::empty() const {
+    bool costs::empty() const { 
         return !milliseconds && !instructions;
     }
 
@@ -132,8 +132,8 @@ namespace datalog {
         m_stopwatch = alloc(stopwatch);
         m_stopwatch->start();
     }
-
-    cost_recorder::~cost_recorder() {
+    
+    cost_recorder::~cost_recorder() { 
         if(m_obj) {
             finish();
         }

@@ -34,7 +34,7 @@ public:
     void collect_param_descrs(param_descrs & r);
 
     void operator()(expr * t, expr_ref & r);
-
+    
     void cancel() { set_cancel(true); }
     void reset_cancel() { set_cancel(false); }
     void cleanup();

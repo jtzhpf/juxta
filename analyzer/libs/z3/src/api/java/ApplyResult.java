@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     ApplyResult.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -34,7 +34,7 @@ public class ApplyResult extends Z3Object
 
     /**
      * Retrieves the subgoals from the ApplyResult.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Goal[] getSubgoals() throws Z3Exception
@@ -42,7 +42,7 @@ public class ApplyResult extends Z3Object
         int n = getNumSubgoals();
         Goal[] res = new Goal[n];
         for (int i = 0; i < n; i++)
-            res[i] = new Goal(getContext(),
+            res[i] = new Goal(getContext(), 
                 Native.applyResultGetSubgoal(getContext().nCtx(), getNativeObject(), i));
         return res;
     }
@@ -50,13 +50,13 @@ public class ApplyResult extends Z3Object
     /**
      * Convert a model for the subgoal <paramref name="i"/> into a model for the
      * original goal <code>g</code>, that the ApplyResult was obtained from.
-     *
+     * 
      * @return A model for <code>g</code>
      * @throws Z3Exception
      **/
     public Model convertModel(int i, Model m) throws Z3Exception
     {
-        return new Model(getContext(),
+        return new Model(getContext(), 
             Native.applyResultConvertModel(getContext().nCtx(), getNativeObject(), i, m.getNativeObject()));
     }
 

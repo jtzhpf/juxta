@@ -24,7 +24,7 @@ class array {
 public:
     // Return the space needed to store an array of size sz.
     static size_t space(size_t sz) { return sizeof(T)*sz + sizeof(size_t); }
-
+    
 private:
 #define ARRAY_SIZE_IDX     -1
     T * m_data;
@@ -42,7 +42,7 @@ private:
 
     void set_data(void * mem, unsigned sz) {
         size_t * _mem = static_cast<size_t*>(mem);
-        *_mem = sz;
+        *_mem = sz; 
         _mem ++;
         m_data = reinterpret_cast<T*>(_mem);
     }
@@ -60,12 +60,12 @@ private:
             new (it) T(v);
         }
     }
-
+    
     void init(T const * vs) {
         iterator it = begin();
         iterator e  = end();
         for (; it != e; ++it, ++vs) {
-            new (it) T(*vs);
+            new (it) T(*vs); 
         }
     }
 
@@ -108,7 +108,7 @@ public:
         if (init_mem)
             init();
     }
-
+    
     // WARNING: this does not free the memory used to store the array.
     // You must free it yourself, or use finalize.
     ~array() {
@@ -132,7 +132,7 @@ public:
         set_data(mem, sz);
         init(vs);
     }
-
+    
     template<typename Allocator>
     void set(Allocator & a, unsigned sz, T const * vs) {
         SASSERT(m_data == 0);
@@ -147,39 +147,39 @@ public:
         init(v);
     }
 
-    unsigned size() const {
+    unsigned size() const { 
         if (m_data == 0) {
-            return 0;
+            return 0;  
         }
-        return static_cast<unsigned>(reinterpret_cast<size_t *>(m_data)[SIZE_IDX]);
+        return static_cast<unsigned>(reinterpret_cast<size_t *>(m_data)[SIZE_IDX]); 
     }
-
+    
     bool empty() const { return m_data == 0; }
 
-    T & operator[](unsigned idx) {
-        SASSERT(idx < size());
+    T & operator[](unsigned idx) { 
+        SASSERT(idx < size()); 
+        return m_data[idx]; 
+    }
+
+    T const & operator[](unsigned idx) const { 
+        SASSERT(idx < size()); 
         return m_data[idx];
     }
 
-    T const & operator[](unsigned idx) const {
-        SASSERT(idx < size());
-        return m_data[idx];
+    iterator begin() { 
+        return m_data; 
     }
 
-    iterator begin() {
-        return m_data;
-    }
-
-    iterator end() {
+    iterator end() { 
         return m_data + size();
     }
 
-    const_iterator begin() const {
-        return m_data;
+    const_iterator begin() const { 
+        return m_data; 
     }
 
-    const_iterator end() const {
-        return m_data + size();
+    const_iterator end() const { 
+        return m_data + size(); 
     }
 
     T const * c_ptr() const { return m_data; }

@@ -31,7 +31,7 @@ namespace smt {
     void theory::reset_eh() {
         m_var2enode.reset();
     }
-
+    
     void theory::push_scope_eh() {
         SASSERT(m_context);
         m_var2enode_lim.push_back(m_var2enode.size());
@@ -107,12 +107,12 @@ namespace smt {
             out << "#" << n->get_id();
         }
     }
-
+    
     bool theory::is_relevant_and_shared(enode * n) const {
         context & ctx = get_context();
         return ctx.is_relevant(n) && ctx.is_shared(n);
     }
-
+    
     bool theory::assume_eq(enode * n1, enode * n2) {
         return get_context().assume_eq(n1, n2);
     }

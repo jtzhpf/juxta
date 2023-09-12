@@ -31,7 +31,7 @@ template<bool CHECK>
 class checked_int64 {
     int64 m_value;
     typedef checked_int64 ci;
-
+    
     rational r64(int64 i) { return rational(i, rational::i64()); }
 
 public:
@@ -52,32 +52,32 @@ public:
     bool is_nonneg() const { return m_value >= 0; }
     bool is_nonpos() const { return m_value <= 0; }
     bool is_even() const { return 0 == (m_value ^ 0x1); }
-
+    
     static checked_int64 zero() { return ci(0); }
     static checked_int64 one() { return ci(1); }
     static checked_int64 minus_one() { return ci(-1);}
 
     int64 get_int64() const { return m_value; }
 
-    checked_int64 abs() const {
+    checked_int64 abs() const { 
         if (m_value >= 0) {
-            return *this;
+            return *this; 
         }
         if (CHECK && m_value == INT64_MIN) {
             throw overflow_exception();
-        }
+        }                    
         return ci(-m_value);
-    }
+    } 
 
-    checked_int64& neg() {
+    checked_int64& neg() { 
         if (CHECK && m_value == INT64_MIN) {
             throw overflow_exception();
-        }
-        m_value = -m_value;
-        return *this;
-    }
+        }                    
+        m_value = -m_value; 
+        return *this; 
+    } 
 
-    unsigned hash() const { return static_cast<unsigned>(m_value); }
+    unsigned hash() const { return static_cast<unsigned>(m_value); } 
 
     struct hash_proc {  unsigned operator()(checked_int64 const& r) const { return r.hash(); }  };
 
@@ -94,7 +94,7 @@ public:
     friend inline bool operator<(checked_int64 const& a, checked_int64 const& b) {
         return a.m_value < b.m_value;
     }
-
+    
     checked_int64 & operator++() {
         if (CHECK && INT64_MAX == m_value) {
             throw overflow_exception();
@@ -104,18 +104,18 @@ public:
     }
 
     const checked_int64 operator++(int) { checked_int64 tmp(*this); ++(*this); return tmp; }
-
+    
     checked_int64 & operator--() {
         if (CHECK && m_value == INT64_MIN) {
             throw overflow_exception();
-        }
+        }                    
         --m_value;
         return *this;
     }
-
+    
     const checked_int64 operator--(int) { checked_int64 tmp(*this); --(*this); return tmp; }
 
-    checked_int64& operator+=(checked_int64 const& other) {
+    checked_int64& operator+=(checked_int64 const& other) { 
         if (CHECK && m_value > 0 && other.m_value > 0 &&
             (m_value > INT_MAX || other.m_value > INT_MAX)) {
             rational r(r64(m_value) + r64(other.m_value));
@@ -134,7 +134,7 @@ public:
             m_value = r.get_int64();
             return *this;
         }
-        m_value += other.m_value;
+        m_value += other.m_value; 
         return *this;
     }
 
@@ -170,7 +170,7 @@ public:
             m_value = r.get_int64();
         }
         else {
-            m_value *= other.m_value;
+            m_value *= other.m_value; 
         }
         return *this;
     }
@@ -178,27 +178,27 @@ public:
     friend inline checked_int64 abs(checked_int64 const& i) {
         return i.abs();
     }
-
+        
 };
 
 template<bool CHECK>
-inline bool operator!=(checked_int64<CHECK> const & i1, checked_int64<CHECK> const & i2) {
-    return !operator==(i1, i2);
+inline bool operator!=(checked_int64<CHECK> const & i1, checked_int64<CHECK> const & i2) { 
+    return !operator==(i1, i2); 
 }
 
 template<bool CHECK>
-inline bool operator>(checked_int64<CHECK> const & i1, checked_int64<CHECK> const & i2) {
-    return operator<(i2, i1);
+inline bool operator>(checked_int64<CHECK> const & i1, checked_int64<CHECK> const & i2) { 
+    return operator<(i2, i1); 
 }
 
 template<bool CHECK>
-inline bool operator<=(checked_int64<CHECK> const & i1, checked_int64<CHECK> const & i2) {
-    return !operator>(i1, i2);
+inline bool operator<=(checked_int64<CHECK> const & i1, checked_int64<CHECK> const & i2) { 
+    return !operator>(i1, i2); 
 }
 
 template<bool CHECK>
-inline bool operator>=(checked_int64<CHECK> const & i1, checked_int64<CHECK> const & i2) {
-    return !operator<(i1, i2);
+inline bool operator>=(checked_int64<CHECK> const & i1, checked_int64<CHECK> const & i2) { 
+    return !operator<(i1, i2); 
 }
 
 template<bool CHECK>

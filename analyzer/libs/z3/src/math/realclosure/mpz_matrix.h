@@ -13,12 +13,12 @@ Abstract:
     implement Sign Determination (Algorithm 10.11) in the Book:
         "Algorithms in real algebraic geometry", Basu, Pollack, Roy
 
-    Design choices:
+    Design choices: 
       - Dense representation. The matrices in Alg 10.11 are small and dense.
       - Integer coefficients instead of rational coefficients (it only complicates the solver a little bit).
         Remark: in Algorithm 10.11, the coefficients of the input matrices are always in {-1, 0, 1}.
         During solving, bigger coefficients are produced, but they are usually very small. It may be
-        an overkill to use mpz instead of int. We use mpz just to be safe.
+        an overkill to use mpz instead of int. We use mpz just to be safe. 
         Remark: We do not use rational arithmetic. The solver is slightly more complicated with integers, but is saves space.
 
 Author:
@@ -34,21 +34,21 @@ Notes:
 #include"mpz.h"
 
 /**
-   \brief A mxn matrix.
-   Remark: Algorithm 10.11 only uses square matrices, but supporting
+   \brief A mxn matrix. 
+   Remark: Algorithm 10.11 only uses square matrices, but supporting 
    arbitrary matrices does not increase the complexity of this module.
 */
 class mpz_matrix {
     friend class mpz_matrix_manager;
     friend class scoped_mpz_matrix;
-    unsigned m;
+    unsigned m; 
     unsigned n;
     mpz *    a_ij;
 public:
     mpz_matrix():m(0), n(0), a_ij(0) {}
-    mpz const & operator()(unsigned i, unsigned j) const {
-        SASSERT(i < m);
-        SASSERT(j < n);
+    mpz const & operator()(unsigned i, unsigned j) const { 
+        SASSERT(i < m); 
+        SASSERT(j < n); 
         return a_ij[i*n + j]; }
     mpz & operator()(unsigned i, unsigned j) { SASSERT(i < m); SASSERT(j < n); return a_ij[i*n + j]; }
     void swap(mpz_matrix & B) { std::swap(m, B.m); std::swap(n, B.n); std::swap(a_ij, B.a_ij); }
@@ -72,25 +72,25 @@ public:
     void tensor_product(mpz_matrix const & A, mpz_matrix const & B, mpz_matrix & C);
     /**
        \brief Solve A*b = c
-
+       
        Return false if the system does not have an integer solution.
-
+       
        \pre A is a square matrix
        \pre b and c are vectors of size A.n (== A.m)
     */
     bool solve(mpz_matrix const & A, mpz * b, mpz const * c);
     /**
        \brief Solve A*b = c
-
+       
        Return false if the system does not have an integer solution.
-
+       
        \pre A is a square matrix
        \pre b and c are vectors of size A.n (== A.m)
     */
     bool solve(mpz_matrix const & A, int * b, int const * c);
     /**
        \brief Store in B that contains the subset cols of columns of A.
-
+       
        \pre num_cols <= A.n
        \pre Forall i < num_cols, cols[i] < A.n
        \pre Forall 0 < i < num_cols, cols[i-1] < cols[i]
@@ -102,10 +102,10 @@ public:
     void permute_rows(mpz_matrix const & A, unsigned const * p, mpz_matrix & B);
     /**
        \brief Store in r the row (ids) of A that are linear independent.
-
-       \remark If there is an option between rows i and j,
+       
+       \remark If there is an option between rows i and j, 
        this method will give preference to the row that occurs first.
-
+       
        \remark The vector r must have at least A.n() capacity
        The numer of linear independent rows is returned.
 

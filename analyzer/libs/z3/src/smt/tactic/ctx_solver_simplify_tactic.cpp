@@ -38,8 +38,8 @@ class ctx_solver_simplify_tactic : public tactic {
     volatile bool         m_cancel;
 public:
     ctx_solver_simplify_tactic(ast_manager & m, params_ref const & p = params_ref()):
-        m(m), m_params(p), m_solver(m, m_front_p),
-        m_arith(m), m_mk_app(m), m_fn(m), m_num_steps(0),
+        m(m), m_params(p), m_solver(m, m_front_p),  
+        m_arith(m), m_mk_app(m), m_fn(m), m_num_steps(0), 
         m_cancel(false) {
         sort* i_sort = m_arith.mk_int();
         m_fn = m.mk_func_decl(symbol(0xbeef101), i_sort, m.mk_bool_sort());
@@ -61,22 +61,22 @@ public:
         m_solver.updt_params(p);
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
-        m_solver.collect_param_descrs(r);
+    virtual void collect_param_descrs(param_descrs & r) { 
+        m_solver.collect_param_descrs(r); 
     }
-
+    
     virtual void collect_statistics(statistics & st) const {
         st.update("solver-simplify-steps", m_num_steps);
     }
 
     virtual void reset_statistics() { m_num_steps = 0; }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
-
+        
         mc = 0; pc = 0; core = 0;
         reduce(*(in.get()));
         in->inc_depth();
@@ -126,7 +126,7 @@ protected:
             lbool is_sat = m_solver.check();
             TRACE("ctx_solver_simplify_tactic", tout << "is non-equivalence sat?: " << is_sat << "\n";);
             if (is_sat != l_false) {
-                TRACE("ctx_solver_simplify_tactic",
+                TRACE("ctx_solver_simplify_tactic", 
                       tout << "result is not equivalent to input\n";
                       tout << mk_pp(fml1, m) << "\n";);
                 UNREACHABLE();
@@ -134,9 +134,9 @@ protected:
             m_solver.pop(1);
         });
         g.reset();
-        g.assert_expr(fml, 0, 0);
+        g.assert_expr(fml, 0, 0); 
         IF_VERBOSE(TACTIC_VERBOSITY_LVL, verbose_stream() << "(ctx-solver-simplify :num-steps " << m_num_steps << ")\n";);
-        SASSERT(g.is_well_sorted());
+        SASSERT(g.is_well_sorted());        
     }
 
     struct expr_pos {
@@ -158,7 +158,7 @@ protected:
         svector<expr_pos> todo;
         expr_ref_vector fresh_vars(m), trail(m);
         expr_ref res(m), tmp(m);
-        obj_map<expr, expr_pos> cache;
+        obj_map<expr, expr_pos> cache;        
         unsigned id = 1, child_id = 0;
         expr_ref n2(m), fml(m);
         unsigned parent_pos = 0, self_pos = 0, self_idx = 0;
@@ -167,7 +167,7 @@ protected:
         expr_pos path_r;
         expr_ref_vector args(m);
         expr_ref n = mk_fresh(id, m.mk_bool_sort());
-        trail.push_back(n);
+        trail.push_back(n);        
 
         fml = result.get();
         tmp = m.mk_not(m.mk_iff(fml, n));
@@ -177,7 +177,7 @@ protected:
         names.push_back(n);
         m_solver.push();
 
-        while (!todo.empty() && !m_cancel) {
+        while (!todo.empty() && !m_cancel) {            
             expr_ref res(m);
             args.reset();
             expr* e    = todo.back().m_expr;
@@ -185,12 +185,12 @@ protected:
             parent_pos = todo.back().m_parent;
             self_idx   = todo.back().m_idx;
             n = names.back();
-
+            
             if (cache.contains(e)) {
                 goto done;
             }
             if (m.is_bool(e) && simplify_bool(n, res)) {
-                TRACE("ctx_solver_simplify_tactic",
+                TRACE("ctx_solver_simplify_tactic", 
                       tout << "simplified: " << mk_pp(e, m) << " |-> " << mk_pp(res, m) << "\n";);
                 goto done;
             }
@@ -198,9 +198,9 @@ protected:
                 res = e;
                 goto done;
             }
-
+            
             a = to_app(e);
-            sz = a->get_num_args();
+            sz = a->get_num_args();            
             n2 = 0;
 
             for (unsigned i = 0; i < sz; ++i) {
@@ -208,10 +208,10 @@ protected:
                 if (cache.find(arg, path_r)) {
                     //
                     // This is a single traversal version of the context
-                    // simplifier. It simplifies only the first occurrence of
+                    // simplifier. It simplifies only the first occurrence of 
                     // a sub-term with respect to the context.
                     //
-
+                                        
                     if (path_r.m_parent == self_pos && path_r.m_idx == i) {
                         args.push_back(path_r.m_expr);
                     }
@@ -239,12 +239,12 @@ protected:
                 m_solver.assert_expr(tmp);
                 continue;
             }
-
+        
         done:
             if (res) {
                 cache.insert(e, expr_pos(parent_pos, self_pos, self_idx, res));
-            }
-
+            }            
+            
             todo.pop_back();
             names.pop_back();
             m_solver.pop(1);
@@ -291,7 +291,7 @@ protected:
         }
         return expr_ref(m.mk_app(fn, m_arith.mk_numeral(rational(id++), true)), m);
     }
-
+    
 };
 
 tactic * mk_ctx_solver_simplify_tactic(ast_manager & m, params_ref const & p) {

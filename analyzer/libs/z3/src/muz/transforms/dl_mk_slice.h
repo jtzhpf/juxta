@@ -39,10 +39,10 @@ namespace datalog {
         svector<bool>   m_output;
         expr_ref_vector m_solved_vars;
         svector<bool>   m_var_is_sliceable;
-        obj_map<func_decl, func_decl*>  m_predicates;
+        obj_map<func_decl, func_decl*>  m_predicates;        
         obj_map<func_decl, bit_vector> m_sliceable;
         ast_ref_vector  m_pinned;
-        slice_proof_converter*      m_pc;
+        slice_proof_converter*      m_pc;        
         slice_model_converter*      m_mc;
 
         void reset();
@@ -50,11 +50,11 @@ namespace datalog {
         void init(rule_set const& source);
 
         void saturate(rule_set const& source);
-
+        
         void display(std::ostream& out);
 
         bool prune_rule(rule& r);
-
+        
         void init_vars(rule& r);
 
         void init_vars(app* p, bool is_output, bool is_neg_tail);
@@ -84,7 +84,7 @@ namespace datalog {
         expr_ref_vector get_tail_conjs(rule const& r);
 
         void declare_predicates(rule_set const& src, rule_set& dst);
-
+         
         bool rule_updated(rule const& r);
 
         void update_predicate(app* p, app_ref& q);
@@ -101,7 +101,7 @@ namespace datalog {
         mk_slice(context & ctx);
 
         virtual ~mk_slice() { }
-
+        
         rule_set * operator()(rule_set const & source);
 
         func_decl* get_predicate(func_decl* p) { func_decl* q = p; m_predicates.find(p, q); return q; }

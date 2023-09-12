@@ -1,8 +1,8 @@
 ############################################
 # Copyright (c) 2013 Microsoft Corporation
-#
+# 
 # Z3 Python interface for Z3 Real Closed Fields
-# that may contain
+# that may contain 
 #    - computable transcendentals
 #    - infinitesimals
 #    - algebraic extensions
@@ -37,9 +37,9 @@ def MkInfinitesimal(name="eps", ctx=None):
 def MkRoots(p, ctx=None):
     ctx = z3._get_ctx(ctx)
     num = len(p)
-    _tmp = []
+    _tmp = [] 
     _as  = (RCFNumObj * num)()
-    _rs  = (RCFNumObj * num)()
+    _rs  = (RCFNumObj * num)() 
     for i in range(num):
         _a = _to_rcfnum(p[i], ctx)
         _tmp.append(_a) # prevent GC
@@ -65,7 +65,7 @@ class RCFNum:
 
     def ctx_ref(self):
         return self.ctx.ref()
-
+                  
     def __repr__(self):
         return Z3_rcf_num_to_string(self.ctx_ref(), self.num, False, in_html_mode())
 
@@ -112,10 +112,10 @@ class RCFNum:
 
     def __pow__(self, k):
         return self.power(k)
-
+ 
     def decimal(self, prec=5):
         return Z3_rcf_num_to_decimal_string(self.ctx_ref(), self.num, prec)
-
+    
     def __lt__(self, other):
         v = _to_rcfnum(other, self.ctx)
         return Z3_rcf_lt(self.ctx_ref(), self.num, v.num)

@@ -1,6 +1,6 @@
 ############################################
 # Copyright (c) 2012 Microsoft Corporation
-#
+# 
 # Author: Leonardo de Moura (leonardo)
 ############################################
 

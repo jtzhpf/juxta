@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Quantifier.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -59,7 +59,7 @@ public class Quantifier extends BoolExpr
 
     /**
      * The patterns.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Pattern[] getPatterns() throws Z3Exception
@@ -83,7 +83,7 @@ public class Quantifier extends BoolExpr
 
     /**
      * The no-patterns.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Pattern[] getNoPatterns() throws Z3Exception
@@ -106,7 +106,7 @@ public class Quantifier extends BoolExpr
 
     /**
      * The symbols for the bound variables.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Symbol[] getBoundVariableNames() throws Z3Exception
@@ -121,7 +121,7 @@ public class Quantifier extends BoolExpr
 
     /**
      * The sorts of the bound variables.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Sort[] getBoundVariableSorts() throws Z3Exception
@@ -136,7 +136,7 @@ public class Quantifier extends BoolExpr
 
     /**
      * The body of the quantifier.
-     *
+     * 
      * @throws Z3Exception
      **/
     public BoolExpr getBody() throws Z3Exception
@@ -170,13 +170,13 @@ public class Quantifier extends BoolExpr
                     .getNativeObject()));
         } else
         {
-            setNativeObject(Native.mkQuantifierEx(ctx.nCtx(),
-		    (isForall) ? true : false, weight, AST.getNativeObject(quantifierID),
-		     AST.getNativeObject(skolemID),
-		     AST.arrayLength(patterns), AST.arrayToNative(patterns),
-		     AST.arrayLength(noPatterns), AST.arrayToNative(noPatterns),
-		     AST.arrayLength(sorts), AST.arrayToNative(sorts),
-		     Symbol.arrayToNative(names),
+            setNativeObject(Native.mkQuantifierEx(ctx.nCtx(), 
+		    (isForall) ? true : false, weight, AST.getNativeObject(quantifierID), 
+		     AST.getNativeObject(skolemID), 
+		     AST.arrayLength(patterns), AST.arrayToNative(patterns), 
+		     AST.arrayLength(noPatterns), AST.arrayToNative(noPatterns), 
+		     AST.arrayLength(sorts), AST.arrayToNative(sorts), 
+		     Symbol.arrayToNative(names), 
 		     body.getNativeObject()));
         }
     }

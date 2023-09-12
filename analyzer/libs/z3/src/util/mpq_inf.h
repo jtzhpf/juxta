@@ -40,14 +40,14 @@ public:
     }
 
     enum inf_kind { NEG=-1, ZERO, POS };
-
+    
     void reset(mpq_inf & a) {
         m.reset(a.first);
         m.reset(a.second);
     }
-
+    
     unsigned hash(mpq_inf const & a) const { return hash_u_u(m.hash(a.first), m.hash(a.second)); }
-
+    
     void del(mpq_inf & a) {
         m.del(a.first);
         m.del(a.second);
@@ -83,7 +83,7 @@ public:
     }
 
     bool is_int(mpq_inf const & a) const { return m.is_int(a.first) && m.is_zero(a.second); }
-
+    
     bool is_rational(mpq_inf const & a) const { return m.is_zero(a.second); }
 
     void get_rational(mpq_inf const & a, mpq & r) { m.set(r, a.first); }
@@ -111,19 +111,19 @@ public:
     bool eq(mpq_inf const & a, mpq const & b) const {
         return m.eq(a.first, b) && m.is_zero(a.second);
     }
-
+        
     bool eq(mpq_inf const & a, mpq const & b, inf_kind k) const {
         if (!m.eq(a.first, b))
             return false;
         switch (k) {
-        case NEG: return m.is_minus_one(a.second);
+        case NEG: return m.is_minus_one(a.second); 
         case ZERO: return m.is_zero(a.second);
         case POS: return m.is_one(a.second);
         }
         UNREACHABLE();
         return false;
     }
-
+    
     bool lt(mpq_inf const & a, mpq_inf const & b) const {
         return m.lt(a.first, b.first) || (m.lt(a.second, b.second) && m.eq(a.first, b.first));
     }
@@ -147,7 +147,7 @@ public:
     }
 
     bool gt(mpq_inf const & a, mpq_inf const & b) const { return lt(b, a); }
-
+    
     bool gt(mpq_inf const & a, mpq const & b) const {
         return m.gt(a.first, b) || (m.is_pos(a.second) && m.eq(a.first, b));
     }

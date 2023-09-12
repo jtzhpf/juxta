@@ -29,7 +29,7 @@ Notes:
 
     Maintaining sorted ranges for larger domains is another option.
 
-    Another possible enhancement is to resplay the tree.
+    Another possible enhancement is to resplay the tree. 
     Keep current key index in the nodes.
 
 --*/
@@ -57,7 +57,7 @@ class heap_trie {
         void reset() { memset(this, 0, sizeof(*this)); }
     };
 
-    enum node_t {
+    enum node_t { 
         trie_t,
         leaf_t
     };
@@ -111,7 +111,7 @@ class heap_trie {
             m_nodes.push_back(std::make_pair(k, n));
             return n;
         }
-
+        
         bool find(Key k, node*& n) const {
             for (unsigned i = 0; i < m_nodes.size(); ++i) {
                 if (m_nodes[i].first == k) {
@@ -121,7 +121,7 @@ class heap_trie {
             }
             return false;
         }
-
+        
         // push nodes whose keys are <= key into vector.
         void find_le(KeyLE& le, Key key, ptr_vector<node>& nodes) {
             for (unsigned i = 0; i < m_nodes.size(); ++i) {
@@ -190,7 +190,7 @@ class heap_trie {
 
 public:
 
-    heap_trie(KeyLE& le):
+    heap_trie(KeyLE& le):    
         m_alloc("heap_trie"),
         m_le(le),
         m_num_keys(0),
@@ -242,7 +242,7 @@ public:
         for (unsigned i = 0; i < num_keys(); ++i) {
             if (!to_trie(n)->find(get_key(keys, i), m)) {
                 return false;
-            }
+            }            
             n = m;
         }
         value = to_leaf(n)->get_value();
@@ -288,7 +288,7 @@ public:
             n->dec_ref();
             VERIFY (to_trie(n)->find(get_key(keys, i), m));
             n = m;
-        }
+        }           
         n->dec_ref();
     }
 
@@ -387,7 +387,7 @@ public:
                     r = t->nodes()[i].second;
                     if (r->ref_count() > 0) {
                         m_idx.push_back(i);
-                        m_keys.push_back(t->nodes()[i].first);
+                        m_keys.push_back(t->nodes()[i].first);                        
                         break;
                     }
                 }
@@ -404,7 +404,7 @@ public:
             m_path.pop_back();
             while (!m_path.empty()) {
                 trie* t = to_trie(m_path.back());
-                unsigned idx = m_idx.back();
+                unsigned idx = m_idx.back();                   
                 unsigned sz = t->nodes().size();
                 m_idx.pop_back();
                 m_keys.pop_back();
@@ -424,18 +424,18 @@ public:
         }
     };
 
-    iterator begin() const {
+    iterator begin() const { 
         return iterator(m_root);
     }
 
-    iterator end() const {
+    iterator end() const { 
         return iterator(0);
     }
 
 
 private:
 
-    inline unsigned num_keys() const {
+    inline unsigned num_keys() const { 
         return m_num_keys;
     }
 
@@ -461,9 +461,9 @@ private:
         {}
 
         bool operator<(key_info const& other) const {
-            return
+            return 
                 (m_index_size < other.m_index_size) ||
-                ((m_index_size == other.m_index_size) &&
+                ((m_index_size == other.m_index_size) && 
                  (m_index < other.m_index));
         }
     };
@@ -511,7 +511,7 @@ private:
             unsigned j = infos[i].m_index;
             sorted_keys.push_back(j);
             new_keys.push_back(m_keys[j]);
-        }
+        } 
         // m_keys:    i |-> key_index
         // new_keys:  i |-> new_key_index
         // permutation: key_index |-> new_key_index
@@ -522,7 +522,7 @@ private:
         trie* new_root = mk_trie();
         IF_VERBOSE(2, verbose_stream() << "before reshuffle: " << m_root->num_nodes() << " nodes\n";);
         for (; it != end(); ++it) {
-            IF_VERBOSE(2,
+            IF_VERBOSE(2, 
                        for (unsigned i = 0; i < num_keys(); ++i) {
                            for (unsigned j = 0; j < num_keys(); ++j) {
                                if (m_keys[j] == i) {
@@ -540,11 +540,11 @@ private:
         for (unsigned i = 0; i < m_keys.size(); ++i) {
             m_keys[i] = new_keys[i];
         }
-
+        
         IF_VERBOSE(2, verbose_stream() << "after reshuffle: " << new_root->num_nodes() << " nodes\n";);
-        IF_VERBOSE(2,
+        IF_VERBOSE(2, 
                    it = begin();
-                   for (; it != end(); ++it) {
+                   for (; it != end(); ++it) {                       
                        for (unsigned i = 0; i < num_keys(); ++i) {
                            for (unsigned j = 0; j < num_keys(); ++j) {
                                if (m_keys[j] == i) {
@@ -561,7 +561,7 @@ private:
         if (index == num_keys()) {
             SASSERT(n->ref_count() > 0);
             bool r = check(to_leaf(n)->get_value());
-            IF_VERBOSE(2,
+            IF_VERBOSE(2, 
                        for (unsigned j = 0; j < index; ++j) {
                            verbose_stream() << " ";
                        }
@@ -589,7 +589,7 @@ private:
             return false;
         }
     }
-
+    
     void insert(node* n, unsigned num_keys, Key const* keys, unsigned const* permutation, Value const& val) {
         // assumption: key is not in table.
         for (unsigned i = 0; i < num_keys; ++i) {
@@ -613,7 +613,7 @@ private:
             }
         }
         return m2;
-    }
+    }       
 
     leaf* mk_leaf() {
         void* mem = m_alloc.allocate(sizeof(leaf));
@@ -633,7 +633,7 @@ private:
             trie* t = to_trie(n);
             for (unsigned i = 0; i < t->nodes().size(); ++i) {
                 del_node(t->nodes()[i].second);
-            }
+            }            
             t->~trie();
             m_alloc.deallocate(sizeof(trie), t);
         }
@@ -663,4 +663,4 @@ private:
     }
 };
 
-#endif
+#endif 

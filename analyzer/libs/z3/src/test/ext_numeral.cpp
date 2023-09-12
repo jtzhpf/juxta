@@ -94,7 +94,7 @@ static void tst1() {
     tst_add(-3, EN_NUMERAL, 4, EN_NUMERAL, 1, EN_NUMERAL);
     tst_add(-2, EN_NUMERAL, 0, EN_NUMERAL, -2, EN_NUMERAL);
     tst_add(3, EN_NUMERAL, 4, EN_NUMERAL, 7, EN_NUMERAL);
-
+    
     tst_add(0, EN_PLUS_INFINITY, 0, EN_PLUS_INFINITY, 0, EN_PLUS_INFINITY);
     tst_add(0, EN_PLUS_INFINITY, 0, EN_NUMERAL, 0, EN_PLUS_INFINITY);
     tst_add(0, EN_PLUS_INFINITY, 1, EN_NUMERAL, 0, EN_PLUS_INFINITY);
@@ -119,7 +119,7 @@ static void tst1() {
     tst_mul(0, EN_PLUS_INFINITY, 5, EN_NUMERAL, 0, EN_PLUS_INFINITY);
     tst_mul(0, EN_PLUS_INFINITY, -1, EN_NUMERAL, 0, EN_MINUS_INFINITY);
     tst_mul(0, EN_PLUS_INFINITY, -5, EN_NUMERAL, 0, EN_MINUS_INFINITY);
-
+    
     tst_mul(0, EN_NUMERAL, 3, EN_NUMERAL, 0, EN_NUMERAL);
     tst_mul(2, EN_NUMERAL, 3, EN_NUMERAL, 6, EN_NUMERAL);
     tst_mul(-2, EN_NUMERAL, 3, EN_NUMERAL, -6, EN_NUMERAL);
@@ -339,8 +339,8 @@ static void tst2() {
 }
 
 static void tst3() {
-    unsynch_mpq_manager m;
-    scoped_mpq a(m);
+    unsynch_mpq_manager m; 
+    scoped_mpq a(m);      
     SASSERT(is_zero(m, a, EN_NUMERAL));
     SASSERT(!is_zero(m, a, EN_PLUS_INFINITY));
     SASSERT(!is_zero(m, a, EN_MINUS_INFINITY));
@@ -368,24 +368,24 @@ static void tst3() {
     reset(m, a, ak);
     SASSERT(is_zero(m, a, EN_NUMERAL));
     {
-        std::ostringstream buffer;
-        display(buffer, m, a, ak);
+        std::ostringstream buffer;        
+        display(buffer, m, a, ak); 
         SASSERT(buffer.str() == "0");
     }
     {
-        std::ostringstream buffer;
+        std::ostringstream buffer;        
         m.set(a, -10);
-        display(buffer, m, a, ak);
+        display(buffer, m, a, ak); 
         SASSERT(buffer.str() == "-10");
     }
     {
-        std::ostringstream buffer;
-        display(buffer, m, a, EN_PLUS_INFINITY);
+        std::ostringstream buffer;        
+        display(buffer, m, a, EN_PLUS_INFINITY); 
         SASSERT(buffer.str() == "+oo");
     }
     {
-        std::ostringstream buffer;
-        display(buffer, m, a, EN_MINUS_INFINITY);
+        std::ostringstream buffer;        
+        display(buffer, m, a, EN_MINUS_INFINITY); 
         SASSERT(buffer.str() == "-oo");
     }
 }

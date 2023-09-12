@@ -25,7 +25,7 @@ Revision History:
 namespace smt {
 
     /**
-       \brief Proof like object used to track dependencies of boolean propagation.
+       \brief Proof like object used to track dependencies of boolean propagation. 
        The idea is to reduce the cost of dependency tracking for the most common
        justifications used during boolean propagation: unit propagation
     */
@@ -49,20 +49,20 @@ namespace smt {
         explicit b_justification(clause * c):
             m_data(TAG(void*, c, CLAUSE)) {
         }
-
+        
         explicit b_justification(literal l):
             m_data(BOXTAGINT(void*, l.index(), BIN_CLAUSE)) {
         }
-
+        
         explicit b_justification(justification * js):
             m_data(TAG(void*, js, JUSTIFICATION)) {
             SASSERT(js);
         }
-
+        
         kind get_kind() const {
             return static_cast<kind>(GET_TAG(m_data));
         }
-
+        
         clause * get_clause() const {
             SASSERT(get_kind() == CLAUSE);
             return UNTAG(clause*, m_data);
@@ -78,7 +78,7 @@ namespace smt {
             return to_literal(UNBOXINT(m_data));
         }
 
-        bool operator==(b_justification const & other) const {
+        bool operator==(b_justification const & other) const { 
             return m_data == other.m_data;
         }
 

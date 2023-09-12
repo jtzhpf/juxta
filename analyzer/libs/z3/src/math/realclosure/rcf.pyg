@@ -1,5 +1,5 @@
 def_module_params('rcf',
-                  description='real closed fields',
+                  description='real closed fields', 
                   export=True,
                   params=(('use_prem', BOOL, True, "use pseudo-remainder instead of remainder when computing GCDs and Sturm-Tarski sequences"),
                           ('clean_denominators', BOOL, True, "clean denominators before root isolation"),

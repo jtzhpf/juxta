@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-11-23
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -36,7 +36,7 @@ namespace Microsoft.Z3
             get
             {
                 Contract.Ensures(Contract.Result<FuncDecl>() != null);
-                return new FuncDecl(Context, Native.Z3_get_datatype_sort_constructor(Context.nCtx, NativeObject, 0));
+                return new FuncDecl(Context, Native.Z3_get_datatype_sort_constructor(Context.nCtx, NativeObject, 0));                                
             }
         }
 
@@ -79,7 +79,7 @@ namespace Microsoft.Z3
         /// <summary>
         /// The declaration of the isCons function of this list sort.
         /// </summary>
-        ///
+        /// 
         public FuncDecl IsConsDecl
         {
             get
@@ -113,7 +113,7 @@ namespace Microsoft.Z3
             }
         }
 
-        #region Internal
+        #region Internal        
         internal ListSort(Context ctx, Symbol name, Sort elemSort)
             : base(ctx)
         {
@@ -121,12 +121,12 @@ namespace Microsoft.Z3
             Contract.Requires(name != null);
             Contract.Requires(elemSort != null);
 
-            IntPtr inil = IntPtr.Zero, iisnil = IntPtr.Zero,
+            IntPtr inil = IntPtr.Zero, iisnil = IntPtr.Zero, 
                    icons = IntPtr.Zero, iiscons = IntPtr.Zero,
                    ihead = IntPtr.Zero, itail = IntPtr.Zero;
 
             NativeObject = Native.Z3_mk_list_sort(ctx.nCtx, name.NativeObject, elemSort.NativeObject,
-                                                  ref inil, ref iisnil, ref icons, ref iiscons, ref ihead, ref itail);
+                                                  ref inil, ref iisnil, ref icons, ref iiscons, ref ihead, ref itail);            
         }
         #endregion
     };

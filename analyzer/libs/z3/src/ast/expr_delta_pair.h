@@ -25,7 +25,7 @@ Revision History:
 struct expr_delta_pair {
     expr *    m_node;
     unsigned  m_delta;
-
+    
     expr_delta_pair():m_node(0), m_delta(0) {}
     expr_delta_pair(expr * n, unsigned d):m_node(n), m_delta(d) {}
     unsigned hash() const { return hash_u_u(m_node->hash(), m_delta); }

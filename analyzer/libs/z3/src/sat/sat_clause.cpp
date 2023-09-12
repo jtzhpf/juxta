@@ -39,11 +39,11 @@ namespace sat {
 
     var_approx_set clause::approx(unsigned num, literal const * lits) {
         var_approx_set r;
-        for (unsigned i = 0; i < num; i++)
+        for (unsigned i = 0; i < num; i++) 
             r.insert(lits[i].var());
         return r;
     }
-
+    
     void clause::update_approx() {
         m_approx = approx(m_size, m_lits);
     }
@@ -157,7 +157,7 @@ namespace sat {
         return reinterpret_cast<size_t>(ptr);
 #endif
     }
-
+    
     clause * clause_allocator::mk_clause(unsigned num_lits, literal const * lits, bool learned) {
         size_t size = clause::get_obj_size(num_lits);
 #ifdef _AMD64_
@@ -206,16 +206,16 @@ namespace sat {
         }
         return out;
     }
-
-    bool clause_wrapper::contains(literal l) const {
+    
+    bool clause_wrapper::contains(literal l) const { 
         unsigned sz = size();
         for (unsigned i = 0; i < sz; i++)
             if (operator[](i) == l)
                 return true;
         return false;
     }
-
-    bool clause_wrapper::contains(bool_var v) const {
+    
+    bool clause_wrapper::contains(bool_var v) const { 
         unsigned sz = size();
         for (unsigned i = 0; i < sz; i++)
             if (operator[](i).var() == v)

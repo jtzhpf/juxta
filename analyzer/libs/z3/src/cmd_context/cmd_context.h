@@ -8,7 +8,7 @@ Module Name:
 Abstract:
     Ultra-light command context.
     It provides a generic command pluging infrastructure.
-    A command context also provides names (aka symbols) to Z3 objects.
+    A command context also provides names (aka symbols) to Z3 objects. 
     These names are used to reference Z3 objects in commands.
 
 Author:
@@ -116,11 +116,11 @@ public:
     enum status {
         UNSAT, SAT, UNKNOWN
     };
-
+    
     enum check_sat_state {
         css_unsat, css_sat, css_unknown, css_clear
     };
-
+    
     typedef std::pair<unsigned, expr*> macro;
 
     struct scoped_watch {
@@ -144,7 +144,7 @@ protected:
     bool                         m_numeral_as_real;
     bool                         m_ignore_check; // used by the API to disable check-sat() commands when parsing SMT 2.0 files.
     bool                         m_exit_on_error;
-
+    
     static std::ostringstream    g_error_stream;
 
     ast_manager *                m_manager;
@@ -154,7 +154,7 @@ protected:
     check_logic                  m_check_logic;
     stream_ref                   m_regular;
     stream_ref                   m_diagnostic;
-    dictionary<cmd*>             m_cmds;
+    dictionary<cmd*>             m_cmds;    
     dictionary<builtin_decl>     m_builtin_decls;
     scoped_ptr_vector<builtin_decl> m_extra_builtin_decls; // make sure that dynamically allocated builtin_decls are deleted
     dictionary<object_ref*>      m_object_refs; // anything that can be named.
@@ -169,7 +169,7 @@ protected:
     svector<sf_pair>             m_func_decls_stack;
     svector<symbol>              m_psort_decls_stack;
     svector<symbol>              m_macros_stack;
-    //
+    // 
     ptr_vector<pdecl>            m_aux_pdecls;
     ptr_vector<expr>             m_assertions;
     vector<std::string>          m_assertion_strings;
@@ -249,7 +249,7 @@ protected:
 
 public:
     cmd_context(bool main_ctx = true, ast_manager * m = 0, symbol const & l = symbol::null);
-    ~cmd_context();
+    ~cmd_context(); 
     void set_cancel(bool f);
     void cancel() { set_cancel(true); }
     void reset_cancel() { set_cancel(false); }
@@ -297,29 +297,29 @@ public:
     virtual ast_manager & get_ast_manager() { return m(); }
     pdecl_manager & pm() const { if (!m_pmanager) const_cast<cmd_context*>(this)->init_manager(); return *m_pmanager; }
     sexpr_manager & sm() const { if (!m_sexpr_manager) const_cast<cmd_context*>(this)->m_sexpr_manager = alloc(sexpr_manager); return *m_sexpr_manager; }
-
+ 
     void set_solver_factory(solver_factory * s);
     void set_interpolating_solver_factory(solver_factory * s);
     void set_check_sat_result(check_sat_result * r) { m_check_sat_result = r; }
     check_sat_result * get_check_sat_result() const { return m_check_sat_result.get(); }
     check_sat_state cs_state() const;
     void validate_model();
-
+    
     bool is_func_decl(symbol const & s) const;
     bool is_sort_decl(symbol const& s) const { return m_psort_decls.contains(s); }
     void insert(cmd * c);
-    void insert(symbol const & s, func_decl * f);
+    void insert(symbol const & s, func_decl * f); 
     void insert(func_decl * f) { insert(f->get_name(), f); }
     void insert(symbol const & s, psort_decl * p);
     void insert(psort_decl * p) { insert(p->get_name(), p); }
     void insert(symbol const & s, unsigned arity, expr * t);
     void insert(symbol const & s, object_ref *);
     void insert(tactic_cmd * c) { tactic_manager::insert(c); }
-    void insert(probe_info * p) { tactic_manager::insert(p); }
-    void insert_user_tactic(symbol const & s, sexpr * d);
+    void insert(probe_info * p) { tactic_manager::insert(p); } 
+    void insert_user_tactic(symbol const & s, sexpr * d); 
     void insert_aux_pdecl(pdecl * p);
     func_decl * find_func_decl(symbol const & s) const;
-    func_decl * find_func_decl(symbol const & s, unsigned num_indices, unsigned const * indices,
+    func_decl * find_func_decl(symbol const & s, unsigned num_indices, unsigned const * indices, 
                                unsigned arity, sort * const * domain, sort * range) const;
     psort_decl * find_psort_decl(symbol const & s) const;
     macro find_macro(symbol const & s) const;
@@ -327,7 +327,7 @@ public:
     sexpr * find_user_tactic(symbol const & s) const;
     object_ref * find_object_ref(symbol const & s) const;
     void mk_const(symbol const & s, expr_ref & result) const;
-    void mk_app(symbol const & s, unsigned num_args, expr * const * args, unsigned num_indices, parameter const * indices, sort * range,
+    void mk_app(symbol const & s, unsigned num_args, expr * const * args, unsigned num_indices, parameter const * indices, sort * range, 
                 expr_ref & r) const;
     void erase_cmd(symbol const & s);
     void erase_func_decl(symbol const & s);
@@ -343,7 +343,7 @@ public:
     void reset_object_refs();
     void reset_user_tactics();
     void set_regular_stream(char const * name) { m_regular.set(name); }
-    void set_diagnostic_stream(char const * name);
+    void set_diagnostic_stream(char const * name); 
     virtual std::ostream & regular_stream() { return *m_regular; }
     virtual std::ostream & diagnostic_stream() { return *m_diagnostic; }
     char const * get_regular_stream_name() const { return m_regular.name(); }
@@ -369,7 +369,7 @@ public:
     // display the result produced by a check-sat or check-sat-using commands in the regular stream
     void display_sat_result(lbool r);
     // check if result produced by check-sat or check-sat-using matches the known status
-    void validate_check_sat_result(lbool r);
+    void validate_check_sat_result(lbool r); 
     unsigned num_scopes() const { return m_scopes.size(); }
 
     dictionary<macro> const & get_macros() const { return m_macros; }

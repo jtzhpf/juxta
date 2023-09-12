@@ -25,7 +25,7 @@ class ast_manager;
 
 class context_params {
     void set_bool(bool & opt, char const * param, char const * value);
-
+        
 public:
     bool        m_auto_config;
     bool        m_proof;
@@ -48,7 +48,7 @@ public:
     /*
       REG_PARAMS('context_params::collect_param_descrs')
     */
-
+    
     /**
        \brief Goodies for extracting parameters for creating a solver object.
     */
@@ -62,7 +62,7 @@ public:
        Example: auto_config
     */
     params_ref merge_default_params(params_ref const & p);
-
+    
     /**
        \brief Create an AST manager using this configuration.
     */

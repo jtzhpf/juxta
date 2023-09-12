@@ -53,8 +53,8 @@ namespace smt {
     }
 
     void model_checker::set_qm(quantifier_manager & qm) {
-        SASSERT(m_qm == 0);
-        SASSERT(m_context == 0);
+        SASSERT(m_qm == 0); 
+        SASSERT(m_context == 0); 
         m_qm = &qm;
         m_context = &(m_qm->get_context());
     }
@@ -108,7 +108,7 @@ namespace smt {
     void model_checker::assert_neg_q_m(quantifier * q, expr_ref_vector & sks) {
         expr_ref tmp(m_manager);
         m_curr_model->eval(q->get_expr(), tmp, true);
-        TRACE("model_checker", tout << "q after applying interpretation:\n" << mk_ismt2_pp(tmp, m_manager) << "\n";);
+        TRACE("model_checker", tout << "q after applying interpretation:\n" << mk_ismt2_pp(tmp, m_manager) << "\n";);        
         ptr_buffer<expr> subst_args;
         unsigned num_decls = q->get_num_decls();
         subst_args.resize(num_decls, 0);
@@ -176,13 +176,13 @@ namespace smt {
             }
             bindings.set(num_decls - i - 1, sk_value);
         }
-
+        
         TRACE("model_checker", tout << q->get_qid() << " found (use_inv: " << use_inv << ") new instance:\n";
               for (unsigned i = 0; i < num_decls; i++) {
                   tout << mk_ismt2_pp(bindings[i], m_manager) << "\n";
               });
-
-        for (unsigned i = 0; i < num_decls; i++)
+        
+        for (unsigned i = 0; i < num_decls; i++) 
             m_new_instances_bindings.push_back(bindings[i]);
         void * mem = m_new_instances_region.allocate(instance::get_obj_size(q->get_num_decls()));
         instance * new_inst = new (mem) instance(q, bindings.c_ptr(), max_generation);
@@ -220,19 +220,19 @@ namespace smt {
     bool model_checker::check(quantifier * q) {
         SASSERT(!m_aux_context->relevancy());
         m_aux_context->push();
-
+        
         quantifier * flat_q = get_flat_quantifier(q);
-        TRACE("model_checker", tout << "model checking:\n" << mk_ismt2_pp(q->get_expr(), m_manager) << "\n" <<
+        TRACE("model_checker", tout << "model checking:\n" << mk_ismt2_pp(q->get_expr(), m_manager) << "\n" << 
               mk_ismt2_pp(flat_q->get_expr(), m_manager) << "\n";);
         expr_ref_vector sks(m_manager);
 
         assert_neg_q_m(flat_q, sks);
-        TRACE("model_checker", tout << "skolems:\n";
+        TRACE("model_checker", tout << "skolems:\n"; 
               for (unsigned i = 0; i < sks.size(); i++) {
                   expr * sk = sks.get(i);
                   tout << mk_ismt2_pp(sk, m_manager) << " " << mk_pp(m_manager.get_sort(sk), m_manager) << "\n";
               });
-
+        
         lbool r = m_aux_context->check();
         TRACE("model_checker", tout << "[complete] model-checker result: " << to_sat_str(r) << "\n";);
         if (r == l_false) {
@@ -240,18 +240,18 @@ namespace smt {
             return true; // quantifier is satisfied by m_curr_model
         }
         model_ref complete_cex;
-        m_aux_context->get_model(complete_cex);
-
+        m_aux_context->get_model(complete_cex); 
+        
         // try to find new instances using instantiation sets.
         m_model_finder.restrict_sks_to_inst_set(m_aux_context.get(), q, sks);
-
+        
         unsigned num_new_instances = 0;
 
         while (true) {
             lbool r = m_aux_context->check();
             TRACE("model_checker", tout << "[restricted] model-checker (" << (num_new_instances+1) << ") result: " << to_sat_str(r) << "\n";);
             if (r == l_false)
-                break;
+                break; 
             model_ref cex;
             m_aux_context->get_model(cex);
             if (add_instance(q, cex.get(), sks, true)) {
@@ -335,7 +335,7 @@ namespace smt {
                 }
             }
         }
-
+        
         if (found_relevant)
             m_iteration_idx++;
 
@@ -405,7 +405,7 @@ namespace smt {
                           expr * b = inst->m_bindings[i];
                           tout << mk_pp(b, m_manager) << "\n";
                       });
-                TRACE("model_checker_instance",
+                TRACE("model_checker_instance", 
                       expr_ref inst_expr(m_manager);
                       instantiate(m_manager, q, inst->m_bindings, inst_expr);
                       tout << "(assert " << mk_ismt2_pp(inst_expr, m_manager) << ")\n";);

@@ -104,7 +104,7 @@ void func_interp::reset_interp_cache() {
     m_manager.dec_ref(m_interp);
     m_interp = 0;
 }
-
+    
 void func_interp::set_else(expr * e) {
     reset_interp_cache();
     m_manager.inc_ref(e);
@@ -148,7 +148,7 @@ func_entry * func_interp::get_entry(expr * const * args) const {
 
 void func_interp::insert_entry(expr * const * args, expr * r) {
     reset_interp_cache();
-    func_entry * entry = get_entry(args);
+    func_entry * entry = get_entry(args); 
     if (entry != 0) {
         entry->set_result(m_manager, r);
         return;
@@ -194,7 +194,7 @@ expr * func_interp::get_max_occ_result() const {
     for (; it != end; ++it) {
         func_entry * curr = *it;
         expr * r = curr->get_result();
-        unsigned occs = 0;
+        unsigned occs = 0; 
         num_occs.find(r, occs);
         occs++;
         num_occs.insert(r, occs);
@@ -282,7 +282,7 @@ func_interp * func_interp::translate(ast_translation & translator) const {
     ptr_vector<func_entry>::const_iterator it  = m_entries.begin();
     ptr_vector<func_entry>::const_iterator end = m_entries.end();
     for (; it != end; ++it) {
-        func_entry * curr = *it;
+        func_entry * curr = *it;        
         ptr_buffer<expr> new_args;
         for (unsigned i=0; i<m_arity; i++)
             new_args.push_back(translator(curr->get_arg(i)));

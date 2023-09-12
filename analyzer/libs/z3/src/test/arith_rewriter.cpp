@@ -42,7 +42,7 @@ void tst_arith_rewriter() {
     ar.mk_mul(2, args, result);
     std::cout << mk_pp(result, m) << "\n";
 
-
+    
     th_rewriter rw(m);
     expr_ref fml = parse_fml(m, example1);
     rw(fml);

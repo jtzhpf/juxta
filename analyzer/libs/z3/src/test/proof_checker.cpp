@@ -21,9 +21,9 @@ void tst_checker1() {
     p4 = m.mk_lemma(p3.get(), m.mk_or(a.get(), m.mk_not(a.get())));
     ast_ll_pp(std::cout, m, p4.get());
     result = checker.check(p4.get(), side_conditions);
-    SASSERT(result);
+    SASSERT(result);    
 }
 
 void tst_proof_checker() {
-    tst_checker1();
+    tst_checker1();    
 }

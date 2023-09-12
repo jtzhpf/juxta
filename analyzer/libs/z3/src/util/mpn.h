@@ -106,8 +106,8 @@ private:
     bool trace_enabled;
     #endif
 
-    void trace(mpn_digit const * a, size_t const lnga,
-               mpn_digit const * b, size_t const lngb,
+    void trace(mpn_digit const * a, size_t const lnga, 
+               mpn_digit const * b, size_t const lngb, 
                const char * op) const;
 
     void trace(mpn_digit const * a, size_t const lnga) const;
@@ -129,12 +129,12 @@ public:
 
 // MSBignum compatible interface
 // Note: The `owner' parameter is ignored. We use separate mpn_manager objects for the
-// same purpose. Multiple owners are not supported in these compatibility functions,
+// same purpose. Multiple owners are not supported in these compatibility functions, 
 // instead a static mpn_manager is used.
 
 extern mpn_manager static_mpn_manager;
 
-typedef unsigned int digit_t;
+typedef unsigned int digit_t;    
 
 typedef struct {
     mpn_digit multiplier;
@@ -158,7 +158,7 @@ inline char * mp_decimal(digit_t const * a, size_t const lng, // Number to be co
 
 inline bool add_full(digit_t const * a, size_t const lnga,
                      digit_t const * b, size_t const lngb,
-                     digit_t *c, size_t const lngc_alloc,
+                     digit_t *c, size_t const lngc_alloc, 
                      size_t * plngc,
                      int owner)
 {
@@ -175,7 +175,7 @@ inline bool sub_diff(digit_t const * a, size_t const lnga,
 
 inline bool multiply(digit_t const * a, size_t const lnga,
                      digit_t const * b, size_t const lngb,
-                     digit_t * c,
+                     digit_t * c, 
                      int owner)
 {
     return static_mpn_manager.mul(a, lnga, b, lngb, c);

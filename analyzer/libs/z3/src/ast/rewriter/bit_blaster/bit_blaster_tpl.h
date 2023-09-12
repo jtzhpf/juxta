@@ -57,7 +57,7 @@ public:
     void set_cancel(bool f) { m_cancel = f; }
     void cancel() { set_cancel(true); }
     void reset_cancel() { set_cancel(false); }
-
+    
     // Cfg required API
     ast_manager & m() const { return Cfg::m(); }
     numeral power(unsigned n) const { return Cfg::power(n); }
@@ -82,7 +82,7 @@ public:
     bool is_numeral(unsigned sz, expr * const * bits, numeral & r) const;
     bool is_minus_one(unsigned sz, expr * const * bits) const;
     void num2bits(numeral const & v, unsigned sz, expr_ref_vector & out_bits) const;
-
+    
     void mk_half_adder(expr * a, expr * b, expr_ref & out, expr_ref & cout);
     void mk_full_adder(expr * a, expr * b, expr * cin, expr_ref & out, expr_ref & cout);
     void mk_neg(unsigned sz, expr * const * a_bits, expr_ref_vector & out_bits);

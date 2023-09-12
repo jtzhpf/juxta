@@ -6,7 +6,7 @@ Module Name:
     upolynomial_factorization_int.h
 
 Abstract:
-
+    
     (Internal) header file for univariate polynomial factorization.
     This classes are exposed for debugging purposes only.
 
@@ -16,9 +16,9 @@ Author:
 
 Notes:
 
-   [1] Elwyn Ralph Berlekamp. Factoring Polynomials over Finite Fields. Bell System Technical Journal,
+   [1] Elwyn Ralph Berlekamp. Factoring Polynomials over Finite Fields. Bell System Technical Journal, 
        46(8-10):1853-1859, 1967.
-   [2] Donald Ervin Knuth. The Art of Computer Programming, volume 2: Seminumerical Algorithms. Addison Wesley, third
+   [2] Donald Ervin Knuth. The Art of Computer Programming, volume 2: Seminumerical Algorithms. Addison Wesley, third 
        edition, 1997.
    [3] Henri Cohen. A Course in Computational Algebraic Number Theory. Springer Verlag, 1993.
 
@@ -52,17 +52,17 @@ namespace upolynomial {
 
     /**
        \brief Contains all possible degrees of a factorization of a polynomial.
-       If
+       If 
          p = p1^{k_1} * ... * pn^{k_n} with p_i of degree d_i
        then it is represents numbers of the for \sum a_i*d_i, where a_i <= k_i. Two numbers always in the set are
-       deg(p) and 0.
+       deg(p) and 0. 
 
     */
     class factorization_degree_set {
-
+    
         // the set itself, a (m_max_degree)-binary number
         bit_vector m_set;
-
+        
     public:
 
         factorization_degree_set() { }
@@ -74,7 +74,7 @@ namespace upolynomial {
             m_set.push_back(true);
             for (unsigned i = 0; i < factors.distinct_factors(); ++ i) {
                 unsigned degree = upm.degree(factors[i]);
-                unsigned multiplicity = factors.get_degree(i);
+                unsigned multiplicity = factors.get_degree(i);                
                 for (unsigned k = 0; k < multiplicity; ++ k) {
                     bit_vector tmp(m_set);
                     m_set.shift_right(degree);
@@ -90,7 +90,7 @@ namespace upolynomial {
             m_set.swap(other.m_set);
         }
 
-        bool is_trivial() const {
+        bool is_trivial() const { 
             // check if set = {0, n}
             for (int i = 1; i < (int) m_set.size() - 1; ++ i) {
                 if (m_set.get(i)) return false;
@@ -102,7 +102,7 @@ namespace upolynomial {
             m_set.set(k, false);
         }
 
-        bool in_set(unsigned k) const {
+        bool in_set(unsigned k) const { 
             return m_set.get(k);
         }
 
@@ -122,8 +122,8 @@ namespace upolynomial {
     };
 
     /**
-       \brief A to iterate through all combinations of factors. This is only needed for the factorization, and we
-       always iterate through the
+       \brief A to iterate through all combinations of factors. This is only needed for the factorization, and we 
+       always iterate through the 
     */
     template <typename factors_type>
     class factorization_combination_iterator_base {
@@ -143,7 +143,7 @@ namespace upolynomial {
         int                    m_current_size;
         // the current selection: indices at positions < m_current_size, other values are maxed out
         svector<int>           m_current;
-
+        
         /**
            Assuming a valid selection m_current[0], ..., m_current[position], try to find the next option for
            m_current[position], i.e. the first bigger one that's enabled.
@@ -163,10 +163,10 @@ namespace upolynomial {
     public:
 
         factorization_combination_iterator_base(factors_type const & factors)
-        : m_total_size(factors.distinct_factors()),
-          m_max_size(factors.distinct_factors()/2),
+        : m_total_size(factors.distinct_factors()), 
+          m_max_size(factors.distinct_factors()/2), 
           m_factors(factors)
-        {
+        {    
             SASSERT(factors.total_factors() > 1);
             SASSERT(factors.total_factors() == factors.distinct_factors());
             // enable all to start with
@@ -179,8 +179,8 @@ namespace upolynomial {
         /**
            \brief Returns the factors we are enumerating through.
         */
-        factors_type const & get_factors() const {
-            return m_factors;
+        factors_type const & get_factors() const { 
+            return m_factors; 
         }
 
         /**
@@ -188,9 +188,9 @@ namespace upolynomial {
            it will eliminate the current selected elements from any future selection.
         */
         bool next(bool remove_current) {
-
+            
             int max_upper_bound = m_factors.distinct_factors();
-
+            
             do {
 
                 // the index we are currently trying to fix
@@ -214,8 +214,8 @@ namespace upolynomial {
                     // out max size is also going down
                     m_total_size -= m_current_size;
                     m_max_size = m_total_size/2;
-                }
-
+                } 
+            
                 // we go back to the first one that can be increased (if removing current go all the way)
                 while (current_i >= 0) {
                     current_value = find(current_i, m_current[current_i + 1]);
@@ -228,14 +228,14 @@ namespace upolynomial {
                         current_i --;
                     }
                 }
-
+            
                 do {
-
+                        
                     if (current_value == -1) {
                         // we couldn't find any options, we have to increse size and start from the first one of that size
                         if (m_current_size >= m_max_size) {
                             return false;
-                        } else {
+                        } else {     
                             m_current_size ++;
                             m_current[0] = -1;
                             current_i = 0;
@@ -247,7 +247,7 @@ namespace upolynomial {
                                 m_current[current_i] = current_value;
                             }
                         }
-                    }
+                    } 
 
                     // ok we have a new selection for the current one
                     for (current_i ++; current_i < m_current_size; ++ current_i) {
@@ -262,11 +262,11 @@ namespace upolynomial {
                             m_current[current_i] = current_value;
                         }
                     }
-
+                        
                 } while (current_value == -1);
-
+                    
             } while (filter_current());
-
+            
             // found the next one, hurray
             return true;
         }
@@ -290,17 +290,17 @@ namespace upolynomial {
             return m_total_size - m_current_size;
         }
 
-        void display(std::ostream& out) const {
+        void display(std::ostream& out) const {            
             out << "[ ";
             for (unsigned i = 0; i < m_current.size(); ++ i) {
                 out << m_current[i] << " ";
-            }
+            }          
             out << "] from [ ";
             for (unsigned i = 0; i < m_factors.distinct_factors(); ++ i) {
                 if (m_enabled[i]) {
                     out << i << " ";
                 }
-            }
+            }                      
             out << "]" << std::endl;
         }
 
@@ -308,30 +308,30 @@ namespace upolynomial {
     };
 
     class ufactorization_combination_iterator : public factorization_combination_iterator_base<zp_factors> {
-
+    
         // the degree sets to choose from
         factorization_degree_set const & m_degree_set;
 
     public:
-
+        
         ufactorization_combination_iterator(zp_factors const & factors, factorization_degree_set const & degree_set)
         : factorization_combination_iterator_base<zp_factors>(factors),
-          m_degree_set(degree_set)
+          m_degree_set(degree_set) 
         {}
 
         /**
            \brief Filter the ones not in the degree set.
         */
         bool filter_current() const {
-
+            
             // select only the ones that have degrees in the degree set
             if (!m_degree_set.in_set(current_degree())) {
                 return true;
-            }
+            }            
             return false;
         }
 
-        /**
+        /** 
            \brief Returns the degree of the current selection.
         */
         unsigned current_degree() const {
@@ -341,7 +341,7 @@ namespace upolynomial {
                 degree += upm.degree(m_factors[m_current[i]]);
             }
             return degree;
-        }
+        }        
 
         void left(numeral_vector & out) const {
             SASSERT(m_current_size > 0);
@@ -372,7 +372,7 @@ namespace upolynomial {
                 if (!m_enabled[current]) {
                     // by skipping the disabled we never skip a selected one
                     current ++;
-                } else {
+                } else {   
                     if (selection_i >= m_current.size() || (int) current < m_current[selection_i]) {
                         SASSERT(m_factors.get_degree(current) == 1);
                         nm.mul(out, m_factors[current][0], out);
@@ -398,7 +398,7 @@ namespace upolynomial {
                 if (!m_enabled[current]) {
                     // by skipping the disabled we never skip a selected one
                     current ++;
-                } else {
+                } else {   
                     if (selection_i >= m_current.size() || (int) current < m_current[selection_i]) {
                         SASSERT(m_factors.get_degree(current) == 1);
                         if (out.size() == 0) {

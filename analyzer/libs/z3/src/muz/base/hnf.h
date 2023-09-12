@@ -31,7 +31,7 @@ class hnf {
 public:
     hnf(ast_manager & m);
     ~hnf();
-
+    
     void operator()(expr * n,                          // [IN] expression that should be put into Horn NF
                     proof* p,                          // [IN] proof of n
                     expr_ref_vector & rs,              // [OUT] resultant (conjunction) of expressions
@@ -41,7 +41,7 @@ public:
     void cancel() { set_cancel(true); }
     void reset_cancel() { set_cancel(false); }
     void set_cancel(bool f);
-    void set_name(symbol const& name);
+    void set_name(symbol const& name);    
     void reset();
     func_decl_ref_vector const& get_fresh_predicates();
 };

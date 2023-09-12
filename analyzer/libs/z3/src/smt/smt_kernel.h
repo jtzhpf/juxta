@@ -10,7 +10,7 @@ Abstract:
     New frontend for smt::context.
     The "kernel" tries to hide details of the smt::context object.
     From now on, clients (code outside of the smt module) should be use smt::kernel instead of smt::context.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-02-09.
@@ -41,7 +41,7 @@ namespace smt {
 
     class enode;
     class context;
-
+    
     class kernel {
         struct imp;
         imp *  m_imp;
@@ -51,7 +51,7 @@ namespace smt {
         ~kernel();
 
         ast_manager & m() const;
-
+        
         /**
            \brief Set logic. It must be invoked before any assertions.
            Return true if succeeded.
@@ -68,7 +68,7 @@ namespace smt {
            This method uses the "asserted" proof as a justification for e.
         */
         void assert_expr(expr * e);
-
+        
         /**
            \brief Assert the given assertion with the given proof as a justification.
         */
@@ -78,12 +78,12 @@ namespace smt {
            \brief Return the number of asserted formulas in the kernel.
         */
         unsigned size() const;
-
+        
         /**
            \brief Return the array of asserted formulas.
         */
         expr * const * get_formulas() const;
-
+        
         /**
            \brief Create a backtracking point (aka scope level).
         */
@@ -114,7 +114,7 @@ namespace smt {
            \brief Setup the logical context and invoke check.
         */
         lbool setup_and_check();
-
+        
         /**
            \brief Satisfiability check.
         */
@@ -134,7 +134,7 @@ namespace smt {
            \brief Return the size of the unsat core associated with the last check command.
         */
         unsigned get_unsat_core_size() const;
-
+        
         /**
            \brief Return the i-th expression in the unsat core associated with the last check command.
 
@@ -157,7 +157,7 @@ namespace smt {
            \brief Return the set of formulas assigned by the kernel.
         */
         void get_assignments(expr_ref_vector & result);
-
+        
         /**
            \brief Return the set of relevant labels in the last check command.
         */
@@ -187,7 +187,7 @@ namespace smt {
            \brief Collect runtime statistics.
          */
         void collect_statistics(::statistics & st) const;
-
+        
         /**
            \brief Reset kernel statistics.
         */
@@ -202,9 +202,9 @@ namespace smt {
            \brief Display statistics in low level format.
         */
         void display_istatistics(std::ostream & out) const;
-
+        
         /**
-           \brief Interrupt the kernel.
+           \brief Interrupt the kernel. 
         */
         void set_cancel(bool f = true);
         void cancel() { set_cancel(true); }
@@ -213,12 +213,12 @@ namespace smt {
            \brief Reset interruption.
         */
         void reset_cancel() { set_cancel(false); }
-
+        
         /**
            \brief Return true if the kernel was interrupted.
         */
         bool canceled() const;
-
+        
         /**
            \brief Update configuration parameters.
         */

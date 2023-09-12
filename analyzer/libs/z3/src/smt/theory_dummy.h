@@ -40,7 +40,7 @@ namespace smt {
         virtual void new_diseq_eh(theory_var v1, theory_var v2);
         virtual void reset_eh();
         virtual final_check_status final_check_eh();
-        virtual bool build_models() const {
+        virtual bool build_models() const { 
             return false;
         }
 

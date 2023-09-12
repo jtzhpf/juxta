@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Multi precision fixed point numbers.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-09-19

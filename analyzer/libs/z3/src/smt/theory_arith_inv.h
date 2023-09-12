@@ -122,7 +122,7 @@ namespace smt {
        \brief Return true if the column associated with v is well formed.
     */
     template<typename Ext>
-    bool theory_arith<Ext>::wf_column(theory_var v) const {
+    bool theory_arith<Ext>::wf_column(theory_var v) const { 
         column const & c = m_columns[v];
         int i = 0;
         typename svector<col_entry>::const_iterator it  = c.begin_entries();
@@ -154,7 +154,7 @@ namespace smt {
 
     /**
        \brief Return true if all rows evaluate to zero.
-
+       
        \remark Quasi-base rows don't need to be checked.
     */
     template<typename Ext>

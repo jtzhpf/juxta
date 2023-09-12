@@ -28,7 +28,7 @@ std::string inf_int_rational::to_string() const {
         return m_first.to_string();
     }
     std::ostringstream s;
-
+    
     s << "(" << m_first.to_string();
     if (m_second < 0) {
         s << " -e*" << (-m_second) << ")";

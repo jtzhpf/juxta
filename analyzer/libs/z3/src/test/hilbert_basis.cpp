@@ -32,7 +32,7 @@ class hilbert_basis_validate {
     }
 
 public:
-
+        
     hilbert_basis_validate(ast_manager& m);
 
     expr_ref mk_validate(hilbert_basis& hb);
@@ -40,7 +40,7 @@ public:
 };
 
 
-hilbert_basis_validate::hilbert_basis_validate(ast_manager& m):
+hilbert_basis_validate::hilbert_basis_validate(ast_manager& m): 
     m(m) {
 }
 
@@ -80,7 +80,7 @@ void hilbert_basis_validate::validate_solution(hilbert_basis& hb, vector<rationa
         }
         std::cout << "\n";
         std::cout << "sum: " << sum << "\n";
-    }
+    }        
 }
 
 expr_ref hilbert_basis_validate::mk_validate(hilbert_basis& hb) {
@@ -88,7 +88,7 @@ expr_ref hilbert_basis_validate::mk_validate(hilbert_basis& hb) {
     unsigned sz = hb.get_basis_size();
     vector<rational> v;
 
-    // check that claimed solution really satisfies inequalities:
+    // check that claimed solution really satisfies inequalities:        
     for (unsigned i = 0; i < sz; ++i) {
         bool is_initial;
         hb.get_basis_solution(i, v, is_initial);
@@ -105,7 +105,7 @@ expr_ref hilbert_basis_validate::mk_validate(hilbert_basis& hb) {
     sort_ref_vector sorts(m);
 
 #define mk_mul(_r,_x) (_r.is_one()?((expr*)_x):((expr*)a.mk_mul(a.mk_numeral(_r,true),_x)))
-
+    
 
     for (unsigned i = 0; i < sz; ++i) {
         bool is_initial;
@@ -163,7 +163,7 @@ expr_ref hilbert_basis_validate::mk_validate(hilbert_basis& hb) {
     }
     fml1 = m.mk_or(fmls.size(), fmls.c_ptr());
     fmls.reset();
-
+    
     sz = hb.get_num_ineqs();
     for (unsigned i = 0; i < sz; ++i) {
         bool is_eq;
@@ -188,7 +188,7 @@ expr_ref hilbert_basis_validate::mk_validate(hilbert_basis& hb) {
     }
     fml2 = m.mk_and(fmls.size(), fmls.c_ptr());
     fml = m.mk_eq(fml1, fml2);
-
+    
     bounds.reset();
     for (unsigned i = 0; i < xs.size(); ++i) {
         if (!hb.get_is_int(i)) {
@@ -215,7 +215,7 @@ static void display_statistics(hilbert_basis& hb) {
 }
 
 static void on_ctrl_c(int) {
-    signal (SIGINT, SIG_DFL);
+    signal (SIGINT, SIG_DFL);    
     display_statistics(*g_hb);
     raise(SIGINT);
 }
@@ -252,17 +252,17 @@ static void saturate_basis(hilbert_basis& hb) {
     lbool is_sat = hb.saturate();
 
     switch(is_sat) {
-    case l_true:
-        std::cout << "sat\n";
+    case l_true:  
+        std::cout << "sat\n"; 
         hb.display(std::cout);
         //validate_sat(hb);
         break;
-    case l_false:
-        std::cout << "unsat\n";
+    case l_false: 
+        std::cout << "unsat\n"; 
         break;
-    case l_undef:
-        std::cout << "undef\n";
-        break;
+    case l_undef: 
+        std::cout << "undef\n"; 
+        break;       
     }
     display_statistics(hb);
 }
@@ -297,7 +297,7 @@ static void gorrila_test(unsigned seed, unsigned n, unsigned k, unsigned bound, 
         }
         a0 = rational(ibound - static_cast<int>(rand(2*bound+1)));
         hb.add_ge(nv, a0);
-    }
+    }    
     hb.display(std::cout << "Saturate\n");
     saturate_basis(hb);
 }
@@ -530,14 +530,14 @@ static void tst18() {
     hilbert_basis hb;
     hb.add_eq(vec(0, 1), R(0));
     hb.add_eq(vec(1, -1), R(2));
-    saturate_basis(hb);
+    saturate_basis(hb);    
 }
 
 static void tst19() {
     hilbert_basis hb;
     hb.add_eq(vec(0,  1, 0), R(0));
     hb.add_eq(vec(1, -1, 0), R(2));
-    saturate_basis(hb);
+    saturate_basis(hb);    
 }
 
 void tst_hilbert_basis() {

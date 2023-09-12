@@ -28,8 +28,8 @@ class sexpr;
 class cmd_context;
 
 enum cmd_arg_kind {
-    CPK_UINT, CPK_BOOL, CPK_DOUBLE, CPK_NUMERAL,
-    CPK_DECIMAL, CPK_STRING, CPK_OPTION_VALUE,
+    CPK_UINT, CPK_BOOL, CPK_DOUBLE, CPK_NUMERAL, 
+    CPK_DECIMAL, CPK_STRING, CPK_OPTION_VALUE, 
     CPK_KEYWORD,
     CPK_SYMBOL, CPK_SYMBOL_LIST,
     CPK_SORT,   CPK_SORT_LIST,
@@ -44,12 +44,12 @@ std::ostream & operator<<(std::ostream & out, cmd_arg_kind k);
 
 typedef cmd_arg_kind param_kind;
 
-class cmd_exception : public default_exception {
+class cmd_exception : public default_exception { 
     int         m_line;
     int         m_pos;
 
     std::string compose(char const* msg, symbol const& s) {
-        std::stringstream stm;
+        std::stringstream stm;        
         stm << msg << s;
         return stm.str();
     }
@@ -57,9 +57,9 @@ public:
     cmd_exception(char const * msg):default_exception(msg), m_line(-1), m_pos(-1) {}
     cmd_exception(std::string const & msg):default_exception(msg), m_line(-1), m_pos(-1) {}
     cmd_exception(std::string const & msg, int line, int pos):default_exception(msg), m_line(line), m_pos(pos) {}
-    cmd_exception(char const * msg, symbol const & s):
+    cmd_exception(char const * msg, symbol const & s): 
         default_exception(compose(msg,s)),m_line(-1),m_pos(-1) {}
-    cmd_exception(char const * msg, symbol const & s, int line, int pos):
+    cmd_exception(char const * msg, symbol const & s, int line, int pos): 
         default_exception(compose(msg,s)),m_line(line),m_pos(pos) {}
 
     bool has_pos() const { return m_line >= 0; }

@@ -31,26 +31,26 @@ public:
     typedef unsynch_mpq_manager    numeral_manager;
     typedef svector<justification> justification_vector;
     static const justification     null_justification = UINT_MAX;
-
+    
     /**
        \brief If m == 0, then the solver will create its own numeral manager.
     */
     euclidean_solver(numeral_manager * m);
-
+    
     ~euclidean_solver();
-
+    
     numeral_manager & m() const;
-
+    
     /**
        \brief Reset the state of the euclidean solver.
     */
     void reset();
-
+    
     /**
        \brief Creates a integer variable.
     */
     var mk_var();
-
+    
     /**
        \brief Creates a fresh justification id.
     */
@@ -62,7 +62,7 @@ public:
        The numerals must be created using the numeral_manager m().
     */
     void assert_eq(unsigned num, mpz const * as, var const * xs, mpz const & c, justification j = null_justification);
-
+    
     /**
        \brief Solve the current set of equations. Return false if it is inconsistent.
     */
@@ -74,20 +74,20 @@ public:
        \pre inconsistent()
     */
     justification_vector const & get_justification() const;
-
+    
     bool inconsistent() const;
 
     /**
        \brief Return true if the variable is a "parameter" created by the Euclidean solver.
     */
     bool is_parameter(var x) const;
-
+    
     /**
        Given a linear polynomial as[0]*xs[0] + ... + as[num-1]*xs[num-1] + c and the current solution set,
        It applies the solution set to produce a polynomial of the for a_prime * p + c_prime, where
        a_prime * p represents a linear polynomial where the coefficient of every monomial is a multiple of
        a_prime.
-
+       
        The justification is stored in js.
        Note that, this function does not return the actual p.
 

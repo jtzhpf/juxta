@@ -8,7 +8,7 @@
 using namespace datalog;
 
 
-static lbool dl_context_eval_unary_predicate(ast_manager & m, context & ctx, char const* problem_text,
+static lbool dl_context_eval_unary_predicate(ast_manager & m, context & ctx, char const* problem_text, 
         const char * pred_name) {
     parser* p = parser::create(ctx,m);
     TRUSTME( p->parse_string(problem_text) );

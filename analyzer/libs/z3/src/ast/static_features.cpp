@@ -76,8 +76,8 @@ void static_features::reset() {
     m_num_arith_eqs                        = 0;
     m_num_arith_ineqs                      = 0;
     m_num_diff_terms                       = 0;
-    m_num_diff_eqs                         = 0;
-    m_num_diff_ineqs                       = 0;
+    m_num_diff_eqs                         = 0;   
+    m_num_diff_ineqs                       = 0;   
     m_num_simple_eqs                       = 0;
     m_num_simple_ineqs                     = 0;
     m_num_non_linear                       = 0;
@@ -95,7 +95,7 @@ void static_features::reset() {
 }
 
 void static_features::flush_cache() {
-    m_expr2depth.reset();
+    m_expr2depth.reset(); 
     m_expr2or_and_depth.reset();
     m_expr2ite_depth.reset();
     m_expr2formula_depth.reset();
@@ -109,7 +109,7 @@ bool static_features::is_non_linear(expr * e) const {
         return true;
     if (m_autil.is_add(e))
         return true; // the non
-}
+} 
 #endif
 
 bool static_features::is_diff_term(expr const * e, rational & r) const {
@@ -131,16 +131,16 @@ bool static_features::is_diff_atom(expr const * e) const {
     SASSERT(to_app(e)->get_num_args() == 2);
     expr * lhs = to_app(e)->get_arg(0);
     expr * rhs = to_app(e)->get_arg(1);
-    if (!is_arith_expr(lhs) && !is_arith_expr(rhs))
-        return true;
-    if (!is_numeral(rhs))
-        return false;
+    if (!is_arith_expr(lhs) && !is_arith_expr(rhs)) 
+        return true;    
+    if (!is_numeral(rhs)) 
+        return false;    
     // lhs can be 'x' or '(+ x (* -1 y))'
     if (!is_arith_expr(lhs))
         return true;
     expr* arg1, *arg2;
-    if (!m_autil.is_add(lhs, arg1, arg2))
-        return false;
+    if (!m_autil.is_add(lhs, arg1, arg2)) 
+        return false;    
     // x
     if (is_arith_expr(arg1))
         return false;
@@ -161,20 +161,20 @@ bool static_features::is_gate(expr const * e) const {
 
 void static_features::update_core(expr * e) {
     m_num_exprs++;
-
+    
     // even if a benchmark does not contain any theory interpreted function decls, we still have to install
     // the theory if the benchmark contains constants or function applications of an interpreted sort.
     sort * s      = m_manager.get_sort(e);
     if (!m_manager.is_uninterp(s))
         mark_theory(s->get_family_id());
-
+    
     bool _is_gate = is_gate(e);
     bool _is_eq   = m_manager.is_eq(e);
     if (_is_gate) {
         m_cnf = false;
         m_num_nested_formulas++;
         switch (to_app(e)->get_decl_kind()) {
-        case OP_ITE:
+        case OP_ITE: 
             if (is_bool(e))
                 m_num_ite_formulas++;
             else {
@@ -185,7 +185,7 @@ void static_features::update_core(expr * e) {
                     acc_num(arg);
                     // Must check whether arg is diff logic or not.
                     // Otherwise, problem can be incorrectly tagged as diff logic.
-                    sort * arg_s = m_manager.get_sort(arg);
+                    sort * arg_s = m_manager.get_sort(arg); 
                     family_id fid_arg = arg_s->get_family_id();
                     if (fid_arg == m_afid) {
                         m_num_arith_terms++;
@@ -199,13 +199,13 @@ void static_features::update_core(expr * e) {
                 }
             }
             break;
-        case OP_AND:
+        case OP_AND: 
             m_num_ands++;
             break;
         case OP_OR:
             m_num_ors++;
             break;
-        case OP_IFF:
+        case OP_IFF: 
             m_num_iffs++;
             break;
         }
@@ -274,8 +274,8 @@ void static_features::update_core(expr * e) {
             if (is_bool(e))
                 inc_theory_atoms(fid);
             else
-                inc_theory_terms(fid);
-            if (to_app(e)->get_num_args() == 0)
+                inc_theory_terms(fid); 
+            if (to_app(e)->get_num_args() == 0) 
                 m_num_interpreted_constants++;
         }
         if (fid == m_afid) {
@@ -316,7 +316,7 @@ void static_features::update_core(expr * e) {
             unsigned num_args = to_app(e)->get_num_args();
             for (unsigned i = 0; i < num_args; i++) {
                 expr * arg   = to_app(e)->get_arg(i);
-                sort * arg_s = m_manager.get_sort(arg);
+                sort * arg_s = m_manager.get_sort(arg); 
                 if (!m_manager.is_uninterp(arg_s)) {
                     family_id fid_arg = arg_s->get_family_id();
                     if (fid_arg != fid && fid_arg != null_family_id) {
@@ -346,7 +346,7 @@ void static_features::process(expr * e, bool form_ctx, bool or_and_ctx, bool ite
     if (is_marked(e)) {
         m_num_sharing++;
         return;
-    }
+    }	
     if (stack_depth > m_max_stack_depth) {
         return;
     }
@@ -360,7 +360,7 @@ void static_features::process(expr * e, bool form_ctx, bool or_and_ctx, bool ite
         set_depth(e, get_depth(body)+1);
         return;
     }
-
+    
     bool form_ctx_new   = false;
     bool or_and_ctx_new = false;
     bool ite_ctx_new    = false;
@@ -371,8 +371,8 @@ void static_features::process(expr * e, bool form_ctx, bool or_and_ctx, bool ite
             form_ctx_new = m_manager.is_bool(e);
             ite_ctx_new  = true;
             break;
-        case OP_AND:
-        case OP_OR:
+        case OP_AND: 
+        case OP_OR: 
             form_ctx_new   = true;
             or_and_ctx_new = true;
             break;
@@ -381,7 +381,7 @@ void static_features::process(expr * e, bool form_ctx, bool or_and_ctx, bool ite
             break;
         }
     }
-
+    
     unsigned depth = 0;
     unsigned form_depth = 0;
     unsigned or_and_depth = 0;
@@ -536,7 +536,7 @@ void static_features::display_primitive(std::ostream & out) const {
     out << "NUM_NESTED_FORMULAS " << m_num_nested_formulas << "\n";
     out << "NUM_BOOL_EXPRS " << m_num_bool_exprs << "\n";
     out << "NUM_BOOL_CONSTANTS " << m_num_bool_constants << "\n";
-    out << "NUM_FORMULA_TREES " << m_num_formula_trees << "\n";
+    out << "NUM_FORMULA_TREES " << m_num_formula_trees << "\n"; 
     out << "MAX_FORMULA_DEPTH " << m_max_formula_depth << "\n";
     out << "SUM_FORMULA_DEPTH " << m_sum_formula_depth << "\n";
     out << "NUM_OR_AND_TREES " << m_num_or_and_trees << "\n";

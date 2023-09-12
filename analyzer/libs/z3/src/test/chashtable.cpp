@@ -7,8 +7,8 @@ Module Name:
 
 Abstract:
 
-    Hashtable with chaining.
-
+    Hashtable with chaining.  
+    
 Author:
 
     Leonardo de Moura (leonardo) 2011-04-14.

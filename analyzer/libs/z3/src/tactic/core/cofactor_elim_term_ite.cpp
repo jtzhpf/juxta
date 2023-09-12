@@ -32,7 +32,7 @@ struct cofactor_elim_term_ite::imp {
     bool               m_cofactor_equalities;
     volatile bool      m_cancel;
 
-    void checkpoint() {
+    void checkpoint() { 
         cooperate("cofactor ite");
         if (memory::get_allocation_size() > m_max_memory)
             throw tactic_exception(TACTIC_MAX_MEMORY_MSG);
@@ -48,7 +48,7 @@ struct cofactor_elim_term_ite::imp {
             unsigned m_form_ctx:1;
             frame(expr * t, bool form_ctx):m_t(t), m_first(true), m_form_ctx(form_ctx) {}
         };
-
+        
         ast_manager &       m;
         imp &               m_owner;
         obj_hashtable<expr> m_candidates;
@@ -57,18 +57,18 @@ struct cofactor_elim_term_ite::imp {
         svector<frame>      m_frame_stack;
 
         analyzer(ast_manager & _m, imp & owner):m(_m), m_owner(owner) {}
-
+        
         void push_frame(expr * t, bool form_ctx) {
             m_frame_stack.push_back(frame(t, form_ctx && m.is_bool(t)));
         }
-
+        
         void visit(expr * t, bool form_ctx, bool & visited) {
             if (!m_processed.is_marked(t)) {
                 visited = false;
                 push_frame(t, form_ctx);
             }
         }
-
+        
         void save_candidate(expr * t, bool form_ctx) {
             if (!form_ctx)
                 return;
@@ -103,7 +103,7 @@ struct cofactor_elim_term_ite::imp {
             // and it contains a term if-then-else.
             m_candidates.insert(t);
         }
-
+        
         void operator()(expr * t) {
             SASSERT(m.is_bool(t));
             push_frame(t, true);
@@ -115,7 +115,7 @@ struct cofactor_elim_term_ite::imp {
                 TRACE("cofactor", tout << "processing, form_ctx: " << form_ctx << "\n" << mk_bounded_pp(t, m) << "\n";);
 
                 m_owner.checkpoint();
-
+                
                 if (m_processed.is_marked(t)) {
                     save_candidate(t, form_ctx);
                     m_frame_stack.pop_back();
@@ -128,7 +128,7 @@ struct cofactor_elim_term_ite::imp {
                     m_frame_stack.pop_back();
                     continue;
                 }
-
+                
                 if (fr.m_first) {
                     fr.m_first   = false;
                     bool visited = true;
@@ -141,7 +141,7 @@ struct cofactor_elim_term_ite::imp {
                     if (!visited)
                         continue;
                 }
-
+                
                 if (is_app(t)) {
                     unsigned num_args = to_app(t)->get_num_args();
                     unsigned i;
@@ -167,18 +167,18 @@ struct cofactor_elim_term_ite::imp {
         }
     };
 
-    expr * get_first(expr * t) {
+    expr * get_first(expr * t) { 
         TRACE("cofactor", tout << mk_ismt2_pp(t, m) << "\n";);
         typedef std::pair<expr *, unsigned> frame;
-        expr_fast_mark1         visited;
-        sbuffer<frame>          stack;
+        expr_fast_mark1         visited;            
+        sbuffer<frame>          stack;    
         stack.push_back(frame(t, 0));
         while (!stack.empty()) {
         start:
             checkpoint();
             frame & fr  = stack.back();
             expr * curr = fr.first;
-            if (m.is_term_ite(curr))
+            if (m.is_term_ite(curr)) 
                 return to_app(curr)->get_arg(0);
             switch (curr->get_kind()) {
             case AST_VAR:
@@ -230,9 +230,9 @@ struct cofactor_elim_term_ite::imp {
         TRACE("cofactor", tout << mk_ismt2_pp(t, m) << "\n";);
         typedef std::pair<expr *, unsigned> frame;
         obj_map<expr, unsigned> occs;
-        expr_fast_mark1         visited;
-        sbuffer<frame>          stack;
-
+        expr_fast_mark1         visited;            
+        sbuffer<frame>          stack;    
+        
         stack.push_back(frame(t, 0));
         while (!stack.empty()) {
         start:
@@ -340,11 +340,11 @@ struct cofactor_elim_term_ite::imp {
             m_mk_app(m, owner.m_params) {
         }
 
-        bool max_steps_exceeded(unsigned num_steps) const {
+        bool max_steps_exceeded(unsigned num_steps) const { 
             m_owner.checkpoint();
             return false;
         }
-
+        
         bool pre_visit(expr * t) {
             return true;
         }
@@ -365,7 +365,7 @@ struct cofactor_elim_term_ite::imp {
                 if (m_owner.m_cofactor_equalities && m.is_eq(t, lhs, rhs)) {
                     if (m.is_unique_value(lhs)) {
                         m_term  = rhs;
-                        m_value = to_app(lhs);
+                        m_value = to_app(lhs); 
                         TRACE("cofactor", tout << "term:\n" << mk_ismt2_pp(m_term, m) << "\nvalue: " << mk_ismt2_pp(m_value, m) << "\n";);
                     }
                     else if (m.is_unique_value(rhs)) {
@@ -377,9 +377,9 @@ struct cofactor_elim_term_ite::imp {
                 // TODO: bounds
             }
         }
-
+        
         bool rewrite_patterns() const { return false; }
-
+        
         br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) {
             result_pr = 0;
             return m_mk_app.mk_core(f, num, args, result);
@@ -387,24 +387,24 @@ struct cofactor_elim_term_ite::imp {
 
         bool get_subst(expr * s, expr * & t, proof * & pr) {
             pr = 0;
-
+            
             if (s == m_atom) {
                 t = m_sign ? m.mk_false() : m.mk_true();
                 return true;
             }
-
+            
             if (s == m_term && m_value != 0) {
                 t = m_value;
                 return true;
             }
-
+            
             // TODO: handle simple bounds
             // Example: s is of the form (<= s 10) and m_term == s, and m_upper is 9
             // then rewrite to true.
-
+            
             return false;
         }
-
+    
     };
 
     struct cofactor_rw : rewriter_tpl<cofactor_rw_cfg> {
@@ -420,7 +420,7 @@ struct cofactor_elim_term_ite::imp {
             reset();
         }
     };
-
+    
     struct main_rw_cfg : public default_rewriter_cfg {
         ast_manager &               m;
         imp &                       m_owner;
@@ -437,16 +437,16 @@ struct cofactor_elim_term_ite::imp {
             m_cache_domain(_m) {
         }
 
-        bool max_steps_exceeded(unsigned num_steps) const {
+        bool max_steps_exceeded(unsigned num_steps) const { 
             m_owner.checkpoint();
             return false;
         }
-
-        bool pre_visit(expr * t) {
+        
+        bool pre_visit(expr * t) { 
             return m.is_bool(t) && !is_quantifier(t);
         }
-
-        bool get_subst(expr * s, expr * & t, proof * & t_pr) {
+        
+        bool get_subst(expr * s, expr * & t, proof * & t_pr) { 
             if (m_candidates.contains(s)) {
                 t_pr = 0;
 
@@ -471,7 +471,7 @@ struct cofactor_elim_term_ite::imp {
                     m_cofactor.set_cofactor_atom(c);
                     m_cofactor(curr, pos_cofactor);
                     expr_ref neg_c(m);
-                    neg_c = m.is_not(c) ? to_app(c)->get_arg(0) : m.mk_not(c);
+                    neg_c = m.is_not(c) ? to_app(c)->get_arg(0) : m.mk_not(c);                    
                     m_cofactor.set_cofactor_atom(neg_c);
                     m_cofactor(curr, neg_cofactor);
                     curr = m.mk_ite(c, pos_cofactor, neg_cofactor);
@@ -500,7 +500,7 @@ struct cofactor_elim_term_ite::imp {
         obj_hashtable<expr>  m_has_term_ite;
         svector<frame>       m_frames;
         cofactor_rw          m_cofactor;
-
+        
         bottom_up_elim(ast_manager & _m, imp & owner):
             m(_m),
             m_owner(owner),
@@ -519,7 +519,7 @@ struct cofactor_elim_term_ite::imp {
                 case OP_DISTINCT:
                     if (m.is_bool(to_app(t)->get_arg(0)))
                         return false;
-                    else
+                    else 
                         return true;
                 default:
                     return false;
@@ -527,7 +527,7 @@ struct cofactor_elim_term_ite::imp {
             }
             return true;
         }
-
+        
         void cofactor(expr * t, expr_ref & r) {
             unsigned step = 0;
             TRACE("cofactor", tout << "cofactor target:\n" << mk_ismt2_pp(t, m) << "\n";);
@@ -546,7 +546,7 @@ struct cofactor_elim_term_ite::imp {
                 m_cofactor.set_cofactor_atom(c);
                 m_cofactor(curr, pos_cofactor);
                 expr_ref neg_c(m);
-                neg_c = m.is_not(c) ? to_app(c)->get_arg(0) : m.mk_not(c);
+                neg_c = m.is_not(c) ? to_app(c)->get_arg(0) : m.mk_not(c);                    
                 m_cofactor.set_cofactor_atom(neg_c);
                 m_cofactor(curr, neg_cofactor);
                 if (pos_cofactor == neg_cofactor) {
@@ -561,7 +561,7 @@ struct cofactor_elim_term_ite::imp {
                 else {
                     curr = m.mk_ite(c, pos_cofactor, neg_cofactor);
                 }
-                TRACE("cofactor",
+                TRACE("cofactor", 
                       tout << "cofactor_ite step: " << step << "\n";
                       tout << "cofactor: " << mk_ismt2_pp(c, m) << "\n";
                       tout << mk_ismt2_pp(curr, m) << "\n";);
@@ -574,7 +574,7 @@ struct cofactor_elim_term_ite::imp {
                 visited = false;
             }
         }
-
+        
         void operator()(expr * t, expr_ref & r) {
             ptr_vector<expr> new_args;
             SASSERT(m_frames.empty());
@@ -666,7 +666,7 @@ struct cofactor_elim_term_ite::imp {
     void operator()(expr * t, expr_ref & r) {
 #if 0
         analyzer proc(m, *this);
-        proc(t);
+        proc(t); 
         main_rw rw(m, *this, proc.m_candidates);
         rw(t, r);
 #else
@@ -697,14 +697,14 @@ void cofactor_elim_term_ite::collect_param_descrs(param_descrs & r) {
 void cofactor_elim_term_ite::operator()(expr * t, expr_ref & r) {
     m_imp->operator()(t, r);
 }
-
+    
 void cofactor_elim_term_ite::set_cancel(bool f) {
     if (m_imp)
         m_imp->set_cancel(f);
 }
 
 void cofactor_elim_term_ite::cleanup() {
-    ast_manager & m = m_imp->m;
+    ast_manager & m = m_imp->m;    
     imp * d = alloc(imp, m, m_params);
     #pragma omp critical (tactic_cancel)
     {

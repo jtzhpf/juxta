@@ -9,7 +9,7 @@ Abstract:
 
     SAT simplification procedures that use a "full" occurrence list:
     Subsumption, Blocked Clause Removal, Variable Elimination, ...
-
+    
 
 Author:
 
@@ -82,7 +82,7 @@ namespace sat {
 
         bool                   m_subsumption;
         unsigned               m_subsumption_limit;
-
+        
         // stats
         unsigned               m_num_blocked_clauses;
         unsigned               m_num_subsumed;
@@ -134,7 +134,7 @@ namespace sat {
         void mark_as_not_learned_core(watch_list & wlist, literal l2);
         void mark_as_not_learned(literal l1, literal l2);
         void subsume();
-
+        
         void cleanup_watches();
         void cleanup_clauses(clause_vector & cs, bool learned, bool vars_eliminated, bool in_use_lists);
 
@@ -144,7 +144,7 @@ namespace sat {
         lbool value(literal l) const;
         watch_list & get_wlist(literal l);
         watch_list const & get_wlist(literal l) const;
-
+        
         struct blocked_clause_elim;
         void elim_blocked_clauses();
 
@@ -177,7 +177,7 @@ namespace sat {
 
         void updt_params(params_ref const & p);
         static void collect_param_descrs(param_descrs & d);
-
+        
         void free_memory();
 
         void collect_statistics(statistics & st) const;

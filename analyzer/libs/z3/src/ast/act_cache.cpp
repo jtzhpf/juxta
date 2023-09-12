@@ -31,7 +31,7 @@ Notes:
   That is, client code never executed find(t)
   Similarly, an entry
        t -> (s, 1)
-  also maps the key t to value s, but signs that key t was already accessed
+  also maps the key t to value s, but signs that key t was already accessed 
   by client code.
 
   When a new key/value pair is inserted the flag is 0.
@@ -41,7 +41,7 @@ Notes:
   of the form
        t -> (s, 0)
   That is, it is the number of keys that were never accessed by cliend code.
-
+  
   The cache maintains at most m_max_unused entries.
   When the maximum number of unused entries exceeds m_max_unused, then
   the cache will delete the oldest unused entry.
@@ -58,7 +58,7 @@ void act_cache::compress_queue() {
     SASSERT(m_qhead > 0);
     unsigned sz = m_queue.size();
     unsigned j = 0;
-    for (unsigned i = m_qhead; i < sz; i++, j++) {
+    for (unsigned i = m_qhead; i < sz; i++, j++) { 
         m_queue[j] = m_queue[i];
     }
     m_queue.shrink(j);
@@ -92,7 +92,7 @@ act_cache::act_cache(ast_manager & m, unsigned max_unused):
     m_max_unused(max_unused) {
     init();
 }
-
+ 
 act_cache::~act_cache() {
     dec_refs();
 }
@@ -162,7 +162,7 @@ void act_cache::insert(expr * k, expr * v) {
     }
     else if (UNTAG(expr*, entry.m_value) == v) {
         // already there
-        DEBUG_CODE(expected_tag = GET_TAG(entry.m_value););
+        DEBUG_CODE(expected_tag = GET_TAG(entry.m_value);); 
     }
     else {
         // replacing old entry
@@ -171,7 +171,7 @@ void act_cache::insert(expr * k, expr * v) {
         entry.m_value = v;
         SASSERT(GET_TAG(entry.m_value) == 0);
         // replaced old entry, and reset the tag.
-        DEBUG_CODE(expected_tag = 0;);
+        DEBUG_CODE(expected_tag = 0;); 
     }
     DEBUG_CODE({
         expr * v2;

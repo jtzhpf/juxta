@@ -40,9 +40,9 @@ namespace Duality {
 	datalog::context &m_ctx;
 
     public:
-        dl_interface(datalog::context& ctx);
+        dl_interface(datalog::context& ctx); 
         ~dl_interface();
-
+        
         lbool query(expr* query);
 
         void cancel();
@@ -60,15 +60,15 @@ namespace Duality {
         unsigned get_num_levels(func_decl* pred);
 
         expr_ref get_cover_delta(int level, func_decl* pred);
-
+       
         void add_cover(int level, func_decl* pred, expr* property);
-
+               
         void updt_params();
 
         model_ref get_model();
 
         proof_ref get_proof();
-
+        
 	duality_data *dd(){return _d;}
 
     private:

@@ -22,13 +22,13 @@ Notes:
 #include"ast.h"
 
 /**
-   \brief Pull nested quantifiers in a formula.
-
+   \brief Pull nested quantifiers in a formula. 
+   
    \warning It assumes the input formula is in NNF.
 
    \remark pull_quant(F) is a quantifier if F contains a quantifier.
-
-   \remark If pull_quant(F) is a quantifier then its weight is
+   
+   \remark If pull_quant(F) is a quantifier then its weight is 
    Min{weight(Q') | Q' is a quantifier nested in F}
 */
 class pull_quant {

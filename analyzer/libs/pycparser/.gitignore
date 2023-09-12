@@ -13,5 +13,3 @@ parser.out
 *.rej
 .tox
 utils/z.c
-*.egg-info
-

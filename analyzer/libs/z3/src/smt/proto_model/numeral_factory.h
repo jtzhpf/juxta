@@ -27,7 +27,7 @@ class numeral_factory : public simple_factory<rational> {
 public:
     numeral_factory(ast_manager & m, family_id fid):simple_factory<rational>(m, fid) {}
     virtual ~numeral_factory() {}
-};
+};    
 
 class arith_factory : public numeral_factory {
     arith_util     m_util;

@@ -25,7 +25,7 @@ Revision History:
 namespace datalog {
 
     class parser {
-    public:
+    public:        
         static parser * create(context& ctx, ast_manager & ast_manager);
 
         virtual ~parser() {}
@@ -35,7 +35,7 @@ namespace datalog {
     };
 
     class wpa_parser {
-    public:
+    public:        
         static wpa_parser * create(context& ctx, ast_manager & ast_manager);
 
         virtual ~wpa_parser() {}

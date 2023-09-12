@@ -26,7 +26,7 @@ Revision History:
 template<typename T, unsigned INITIAL_SIZE=16, typename D = delete_proc<T> >
 class ptr_scoped_buffer : private ptr_buffer<T, INITIAL_SIZE> {
     D m_deallocator;
-    void deallocate_all() {
+    void deallocate_all() { 
         typename ptr_buffer<T, INITIAL_SIZE>::iterator it  = ptr_buffer<T, INITIAL_SIZE>::begin();
         typename ptr_buffer<T, INITIAL_SIZE>::iterator end = ptr_buffer<T, INITIAL_SIZE>::end();
         for (; it != end; ++it)

@@ -30,9 +30,9 @@ Revision History:
 
 void myInvalidParameterHandler(
     const wchar_t* expression,
-    const wchar_t* function,
-    const wchar_t* file,
-    unsigned int line,
+    const wchar_t* function, 
+    const wchar_t* file, 
+    unsigned int line, 
     uintptr_t pReserved)
 {
     // no-op
@@ -91,13 +91,13 @@ void disable_error_msg_prefix() {
 static void string2ostream(std::ostream& out, char const* msg) {
     svector<char>  buff;
     buff.resize(10);
-    BEGIN_ERR_HANDLER();
+    BEGIN_ERR_HANDLER();                            
     while (true) {
-        int nc = PRF(buff.c_ptr(), buff.size(), msg);
+        int nc = PRF(buff.c_ptr(), buff.size(), msg);                                                
         if (nc >= 0 && nc < static_cast<int>(buff.size()))
             break; // success
-        buff.resize(buff.size()*2 + 1);
-    }
+        buff.resize(buff.size()*2 + 1);             
+    }         
     END_ERR_HANDLER();
     out << buff.c_ptr();
 }
@@ -113,7 +113,7 @@ void format2ostream(std::ostream & out, char const* msg, va_list args) {
 #endif
     BEGIN_ERR_HANDLER();
     while (true) {
-        int nc = VPRF(buff.c_ptr(), buff.size(), msg, args);
+        int nc = VPRF(buff.c_ptr(), buff.size(), msg, args);                                                
 #if !defined(_WINDOWS) && defined(_AMD64_)
 	// For some strange reason, on Linux 64-bit version, va_list args is reset by vsnprintf.
 	// Z3 crashes when trying to use va_list args again.
@@ -122,7 +122,7 @@ void format2ostream(std::ostream & out, char const* msg, va_list args) {
 	END_ERR_HANDLER();
 	if (nc < 0) {
 	  // vsnprintf didn't work, so we just print the msg
-	  out << msg;
+	  out << msg; 
 	  return;
 	}
 	if (nc >= static_cast<int>(buff.size())) {
@@ -134,9 +134,9 @@ void format2ostream(std::ostream & out, char const* msg, va_list args) {
 #else
         if (nc >= 0 && nc < static_cast<int>(buff.size()))
             break; // success
-        buff.resize(buff.size()*2 + 1);
+        buff.resize(buff.size()*2 + 1);             
 #endif
-    }
+    }                   
     END_ERR_HANDLER();
     out << buff.c_ptr();
 }

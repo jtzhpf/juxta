@@ -31,7 +31,7 @@ public:
     typedef typename f_manager::numeral numeral;
 
     im_float_config(f_manager & m, unsigned ebits = 11, unsigned sbits = 53):m_manager(m, ebits, sbits) {}
-
+    
     struct interval {
         numeral   m_lower;
         numeral   m_upper;
@@ -58,7 +58,7 @@ public:
     void set_upper_is_open(interval & a, bool v) {}
     void set_lower_is_inf(interval & a, bool v) { if (v) m_manager.m().mk_ninf(m_manager.ebits(), m_manager.sbits(), a.m_lower); }
     void set_upper_is_inf(interval & a, bool v) { if (v) m_manager.m().mk_pinf(m_manager.ebits(), m_manager.sbits(), a.m_upper); }
-
+    
     // Reference to numeral manager
     numeral_manager & m() const { return const_cast<numeral_manager&>(m_manager); }
 };

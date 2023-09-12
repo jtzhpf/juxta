@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Constructor.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -24,16 +24,16 @@ public class Constructor extends Z3Object
 {
 	/**
 	 * The number of fields of the constructor.
-	 * @throws Z3Exception
+	 * @throws Z3Exception 
 	 **/
 	public int getNumFields() throws Z3Exception
-	{
+	{	
 		return n;
 	}
 
 	/**
 	 * The function declaration of the constructor.
-	 * @throws Z3Exception
+	 * @throws Z3Exception 
 	 **/
 	public FuncDecl ConstructorDecl() throws Z3Exception
 	{
@@ -41,12 +41,12 @@ public class Constructor extends Z3Object
 	    Native.LongPtr tester = new Native.LongPtr();
 	    long[] accessors = new long[n];
         Native.queryConstructor(getContext().nCtx(), getNativeObject(), n, constructor, tester, accessors);
-        return new FuncDecl(getContext(), constructor.value);
+        return new FuncDecl(getContext(), constructor.value);         
 	}
 
 	/**
 	 * The function declaration of the tester.
-	 * @throws Z3Exception
+	 * @throws Z3Exception 
 	 **/
 	public FuncDecl getTesterDecl() throws Z3Exception
 	{
@@ -59,7 +59,7 @@ public class Constructor extends Z3Object
 
 	/**
 	 * The function declarations of the accessors
-	 * @throws Z3Exception
+	 * @throws Z3Exception 
 	 **/
 	public FuncDecl[] getAccessorDecls() throws Z3Exception
 	{
@@ -69,7 +69,7 @@ public class Constructor extends Z3Object
         Native.queryConstructor(getContext().nCtx(), getNativeObject(), n, constructor, tester, accessors);
         FuncDecl[] t = new FuncDecl[n];
         for (int i = 0; i < n; i++)
-            t[i] = new FuncDecl(getContext(), accessors[i]);
+            t[i] = new FuncDecl(getContext(), accessors[i]); 
         return t;
 	}
 

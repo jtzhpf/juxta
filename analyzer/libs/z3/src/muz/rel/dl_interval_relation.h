@@ -45,7 +45,7 @@ namespace datalog {
         class filter_identical_fn;
         class filter_interpreted_fn;
         friend class interval_relation;
-
+       
         interval unite(interval const& src1, interval const& src2);
         interval widen(interval const& src1, interval const& src2);
         interval meet(interval const& src1, interval const& src2, bool& is_empty);
@@ -60,17 +60,17 @@ namespace datalog {
         virtual relation_base * mk_full(func_decl* p, const relation_signature & s);
         virtual relation_join_fn * mk_join_fn(const relation_base & t1, const relation_base & t2,
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2);
-        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
-        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len,
+        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle);
-        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src,
+        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
-        virtual relation_union_fn * mk_widen_fn(const relation_base & tgt, const relation_base & src,
+        virtual relation_union_fn * mk_widen_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
-        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * identical_cols);
-        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value,
+        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value, 
             unsigned col);
         virtual relation_mutator_fn * mk_filter_interpreted_fn(const relation_base & t, app * condition);
 
@@ -79,7 +79,7 @@ namespace datalog {
 
     private:
         static interval_relation& get(relation_base& r);
-        static interval_relation const & get(relation_base const& r);
+        static interval_relation const & get(relation_base const& r);   
 
         bool is_linear(expr* e, unsigned& pos, unsigned& neg, rational& k, bool is_pos) const;
 
@@ -91,8 +91,8 @@ namespace datalog {
         bool is_eq(app* cond, unsigned& x, rational& k, unsigned& y) const;
     };
 
-
-    class interval_relation : public vector_relation<interval> {
+    
+    class interval_relation : public vector_relation<interval> {              
         friend class interval_relation_plugin;
         friend class interval_relation_plugin::filter_equal_fn;
     public:
@@ -103,15 +103,15 @@ namespace datalog {
         virtual interval_relation * clone() const;
         virtual interval_relation * complement(func_decl*) const;
         virtual void to_formula(expr_ref& fml) const;
-        interval_relation_plugin& get_plugin() const;
+        interval_relation_plugin& get_plugin() const; 
 
         void filter_interpreted(app* cond);
         virtual bool is_precise() const { return false; }
 
     private:
 
-        virtual interval mk_intersect(interval const& t1, interval const& t2, bool& is_empty) const {
-            return get_plugin().meet(t1, t2, is_empty);
+        virtual interval mk_intersect(interval const& t1, interval const& t2, bool& is_empty) const { 
+            return get_plugin().meet(t1, t2, is_empty); 
         }
 
         virtual interval mk_unite(interval const& t1, interval const& t2) const { return get_plugin().unite(t1,t2); }
@@ -120,7 +120,7 @@ namespace datalog {
 
         virtual bool is_subset_of(interval const& t1, interval const& t2) const { NOT_IMPLEMENTED_YET(); return false; }
 
-        virtual bool is_full(interval const& t) const {
+        virtual bool is_full(interval const& t) const { 
             return interval_relation_plugin::is_infinite(t);
         }
 
@@ -135,8 +135,8 @@ namespace datalog {
         void mk_intersect(unsigned idx, interval const& i);
 
     };
-
+        
 };
 
-#endif
+#endif 
 

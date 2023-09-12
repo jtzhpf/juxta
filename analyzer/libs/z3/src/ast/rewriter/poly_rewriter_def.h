@@ -42,7 +42,7 @@ void poly_rewriter<Config>::get_param_descrs(param_descrs & r) {
 }
 
 template<typename Config>
-expr * poly_rewriter<Config>::mk_add_app(unsigned num_args, expr * const * args) {
+expr * poly_rewriter<Config>::mk_add_app(unsigned num_args, expr * const * args) { 
     switch (num_args) {
     case 0: return mk_numeral(numeral(0));
     case 1: return args[0];
@@ -66,13 +66,13 @@ expr * poly_rewriter<Config>::get_power_body(expr * t, rational & k) {
 }
 
 template<typename Config>
-expr * poly_rewriter<Config>::mk_mul_app(unsigned num_args, expr * const * args) {
+expr * poly_rewriter<Config>::mk_mul_app(unsigned num_args, expr * const * args) { 
     switch (num_args) {
-    case 0:
+    case 0: 
         return mk_numeral(numeral(1));
-    case 1:
+    case 1: 
         return args[0];
-    default:
+    default: 
         if (use_power()) {
             rational k_prev;
             expr * prev = get_power_body(args[0], k_prev);
@@ -87,7 +87,7 @@ expr * poly_rewriter<Config>::mk_mul_app(unsigned num_args, expr * const * args)
                     new_args.push_back(m().mk_app(get_fid(), power_decl_kind(), 2, pargs));     \
                 }                                                                               \
             }
-
+ 
             for (unsigned i = 1; i < num_args; i++) {
                 expr * arg = get_power_body(args[i], k);
                 if (arg == prev) {
@@ -121,7 +121,7 @@ expr * poly_rewriter<Config>::mk_mul_app(numeral const & c, expr * arg) {
     }
     else {
         expr * new_args[2] = { mk_numeral(c), arg };
-        return mk_mul_app(2, new_args);
+        return mk_mul_app(2, new_args); 
     }
 }
 
@@ -138,7 +138,7 @@ br_status poly_rewriter<Config>::mk_flat_mul_core(unsigned num_args, expr * cons
                 break;
         }
         if (i < num_args) {
-            // input has nested monomials.
+            // input has nested monomials. 
             ptr_buffer<expr> flat_args;
             // we need the todo buffer to handle: (* (* c (* x_1 ... x_n)) (* d (* y_1 ... y_n)))
             ptr_buffer<expr> todo;
@@ -178,7 +178,7 @@ br_status poly_rewriter<Config>::mk_flat_mul_core(unsigned num_args, expr * cons
             return st;
         }
     }
-    return mk_nflat_mul_core(num_args, args, result);
+    return mk_nflat_mul_core(num_args, args, result);    
 }
 
 
@@ -186,10 +186,10 @@ template<typename Config>
 struct poly_rewriter<Config>::mon_pw_lt {
     poly_rewriter<Config> & m_owner;
     mon_pw_lt(poly_rewriter<Config> & o):m_owner(o) {}
-
-    bool operator()(expr * n1, expr * n2) const {
+    
+    bool operator()(expr * n1, expr * n2) const { 
         rational k;
-        return lt(m_owner.get_power_body(n1, k),
+        return lt(m_owner.get_power_body(n1, k), 
                   m_owner.get_power_body(n2, k));
     }
 };
@@ -200,8 +200,8 @@ br_status poly_rewriter<Config>::mk_nflat_mul_core(unsigned num_args, expr * con
     SASSERT(num_args >= 2);
     // cheap case
     numeral a;
-    if (num_args == 2 && is_numeral(args[0], a) && !a.is_one() && !a.is_zero() &&
-        (is_var(args[1]) || to_app(args[1])->get_decl()->get_family_id() != get_fid()))
+    if (num_args == 2 && is_numeral(args[0], a) && !a.is_one() && !a.is_zero() && 
+        (is_var(args[1]) || to_app(args[1])->get_decl()->get_family_id() != get_fid())) 
         return BR_FAILED;
     numeral c(1);
     unsigned num_coeffs = 0;
@@ -219,7 +219,7 @@ br_status poly_rewriter<Config>::mk_nflat_mul_core(unsigned num_args, expr * con
                 num_add++;
         }
     }
-
+    
     normalize(c);
     // (* c_1 ... c_n) --> c_1*...*c_n
     if (num_coeffs == num_args) {
@@ -256,18 +256,18 @@ br_status poly_rewriter<Config>::mk_nflat_mul_core(unsigned num_args, expr * con
                 return BR_FAILED;
             }
         }
-
+        
         if (num_add == 0 || m_hoist_cmul) {
             SASSERT(!is_add(var) || m_hoist_cmul);
             if (num_args == 2 && args[1] == var) {
-                DEBUG_CODE({
+                DEBUG_CODE({ 
                     numeral c_prime;
                     SASSERT(is_numeral(args[0], c_prime) && c == c_prime);
                 });
                 // it is already simplified
                 return BR_FAILED;
             }
-
+            
             // (* c_1 ... c_n x) --> (* c_1*...*c_n x)
             result = mk_mul_app(c, var);
             return BR_DONE;
@@ -301,7 +301,7 @@ br_status poly_rewriter<Config>::mk_nflat_mul_core(unsigned num_args, expr * con
             new_args.push_back(curr);
             prev = curr;
         }
-        TRACE("poly_rewriter",
+        TRACE("poly_rewriter", 
               for (unsigned i = 0; i < new_args.size(); i++) {
                   if (i > 0)
                       tout << (lt(new_args[i-1], new_args[i]) ? " < " : " !< ");
@@ -526,7 +526,7 @@ br_status poly_rewriter<Config>::mk_nflat_add_core(unsigned num_args, expr * con
     }
     normalize(c);
     SASSERT(m_sort_sums || ordered);
-    TRACE("sort_sums",
+    TRACE("sort_sums", 
           tout << "ordered: " << ordered << "\n";
           for (unsigned i = 0; i < num_args; i++) tout << mk_ismt2_pp(args[i], m()) << "\n";);
 
@@ -572,7 +572,7 @@ br_status poly_rewriter<Config>::mk_nflat_add_core(unsigned num_args, expr * con
                 SASSERT(pos != UINT_MAX);
                 a = coeffs[pos];
                 normalize(a);
-                if (!a.is_zero())
+                if (!a.is_zero()) 
                     new_args.push_back(mk_mul_app(a, pp));
             }
         }
@@ -596,7 +596,7 @@ br_status poly_rewriter<Config>::mk_nflat_add_core(unsigned num_args, expr * con
         SASSERT(!has_multiple);
         if (ordered && !m_hoist_mul && !m_hoist_cmul) {
             if (num_coeffs == 0)
-                return BR_FAILED;
+                return BR_FAILED; 
             if (num_coeffs == 1 && is_numeral(args[0], a) && !a.is_zero())
                 return BR_FAILED;
         }
@@ -615,10 +615,10 @@ br_status poly_rewriter<Config>::mk_nflat_add_core(unsigned num_args, expr * con
         else if (!ordered) {
             if (c.is_zero())
                 std::sort(new_args.c_ptr(), new_args.c_ptr() + new_args.size(), ast_to_lt());
-            else
+            else 
                 std::sort(new_args.c_ptr() + 1, new_args.c_ptr() + new_args.size(), ast_to_lt());
         }
-        result = mk_add_app(new_args.size(), new_args.c_ptr());
+        result = mk_add_app(new_args.size(), new_args.c_ptr());        
         if (hoist_multiplication(result)) {
             return BR_REWRITE_FULL;
         }
@@ -664,7 +664,7 @@ br_status poly_rewriter<Config>::mk_sub(unsigned num_args, expr * const * args, 
 
 /**
    \brief Cancel/Combine monomials that occur is the left and right hand sides.
-
+   
    \remark If move = true, then all non-constant monomials are moved to the left-hand-side.
 */
 template<typename Config>
@@ -713,7 +713,7 @@ br_status poly_rewriter<Config>::cancel_monomials(expr * lhs, expr * rhs, bool m
     }
 
     normalize(c);
-
+    
     if (!has_multiple && num_coeffs <= 1) {
         if (move) {
             if (is_numeral(rhs))
@@ -724,7 +724,7 @@ br_status poly_rewriter<Config>::cancel_monomials(expr * lhs, expr * rhs, bool m
                 return BR_FAILED;
         }
     }
-
+    
     buffer<numeral>  coeffs;
     m_expr2pos.reset();
     for (unsigned i = 0; i < lhs_sz; i++) {
@@ -780,7 +780,7 @@ br_status poly_rewriter<Config>::cancel_monomials(expr * lhs, expr * rhs, bool m
                 new_lhs_monomials.push_back(mk_mul_app(a, pp));
         }
     }
-
+    
     ptr_buffer<expr> new_rhs_monomials;
     new_rhs_monomials.push_back(0); // save space for coefficient if needed
     for (unsigned i = 0; i < rhs_sz; i++) {
@@ -810,7 +810,7 @@ br_status poly_rewriter<Config>::cancel_monomials(expr * lhs, expr * rhs, bool m
 
     bool c_at_rhs = false;
     if (move) {
-        if (m_sort_sums) {
+        if (m_sort_sums) { 
             // + 1 to skip coefficient
             std::sort(new_lhs_monomials.begin() + 1, new_lhs_monomials.end(), ast_to_lt());
         }
@@ -877,7 +877,7 @@ bool poly_rewriter<Config>::hoist_multiplication(expr_ref& som) {
             if (mul_map.find(e, j) && valid[j] && j != k) {
                 m_curr_sort = m().get_sort(adds[k]);
                 adds[j]  = merge_muls(adds[j], adds[k]);
-                adds[k]  = mk_numeral(rational(0));
+                adds[k]  = mk_numeral(rational(0)); 
                 valid[j] = false;
                 valid[k] = false;
                 change = true;
@@ -891,10 +891,10 @@ bool poly_rewriter<Config>::hoist_multiplication(expr_ref& som) {
     if (!change) {
         return false;
     }
-
+    
     som = mk_add_app(adds.size(), adds.c_ptr());
-
-
+    
+       
     return true;
 }
 
@@ -920,9 +920,9 @@ expr* poly_rewriter<Config>::merge_muls(expr* x, expr* y) {
     }
     m_curr_sort = m().get_sort(x);
     SASSERT(k > 0);
-    SASSERT(m1.size() >= k);
+    SASSERT(m1.size() >= k); 
     SASSERT(m2.size() >= k);
-    expr* args[2] = { mk_mul_app(m1.size()-k, m1.c_ptr()+k),
+    expr* args[2] = { mk_mul_app(m1.size()-k, m1.c_ptr()+k), 
                       mk_mul_app(m2.size()-k, m2.c_ptr()+k) };
     if (k == m1.size()) {
         m1.push_back(0);

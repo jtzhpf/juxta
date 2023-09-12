@@ -26,7 +26,7 @@ Revision History:
 #include "dl_util.h"
 
 namespace pdr {
-
+    
     class smt_context_manager;
 
     class smt_context {
@@ -59,7 +59,7 @@ namespace pdr {
     class _smt_context : public smt_context {
         smt::kernel & m_context;
     public:
-        _smt_context(smt::kernel & ctx, smt_context_manager& p, app* pred);
+        _smt_context(smt::kernel & ctx, smt_context_manager& p, app* pred); 
         virtual ~_smt_context() {}
         virtual void assert_expr(expr* e);
         virtual lbool check(expr_ref_vector& assumptions);
@@ -71,11 +71,11 @@ namespace pdr {
         virtual expr* get_unsat_core_expr(unsigned i) { return m_context.get_unsat_core_expr(i); }
     };
 
-    // TBD:
+    // TBD: 
     class sat_context : public smt_context {
         sat::solver m_solver;
     public:
-        sat_context(smt::kernel & ctx, smt_context_manager& p, app* pred);
+        sat_context(smt::kernel & ctx, smt_context_manager& p, app* pred); 
         virtual ~sat_context() {}
         virtual void assert_expr(expr* e);
         virtual lbool check(expr_ref_vector& assumptions);
@@ -95,11 +95,11 @@ namespace pdr {
         ptr_vector<smt::kernel>  m_contexts;
         unsigned                 m_num_contexts;
         app_ref_vector           m_predicate_list;
-        func_decl_set            m_predicate_set;
+        func_decl_set            m_predicate_set;        
     public:
         smt_context_manager(smt_params& fp, unsigned max_num_contexts, ast_manager& m);
         ~smt_context_manager();
-        smt_context* mk_fresh();
+        smt_context* mk_fresh();                
         void collect_statistics(statistics& st) const;
         void reset_statistics();
         bool is_aux_predicate(func_decl* p) const { return m_predicate_set.contains(p); }

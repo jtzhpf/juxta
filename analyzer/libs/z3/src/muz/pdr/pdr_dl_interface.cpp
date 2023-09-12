@@ -37,10 +37,10 @@ Revision History:
 
 using namespace pdr;
 
-dl_interface::dl_interface(datalog::context& ctx) :
+dl_interface::dl_interface(datalog::context& ctx) : 
     engine_base(ctx.get_manager(), "pdr"),
-    m_ctx(ctx),
-    m_pdr_rules(ctx),
+    m_ctx(ctx), 
+    m_pdr_rules(ctx), 
     m_old_rules(ctx),
     m_context(0),
     m_refs(ctx.get_manager()) {
@@ -54,12 +54,12 @@ dl_interface::~dl_interface() {
 
 
 //
-// Check if the new rules are weaker so that we can
+// Check if the new rules are weaker so that we can 
 // re-use existing context.
-//
+// 
 void dl_interface::check_reset() {
     datalog::rule_set const& new_rules = m_ctx.get_rules();
-    datalog::rule_ref_vector const& old_rules = m_old_rules.get_rules();
+    datalog::rule_ref_vector const& old_rules = m_old_rules.get_rules();  
     bool is_subsumed = !old_rules.empty();
     for (unsigned i = 0; is_subsumed && i < new_rules.get_num_rules(); ++i) {
         is_subsumed = false;
@@ -110,7 +110,7 @@ lbool dl_interface::query(expr * query) {
         datalog::mk_slice* slice = alloc(datalog::mk_slice, m_ctx);
         transformer.register_plugin(slice);
         m_ctx.transform_rules(transformer);
-
+        
         // track sliced predicates.
         obj_map<func_decl, func_decl*> const& preds = slice->get_predicates();
         obj_map<func_decl, func_decl*>::iterator it  = preds.begin();
@@ -124,7 +124,7 @@ lbool dl_interface::query(expr * query) {
 
     if (m_ctx.get_params().unfold_rules() > 0) {
         unsigned num_unfolds = m_ctx.get_params().unfold_rules();
-        datalog::rule_transformer transf1(m_ctx), transf2(m_ctx);
+        datalog::rule_transformer transf1(m_ctx), transf2(m_ctx);        
         transf1.register_plugin(alloc(datalog::mk_coalesce, m_ctx));
         transf2.register_plugin(alloc(datalog::mk_unfold, m_ctx));
         if (m_ctx.get_params().coalesce_rules()) {
@@ -149,7 +149,7 @@ lbool dl_interface::query(expr * query) {
     m_ctx.record_transformed_rules();
     m_ctx.reopen();
     m_ctx.replace_rules(old_rules);
-
+    
     scoped_restore_proof _sc(m); // update_rules may overwrite the proof mode.
 
     m_context->set_proof_converter(m_ctx.get_proof_converter());
@@ -157,13 +157,13 @@ lbool dl_interface::query(expr * query) {
     m_context->set_query(query_pred);
     m_context->set_axioms(bg_assertion);
     m_context->update_rules(m_pdr_rules);
-
+    
     if (m_pdr_rules.get_rules().empty()) {
         m_context->set_unsat();
         IF_VERBOSE(1, model_smt2_pp(verbose_stream(), m, *m_context->get_model(),0););
         return l_false;
     }
-
+        
     return m_context->solve();
 
 }

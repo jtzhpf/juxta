@@ -50,27 +50,27 @@ namespace datalog {
         acc.push_back(instruction::mk_load(m_context.get_manager(), pred, reg));
     }
 
-    void compiler::make_join(reg_idx t1, reg_idx t2, const variable_intersection & vars, reg_idx & result,
+    void compiler::make_join(reg_idx t1, reg_idx t2, const variable_intersection & vars, reg_idx & result, 
             instruction_block & acc) {
         relation_signature res_sig;
-        relation_signature::from_join(m_reg_signatures[t1], m_reg_signatures[t2], vars.size(),
+        relation_signature::from_join(m_reg_signatures[t1], m_reg_signatures[t2], vars.size(), 
             vars.get_cols1(), vars.get_cols2(), res_sig);
         result = get_fresh_register(res_sig);
         acc.push_back(instruction::mk_join(t1, t2, vars.size(), vars.get_cols1(), vars.get_cols2(), result));
     }
 
-    void compiler::make_join_project(reg_idx t1, reg_idx t2, const variable_intersection & vars,
+    void compiler::make_join_project(reg_idx t1, reg_idx t2, const variable_intersection & vars, 
             const unsigned_vector & removed_cols, reg_idx & result, instruction_block & acc) {
         relation_signature aux_sig;
         relation_signature sig1 = m_reg_signatures[t1];
         relation_signature sig2 = m_reg_signatures[t2];
         relation_signature::from_join(sig1, sig2, vars.size(), vars.get_cols1(), vars.get_cols2(), aux_sig);
         relation_signature res_sig;
-        relation_signature::from_project(aux_sig, removed_cols.size(), removed_cols.c_ptr(),
+        relation_signature::from_project(aux_sig, removed_cols.size(), removed_cols.c_ptr(), 
             res_sig);
         result = get_fresh_register(res_sig);
 
-        acc.push_back(instruction::mk_join_project(t1, t2, vars.size(), vars.get_cols1(),
+        acc.push_back(instruction::mk_join_project(t1, t2, vars.size(), vars.get_cols1(), 
             vars.get_cols2(), removed_cols.size(), removed_cols.c_ptr(), result));
     }
 
@@ -101,7 +101,7 @@ namespace datalog {
         acc.push_back(instruction::mk_clone(src, result));
     }
 
-    void compiler::make_union(reg_idx src, reg_idx tgt, reg_idx delta, bool use_widening,
+    void compiler::make_union(reg_idx src, reg_idx tgt, reg_idx delta, bool use_widening, 
             instruction_block & acc) {
         SASSERT(m_reg_signatures[src]==m_reg_signatures[tgt]);
         SASSERT(delta==execution_context::void_register || m_reg_signatures[src]==m_reg_signatures[delta]);
@@ -114,7 +114,7 @@ namespace datalog {
         }
     }
 
-    void compiler::make_projection(reg_idx src, unsigned col_cnt, const unsigned * removed_cols,
+    void compiler::make_projection(reg_idx src, unsigned col_cnt, const unsigned * removed_cols, 
             reg_idx & result, instruction_block & acc) {
         SASSERT(col_cnt>0);
 
@@ -178,15 +178,15 @@ namespace datalog {
         }
     }
 
-    void compiler::make_add_unbound_column(rule* compiled_rule, unsigned col_idx, func_decl* pred, reg_idx src, const relation_sort & s, reg_idx & result,
+    void compiler::make_add_unbound_column(rule* compiled_rule, unsigned col_idx, func_decl* pred, reg_idx src, const relation_sort & s, reg_idx & result, 
             bool & dealloc, instruction_block & acc) {
-
+        
         TRACE("dl", tout << "Adding unbound column " << mk_pp(pred, m_context.get_manager()) << "\n";);
-            IF_VERBOSE(3, {
-                    expr_ref e(m_context.get_manager());
-                    compiled_rule->to_formula(e);
-                    verbose_stream() << "Compiling unsafe rule column " << col_idx << "\n"
-                                     << mk_ismt2_pp(e, m_context.get_manager()) << "\n";
+            IF_VERBOSE(3, { 
+                    expr_ref e(m_context.get_manager()); 
+                    compiled_rule->to_formula(e); 
+                    verbose_stream() << "Compiling unsafe rule column " << col_idx << "\n" 
+                                     << mk_ismt2_pp(e, m_context.get_manager()) << "\n"; 
                 });
         reg_idx total_table;
         if (!m_total_registers.find(s, pred, total_table)) {
@@ -195,7 +195,7 @@ namespace datalog {
             sig.push_back(s);
             m_top_level_code.push_back(instruction::mk_total(sig, pred, total_table));
             m_total_registers.insert(s, pred, total_table);
-        }
+        }       
         if(src == execution_context::void_register) {
             result = total_table;
             dealloc = false;
@@ -207,7 +207,7 @@ namespace datalog {
         }
     }
 
-    void compiler::make_full_relation(func_decl* pred, const relation_signature & sig, reg_idx & result,
+    void compiler::make_full_relation(func_decl* pred, const relation_signature & sig, reg_idx & result, 
             instruction_block & acc) {
         SASSERT(sig.empty());
         TRACE("dl", tout << "Adding unbound column " << mk_pp(pred, m_context.get_manager()) << "\n";);
@@ -220,7 +220,7 @@ namespace datalog {
     }
 
 
-    void compiler::make_duplicate_column(reg_idx src, unsigned col, reg_idx & result,
+    void compiler::make_duplicate_column(reg_idx src, unsigned col, reg_idx & result, 
             instruction_block & acc) {
 
         relation_signature & src_sig = m_reg_signatures[src];
@@ -244,7 +244,7 @@ namespace datalog {
         make_dealloc_non_void(single_col_reg, acc);
     }
 
-    void compiler::make_rename(reg_idx src, unsigned cycle_len, const unsigned * permutation_cycle,
+    void compiler::make_rename(reg_idx src, unsigned cycle_len, const unsigned * permutation_cycle, 
             reg_idx & result, instruction_block & acc) {
         relation_signature res_sig;
         relation_signature::from_rename(m_reg_signatures[src], cycle_len, permutation_cycle, res_sig);
@@ -253,11 +253,11 @@ namespace datalog {
     }
 
     void compiler::make_assembling_code(
-        rule* compiled_rule,
-        func_decl* head_pred,
-        reg_idx    src,
+        rule* compiled_rule, 
+        func_decl* head_pred, 
+        reg_idx    src, 
         const svector<assembling_column_info> & acis0,
-        reg_idx &           result,
+        reg_idx &           result, 
         bool & dealloc,
         instruction_block & acc) {
 
@@ -406,7 +406,7 @@ namespace datalog {
         result=curr;
     }
 
-    void compiler::get_local_indexes_for_projection(app * t, var_counter & globals, unsigned ofs,
+    void compiler::get_local_indexes_for_projection(app * t, var_counter & globals, unsigned ofs, 
             unsigned_vector & res) {
         unsigned n = t->get_num_args();
         for(unsigned i = 0; i<n; i++) {
@@ -431,9 +431,9 @@ namespace datalog {
         get_local_indexes_for_projection(t2, counter, t1->get_num_args(), res);
     }
 
-    void compiler::compile_rule_evaluation_run(rule * r, reg_idx head_reg, const reg_idx * tail_regs,
+    void compiler::compile_rule_evaluation_run(rule * r, reg_idx head_reg, const reg_idx * tail_regs, 
             reg_idx delta_reg, bool use_widening, instruction_block & acc) {
-
+        
         ast_manager & m = m_context.get_manager();
         m_instruction_observer.start_rule(r);
 
@@ -449,7 +449,7 @@ namespace datalog {
         reg_idx single_res;
         expr_ref_vector single_res_expr(m);
 
-        //used to save on filter_identical instructions where the check is already done
+        //used to save on filter_identical instructions where the check is already done 
         //by the join operation
         unsigned second_tail_arg_ofs;
 
@@ -605,7 +605,7 @@ namespace datalog {
             // create binding
             expr_ref_vector binding(m);
             binding.resize(filter_vars.size()+1);
-
+            
             for (unsigned v = 0; v < filter_vars.size(); ++v) {
                 if (!filter_vars[v])
                     continue;
@@ -747,7 +747,7 @@ namespace datalog {
             app * t = r->get_tail(tail_index);
             ptr_vector<sort> t_vars;
             ::get_free_vars(t, t_vars);
-
+            
             if(t_vars.empty()) {
                 expr_ref simplified(m);
                 m_context.get_rewriter()(t, simplified);
@@ -769,7 +769,7 @@ namespace datalog {
             //create binding
             expr_ref_vector binding(m);
             binding.resize(max_var+1);
-
+            
             for(unsigned v = 0; v < t_vars.size(); ++v) {
                 if (!t_vars[v]) {
                     continue;
@@ -865,7 +865,7 @@ namespace datalog {
         m_instruction_observer.finish_rule();
     }
 
-    void compiler::add_unbound_columns_for_negation(rule* r, func_decl* pred, reg_idx& single_res, expr_ref_vector& single_res_expr,
+    void compiler::add_unbound_columns_for_negation(rule* r, func_decl* pred, reg_idx& single_res, expr_ref_vector& single_res_expr, 
                                                     bool & dealloc, instruction_block & acc) {
         uint_set pos_vars;
         u_map<expr*> neg_vars;
@@ -962,13 +962,13 @@ namespace datalog {
         ast_mark m_visited;
 
         void traverse(T v) {
-            SASSERT(!m_stack_content.is_marked(v));
-            if(m_visited.is_marked(v) || m_removed.contains(v)) {
+            SASSERT(!m_stack_content.is_marked(v)); 
+            if(m_visited.is_marked(v) || m_removed.contains(v)) { 
                 return;
             }
 
             m_stack.push_back(v);
-            m_stack_content.mark(v, true);
+            m_stack_content.mark(v, true); 
             m_visited.mark(v, true);
 
             const item_set & deps = m_deps.get_deps(v);
@@ -976,7 +976,7 @@ namespace datalog {
             item_set::iterator end = deps.end();
             for(; it!=end; ++it) {
                 T d = *it;
-                if(m_stack_content.is_marked(d)) {
+                if(m_stack_content.is_marked(d)) { 
                     //TODO: find the best vertex to remove in the cycle
                     m_removed.insert(v);
                     break;
@@ -986,11 +986,11 @@ namespace datalog {
             SASSERT(m_stack.back()==v);
 
             m_stack.pop_back();
-            m_stack_content.mark(v, false);
+            m_stack_content.mark(v, false); 
         }
 
     public:
-        cycle_breaker(rule_dependencies & deps, item_set & removed)
+        cycle_breaker(rule_dependencies & deps, item_set & removed) 
             : m_deps(deps), m_removed(removed) { SASSERT(removed.empty()); }
 
         void operator()() {
@@ -1004,7 +1004,7 @@ namespace datalog {
         }
     };
 
-    void compiler::detect_chains(const func_decl_set & preds, func_decl_vector & ordered_preds,
+    void compiler::detect_chains(const func_decl_set & preds, func_decl_vector & ordered_preds, 
             func_decl_set & global_deltas) {
 
         SASSERT(ordered_preds.empty());
@@ -1084,7 +1084,7 @@ namespace datalog {
         }
     }
 
-    void compiler::make_inloop_delta_transition(const pred2idx & global_head_deltas,
+    void compiler::make_inloop_delta_transition(const pred2idx & global_head_deltas, 
             const pred2idx & global_tail_deltas, const pred2idx & local_deltas, instruction_block & acc) {
         //move global head deltas into tail ones
         pred2idx::iterator gdit = global_head_deltas.begin();
@@ -1104,7 +1104,7 @@ namespace datalog {
     }
 
     void compiler::compile_loop(const func_decl_vector & head_preds, const func_decl_set & widened_preds,
-            const pred2idx & global_head_deltas, const pred2idx & global_tail_deltas,
+            const pred2idx & global_head_deltas, const pred2idx & global_tail_deltas, 
             const pred2idx & local_deltas, instruction_block & acc) {
         instruction_block * loop_body = alloc(instruction_block);
         loop_body->set_observer(&m_instruction_observer);
@@ -1131,15 +1131,15 @@ namespace datalog {
     }
 
     void compiler::compile_dependent_rules(const func_decl_set & head_preds,
-            const pred2idx * input_deltas, const pred2idx & output_deltas,
+            const pred2idx * input_deltas, const pred2idx & output_deltas, 
             bool add_saturation_marks, instruction_block & acc) {
-
+        
         if (!output_deltas.empty()) {
             func_decl_set::iterator hpit = head_preds.begin();
             func_decl_set::iterator hpend = head_preds.end();
             for(; hpit!=hpend; ++hpit) {
                 if(output_deltas.contains(*hpit)) {
-                    //we do not support retrieving deltas for rules that are inside a recursive
+                    //we do not support retrieving deltas for rules that are inside a recursive 
                     //stratum, since we would have to maintain this 'global' delta through the loop
                     //iterations
                     NOT_IMPLEMENTED_YET();
@@ -1188,7 +1188,7 @@ namespace datalog {
 
 
         if(add_saturation_marks) {
-            //after the loop finishes, all predicates in the group are saturated,
+            //after the loop finishes, all predicates in the group are saturated, 
             //so we may mark them as such
             func_decl_set::iterator fdit = head_preds.begin();
             func_decl_set::iterator fdend = head_preds.end();
@@ -1218,8 +1218,8 @@ namespace datalog {
         return true;
     }
 
-    void compiler::compile_nonrecursive_stratum(const func_decl_set & preds,
-            const pred2idx * input_deltas, const pred2idx & output_deltas,
+    void compiler::compile_nonrecursive_stratum(const func_decl_set & preds, 
+            const pred2idx * input_deltas, const pred2idx & output_deltas, 
             bool add_saturation_marks, instruction_block & acc) {
         //non-recursive stratum always has just one head predicate
         SASSERT(preds.size()==1);
@@ -1260,8 +1260,8 @@ namespace datalog {
         return true;
     }
 
-    void compiler::compile_strats(const rule_stratifier & stratifier,
-            const pred2idx * input_deltas, const pred2idx & output_deltas,
+    void compiler::compile_strats(const rule_stratifier & stratifier, 
+            const pred2idx * input_deltas, const pred2idx & output_deltas, 
             bool add_saturation_marks, instruction_block & acc) {
         rule_set::pred_set_vector strats = stratifier.get_strats();
         rule_set::pred_set_vector::const_iterator sit = strats.begin();
@@ -1290,13 +1290,13 @@ namespace datalog {
                 compile_nonrecursive_stratum(strat_preds, input_deltas, output_deltas, add_saturation_marks, acc);
             }
             else {
-                compile_dependent_rules(strat_preds, input_deltas, output_deltas,
+                compile_dependent_rules(strat_preds, input_deltas, output_deltas, 
                     add_saturation_marks, acc);
             }
         }
     }
 
-    void compiler::do_compilation(instruction_block & execution_code,
+    void compiler::do_compilation(instruction_block & execution_code, 
             instruction_block & termination_code) {
 
         unsigned rule_cnt=m_rule_set.get_num_rules();
@@ -1318,10 +1318,10 @@ namespace datalog {
                 ensure_predicate_loaded(r->get_tail(j)->get_decl(), acc);
             }
         }
-
+        
         pred2idx empty_pred2idx_map;
 
-        compile_strats(m_rule_set.get_stratifier(), static_cast<pred2idx *>(0),
+        compile_strats(m_rule_set.get_stratifier(), static_cast<pred2idx *>(0), 
             empty_pred2idx_map, true, execution_code);
 
 

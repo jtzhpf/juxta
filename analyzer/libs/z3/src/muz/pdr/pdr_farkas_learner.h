@@ -44,11 +44,11 @@ class farkas_learner {
     scoped_ptr<smt::kernel>  m_ctx;
     constr*                  m_constr;
 
-    //
+    // 
     // true:  produce a combined constraint by applying Farkas coefficients.
     // false: produce a conjunction of the negated literals from the theory lemmas.
     //
-    bool                     m_combine_farkas_coefficients;
+    bool                     m_combine_farkas_coefficients; 
 
 
     static smt_params get_proof_params(smt_params& orig_params);
@@ -71,7 +71,7 @@ class farkas_learner {
     bool try_ensure_lemma_in_language(expr_ref& lemma, expr* A, const func_decl_set& lang);
 
     bool is_farkas_lemma(ast_manager& m, expr* e);
-
+   
     void get_asserted(proof* p, expr_set const& bs, ast_mark& b_closed, obj_hashtable<expr>& lemma_set, expr_ref_vector& lemmas);
 
     bool is_pure_expr(func_decl_set const& symbs, expr* e) const;
@@ -84,14 +84,14 @@ public:
     ~farkas_learner();
 
     /**
-       All ast objects have the ast_manager which was passed as
+       All ast objects have the ast_manager which was passed as 
        an argument to the constructor (i.e. m_outer_mgr)
-
+       
        B is a conjunction of literals.
        A && B is unsat, equivalently A => ~B is valid
        Find a weakened B' such that
        A && B' is unsat and B' uses vocabulary (and constants) in common with A.
-       return lemmas to weaken B.
+       return lemmas to weaken B.     
     */
 
     bool get_lemma_guesses(expr * A, expr * B, expr_ref_vector& lemmas);

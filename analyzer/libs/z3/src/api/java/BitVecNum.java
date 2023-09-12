@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     BitVecNum.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -26,7 +26,7 @@ public class BitVecNum extends BitVecExpr
 {
     /**
      * Retrieve the int value.
-     *
+     * 
      * @throws Z3Exception
      **/
     public int getInt() throws Z3Exception
@@ -39,7 +39,7 @@ public class BitVecNum extends BitVecExpr
 
     /**
      * Retrieve the 64-bit int value.
-     *
+     * 
      * @throws Z3Exception
      **/
     public long getLong() throws Z3Exception

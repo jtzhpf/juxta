@@ -85,7 +85,7 @@ void * stack::top() const {
     SASSERT(!empty());
     size_t m = top_mark();
     void * r = mark2ptr(m);
-    if (external_ptr(m))
+    if (external_ptr(m)) 
         r = reinterpret_cast<void**>(r)[0];
     return r;
 }
@@ -99,7 +99,7 @@ void * stack::allocate_small(size_t size, bool external) {
         m_curr_ptr = ALIGN(char *, new_curr_ptr);
     }
     else {
-        allocate_page(top_mark());
+        allocate_page(top_mark()); 
         result = m_curr_ptr;
         m_curr_ptr += size;
         m_curr_ptr = ALIGN(char *, m_curr_ptr);
@@ -118,7 +118,7 @@ void * stack::allocate_big(size_t size) {
     SASSERT(m_curr_ptr <= m_curr_end_ptr);
     return r;
 }
-
+    
 void stack::deallocate() {
     SASSERT(m_curr_ptr > m_curr_page);
     SASSERT(m_curr_ptr <= m_curr_end_ptr);

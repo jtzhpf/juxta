@@ -33,7 +33,7 @@ static void tst1() {
     SASSERT(t.find(symbol("foo"), tmp) && tmp == 35);
     t.insert(symbol("foo"), 100);
     SASSERT(t.find(symbol("foo"), tmp) && tmp == 100);
-    t.end_scope();
+    t.end_scope(); 
     SASSERT(t.find(symbol("foo"), tmp) && tmp == 35);
     SASSERT(!t.contains(symbol("boo")));
     t.reset();

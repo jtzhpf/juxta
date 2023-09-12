@@ -32,9 +32,9 @@ protected:
     decl2expr                     m_interp;      //!< interpretation for uninterpreted constants
     decl2finterp                  m_finterp;     //!< interpretation for uninterpreted functions
     ptr_vector<func_decl>         m_decls;       //!< domain of m_interp
-    ptr_vector<func_decl>         m_const_decls;
-    ptr_vector<func_decl>         m_func_decls;
-
+    ptr_vector<func_decl>         m_const_decls; 
+    ptr_vector<func_decl>         m_func_decls;  
+    
 public:
     model_core(ast_manager & m):m_manager(m), m_ref_count(0) {}
     virtual ~model_core() {}
@@ -62,7 +62,7 @@ public:
     // Reference counting
     //
     void inc_ref() { ++m_ref_count; }
-    void dec_ref() {
+    void dec_ref() { 
         --m_ref_count;
         if (m_ref_count == 0) {
             dealloc(this);

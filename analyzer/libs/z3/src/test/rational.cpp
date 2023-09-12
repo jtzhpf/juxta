@@ -105,7 +105,7 @@ static void tst1() {
     SASSERT(rational(6) % rational(4) == rational(2));
     SASSERT(power(rational(2),0) == rational(1));
     SASSERT(power(rational(2),1) == rational(2));
-    SASSERT(power(rational(2),3) == rational(8));
+    SASSERT(power(rational(2),3) == rational(8));    
 }
 
 static void tst2() {
@@ -124,7 +124,7 @@ static void tst2() {
     SASSERT((r2 - r3).is_zero());
     // std::cout << "===> " << floor(r2) << "\n";
     {
-        rational r0("1/3000000000000000000000000");
+        rational r0("1/3000000000000000000000000");        
         SASSERT(ceil(r0).is_one());
         SASSERT(floor(-r0).is_minus_one());
         SASSERT(ceil(-r0).is_zero());
@@ -180,7 +180,7 @@ static void tst2() {
     SASSERT(rational(-1).is_int64());
     SASSERT(!(int64_max + rational(1)).is_int64());
     SASSERT(!(int64_min - rational(1)).is_int64());
-
+    
     // is_uint64
     SASSERT(int64_max.is_uint64());
     SASSERT(!int64_min.is_uint64());
@@ -202,7 +202,7 @@ static void tst2() {
     SASSERT(int64_min.get_int64() == INT64_MIN);
 
     // extended Euclid:
-
+    
 }
 
 void tst3() {
@@ -210,13 +210,13 @@ void tst3() {
     TRACE("rational", tout << "n1: " << n1 << "\n";);
     rational n2 = div(n1, rational(2));
     rational n3 = div(rational(2), n2);
-    TRACE("rational",
+    TRACE("rational", 
           tout << "n1: " << n1 << "\n";
           tout << "n2: " << n2 << "\n";
           tout << "n3: " << n3 << "\n";);
     rational n4 = n1 - rational(3);
     rational n5 = div(n4, rational(2));
-    TRACE("rational",
+    TRACE("rational", 
           tout << "n4: " << n4 << "\n";
           tout << "n5: " << n5 << "\n";);
     SASSERT(n5 == rational("2147483646"));
@@ -306,7 +306,7 @@ static void tst7() {
         rational gcd;
         extended_gcd(n, p, gcd, x, y);
         TRACE("gcd", tout << n << " " << p << ": " << gcd << " " << x << " " << y << "\n";);
-        SASSERT(!mod(n, rational(2)).is_one() || mod(n * x, p).is_one());
+        SASSERT(!mod(n, rational(2)).is_one() || mod(n * x, p).is_one()); 
     }
 }
 
@@ -386,7 +386,7 @@ static void tst9() {
 #define MAGNITUDE 10000
 
 static void tst10(bool use_ints) {
-    if (use_ints)
+    if (use_ints) 
         std::cout << "Testing multiplication performace using small ints\n";
     else
         std::cout << "Testing multiplication performace using small rationals\n";

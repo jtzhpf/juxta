@@ -13,7 +13,7 @@
 // Unit tests fail by asserting.
 // If they return, we assume the unit test succeeds
 // and print "PASS" to indicate success.
-//
+// 
 
 #define TST(MODULE) {				\
     std::string s("test ");			\
@@ -75,7 +75,7 @@ void display_usage() {
 void parse_cmd_line_args(int argc, char ** argv, bool& do_display_usage, bool& test_all) {
     int i = 1;
     while (i < argc) {
-	char * arg = argv[i];
+	char * arg = argv[i];    
 
 	if (arg[0] == '-' || arg[0] == '/') {
 	    char * opt_name = arg + 1;

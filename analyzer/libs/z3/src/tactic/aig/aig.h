@@ -27,7 +27,7 @@ class aig_lit;
 class aig_manager;
 
 class aig_exception : public tactic_exception {
-public:
+public:                                                
     aig_exception(char const * msg):tactic_exception(msg) {}
 };
 
@@ -61,7 +61,7 @@ public:
     ~aig_manager();
     void set_max_memory(unsigned long long max);
     aig_ref mk_aig(expr * n);
-    aig_ref mk_aig(goal const & g);
+    aig_ref mk_aig(goal const & g); 
     aig_ref mk_not(aig_ref const & r);
     aig_ref mk_and(aig_ref const & r1, aig_ref const & r2);
     aig_ref mk_or(aig_ref const & r1, aig_ref const & r2);

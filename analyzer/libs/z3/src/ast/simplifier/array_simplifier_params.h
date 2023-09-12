@@ -31,6 +31,6 @@ struct array_simplifier_params {
 
     void updt_params(params_ref const & _p);
 };
-
+    
 #endif /* _ARITH_SIMPLIFIER_PARAMS_H_ */
 

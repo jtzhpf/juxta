@@ -36,11 +36,11 @@ template<bool PRESERVE_ROOTS>
 static void tst1() {
     typedef parray_manager<int_parray_config<PRESERVE_ROOTS> > int_parray_manager;
     typedef typename int_parray_manager::ref int_array;
-
+    
     dummy_value_manager<int> vm;
     small_object_allocator   a;
     int_parray_manager m(vm, a);
-
+    
     int_array a1;
     int_array a2;
     int_array a3;
@@ -48,14 +48,14 @@ static void tst1() {
     m.mk(a1);
     SASSERT(m.size(a1) == 0);
     m.push_back(a1, 10, a2);
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";);
     SASSERT(m.size(a1) == 0);
     SASSERT(m.size(a2) == 1);
     m.push_back(a1, 20, a1);
     m.push_back(a1, 30, a1);
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";);
     SASSERT(m.get(a1, 0) == 20);
@@ -68,7 +68,7 @@ static void tst1() {
     SASSERT(m.size(a3) == 2);
     SASSERT(m.get(a3, 0) == 10);
     SASSERT(m.get(a3, 1) == 100);
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";
           m.display_info(tout, a3); tout << "\n";);
@@ -76,7 +76,7 @@ static void tst1() {
     SASSERT(m.get(a2, 0) == 10);
     SASSERT(m.get(a2, 1) == 50);
     SASSERT(m.size(a2) == 2);
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";
           m.display_info(tout, a3); tout << "\n";);
@@ -89,7 +89,7 @@ template<bool PRESERVE_ROOTS>
 static void tst2() {
     typedef parray_manager<int_parray_config<PRESERVE_ROOTS> > int_parray_manager;
     typedef typename int_parray_manager::ref int_array;
-
+    
     TRACE("parray", tout << "tst2\n";);
     dummy_value_manager<int> vm;
     small_object_allocator   a;
@@ -97,18 +97,18 @@ static void tst2() {
 
     int_array a1;
     int_array a2;
-
-    for (unsigned i = 0; i < 100; i++)
+ 
+    for (unsigned i = 0; i < 100; i++) 
         m.push_back(a1, i);
     SASSERT(m.size(a1) == 100);
     m.push_back(a1, 100, a2);
-    for (unsigned i = 0; i < 10; i++)
+    for (unsigned i = 0; i < 10; i++) 
         m.push_back(a2, i+101);
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";);
     SASSERT(m.get(a1, 0) == 0);
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";);
     for (unsigned i = 0; i < m.size(a1); i++) {
@@ -117,16 +117,16 @@ static void tst2() {
     for (unsigned i = 0; i < m.size(a2); i++) {
         SASSERT(static_cast<unsigned>(m.get(a2, i)) == i);
     }
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";);
     m.unshare(a1);
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";);
     m.del(a1);
     m.del(a2);
-}
+}    
 
 template<bool PRESERVE_ROOTS>
 static void tst3() {
@@ -142,8 +142,8 @@ static void tst3() {
     int_array a2;
     int_array a3;
     int_array a4;
-
-    for (unsigned i = 0; i < 20; i++)
+ 
+    for (unsigned i = 0; i < 20; i++) 
         m.push_back(a1, i);
     SASSERT(m.size(a1) == 20);
     m.set(a1, 0, 1, a2);
@@ -159,18 +159,18 @@ static void tst3() {
     m.pop_back(a2, a4);
     m.pop_back(a4);
     m.push_back(a4, 30);
-
+    
     for (unsigned i = 0; i < 20; i++) {
         SASSERT(static_cast<unsigned>(m.get(a2, i)) == i+1);
     }
-    TRACE("parray",
+    TRACE("parray", 
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";
           m.display_info(tout, a3); tout << "\n";
           m.display_info(tout, a4); tout << "\n";
           );
     SASSERT(m.get(a1, 10) == 10);
-    TRACE("parray",
+    TRACE("parray", 
           tout << "after rerooting...\n";
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";
@@ -190,7 +190,7 @@ static void tst3() {
     }
     SASSERT(m.get(a4, 18) == 30);
     SASSERT(m.get(a3, 18) == 40);
-    TRACE("parray",
+    TRACE("parray", 
           tout << "after many gets...\n";
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";
@@ -198,7 +198,7 @@ static void tst3() {
           m.display_info(tout, a4); tout << "\n";
           );
     m.unshare(a1);
-    TRACE("parray",
+    TRACE("parray", 
           tout << "after unshare...\n";
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";
@@ -206,7 +206,7 @@ static void tst3() {
           m.display_info(tout, a4); tout << "\n";
           );
     m.reroot(a4);
-    TRACE("parray",
+    TRACE("parray", 
           tout << "after reroot...\n";
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";
@@ -214,7 +214,7 @@ static void tst3() {
           m.display_info(tout, a4); tout << "\n";
           );
     m.unshare(a2);
-    TRACE("parray",
+    TRACE("parray", 
           tout << "after second unshare...\n";
           m.display_info(tout, a1); tout << "\n";
           m.display_info(tout, a2); tout << "\n";
@@ -246,7 +246,7 @@ static void tst4() {
     TRACE("parray", tout << "tst4\n";);
     ast_manager m;
     expr_array_manager m2(m, m.get_allocator());
-
+    
     expr_array a1;
     expr_array a2;
 
@@ -261,12 +261,12 @@ static void tst4() {
     m2.push_back(a1, v3);
     m2.push_back(a2, v2);
     m2.pop_back(a1);
-    TRACE("parray",
+    TRACE("parray", 
           m2.display_info(tout, a1); tout << "\n";
           m2.display_info(tout, a2); tout << "\n";
           );
     m2.reroot(a1);
-    TRACE("parray",
+    TRACE("parray", 
           m2.display_info(tout, a1); tout << "\n";
           m2.display_info(tout, a2); tout << "\n";
           );
@@ -289,14 +289,14 @@ static void tst5() {
     std::cout << "max. heap size: " << static_cast<double>(mem)/static_cast<double>(1024*1024) << " Mbytes\n";
 
     m.copy(a1, a2);
-
+    
     for (unsigned i = 0; i < 1000000; i++) {
         m.set(a1, i % 100, m.mk_var(rand() % 100, m.mk_bool_sort()));
     }
 
     mem = memory::get_max_used_memory();
     std::cout << "max. heap size: " << static_cast<double>(mem)/static_cast<double>(1024*1024) << " Mbytes\n";
-
+    
     m.del(a2);
     m.del(a1);
 }

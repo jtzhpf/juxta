@@ -66,4 +66,4 @@ ocamlz3: z3.cma Makefile
 
 clean: Makefile
 	make -C $(SRC_ML) clean
-	rm -rf Makefile libz3stubs.$(A) libz3stubs_dbg.$(A) ocamlz3 ocamlz3.dSYM z3.$(O) z3.$(A) z3.cma z3.cmi z3.cmo z3.cmx z3.cmxa z3.ml z3.mli z3_stubs.$(O) z3_stubs.c z3_theory_stubs.$(O) z3_theory_stubs.c
+	rm -rf Makefile libz3stubs.$(A) libz3stubs_dbg.$(A) ocamlz3 ocamlz3.dSYM z3.$(O) z3.$(A) z3.cma z3.cmi z3.cmo z3.cmx z3.cmxa z3.ml z3.mli z3_stubs.$(O) z3_stubs.c z3_theory_stubs.$(O) z3_theory_stubs.c 

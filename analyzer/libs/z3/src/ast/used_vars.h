@@ -31,7 +31,7 @@ class used_vars {
     void process(expr * n, unsigned delta);
 
 public:
-
+    
     void operator()(expr * n) {
         m_found_vars.reset();
         process(n, 0);
@@ -49,7 +49,7 @@ public:
 
     sort * get(unsigned var_idx) const { return m_found_vars[var_idx]; }
     sort * contains(unsigned var_idx) const { return var_idx < m_found_vars.size() ? m_found_vars[var_idx] : 0; }
-
+    
     bool uses_all_vars(unsigned num_decls) const;
     bool uses_a_var(unsigned num_decls) const;
     unsigned get_num_vars() const;

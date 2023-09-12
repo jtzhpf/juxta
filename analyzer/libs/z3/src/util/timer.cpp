@@ -25,7 +25,7 @@ timer::timer(){
     m_watch = alloc(stopwatch);
     start();
 }
-
+ 
 timer::~timer() {
     dealloc(m_watch);
 }

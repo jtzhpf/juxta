@@ -1,6 +1,6 @@
 ############################################
 # Copyright (c) 2012 Microsoft Corporation
-#
+# 
 # Z3 project configuration files
 #
 # Author: Leonardo de Moura (leonardo)
@@ -71,8 +71,8 @@ def init_project_def():
     add_lib('ufbv_tactic', ['normal_forms', 'core_tactics', 'macros', 'smt_tactic', 'rewriter'], 'tactic/ufbv')
     add_lib('portfolio', ['smtlogic_tactics', 'ufbv_tactic', 'fpa_tactics', 'aig_tactic', 'fp',  'qe','sls_tactic', 'subpaving_tactic'], 'tactic/portfolio')
     add_lib('smtparser', ['portfolio'], 'parsers/smt')
-#    add_dll('foci2', ['util'], 'interp/foci2stub',
-#            dll_name='foci2',
+#    add_dll('foci2', ['util'], 'interp/foci2stub', 
+#            dll_name='foci2', 
 #            export_files=['foci2stub.cpp'])
 #    add_lib('interp', ['solver','foci2'])
     API_files = ['z3_api.h', 'z3_algebraic.h', 'z3_polynomial.h', 'z3_rcf.h', 'z3_interp.h']
@@ -80,9 +80,9 @@ def init_project_def():
             includes2install=['z3.h', 'z3_v1.h', 'z3_macros.h'] + API_files)
     add_exe('shell', ['api', 'sat', 'extra_cmds'], exe_name='z3')
     add_exe('test', ['api', 'fuzzing'], exe_name='test-z3', install=False)
-    add_dll('api_dll', ['api', 'sat', 'extra_cmds'], 'api/dll',
-            reexports=['api'],
-            dll_name='libz3',
+    add_dll('api_dll', ['api', 'sat', 'extra_cmds'], 'api/dll', 
+            reexports=['api'], 
+            dll_name='libz3', 
             static=build_static_lib(),
             export_files=API_files)
     add_dot_net_dll('dotnet', ['api_dll'], 'api/dotnet', dll_name='Microsoft.Z3', assembly_info_dir='Properties')
@@ -90,9 +90,9 @@ def init_project_def():
     add_hlib('cpp', 'api/c++', includes2install=['z3++.h'])
     set_z3py_dir('api/python')
     # Examples
-    add_cpp_example('cpp_example', 'c++')
-    add_cpp_example('iz3', 'interp')
-    add_cpp_example('z3_tptp', 'tptp')
+    add_cpp_example('cpp_example', 'c++') 
+    add_cpp_example('iz3', 'interp') 
+    add_cpp_example('z3_tptp', 'tptp') 
     add_c_example('c_example', 'c')
     add_c_example('maxsat')
     add_dotnet_example('dotnet_example', 'dotnet')

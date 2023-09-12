@@ -24,7 +24,7 @@ Revision History:
 
 struct static_features;
 namespace smt {
-
+    
     enum config_mode {
         CFG_BASIC,   // install theories based on user options
         CFG_LOGIC,   // install theories and configure Z3 based on the value of the parameter set-logic.
@@ -34,7 +34,7 @@ namespace smt {
     class context;
     /**
        \brief Object used to setup a logical context.
-
+       
        \warning In the current version, we can only setup a logical context at scope level 0,
        and before internalizing any formula. Auxiliary temporary contexts are used to avoid this
        limitation.
@@ -49,11 +49,11 @@ namespace smt {
         void setup_default();
         //
         // setup_<logic>() methods do not depend on static features of the formula. So, they are safe to use
-        // even in an incremental setting.
+        // even in an incremental setting. 
         //
-        // setup_<logic>(static_features & st) can only be used if the logical context will perform a single
+        // setup_<logic>(static_features & st) can only be used if the logical context will perform a single 
         // check.
-        //
+        // 
         void setup_QF_UF();
         void setup_QF_UF(static_features const & st);
         void setup_QF_RDL();
@@ -99,10 +99,10 @@ namespace smt {
         setup(context & c, smt_params & params);
         void mark_already_configured() { m_already_configured = true; }
         bool already_configured() const { return m_already_configured; }
-        bool set_logic(symbol logic) {
-            if (already_configured())
+        bool set_logic(symbol logic) { 
+            if (already_configured()) 
                 return false;
-            m_logic = logic;
+            m_logic = logic; 
             return true;
         }
         symbol const & get_logic() const { return m_logic; }

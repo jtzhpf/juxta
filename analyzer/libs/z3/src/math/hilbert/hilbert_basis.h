@@ -18,9 +18,9 @@ Author:
 
 Revision History:
 
-    Hilbert basis can be templatized
+    Hilbert basis can be templatized 
     based on traits that define numeral:
-    as rational, mpz, checked_int64
+    as rational, mpz, checked_int64 
     (checked or unchecked).
 
 --*/
@@ -56,13 +56,13 @@ class hilbert_basis {
     class index;
     class passive;
     class passive2;
-    struct offset_t {
-        unsigned m_offset;
-        offset_t(unsigned o) : m_offset(o) {}
+    struct offset_t { 
+        unsigned m_offset; 
+        offset_t(unsigned o) : m_offset(o) {} 
         offset_t(): m_offset(0) {}
         bool operator<(offset_t const& other) const {
             return m_offset < other.m_offset;
-        }
+        }        
     };
     enum sign_t { pos, neg, zero };
     struct stats {
@@ -76,10 +76,10 @@ class hilbert_basis {
         numeral* m_values;
     public:
         values(unsigned offset, numeral* v): m_values(v+offset) { }
-        numeral& weight()             { return m_values[-1]; } // value of a*x
-        numeral const& weight() const { return m_values[-1]; } // value of a*x
-        numeral& weight(int i)   { return m_values[-2-i]; } // value of b_i*x for 0 <= i < current inequality.
-        numeral const& weight(int i) const { return m_values[-2-i]; } // value of b_i*x
+        numeral& weight()             { return m_values[-1]; } // value of a*x 
+        numeral const& weight() const { return m_values[-1]; } // value of a*x 
+        numeral& weight(int i)   { return m_values[-2-i]; } // value of b_i*x for 0 <= i < current inequality. 
+        numeral const& weight(int i) const { return m_values[-2-i]; } // value of b_i*x 
         numeral& operator[](unsigned i) { return m_values[i]; } // value of x_i
         numeral const& operator[](unsigned i) const { return m_values[i]; } // value of x_i
         numeral const* operator()() const { return m_values; }
@@ -95,12 +95,12 @@ class hilbert_basis {
     svector<offset_t>  m_zero;       // zeros
     passive*           m_passive;    // passive set
     passive2*          m_passive2;   // passive set
-    volatile bool      m_cancel;
+    volatile bool      m_cancel;     
     stats              m_stats;
     index*             m_index;      // index of generated vectors
     unsigned_vector    m_ints;       // indices that can be both positive and negative
     unsigned           m_current_ineq;
-
+    
     bool               m_use_support;             // parameter: (associativity) resolve only against vectors that are initially in basis.
     bool               m_use_ordered_support;     // parameter: (commutativity) resolve in order
     bool               m_use_ordered_subsumption; // parameter
@@ -147,13 +147,13 @@ class hilbert_basis {
     bool vector_lt(offset_t i, offset_t j) const;
 
     values vec(offset_t offs) const;
-
+    
     void display(std::ostream& out, offset_t o) const;
     void display(std::ostream& out, values const & v) const;
     void display_ineq(std::ostream& out, num_vector const& v, bool is_eq) const;
 
 public:
-
+        
     hilbert_basis();
     ~hilbert_basis();
 
@@ -186,16 +186,16 @@ public:
     void get_basis_solution(unsigned i, rational_vector& v, bool& is_initial);
 
     unsigned get_num_ineqs() const { return m_ineqs.size(); }
-    void get_ge(unsigned i, rational_vector& v, rational& b, bool& is_eq);
+    void get_ge(unsigned i, rational_vector& v, rational& b, bool& is_eq);    
 
     void set_cancel(bool f) { m_cancel = f; }
 
     void display(std::ostream& out) const;
 
     void collect_statistics(statistics& st) const;
-    void reset_statistics();
+    void reset_statistics();     
 
 };
 
 
-#endif
+#endif 

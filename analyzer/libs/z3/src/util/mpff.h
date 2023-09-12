@@ -12,7 +12,7 @@ Abstract:
     For an IEEE compliant implementation, see mpf.h
 
     There are only two rounding modes: towards plus or minus inf.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-09-12
@@ -43,11 +43,11 @@ public:
         m_sig_idx(0),
         m_exponent(0) {
     }
-
-    void swap(mpff & other) {
+    
+    void swap(mpff & other) { 
         unsigned sign    = m_sign;    m_sign    = other.m_sign;    other.m_sign = sign;
         unsigned sig_idx = m_sig_idx; m_sig_idx = other.m_sig_idx; other.m_sig_idx = sig_idx;
-        std::swap(m_exponent, other.m_exponent);
+        std::swap(m_exponent, other.m_exponent); 
     }
 };
 
@@ -64,11 +64,11 @@ typedef mpq_manager<false> unsynch_mpq_manager;
 
 class mpff_manager {
     // Some restrictions on mpff numbers
-    //
-    // - The exponent is always a machine integer. The main point is that 2^(2^31) is a huge number,
-    //   we will not even be able to convert the mpff into mpq. Formulas that need this kind of huge number
-    //   are usually out-of-reach for Z3.
-    //
+    // 
+    // - The exponent is always a machine integer. The main point is that 2^(2^31) is a huge number, 
+    //   we will not even be able to convert the mpff into mpq. Formulas that need this kind of huge number 
+    //   are usually out-of-reach for Z3. 
+    // 
     // - The significand size is measured in words of 32-bit. The number of words is always even.
     //   This decision makes sure that the size (in bits) of mpff numbers is always a multiple of 64.
     //   Thus mpff objs can be easily packed in 64-bit machines.
@@ -79,16 +79,16 @@ class mpff_manager {
     // - All mpff numerals in a given manager use the same number of words for storing the significand.
     //   This is different from the mpf_manager where the same manager can be used to manipulate floating point numbers
     //   of different precision.
-    //
+    // 
     // - In the encoding used for mpff numbers, the most significand bit of the most significand word is always 1.
     //   The only exception is the number zero.
     //   For example, assuming we are using 64-bits for the significand, the number 1 is encoded as
     //         (sign = 0, significand = 0x800..0, exponent = -63)
     //   Note that, in this representation, the smallest positive integer is:
     //         (sign = 0, significand = 0x800..0, exponent = INT_MIN)
-    //   instead of
+    //   instead of 
     //         (sign = 0, significand = 0x000..1, exponent = INT_MIN)
-    //
+    // 
     // Remarks:
     //
     // - All values of type int, unsigned, int64 and uint64 can be precisely represented as mpff numerals.
@@ -101,10 +101,10 @@ class mpff_manager {
     //
     // - There are only two rounding modes: towards plus infinity and towards minus infinity.
     //   The rounding mode can be dynamically modified.
-    //
+    // 
     // - The mpff numerals are stored in a dynamic array.
     //   Type mpff is just an index (unsigned) into this array.
-
+    
     unsigned          m_precision;      //!< Number of words in the significand. Must be an even number.
     unsigned          m_precision_bits; //!< Number of bits in the significand.  Must be 32*m_precision.
     unsigned_vector   m_significands;   //!< Array containing all significands.
@@ -112,17 +112,17 @@ class mpff_manager {
     bool              m_to_plus_inf;    //!< If True, then round to plus infinity, otherwise to minus infinity
     id_gen            m_id_gen;
     static const unsigned MPFF_NUM_BUFFERS = 4;
-    svector<unsigned> m_buffers[MPFF_NUM_BUFFERS];
+    svector<unsigned> m_buffers[MPFF_NUM_BUFFERS];      
     svector<unsigned> m_set_buffer;
     mpff              m_one;
 
     unsigned * sig(mpff const & n) const { return m_significands.c_ptr() + (n.m_sig_idx * m_precision); }
-
+    
     void ensure_capacity(unsigned sig_idx) {
-        while (sig_idx >= m_capacity)
+        while (sig_idx >= m_capacity) 
             expand();
     }
-
+    
     void expand();
 
     void allocate_if_needed(mpff & n) {
@@ -136,7 +136,7 @@ class mpff_manager {
     void to_buffer(unsigned idx, mpff const & n) const;
     // copy n to buffer idx and add m_precision zeros.
     void to_buffer_ext(unsigned idx, mpff const & n) const;
-    // copy (and shift by m_precision_bits) n to buffer idx
+    // copy (and shift by m_precision_bits) n to buffer idx 
     void to_buffer_shifting(unsigned idx, mpff const & n) const;
 
     void inc_significand(unsigned * s, int64 & exp);
@@ -147,7 +147,7 @@ class mpff_manager {
     void set_max_significand(mpff & a);
     void set_big_exponent(mpff & a, int64 e);
     void set_exponent(mpff & a, int64 e) {
-        if (e > INT_MAX || e < INT_MIN)
+        if (e > INT_MAX || e < INT_MIN) 
             set_big_exponent(a, e);
         else
             a.m_exponent = static_cast<int>(e);
@@ -169,7 +169,7 @@ class mpff_manager {
     void significand_core(mpff const & n, mpz_manager<SYNCH> & m, mpz & r);
 
     void add_sub(bool is_sub, mpff const & a, mpff const & b, mpff & c);
-
+    
 public:
     typedef mpff numeral;
     static bool precise() { return false; }
@@ -178,7 +178,7 @@ public:
     class exception : public z3_exception {
         virtual char const * msg() const { return "multi-precision floating point (mpff) exception"; }
     };
-
+    
     class overflow_exception : public exception {
         virtual char const * msg() const { return "multi-precision floating point (mpff) overflow"; }
     };
@@ -186,7 +186,7 @@ public:
     class div0_exception : public exception {
         virtual char const * msg() const { return "multi-precision floating point (mpff) division by zero"; }
     };
-
+    
     mpff_manager(unsigned prec = 2, unsigned initial_capacity = 1024);
     ~mpff_manager();
 
@@ -199,7 +199,7 @@ public:
        \brief Return the exponent of n.
     */
     static int exponent(mpff const & n) { return n.m_exponent; }
-
+    
     /**
        \brief Update the exponent of n.
 
@@ -227,7 +227,7 @@ public:
        \brief Return true if n is an integer.
     */
     bool is_int(mpff const & n) const;
-
+    
     /**
        \brief Return true if n is zero.
     */
@@ -247,7 +247,7 @@ public:
        \brief Return true if n is non positive.
     */
     static bool is_nonpos(mpff const & n) { return !is_pos(n); }
-
+    
     /**
        \brief Return true if n is non negative.
     */
@@ -257,7 +257,7 @@ public:
        \brief Return true if the absolute value of n is 1.
      */
     bool is_abs_one(mpff const & n) const;
-
+    
     /**
        \brief Return true if n is one.
     */
@@ -292,12 +292,12 @@ public:
        \brief Return true if \c a is a non-negative integer and fits in an int64 machine integer.
     */
     bool is_uint64(mpff const & a) const;
-
+    
     /**
        \brief Delete the resources associated with n.
     */
     void del(mpff & n);
-
+    
     /**
        \brief a <- -a
     */
@@ -337,7 +337,7 @@ public:
 
     /**
        \brief c <- a / b
-
+       
        \pre !is_zero(b)
     */
     void div(mpff const & a, mpff const & b, mpff & c);
@@ -360,14 +360,14 @@ public:
     */
     bool is_power_of_two(mpff const & a, unsigned & k) const;
     bool is_power_of_two(mpff const & a) const;
-
+    
     bool eq(mpff const & a, mpff const & b) const;
     bool neq(mpff const & a, mpff const & b) const { return !eq(a, b); }
     bool lt(mpff const & a, mpff const & b) const;
     bool gt(mpff const & a, mpff const & b) const { return lt(b, a); }
     bool le(mpff const & a, mpff const & b) const { return !lt(b, a); }
     bool ge(mpff const & a, mpff const & b) const { return !lt(a, b); }
-
+    
     void set(mpff & n, int v);
     void set(mpff & n, unsigned v);
     void set(mpff & n, int64 v);
@@ -376,7 +376,7 @@ public:
     void set(mpff & n, int64 num, uint64 den);
     void set(mpff & n, mpff const & v);
     void set(mpff & n, unsynch_mpz_manager & m, mpz const & v);
-    void set(mpff & n, synch_mpz_manager & m, mpz const & v);
+    void set(mpff & n, synch_mpz_manager & m, mpz const & v); 
     void set(mpff & n, unsynch_mpq_manager & m, mpq const & v);
     void set(mpff & n, synch_mpq_manager & m, mpq const & v);
     void set_plus_epsilon(mpff & n);
@@ -398,29 +398,29 @@ public:
 
     /**
        \brief Update \c a to the next representable float.
-
+       
        Throws an exception if \c a is the maximal representable float.
     */
     void next(mpff & a);
     /**
        \brief Update \c a to the previous representable float.
-
+       
        Throws an exception if \c a is the minimal representable float.
     */
     void prev(mpff & a);
-
+    
     /**
        \brief Convert n into a mpz numeral.
-
+       
        \pre is_int(n)
-
+       
        \remark if exponent(n) is too big, we may run out of memory.
     */
     void to_mpz(mpff const & n, unsynch_mpz_manager & m, mpz & t);
 
     /**
        \brief Convert n into a mpz numeral.
-
+       
        \pre is_int(n)
 
        \remark if exponent(n) is too big, we may run out of memory.
@@ -440,7 +440,7 @@ public:
        \remark if exponent(n) is too big, we may run out of memory.
     */
     void to_mpq(mpff const & n, synch_mpq_manager & m, mpq & t);
-
+    
     /**
        \brief Return n as an int64.
 
@@ -457,7 +457,7 @@ public:
 
     /**
        \brief Return the biggest k s.t. 2^k <= a.
-
+       
        \remark Return 0 if a is not positive.
     */
     unsigned prev_power_of_two(mpff const & a);
@@ -470,7 +470,7 @@ public:
 
     std::string to_string(mpff const & a) const;
     std::string to_rational_string(mpff const & a) const;
-
+    
     bool check(mpff const & n) const;
 };
 

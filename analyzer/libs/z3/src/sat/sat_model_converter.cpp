@@ -32,7 +32,7 @@ namespace sat {
     void model_converter::reset() {
         m_entries.finalize();
     }
-
+    
     void model_converter::operator()(model & m) const {
         vector<entry>::const_iterator begin = m_entries.begin();
         vector<entry>::const_iterator it    = m_entries.end();
@@ -125,7 +125,7 @@ namespace sat {
         }
         return ok;
     }
-
+    
     model_converter::entry & model_converter::mk(kind k, bool_var v) {
         m_entries.push_back(entry(k, v));
         entry & e = m_entries.back();
@@ -218,7 +218,7 @@ namespace sat {
                 out << *it2;
             }
             out << ")";
-        }
+        }    
         out << ")\n";
     }
 

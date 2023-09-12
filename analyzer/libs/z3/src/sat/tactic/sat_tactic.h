@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Tactic for using the SAT solver and its preprocessing capabilities.
-
+    
 Author:
 
     Leonardo (leonardo) 2011-10-26

@@ -11,7 +11,7 @@ Abstract:
 
 Author:
 
-    Ken McMillan
+    Ken McMillan 
     Andrey Rybalchenko
     Nikolaj Bjorner (nbjorner) 2013-04-02
 
@@ -29,7 +29,7 @@ Revision History:
 namespace datalog {
 
 
-    // model converter:
+    // model converter: 
     // Given model for P^(x, y, i, a[i])
     // create model: P(x,y,a) == forall i . P^(x,y,i,a[i])
     // requires substitution and list of bound variables.
@@ -49,7 +49,7 @@ namespace datalog {
 
         virtual ~qa_model_converter() {}
 
-        virtual model_converter * translate(ast_translation & translator) {
+        virtual model_converter * translate(ast_translation & translator) { 
             return alloc(qa_model_converter, m);
         }
 
@@ -70,7 +70,7 @@ namespace datalog {
                 sort_ref_vector const& sorts = m_sorts[i];
                 svector<bool> const& is_bound  = m_bound[i];
                 func_interp* f = old_model->get_func_interp(p);
-                expr_ref body(m);
+                expr_ref body(m);                
                 unsigned arity_p = p->get_arity();
                 unsigned arity_q = q->get_arity();
                 SASSERT(0 < arity_p);
@@ -79,15 +79,15 @@ namespace datalog {
                 if (f) {
                     body = f->get_interp();
                     SASSERT(!f->is_partial());
-                    SASSERT(body);
+                    SASSERT(body);                    
                 }
                 else {
-                    body = m.mk_false();
+                    body = m.mk_false();  
                 }
                 // Create quantifier wrapper around body.
 
                 TRACE("dl", tout << mk_pp(body, m) << "\n";);
-                // 1. replace variables by the compound terms from
+                // 1. replace variables by the compound terms from 
                 //    the original predicate.
                 expr_safe_replace rep(m);
                 for (unsigned i = 0; i < sub.size(); ++i) {
@@ -114,7 +114,7 @@ namespace datalog {
                         free.push_back(consts.back());
                     }
                 }
-                rep(body);
+                rep(body);                
                 rep.reset();
 
                 TRACE("dl", tout << mk_pp(body, m) << "\n";);
@@ -123,18 +123,18 @@ namespace datalog {
                 body = m.mk_forall(names.size(), bound_sorts.c_ptr(), names.c_ptr(), body);
 
                 TRACE("dl", tout << mk_pp(body, m) << "\n";);
-                // 4. replace remaining constants by variables.
+                // 4. replace remaining constants by variables.                                
                 for (unsigned i = 0; i < free.size(); ++i) {
                     rep.insert(free[i].get(), m.mk_var(i, m.get_sort(free[i].get())));
                 }
-                rep(body);
+                rep(body);                
                 g->set_else(body);
                 TRACE("dl", tout << mk_pp(body, m) << "\n";);
 
                 new_model->register_decl(q, g);
-            }
+            }  
             old_model = new_model;
-        }
+        }                        
     };
 
     mk_quantifier_abstraction::mk_quantifier_abstraction(
@@ -143,10 +143,10 @@ namespace datalog {
         m(ctx.get_manager()),
         m_ctx(ctx),
         a(m),
-        m_refs(m) {
+        m_refs(m) {        
     }
 
-    mk_quantifier_abstraction::~mk_quantifier_abstraction() {
+    mk_quantifier_abstraction::~mk_quantifier_abstraction() {        
     }
 
     func_decl* mk_quantifier_abstraction::declare_pred(rule_set const& rules, rule_set& dst, func_decl* old_p) {
@@ -170,7 +170,7 @@ namespace datalog {
         func_decl* new_p = 0;
         if (!m_old2new.find(old_p, new_p)) {
             expr_ref_vector sub(m), vars(m);
-            svector<bool> bound;
+            svector<bool> bound;            
             sort_ref_vector domain(m), sorts(m);
             expr_ref arg(m);
             for (unsigned i = 0; i < sz; ++i) {
@@ -200,7 +200,7 @@ namespace datalog {
                 bound.push_back(false);
                 sub.push_back(arg);
                 sorts.push_back(s0);
-            }
+            }          
             SASSERT(old_p->get_range() == m.mk_bool_sort());
             new_p = m.mk_func_decl(old_p->get_name(), domain.size(), domain.c_ptr(), old_p->get_range());
             m_refs.push_back(new_p);
@@ -234,12 +234,12 @@ namespace datalog {
             }
             args.push_back(arg);
         }
-        TRACE("dl",
+        TRACE("dl", 
               tout << mk_pp(new_p, m) << "\n";
               for (unsigned i = 0; i < args.size(); ++i) {
                   tout << mk_pp(args[i].get(), m) << "\n";
               });
-        return app_ref(m.mk_app(new_p, args.size(), args.c_ptr()), m);
+        return app_ref(m.mk_app(new_p, args.size(), args.c_ptr()), m);        
     }
 
     app_ref mk_quantifier_abstraction::mk_tail(rule_set const& rules, rule_set& dst, app* p) {
@@ -264,7 +264,7 @@ namespace datalog {
         for (unsigned i = 0; i < sz; ++i) {
             arg = ps->get_arg(i);
             sort* s = m.get_sort(arg);
-            bool is_pattern = false;
+            bool is_pattern = false;            
             while (a.is_array(s)) {
                 is_pattern = true;
                 unsigned arity = get_array_arity(s);
@@ -296,9 +296,9 @@ namespace datalog {
         ptr_vector<expr> args2;
         args2.push_back(arg);
         args2.append(num_args, args);
-        return a.mk_select(args2.size(), args2.c_ptr());
+        return a.mk_select(args2.size(), args2.c_ptr());                
     }
-
+        
     rule_set * mk_quantifier_abstraction::operator()(rule_set const & source) {
         if (!m_ctx.quantify_arrays()) {
             return 0;
@@ -326,10 +326,10 @@ namespace datalog {
         }
         rule_set * result = alloc(rule_set, m_ctx);
 
-        for (unsigned i = 0; i < sz; ++i) {
+        for (unsigned i = 0; i < sz; ++i) {      
             tail.reset();
             rule & r = *source.get_rule(i);
-            TRACE("dl", r.display(m_ctx, tout); );
+            TRACE("dl", r.display(m_ctx, tout); );      
             unsigned cnt = vc.get_max_rule_var(r)+1;
             unsigned utsz = r.get_uninterpreted_tail_size();
             unsigned tsz = r.get_tail_size();
@@ -344,8 +344,8 @@ namespace datalog {
             proof_ref pr(m);
             rm.mk_rule(fml, pr, *result);
             TRACE("dl", result->last()->display(m_ctx, tout););
-        }
-
+        }        
+        
         // proof converter: proofs are not necessarily preserved using this transformation.
 
         if (m_old2new.empty()) {

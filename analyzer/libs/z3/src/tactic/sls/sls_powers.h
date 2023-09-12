@@ -38,12 +38,12 @@ public:
         if (it != end())
             return *it->m_value;
         else {
-            mpz * new_obj = alloc(mpz);
+            mpz * new_obj = alloc(mpz);                        
             m.mul2k(m.mk_z(1), n, *new_obj);
             insert(n, new_obj);
             return *new_obj;
         }
     }
-};
+};  
 
 #endif

@@ -9,7 +9,7 @@ Abstract:
 
     Goodies for handling extended numerals such as R union { -oo, +oo }.
     We can have extended sets of mpq, mpz, mpbq, mpf, etc.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2011-12-04.
@@ -22,25 +22,25 @@ Revision History:
 
 #include<iostream>
 #include"debug.h"
-
+    
 enum ext_numeral_kind { EN_MINUS_INFINITY, EN_NUMERAL, EN_PLUS_INFINITY };
 
 template<typename numeral_manager>
-bool is_zero(numeral_manager & m,
+bool is_zero(numeral_manager & m, 
              typename numeral_manager::numeral const & a,
              ext_numeral_kind ak) {
     return ak == EN_NUMERAL && m.is_zero(a);
 }
 
 template<typename numeral_manager>
-bool is_pos(numeral_manager & m,
+bool is_pos(numeral_manager & m, 
             typename numeral_manager::numeral const & a,
             ext_numeral_kind ak) {
     return ak == EN_PLUS_INFINITY || (ak == EN_NUMERAL && m.is_pos(a));
 }
 
 template<typename numeral_manager>
-bool is_neg(numeral_manager & m,
+bool is_neg(numeral_manager & m, 
             typename numeral_manager::numeral const & a,
             ext_numeral_kind ak) {
     return ak == EN_MINUS_INFINITY || (ak == EN_NUMERAL && m.is_neg(a));
@@ -49,7 +49,7 @@ bool is_neg(numeral_manager & m,
 inline bool is_infinite(ext_numeral_kind ak) { return ak != EN_NUMERAL; }
 
 template<typename numeral_manager>
-void set(numeral_manager & m,
+void set(numeral_manager & m, 
          typename numeral_manager::numeral & a,
          ext_numeral_kind & ak,
          typename numeral_manager::numeral const & b,
@@ -59,7 +59,7 @@ void set(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-void reset(numeral_manager & m,
+void reset(numeral_manager & m, 
            typename numeral_manager::numeral & a,
            ext_numeral_kind & ak) {
     m.reset(a);
@@ -67,7 +67,7 @@ void reset(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-void neg(numeral_manager & m,
+void neg(numeral_manager & m, 
          typename numeral_manager::numeral & a,
          ext_numeral_kind & ak) {
     switch (ak) {
@@ -84,7 +84,7 @@ void neg(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-void inv(numeral_manager & m,
+void inv(numeral_manager & m, 
          typename numeral_manager::numeral & a,
          ext_numeral_kind & ak) {
     SASSERT(numeral_manager::field());
@@ -105,7 +105,7 @@ void inv(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-void add(numeral_manager & m,
+void add(numeral_manager & m, 
          typename numeral_manager::numeral const & a,
          ext_numeral_kind ak,
          typename numeral_manager::numeral const & b,
@@ -129,7 +129,7 @@ void add(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-void sub(numeral_manager & m,
+void sub(numeral_manager & m, 
          typename numeral_manager::numeral const & a,
          ext_numeral_kind ak,
          typename numeral_manager::numeral const & b,
@@ -162,7 +162,7 @@ void sub(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-void mul(numeral_manager & m,
+void mul(numeral_manager & m, 
          typename numeral_manager::numeral const & a,
          ext_numeral_kind ak,
          typename numeral_manager::numeral const & b,
@@ -187,7 +187,7 @@ void mul(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-void div(numeral_manager & m,
+void div(numeral_manager & m, 
          typename numeral_manager::numeral const & a,
          ext_numeral_kind ak,
          typename numeral_manager::numeral const & b,
@@ -221,7 +221,7 @@ void div(numeral_manager & m,
 
 
 template<typename numeral_manager>
-void power(numeral_manager & m,
+void power(numeral_manager & m, 
            typename numeral_manager::numeral & a,
            ext_numeral_kind & ak,
            unsigned n) {
@@ -242,7 +242,7 @@ void power(numeral_manager & m,
    \brief Return true if (a,ak) == (b,bk).
 */
 template<typename numeral_manager>
-bool eq(numeral_manager & m,
+bool eq(numeral_manager & m, 
         typename numeral_manager::numeral const & a,
         ext_numeral_kind ak,
         typename numeral_manager::numeral const & b,
@@ -256,7 +256,7 @@ bool eq(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-bool neq(numeral_manager & m,
+bool neq(numeral_manager & m, 
          typename numeral_manager::numeral const & a,
          ext_numeral_kind ak,
          typename numeral_manager::numeral const & b,
@@ -265,7 +265,7 @@ bool neq(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-bool lt(numeral_manager & m,
+bool lt(numeral_manager & m, 
         typename numeral_manager::numeral const & a,
         ext_numeral_kind ak,
         typename numeral_manager::numeral const & b,
@@ -294,7 +294,7 @@ bool lt(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-bool gt(numeral_manager & m,
+bool gt(numeral_manager & m, 
         typename numeral_manager::numeral const & a,
         ext_numeral_kind ak,
         typename numeral_manager::numeral const & b,
@@ -303,7 +303,7 @@ bool gt(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-bool le(numeral_manager & m,
+bool le(numeral_manager & m, 
         typename numeral_manager::numeral const & a,
         ext_numeral_kind ak,
         typename numeral_manager::numeral const & b,
@@ -312,7 +312,7 @@ bool le(numeral_manager & m,
 }
 
 template<typename numeral_manager>
-bool ge(numeral_manager & m,
+bool ge(numeral_manager & m, 
         typename numeral_manager::numeral const & a,
         ext_numeral_kind ak,
         typename numeral_manager::numeral const & b,
@@ -322,7 +322,7 @@ bool ge(numeral_manager & m,
 
 template<typename numeral_manager>
 void display(std::ostream & out,
-             numeral_manager & m,
+             numeral_manager & m, 
              typename numeral_manager::numeral const & a,
              ext_numeral_kind ak) {
     switch (ak) {
@@ -334,7 +334,7 @@ void display(std::ostream & out,
 
 template<typename numeral_manager>
 void display_pp(std::ostream & out,
-                numeral_manager & m,
+                numeral_manager & m, 
                 typename numeral_manager::numeral const & a,
                 ext_numeral_kind ak) {
     switch (ak) {

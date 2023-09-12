@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Mapping from expressions to expressions + proofs. This mapping
-    is used to cache simplification results.
+    is used to cache simplification results. 
     For every entry [e1->(e2, p)] we have that p is a proof that (= e1 e2).
 
 Author:
@@ -35,7 +35,7 @@ expr_map::~expr_map() {
     reset();
 }
 
-void expr_map::insert(expr * k, expr * d, proof * p) {
+void expr_map::insert(expr * k, expr * d, proof * p) {  
     m_manager.inc_ref(d);
     obj_map<expr, expr*>::obj_map_entry * entry = m_expr2expr.find_core(k);
     if (entry != 0) {

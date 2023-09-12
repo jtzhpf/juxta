@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Log.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -29,7 +29,7 @@ public final class Log
     /**
      * Open an interaction log file. <param name="filename">the name of the file
      * to open</param>
-     *
+     * 
      * @return True if opening the log file succeeds, false otherwise.
      **/
     public static boolean open(String filename)
@@ -50,7 +50,7 @@ public final class Log
     /**
      * Appends the user-provided string <paramref name="s"/> to the interaction
      * log.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public static void append(String s) throws Z3Exception
     {
@@ -61,7 +61,7 @@ public final class Log
 
     /**
      * Checks whether the interaction log is opened.
-     *
+     * 
      * @return True if the interaction log is open, false otherwise.
      **/
     public static boolean isOpen()

@@ -35,7 +35,7 @@ namespace smt {
         m_base_var(null_theory_var),
         m_first_free_idx(-1) {
     }
-
+    
     template<typename Ext>
     void theory_arith<Ext>::row::reset() {
         m_entries.reset();
@@ -43,7 +43,7 @@ namespace smt {
         m_base_var       = -1;
         m_first_free_idx = -1;
     }
-
+    
     /**
        \brief Add a new row_entry. The result is a reference to the new row_entry. The position of the new row_entry in the
        row is stored in pos_idx.
@@ -79,7 +79,7 @@ namespace smt {
     }
 
     /**
-       \brief Remove holes (i.e., dead entries) from the row.
+       \brief Remove holes (i.e., dead entries) from the row. 
     */
     template<typename Ext>
     void theory_arith<Ext>::row::compress(vector<column> & cols) {
@@ -105,7 +105,7 @@ namespace smt {
         m_entries.shrink(m_size);
         m_first_free_idx = -1;
     }
-
+    
     /**
        \brief Invoke compress if the row contains too many holes (i.e., dead entries).
     */
@@ -115,7 +115,7 @@ namespace smt {
             compress(cols);
         }
     }
-
+    
     /**
        \brief Fill the map var -> pos/idx
     */
@@ -130,7 +130,7 @@ namespace smt {
             }
         }
     }
-
+    
     /**
        \brief Reset the map var -> pos/idx. That is for all variables v in the row, set result[v] = -1
        This method can be viewed as the "inverse" of save_var_pos.
@@ -145,7 +145,7 @@ namespace smt {
             }
         }
     };
-
+    
 #ifdef Z3DEBUG
     /**
        \brief Return true if the coefficient of v in the row is equals to 'expected'.
@@ -190,7 +190,7 @@ namespace smt {
         }
         return r;
     }
-
+    
     template<typename Ext>
     int theory_arith<Ext>::row::get_idx_of(theory_var v) const {
         typename vector<row_entry>::const_iterator it  = m_entries.begin();
@@ -207,14 +207,14 @@ namespace smt {
     // Columns
     //
     // -----------------------------------
-
+    
     template<typename Ext>
     void theory_arith<Ext>::column::reset() {
         m_entries.reset();
         m_size           = 0;
         m_first_free_idx = -1;
     }
-
+    
     /**
        \brief Remove holes (i.e., dead entries) from the column.
     */
@@ -238,7 +238,7 @@ namespace smt {
         m_entries.shrink(m_size);
         m_first_free_idx = -1;
     }
-
+    
     /**
        \brief Invoke compress if the column contains too many holes (i.e., dead entries).
     */
@@ -265,7 +265,7 @@ namespace smt {
         m_first_free_idx = -1;
         m_entries.shrink(1);
     }
-
+    
     template<typename Ext>
     const typename theory_arith<Ext>::col_entry * theory_arith<Ext>::column::get_first_col_entry() const {
         typename svector<col_entry>::const_iterator it  = m_entries.begin();
@@ -294,7 +294,7 @@ namespace smt {
             return result;
         }
     }
-
+    
     template<typename Ext>
     void theory_arith<Ext>::column::del_col_entry(unsigned idx) {
         col_entry & c = m_entries[idx];
@@ -322,32 +322,32 @@ namespace smt {
                 m_params.push_back(parameter(m_eq_coeffs[i].to_rational()));
             }
             m_init = true;
-        }
+        }                
     }
 
     template<typename Ext>
-    void theory_arith<Ext>::antecedents::reset() {
-        m_init = false;
+    void theory_arith<Ext>::antecedents::reset() { 
+        m_init = false; 
         m_eq_coeffs.reset();
         m_lit_coeffs.reset();
-        m_eqs.reset();
-        m_lits.reset();
-        m_params.reset();
+        m_eqs.reset(); 
+        m_lits.reset(); 
+        m_params.reset(); 
     }
 
     template<typename Ext>
-    void theory_arith<Ext>::antecedents::push_lit(literal l, numeral const& r, bool proofs_enabled) {
+    void theory_arith<Ext>::antecedents::push_lit(literal l, numeral const& r, bool proofs_enabled) { 
         m_lits.push_back(l);
         if (proofs_enabled) {
-            m_lit_coeffs.push_back(r);
+            m_lit_coeffs.push_back(r); 
         }
     }
 
     template<typename Ext>
-    void theory_arith<Ext>::antecedents::push_eq(enode_pair const& p, numeral const& r, bool proofs_enabled) {
+    void theory_arith<Ext>::antecedents::push_eq(enode_pair const& p, numeral const& r, bool proofs_enabled) { 
         m_eqs.push_back(p);
         if (proofs_enabled) {
-            m_eq_coeffs.push_back(r);
+            m_eq_coeffs.push_back(r); 
         }
     }
 
@@ -418,7 +418,7 @@ namespace smt {
         if (l == 0)
             return false;
         bound * u = upper(v);
-        if (u == 0)
+        if (u == 0) 
             return false;
         return l->get_value() == u->get_value();
     }
@@ -433,7 +433,7 @@ namespace smt {
         if ((propagate_eqs() || propagate_diseqs()) && is_fixed(v))
             fixed_var_eh(v);
     }
-
+    
 
 
     /**
@@ -475,11 +475,11 @@ namespace smt {
     bool theory_arith<Ext>::all_coeff_int(row const & r) const {
         typename vector<row_entry>::const_iterator it  = r.begin_entries();
         typename vector<row_entry>::const_iterator end = r.end_entries();
-        for (; it != end; ++it) {
-            if (!it->is_dead() && !it->m_coeff.is_int())
+        for (; it != end; ++it) {                                                                 
+            if (!it->is_dead() && !it->m_coeff.is_int()) 
                 TRACE("gomory_cut", display_row(tout, r, true););
                 return false;
-
+            
         }
         return true;
     }
@@ -488,7 +488,7 @@ namespace smt {
        \brief Return the col_entry that points to row that contains the given variable.
        This row should not be owned by an unconstrained quasi-base variable.
        Return 0 if failed.
-
+       
        This method is used by move_unconstrained_to_base
     */
     template<typename Ext>
@@ -508,10 +508,10 @@ namespace smt {
                     numeral const & c = r[it->m_row_idx].m_coeff;
                     // If c == 1 or c == -1, and all other coefficients of r are integer,
                     // then if we pivot v with the base var of r, we will produce a row
-                    // that will guarantee an integer assignment for v, when the
+                    // that will guarantee an integer assignment for v, when the 
                     // non-base vars have integer assignment.
                     if (!c.is_one() && !c.is_minus_one())
-                        continue;
+                        continue; 
                     if (!all_coeff_int(r))
                         continue;
                 }
@@ -537,7 +537,7 @@ namespace smt {
                         // If the row contains non integer coefficients, then v may be assigned
                         // to a non-integer value even if all non-base variables are integer.
                         // So, v should not be "eliminated"
-                        break;
+                        break; 
                     eliminate<false>(v, m_eager_gcd);
                     break;
                 case NON_BASE: {
@@ -547,9 +547,9 @@ namespace smt {
                         row & r = m_rows[entry->m_row_id];
                         SASSERT(r[entry->m_row_idx].m_var == v);
                         pivot<false>(r.get_base_var(), v, r[entry->m_row_idx].m_coeff, m_eager_gcd);
-                        SASSERT(is_base(v));
+                        SASSERT(is_base(v));                    
                         set_var_kind(v, QUASI_BASE);
-                        SASSERT(is_quasi_base(v));
+                        SASSERT(is_quasi_base(v));                    
                     }
                     break;
                 } }
@@ -560,7 +560,7 @@ namespace smt {
         CASSERT("arith", wf_columns());
         CASSERT("arith", valid_row_assignment());
     }
-
+    
     /**
        \brief Force all quasi_base rows to become base rows.
     */
@@ -600,7 +600,7 @@ namespace smt {
     /**
        \brief Try to minimize the number of rational coefficients.
        The idea is to pivot x_i and x_j whenever there is a row
-
+       
        x_i + 1/n * x_j + ... = 0
 
        where
@@ -608,7 +608,7 @@ namespace smt {
        - x_j is a non-base variables
        - x_j is not a fixed variable
        - The denominator of any other coefficient a_ik divides n (I only consider the coefficient of non-fixed variables)
-
+       
        remark if there are more than one variable with such properties, we give preference to free variables,
        then to variables where upper - lower is maximal.
     */
@@ -679,7 +679,7 @@ namespace smt {
                         break;
                 }
             }
-            if (x_j != null_theory_var)
+            if (x_j != null_theory_var) 
                 pivot<true>(v, x_j, a_ij, false);
         }
     }
@@ -758,7 +758,7 @@ namespace smt {
                 continue;
             if (proofs_enabled()) {
                 new_bound.push_lit(l, ante.lit_coeffs()[i]);
-            }
+            }			
             else {
                 new_bound.push_lit(l, numeral::zero());
                 lits.insert(l.index());
@@ -779,8 +779,8 @@ namespace smt {
         }
     }
 
-
-
+    
+    
     template<typename Ext>
     typename theory_arith<Ext>::inf_numeral theory_arith<Ext>::normalize_bound(theory_var v, inf_numeral const & k, bound_kind kind) {
         if (is_real(v))
@@ -804,11 +804,11 @@ namespace smt {
         m_tmp_eq_set.reset();
 #ifdef Z3DEBUG
         inf_numeral val;
-#endif
-        typename vector<row_entry>::const_iterator it  = r.begin_entries();
-        typename vector<row_entry>::const_iterator end = r.end_entries();
+#endif 
+        typename vector<row_entry>::const_iterator it  = r.begin_entries();  
+        typename vector<row_entry>::const_iterator end = r.end_entries();                
         for (; it != end; ++it) {
-            if (!it->is_dead()) {
+            if (!it->is_dead()) { 
                 theory_var v = it->m_var;
                 bool use_upper = (kind == B_UPPER);
                 if (!it->m_coeff.is_pos())
@@ -824,7 +824,7 @@ namespace smt {
                 accumulate_justification(*b, *new_bound, it->m_coeff, m_tmp_lit_set, m_tmp_eq_set);
             }
         }
-        TRACE("derived_bound",
+        TRACE("derived_bound", 
               tout << "explanation:\n";
               literal_vector::const_iterator it1  = new_bound->m_lits.begin();
               literal_vector::const_iterator end1 = new_bound->m_lits.end();
@@ -840,21 +840,21 @@ namespace smt {
 
     // -----------------------------------
     //
-    // Maximization/Minimization
+    // Maximization/Minimization 
     //
     // -----------------------------------
 
     /**
        \brief Set: row1 <- row1 + coeff * row2,
        where row1 is a temporary row.
-
+       
        \remark Columns do not need to be updated when updating a temporary row.
     */
     template<typename Ext>
     void theory_arith<Ext>::add_tmp_row(row & r1, numeral const & coeff, row const & r2) {
         r1.save_var_pos(m_var_pos);
 
-        //
+        // 
         // loop over variables in row2,
         // add terms in row2 to row1.
         //
@@ -894,10 +894,10 @@ namespace smt {
                         r_entry.m_coeff -= it->m_coeff);
         }
         else {
-            ADD_TMP_ROW(r_entry.m_coeff = it->m_coeff; r_entry.m_coeff *= coeff,
+            ADD_TMP_ROW(r_entry.m_coeff = it->m_coeff; r_entry.m_coeff *= coeff, 
                         r_entry.m_coeff += it->m_coeff * coeff);
         }
-
+     
         r1.reset_var_pos(m_var_pos);
     }
 
@@ -909,7 +909,7 @@ namespace smt {
        operation in 'gain'. Note the gain can be too much. That is,
        it may make x_i infeasible. In this case, instead of pivoting
        we move x_j to its upper bound (lower bound) when inc = true (inc = false).
-
+       
        If no x_i imposes a restriction on x_j, then return null_theory_var.
        That is, x_j is free to move to its upper bound (lower bound).
     */
@@ -917,7 +917,7 @@ namespace smt {
     theory_var theory_arith<Ext>::pick_var_to_leave(theory_var x_j, bool inc, numeral & a_ij, inf_numeral & gain) {
         TRACE("maximize", tout << "selecting variable to replace v" << x_j << ", inc: " << inc << "\n";);
         theory_var x_i  = null_theory_var;
-        inf_numeral curr_gain;
+        inf_numeral curr_gain; 
         column & c      = m_columns[x_j];
         typename svector<col_entry>::iterator it  = c.begin_entries();
         typename svector<col_entry>::iterator end = c.end_entries();
@@ -976,12 +976,12 @@ namespace smt {
             TRACE("maximize", tout << "i: " << i << ", max: " << max << "\n"; display_row(tout, r, true); tout << "state:\n"; display(tout); i++;);
             typename vector<row_entry>::const_iterator it  = r.begin_entries();
             typename vector<row_entry>::const_iterator end = r.end_entries();
-            for (; it != end; ++it) {
-                if (!it->is_dead()) {
+            for (; it != end; ++it) {  
+                if (!it->is_dead()) {                                                  
                     theory_var curr_x_j = it->m_var;
                     SASSERT(is_non_base(curr_x_j));
                     curr_coeff    = it->m_coeff;
-                    bool curr_inc = curr_coeff.is_pos() ? max : !max;
+                    bool curr_inc = curr_coeff.is_pos() ? max : !max; 
                     if ((curr_inc && at_upper(curr_x_j)) || (!curr_inc && at_lower(curr_x_j)))
                         continue; // variable cannot be used for max/min.
                     theory_var curr_x_i = pick_var_to_leave(curr_x_j, curr_inc, curr_a_ij, curr_gain);
@@ -1056,7 +1056,7 @@ namespace smt {
 
             TRACE("maximize", tout << "max: " << max << ", x_i: v" << x_i << ", x_j: v" << x_j << ", a_ij: " << a_ij << ", coeff: " << coeff << "\n";);
             bool move_xi_to_lower;
-            if (inc)
+            if (inc) 
                 move_xi_to_lower = a_ij.is_pos();
             else
                 move_xi_to_lower = a_ij.is_neg();
@@ -1078,7 +1078,7 @@ namespace smt {
 
     /**
        \brief Add an entry to a temporary row.
-
+       
        \remark Columns do not need to be updated when updating a temporary row.
     */
     template<typename Ext>
@@ -1096,7 +1096,7 @@ namespace smt {
        \brief Maximize/Minimize the given variable. The bounds of v are update if procedure succeeds.
     */
     template<typename Ext>
-    bool theory_arith<Ext>::max_min(theory_var v, bool max) {
+    bool theory_arith<Ext>::max_min(theory_var v, bool max) { 
         TRACE("maximize", tout << (max ? "maximizing" : "minimizing") << " v" << v << "...\n";);
         SASSERT(valid_row_assignment());
         SASSERT(satisfy_bounds());
@@ -1111,15 +1111,15 @@ namespace smt {
             row & r = m_rows[get_var_row(v)];
             typename vector<row_entry>::const_iterator it  = r.begin_entries();
             typename vector<row_entry>::const_iterator end = r.end_entries();
-            for (; it != end; ++it) {
-                if (!it->is_dead() && it->m_var != v)
+            for (; it != end; ++it) {  
+                if (!it->is_dead() && it->m_var != v)                          
                     add_tmp_row_entry<true>(m_tmp_row, it->m_coeff, it->m_var);
-            }
+            }            
         }
         if (max_min(m_tmp_row, max)) {
             TRACE("maximize", tout << "v" << v << " " << (max ? "max" : "min") << " value is: " << get_value(v) << "\n";
                   display_row(tout, m_tmp_row, true); display_row_info(tout, m_tmp_row););
-
+            
             mk_bound_from_row(v, get_value(v), max ? B_UPPER : B_LOWER, m_tmp_row);
             return true;
         }
@@ -1131,7 +1131,7 @@ namespace smt {
        Return false if an inconsistency was detected.
     */
     template<typename Ext>
-    bool theory_arith<Ext>::max_min(svector<theory_var> const & vars) {
+    bool theory_arith<Ext>::max_min(svector<theory_var> const & vars) { 
         bool succ = false;
         svector<theory_var>::const_iterator it  = vars.begin();
         svector<theory_var>::const_iterator end = vars.end();
@@ -1155,13 +1155,13 @@ namespace smt {
     // Freedom intervals
     //
     // -----------------------------------
-
+    
     /**
        \brief See Model-based theory combination paper.
        Return false if failed to build the freedom interval.
-
+       
        \remark If x_j is an integer variable, then m will contain the lcm of the denominators of a_ij.
-       We only consider the a_ij coefficients for x_i
+       We only consider the a_ij coefficients for x_i 
     */
     template<typename Ext>
     bool theory_arith<Ext>::get_freedom_interval(theory_var x_j, bool & inf_l, inf_numeral & l, bool & inf_u, inf_numeral & u, numeral & m) {
@@ -1175,20 +1175,20 @@ namespace smt {
 
         inf_l = true;
         inf_u = true;
-        l.reset();
+        l.reset(); 
         u.reset();
         m = numeral(1);
 #define IS_FIXED() { if (!inf_l && !inf_u && l == u) goto fi_succeeded; }
 #define SET_LOWER(VAL) { inf_numeral const & _VAL = VAL; if (inf_l || _VAL > l) { l = _VAL; inf_l = false; } IS_FIXED(); }
 #define SET_UPPER(VAL) { inf_numeral const & _VAL = VAL; if (inf_u || _VAL < u) { u = _VAL; inf_u = false; } IS_FIXED(); }
-
+        
         if (lower(x_j)) {
             SET_LOWER(lower_bound(x_j));
         }
         if (upper(x_j)) {
             SET_UPPER(upper_bound(x_j));
         }
-
+       
         for (; it != end; ++it) {
             if (!it->is_dead()) {
                 row & r        = m_rows[it->m_row_id];
@@ -1240,7 +1240,7 @@ namespace smt {
     // Implied eqs
     //
     // -----------------------------------
-
+    
 
     /**
        \brief Try to check whether v1 == v2 is implied by the current state.
@@ -1263,10 +1263,10 @@ namespace smt {
             row & r = m_rows[get_var_row(v1)];
             typename vector<row_entry>::const_iterator it  = r.begin_entries();
             typename vector<row_entry>::const_iterator end = r.end_entries();
-            for (; it != end; ++it) {
-                if (!it->is_dead() && it->m_var != v1)
+            for (; it != end; ++it) {  
+                if (!it->is_dead() && it->m_var != v1)                          
                     add_tmp_row_entry<true>(m_tmp_row, it->m_coeff, it->m_var);
-            }
+            }            
         }
 
         m_tmp_row.save_var_pos(m_var_pos);
@@ -1284,7 +1284,7 @@ namespace smt {
                     m_tmp_row.del_row_entry(pos);                                       \
                 m_var_pos[VAR] = -1;                                                    \
             }                                                                           \
-        }
+        }        
 
         if (is_non_base(v2)) {
             ADD_ENTRY(numeral(-1), v2);
@@ -1293,7 +1293,7 @@ namespace smt {
             row & r = m_rows[get_var_row(v2)];
             typename vector<row_entry>::const_iterator it  = r.begin_entries();
             typename vector<row_entry>::const_iterator end = r.end_entries();
-            for (; it != end; ++it) {
+            for (; it != end; ++it) {  
                 if (!it->is_dead() && it->m_var != v2) {
                     numeral c = it->m_coeff;
                     c.neg();
@@ -1302,7 +1302,7 @@ namespace smt {
             }
         }
         m_tmp_row.reset_var_pos(m_var_pos);
-
+        
         SASSERT(m_tmp_row.size() > 0);
 
 #if 0
@@ -1311,8 +1311,8 @@ namespace smt {
         m_tmp_acc_eqs.reset();
         m_tmp_lit_set.reset();
         m_tmp_eq_set.reset();
-
-        if (max_min(m_tmp_row, true) &&
+        
+        if (max_min(m_tmp_row, true) && 
             is_zero_row(m_tmp_row, true, m_tmp_acc_lits, m_tmp_acc_eqs, m_tmp_lit_set, m_tmp_eq_set) &&
             max_min(m_tmp_row, false) &&
             is_zero_row(m_tmp_row, false, m_tmp_acc_lits, m_tmp_acc_eqs, m_tmp_lit_set, m_tmp_eq_set)) {
@@ -1331,7 +1331,7 @@ namespace smt {
     //
     // Assume eqs
     //
-    // The revamped assume eqs try to perturbate the
+    // The revamped assume eqs try to perturbate the 
     // current assignment using pivoting operations.
     //
     // -----------------------------------
@@ -1386,7 +1386,7 @@ namespace smt {
         if (!is_int(v)) {
             SASSERT(!inf_l && !inf_u);
             numeral delta       = numeral(m_random() % (RANGE + 1));
-            inf_numeral new_val = l + ((delta * (u - l)) / numeral(RANGE));
+            inf_numeral new_val = l + ((delta * (u - l)) / numeral(RANGE)); 
             set_value(v, new_val);
             return true;
         }
@@ -1400,7 +1400,7 @@ namespace smt {
             return true;
         }
     }
-
+    
     template<typename Ext>
     void theory_arith<Ext>::mutate_assignment() {
         remove_fixed_vars_from_base();
@@ -1439,7 +1439,7 @@ namespace smt {
                 row & r = m_rows[get_var_row(v)];
                 typename vector<row_entry>::const_iterator it2  = r.begin_entries();
                 typename vector<row_entry>::const_iterator end2 = r.end_entries();
-                for (; it2 != end2; ++it2) {
+                for (; it2 != end2; ++it2) {  
                     if (!it2->is_dead() && it2->m_var != v && !is_fixed(it2->m_var) && random_update(it2->m_var))
                         break;
                 }
@@ -1527,11 +1527,11 @@ namespace smt {
             theory_var v1 = p.first;
             theory_var v2 = p.second;
             m_assume_eq_head++;
-            CTRACE("func_interp_bug",
-                   get_value(v1) == get_value(v2) &&
+            CTRACE("func_interp_bug", 
+                   get_value(v1) == get_value(v2) && 
                    get_enode(v1)->get_root() != get_enode(v2)->get_root(),
                    tout << "assuming eq: #" << get_enode(v1)->get_owner_id() << " = #" << get_enode(v2)->get_owner_id() << "\n";);
-            if (get_value(v1) == get_value(v2) &&
+            if (get_value(v1) == get_value(v2) && 
                 get_enode(v1)->get_root() != get_enode(v2)->get_root() &&
                 assume_eq(get_enode(v1), get_enode(v2))) {
                 return true;
@@ -1550,10 +1550,10 @@ namespace smt {
     template<typename Ext>
     bool theory_arith<Ext>::is_zero_row(row const & r, bool upper, literal_vector & lit_vect, eq_vector & eq_vect, literal_idx_set & lits, eq_set & eqs) {
         inf_numeral val;
-        typename vector<row_entry>::const_iterator it  = r.begin_entries();
-        typename vector<row_entry>::const_iterator end = r.end_entries();
+        typename vector<row_entry>::const_iterator it  = r.begin_entries();  
+        typename vector<row_entry>::const_iterator end = r.end_entries();                
         for (; it != end; ++it) {
-            if (!it->is_dead()) {
+            if (!it->is_dead()) { 
                 theory_var v = it->m_var;
                 bool use_upper = upper;
                 if (!it->m_coeff.is_pos())

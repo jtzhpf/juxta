@@ -70,7 +70,7 @@ namespace pdr {
     public:
         core_farkas_generalizer(context& ctx, ast_manager& m, smt_params& p);
         virtual ~core_farkas_generalizer() {}
-        virtual void operator()(model_node& n, expr_ref_vector& core, bool& uses_level);
+        virtual void operator()(model_node& n, expr_ref_vector& core, bool& uses_level);  
         virtual void collect_statistics(statistics& st) const;
     };
 
@@ -88,7 +88,7 @@ namespace pdr {
         virtual ~core_convex_hull_generalizer() {}
         virtual void operator()(model_node& n, expr_ref_vector const& core, bool uses_level, cores& new_cores);
         virtual void operator()(model_node& n, expr_ref_vector& core, bool& uses_level);
-    };
+    };	
 
     class core_multi_generalizer : public core_generalizer {
         core_bool_inductive_generalizer m_gen;

@@ -49,8 +49,8 @@ public:
         entry_hash_proc(HashProc const & p):
             HashProc(p) {
         }
-
-        unsigned operator()(key_data const & d) const {
+        
+        unsigned operator()(key_data const & d) const { 
             return HashProc::operator()(d.m_key);
         }
     };
@@ -59,23 +59,23 @@ public:
         entry_eq_proc(EqProc const & p):
             EqProc(p) {
         }
-
+    
         bool operator()(key_data const & d1, key_data const & d2) const {
             return EqProc::operator()(d1.m_key, d2.m_key);
         }
     };
 
     typedef core_hashtable<entry, entry_hash_proc, entry_eq_proc> table;
-
+    
     table m_table;
-
+    
 public:
     table2map(HashProc const & h = HashProc(), EqProc const & e = EqProc()):
         m_table(DEFAULT_HASHTABLE_INITIAL_CAPACITY, entry_hash_proc(h), entry_eq_proc(e)) {
     }
-
+    
     typedef typename table::iterator iterator;
-
+    
     void reset() {
         m_table.reset();
     }
@@ -83,39 +83,39 @@ public:
     void finalize() {
         m_table.finalize();
     }
-
-    bool empty() const {
+    
+    bool empty() const { 
         return m_table.empty();
     }
-
-    unsigned size() const {
-        return m_table.size();
+    
+    unsigned size() const { 
+        return m_table.size(); 
     }
-
-    unsigned capacity() const {
+    
+    unsigned capacity() const { 
         return m_table.capacity();
     }
-
-    iterator begin() const {
+    
+    iterator begin() const { 
         return m_table.begin();
     }
-
-    iterator end() const {
+    
+    iterator end() const { 
         return m_table.end();
     }
-
+    
     void insert(key const & k, value const & v) {
         m_table.insert(key_data(k, v));
     }
-
+  
     key_data const & insert_if_not_there(key const & k, value const & v) {
         return m_table.insert_if_not_there(key_data(k, v));
     }
-
+    
     entry * insert_if_not_there2(key const & k, value const & v) {
         return m_table.insert_if_not_there2(key_data(k, v));
     }
-
+        
     entry * find_core(key const & k) const {
         return m_table.find_core(key_data(k));
     }
@@ -137,11 +137,11 @@ public:
             return default_value;
         }
     }
-
-    iterator find_iterator(key const & k) const {
+        
+    iterator find_iterator(key const & k) const { 
         return m_table.find(key_data(k));
     }
-
+    
     value const & find(key const& k) const {
         entry * e = find_core(k);
         SASSERT(e);
@@ -159,14 +159,14 @@ public:
     value& operator[](key const& k) { return find(k); }
 
 
-    bool contains(key const & k) const {
-        return find_core(k) != 0;
+    bool contains(key const & k) const { 
+        return find_core(k) != 0; 
     }
 
     void remove(key const & k) {
         m_table.remove(key_data(k));
     }
-
+    
     void erase(key const & k) {
         remove(k);
     }
@@ -176,14 +176,14 @@ public:
     void swap(table2map & other) {
         m_table.swap(other.m_table);
     }
-
+    
 #ifdef Z3DEBUG
-
-    bool check_invariant() {
-        return m_table.check_invariant();
+    
+    bool check_invariant() { 
+        return m_table.check_invariant(); 
     }
-
-#endif
+    
+#endif   
 };
 
 template<typename Key, typename Value>
@@ -277,7 +277,7 @@ struct size_t_eq { bool operator()(size_t u1, size_t u2) const { return u1 == u2
 
 struct int_eq { bool operator()(int u1, int u2) const { return u1 == u2; } };
 
-template<typename Value>
+template<typename Value> 
 class u_map : public map<unsigned, Value, u_hash, u_eq> {};
 
 template<typename Value>

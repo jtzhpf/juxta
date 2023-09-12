@@ -11,7 +11,7 @@ Abstract:
 
 Author:
 
-    Leonardo de Moura (leonardo) 2008-01-27.
+    Leonardo de Moura (leonardo) 2008-01-27.    
 
 Revision History:
 
@@ -28,7 +28,7 @@ Revision History:
   New DER: the class DER (above) eliminates variables one by one.
   This is inefficient, and we should implement a new version that
   can handle efficiently examples with hundreds of variables.
-
+  
   Suppose the target of the simplification is the quantifier
   (FORALL (x1 T1) (x2 T2) ... (xn Tn) (or ....))
   So, the variables x1 ... xn are the candidates for elimination.
@@ -44,10 +44,10 @@ Revision History:
   Thus, m_pos2var[pos] contains the variable that is defined by the diseq at position pos.
   m_pos2var[pos] = -1, if this position does not contain a diseq.
 
-  After doing that, m_map contains the variables that can
+  After doing that, m_map contains the variables that can 
   be potentially eliminated using DER.
   We say m_map[v] is the definition of variable v.
-
+  
   The next step is to perform a topological sort on these
   variables. The result is an array (m_order) of integers (variable ids)
   such that i < j implies that m_map[m_order[i]] does not depend on variable m_order[j].
@@ -60,11 +60,11 @@ Revision History:
   m_map[4]  =    (* (VAR 5) 2)
   m_map[5]  =    null
 
-  In this example, variable 0 depends on the definition of variable 2, which
+  In this example, variable 0 depends on the definition of variable 2, which 
   depends on the definition of variable 3, which depends on the definition of variable 0 (cycle).
   On the other hand, no cycle is found when starting at variable 4.
   Cycles can be broken by erasing entries from m_map. For example, the cycle above
-  can be removed by setting m_map[0] = null.
+  can be removed by setting m_map[0] = null. 
 
   m_map[0]  =    null
   m_map[1]  =    null
@@ -77,7 +77,7 @@ Revision History:
   This class cannot be used here, since it is meant for eliminating constants (instead of variables).
   We need to implement a new top_sort here, we do not need a separate class for doing that.
   Moreover, it is much simpler, since m_map is just an array.
-
+  
   In the example above (after setting m_map[0] to null), top_sort will produce the following order
   m_order = [3, 2, 4]
 
@@ -98,7 +98,7 @@ Revision History:
   m_map[3]  =    (+ (VAR 1) 1)
   m_map[4]  =    (* (VAR 5) 2)
   m_map[5]  =    null
-
+  
   Now, we update the body of the quantifier using var_subst and the mapping above.
   The idea is to create a new set of children for the OR.
   For each child at position i, we do
@@ -107,26 +107,26 @@ Revision History:
      else
        apply var_subst using m_map to this child, and store the result in a new children array
   Create a new OR (new body of the quantifier) using the new children
-  Then, we create a new quantifier using this new body, and use the function elim_unused_vars to
+  Then, we create a new quantifier using this new body, and use the function elim_unused_vars to 
   eliminate the ununsed variables.
 
   Remark: let us implement the new version inside the class der.
   Use #if 0 ... #endif to comment the old version.
-
+  
   Remark: after you are done, we can eliminate the call to occurs in is_var_diseq, since
   top_sort is already performing cycle detection.
 */
 
 /**
    \brief Functor for applying Destructive Multi-Equality Resolution.
-
+   
    (forall (X Y) (or X /= s C[X])) --> (forall (Y) C[Y])
 */
 class der {
     ast_manager &   m_manager;
     var_subst       m_subst;
     expr_ref_buffer m_new_exprs;
-
+    
     ptr_vector<expr> m_map;
     int_vector       m_pos2var;
     ptr_vector<var>  m_inx2var;
@@ -135,7 +135,7 @@ class der {
     expr_ref_buffer  m_new_args;
 
     /**
-       \brief Return true if e can be viewed as a variable disequality.
+       \brief Return true if e can be viewed as a variable disequality. 
        Store the variable id in v and the definition in t.
        For example:
 
@@ -167,7 +167,7 @@ protected:
     struct     imp;
     imp *      m_imp;
 public:
-    der_rewriter(ast_manager & m);
+    der_rewriter(ast_manager & m); 
     ~der_rewriter();
 
     ast_manager & m () const;
@@ -181,7 +181,7 @@ public:
     void reset();
 };
 
-typedef der_rewriter der_star;
+typedef der_rewriter der_star; 
 
 #endif /* _DER_H_ */
 

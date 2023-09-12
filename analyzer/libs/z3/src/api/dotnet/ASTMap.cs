@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -46,7 +46,7 @@ namespace Microsoft.Z3
         /// <remarks>
         /// This function signs an error when <paramref name="k"/> is not a key in the map.
         /// </remarks>
-        /// <param name="k">An AST</param>
+        /// <param name="k">An AST</param>    
         public AST Find(AST k)
         {
             Contract.Requires(k != null);
@@ -107,8 +107,8 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Retrieves a string representation of the map.
-        /// </summary>
+        /// Retrieves a string representation of the map. 
+        /// </summary>    
         public override string ToString()
         {
             return Native.Z3_ast_map_to_string(Context.nCtx, NativeObject);

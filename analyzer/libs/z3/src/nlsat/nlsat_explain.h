@@ -25,7 +25,7 @@ Revision History:
 
 namespace nlsat {
     class evaluator;
-
+    
     class explain {
     public:
         struct imp;

@@ -31,7 +31,7 @@ class occf_tactic : public tactic {
         ast_manager &            m;
         volatile bool            m_cancel;
         filter_model_converter * m_mc;
-
+        
         imp(ast_manager & _m):
             m(_m) {
             m_cancel = false;
@@ -51,11 +51,11 @@ class occf_tactic : public tactic {
             expr * atom;
             return is_uninterp_const(t) || (m.is_not(t, atom) && is_uninterp_const(atom));
         }
-
+        
         bool is_constraint(expr * t) const {
             return !is_literal(t);
         }
-
+        
         bool is_target(app * cls) {
             SASSERT(m.is_or(cls));
             bool found = false;
@@ -69,7 +69,7 @@ class occf_tactic : public tactic {
             }
             return false;
         }
-
+        
         struct bvar_info {
             expr *   m_bvar;
             unsigned m_gen_pos:1;
@@ -81,16 +81,16 @@ class occf_tactic : public tactic {
                 m_gen_neg(sign) {
             }
         };
-
+        
         typedef obj_map<expr, bvar_info> cnstr2bvar;
-
+        
         expr * get_aux_lit(cnstr2bvar & c2b, expr * cnstr, goal_ref const & g) {
             bool sign = false;
             while (m.is_not(cnstr)) {
                 cnstr = to_app(cnstr)->get_arg(0);
                 sign  = !sign;
             }
-
+            
             cnstr2bvar::obj_map_entry * entry = c2b.find_core(cnstr);
             if (entry == 0)
                 return 0;
@@ -117,7 +117,7 @@ class occf_tactic : public tactic {
                 cnstr = to_app(cnstr)->get_arg(0);
                 sign  = !sign;
             }
-
+            
             SASSERT(!c2b.contains(cnstr));
             expr * bvar = m.mk_fresh_const(0, m.mk_bool_sort());
             if (produce_models)
@@ -132,10 +132,10 @@ class occf_tactic : public tactic {
                 return bvar;
             }
         }
-
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -145,13 +145,13 @@ class occf_tactic : public tactic {
 
             bool produce_models = g->models_enabled();
             tactic_report report("occf", *g);
-
+            
             m_mc = 0;
-
+            
             ptr_vector<expr> new_lits;
-
+            
             cnstr2bvar c2b;
-
+            
             unsigned sz = g->size();
             for (unsigned i = 0; i < sz; i++) {
                 checkpoint();
@@ -198,7 +198,7 @@ class occf_tactic : public tactic {
             SASSERT(g->is_well_sorted());
         }
     };
-
+    
     imp *      m_imp;
 public:
     occf_tactic(ast_manager & m) {
@@ -208,22 +208,22 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(occf_tactic, m);
     }
-
+        
     virtual ~occf_tactic() {
         dealloc(m_imp);
     }
 
     virtual void updt_params(params_ref const & p) {}
     virtual void collect_param_descrs(param_descrs & r) {}
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
+    
     virtual void cleanup() {
         imp * d = alloc(imp, m_imp->m);
         #pragma omp critical (tactic_cancel)
@@ -232,7 +232,7 @@ public:
         }
         dealloc(d);
     }
-
+    
 protected:
     virtual void set_cancel(bool f) {
         if (m_imp)

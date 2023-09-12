@@ -92,9 +92,9 @@ void simplify_tactic::get_param_descrs(param_descrs & r) {
     th_rewriter::get_param_descrs(r);
 }
 
-void simplify_tactic::operator()(goal_ref const & in,
-                                 goal_ref_buffer & result,
-                                 model_converter_ref & mc,
+void simplify_tactic::operator()(goal_ref const & in, 
+                                 goal_ref_buffer & result, 
+                                 model_converter_ref & mc, 
                                  proof_converter_ref & pc,
                                  expr_dependency_ref & core) {
     try {

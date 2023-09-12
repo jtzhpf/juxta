@@ -42,8 +42,8 @@ let mk_symbol c = function
 
 (* Sorts *)
 
-let get_datatype_sort c s =
-  Array.init (get_datatype_sort_num_constructors c s) (fun i ->
+let get_datatype_sort c s = 
+  Array.init (get_datatype_sort_num_constructors c s) (fun i -> 
     let constructor = get_datatype_sort_constructor c s i in
     let recognizer = get_datatype_sort_recognizer c s i in
     let accessors =
@@ -161,11 +161,11 @@ let rec numeral_refine c t =
   assert( get_ast_kind c t = NUMERAL_AST );
   let sort = get_sort c t in
   let is_int, i = get_numeral_int c t in
-  if is_int then
+  if is_int then 
     Numeral_int (i, sort)
   else
   let is_int64, i = get_numeral_int64 c t in
-  if is_int64 then
+  if is_int64 then 
     Numeral_int64 (i, sort)
   else
   if get_sort_kind c sort <> REAL_SORT then
@@ -204,11 +204,11 @@ let get_domains c d =
   Array.init (get_domain_size c d) (get_domain c d);;
 
 
-let get_pattern_terms c p =
+let get_pattern_terms c p = 
   Array.init (get_pattern_num_terms c p) (get_pattern c p)
 
 
-let term_refine c t =
+let term_refine c t = 
   match get_ast_kind c t with
   | NUMERAL_AST ->
       Term_numeral (numeral_refine c t)
@@ -219,7 +219,7 @@ let term_refine c t =
       let args = Array.init num_args (get_app_arg c t') in
       let k = get_decl_kind c f in
       Term_app (k, f, args)
-  | QUANTIFIER_AST ->
+  | QUANTIFIER_AST -> 
       let bt = if is_quantifier_forall c t then Forall else Exists in
       let w = get_quantifier_weight c t                            in
       let np = get_quantifier_num_patterns c t                     in
@@ -232,7 +232,7 @@ let term_refine c t =
         ) in
       let body = get_quantifier_body c t in
       Term_quantifier (bt, w, pats, bound, body)
-  | VAR_AST ->
+  | VAR_AST -> 
       Term_var (get_index_value c t, get_sort c t)
   | _ ->
       assert false
@@ -311,10 +311,10 @@ let model_refine c m =
 
 (* Extended parser API *)
 
-let get_smtlib_formulas c =
+let get_smtlib_formulas c = 
   Array.init (get_smtlib_num_formulas c) (get_smtlib_formula c)
 
-let get_smtlib_assumptions c =
+let get_smtlib_assumptions c = 
   Array.init (get_smtlib_num_assumptions c) (get_smtlib_assumption c)
 
 let get_smtlib_decls c =
@@ -323,19 +323,19 @@ let get_smtlib_decls c =
 let get_smtlib_parse_results c =
   (get_smtlib_formulas c, get_smtlib_assumptions c, get_smtlib_decls c)
 
-let parse_smtlib_string_x c a1 a2 a3 a4 a5 =
+let parse_smtlib_string_x c a1 a2 a3 a4 a5 = 
   parse_smtlib_string c a1 a2 a3 a4 a5 ;
   get_smtlib_parse_results c
 
-let parse_smtlib_file_x c a1 a2 a3 a4 a5 =
+let parse_smtlib_file_x c a1 a2 a3 a4 a5 = 
   parse_smtlib_file c a1 a2 a3 a4 a5 ;
   get_smtlib_parse_results c
 
-let parse_smtlib_string_formula c a1 a2 a3 a4 a5 =
+let parse_smtlib_string_formula c a1 a2 a3 a4 a5 = 
   parse_smtlib_string c a1 a2 a3 a4 a5 ;
   match get_smtlib_formulas c with [|f|] -> f | _ -> failwith \"Z3: parse_smtlib_string_formula\"
 
-let parse_smtlib_file_formula c a1 a2 a3 a4 a5 =
+let parse_smtlib_file_formula c a1 a2 a3 a4 a5 = 
   parse_smtlib_file c a1 a2 a3 a4 a5 ;
   match get_smtlib_formulas c with [|f|] -> f | _ -> failwith \"Z3: parse_smtlib_file_formula\"
 

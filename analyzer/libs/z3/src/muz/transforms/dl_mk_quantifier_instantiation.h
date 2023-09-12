@@ -12,14 +12,14 @@ Abstract:
 
 Author:
 
-    Ken McMillan
+    Ken McMillan 
     Andrey Rybalchenko
     Nikolaj Bjorner (nbjorner) 2013-04-02
 
 Revision History:
 
-    Based on approach suggested in the SAS 2013 paper
-    "On Solving Universally Quantified Horn Clauses"
+    Based on approach suggested in the SAS 2013 paper 
+    "On Solving Universally Quantified Horn Clauses"    
 
 --*/
 #ifndef _DL_MK_QUANTIFIER_INSTANTIATION_H_
@@ -56,7 +56,7 @@ namespace datalog {
                 return r;
             }
             unsigned get_num_vars() const { return m_find.size(); }
-
+            
             unsigned find(unsigned v) const {
                 if (v >= get_num_vars()) {
                     return v;
@@ -68,18 +68,18 @@ namespace datalog {
                     v = new_v;
                 }
             }
-
-            unsigned next(unsigned v) const {
+            
+            unsigned next(unsigned v) const { 
                 if (v >= get_num_vars()) {
                     return v;
                 }
-                return m_next[v];
+                return m_next[v]; 
             }
-
-            bool is_root(unsigned v) const {
-                return v >= get_num_vars() || m_find[v] == v;
+            
+            bool is_root(unsigned v) const { 
+                return v >= get_num_vars() || m_find[v] == v; 
             }
-
+            
             void merge(unsigned v1, unsigned v2) {
                 unsigned r1 = find(v1);
                 unsigned r2 = find(v2);
@@ -103,7 +103,7 @@ namespace datalog {
 
         ast_manager&      m;
         context&          m_ctx;
-        expr_safe_replace m_var2cnst;
+        expr_safe_replace m_var2cnst; 
         expr_safe_replace m_cnst2var;
         union_find        m_uf;
         ptr_vector<expr>  m_todo;
@@ -124,7 +124,7 @@ namespace datalog {
         mk_quantifier_instantiation(context & ctx, unsigned priority);
 
         virtual ~mk_quantifier_instantiation();
-
+        
         rule_set * operator()(rule_set const & source);
     };
 

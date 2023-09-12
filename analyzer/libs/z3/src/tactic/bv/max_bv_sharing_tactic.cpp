@@ -27,7 +27,7 @@ Revision History:
 #include"cooperate.h"
 
 class max_bv_sharing_tactic : public tactic {
-
+    
     struct rw_cfg : public default_rewriter_cfg {
         typedef std::pair<expr *, expr *> expr_pair;
         typedef obj_pair_hashtable<expr, expr> set;
@@ -39,9 +39,9 @@ class max_bv_sharing_tactic : public tactic {
         unsigned long long m_max_memory;
         unsigned           m_max_steps;
         unsigned           m_max_args;
-
+        
         ast_manager & m() const { return m_util.get_manager(); }
-
+        
         rw_cfg(ast_manager & m, params_ref const & p):
             m_util(m) {
             updt_params(p);
@@ -60,7 +60,7 @@ class max_bv_sharing_tactic : public tactic {
             m_max_args       = p.get_uint("max_args", 128);
         }
 
-        bool max_steps_exceeded(unsigned num_steps) const {
+        bool max_steps_exceeded(unsigned num_steps) const { 
             cooperate("max bv sharing");
             if (memory::get_allocation_size() > m_max_memory)
                 throw tactic_exception(TACTIC_MAX_MEMORY_MSG);
@@ -122,7 +122,7 @@ class max_bv_sharing_tactic : public tactic {
 
             // std::sort(_args.begin(), _args.end(), ref_count_lt());
             // std::sort(_args.begin(), _args.end(), ast_to_lt());
-
+            
         try_to_reuse:
             if (num_args > 1 && num_args < m_max_args) {
                 for (unsigned i = 0; i < num_args - 1; i++) {
@@ -141,11 +141,11 @@ class max_bv_sharing_tactic : public tactic {
                     }
                 }
             }
-
-            // TODO:
+            
+            // TODO: 
             // some benchmarks are more efficiently solved using a tree-like structure (better sharing)
             // other benchmarks are more efficiently solved using a chain-like structure (better propagation for arguments "closer to the output").
-            //
+            // 
             // One possible solution is to do a global analysis that finds a good order that increases sharing without affecting
             // propagation.
             //
@@ -163,14 +163,14 @@ class max_bv_sharing_tactic : public tactic {
                     result = m().mk_app(f, result.get(), _args[i]);
                 }
             }
-            if (num != 0) {
+            if (num != 0) { 
                 if (first)
                     result = m().mk_app(f, num, result);
                 else
                     result = m().mk_app(f, result, num);
             }
             return BR_DONE;
-#else
+#else       
             // Create "tree-like circuit"
             while (true) {
                 TRACE("bv_sharing_detail", tout << "tree-loop: num_args: " << num_args << "\n";);
@@ -186,7 +186,7 @@ class max_bv_sharing_tactic : public tactic {
                 }
                 num_args = j;
                 if (num_args == 1) {
-                    if (num == 0) {
+                    if (num == 0) { 
                         result = _args[0];
                     }
                     else {
@@ -200,7 +200,7 @@ class max_bv_sharing_tactic : public tactic {
             }
 #endif
         }
-
+        
         br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) {
             if (f->get_family_id() != m_util.get_family_id())
                 return BR_FAILED;
@@ -229,27 +229,27 @@ class max_bv_sharing_tactic : public tactic {
     struct imp {
         rw                m_rw;
         unsigned          m_num_steps;
-
+        
         imp(ast_manager & m, params_ref const & p):
             m_rw(m, p) {
         }
-
+        
         ast_manager & m() const { return m_rw.m(); }
-
+        
         void set_cancel(bool f) {
             m_rw.set_cancel(f);
         }
-
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
             mc = 0; pc = 0; core = 0;
             tactic_report report("max-bv-sharing", *g);
             bool produce_proofs = g->proofs_enabled();
-
+            
             expr_ref   new_curr(m());
             proof_ref  new_pr(m());
             unsigned size = g->size();
@@ -259,7 +259,7 @@ class max_bv_sharing_tactic : public tactic {
                 expr * curr = g->form(idx);
                 m_rw(curr, new_curr, new_pr);
                 m_num_steps += m_rw.get_num_steps();
-
+                
                 if (produce_proofs) {
                     proof * pr = g->pr(idx);
                     new_pr     = m().mk_modus_ponens(pr, new_pr);
@@ -273,7 +273,7 @@ class max_bv_sharing_tactic : public tactic {
             SASSERT(g->is_well_sorted());
         }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
 public:
@@ -285,7 +285,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(max_bv_sharing_tactic, m, m_params);
     }
-
+        
     virtual ~max_bv_sharing_tactic() {
         dealloc(m_imp);
     }
@@ -298,18 +298,18 @@ public:
     virtual void collect_param_descrs(param_descrs & r) {
         insert_max_memory(r);
         insert_max_steps(r);
-        r.insert("max_args", CPK_UINT,
+        r.insert("max_args", CPK_UINT, 
                  "(default: 128) maximum number of arguments (per application) that will be considered by the greedy (quadratic) heuristic.");
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
+    
     virtual void cleanup() {
         imp * d = alloc(imp, m_imp->m(), m_params);
         #pragma omp critical (tactic_cancel)

@@ -17,7 +17,7 @@ Notes:
 
     Background: PDR generates several clauses that subsume each-other.
     Simplify a goal assuming it is a conjunction of clauses.
-    Subsumed clauses are simplified by using unit-propagation
+    Subsumed clauses are simplified by using unit-propagation 
     It uses the smt_context for the solver.
 
 --*/

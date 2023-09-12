@@ -42,7 +42,7 @@ namespace smt {
             m_n1(n1),
             m_n2(n2) {
         }
-
+        
         virtual void undo(context & ctx) {
             m_already_processed.erase(m_n1, m_n2);
             TRACE("arith_eq_adapter_profile", tout << "del #" << m_n1->get_owner_id() << " #" << m_n2->get_owner_id() << "\n";);
@@ -61,7 +61,7 @@ namespace smt {
         expr * m_ge;
     public:
         arith_eq_relevancy_eh(expr * n1, expr * n2, expr * eq, expr * le, expr * ge):
-            m_n1(n1),
+            m_n1(n1), 
             m_n2(n2),
             m_eq(eq),
             m_le(le),
@@ -101,9 +101,9 @@ namespace smt {
         if (m.is_value(t1) && m.is_value(t2)) {
             // Nothing to be done
             // We don't need to create axioms for 2 = 3
-            return;
+            return; 
         }
-
+        
         context & ctx = get_context();
         CTRACE("arith_eq_adapter_relevancy", !(ctx.is_relevant(n1) && ctx.is_relevant(n2)),
                tout << "is_relevant(n1): #" << n1->get_owner_id() << " " << ctx.is_relevant(n1) << "\n";
@@ -118,22 +118,22 @@ namespace smt {
         data d;
         if (m_already_processed.find(n1, n2, d))
             return;
-
+        
         TRACE("arith_eq_adapter_profile", tout << "mk #" << n1->get_owner_id() << " #" << n2->get_owner_id() << " " <<
               m_already_processed.size() << " " << ctx.get_scope_level() << "\n";);
-
+        
         m_stats.m_num_eq_axioms++;
-
-        TRACE("arith_eq_adapter_profile_detail",
-              tout << "mk_detail " << mk_bounded_pp(n1->get_owner(), m, 5) << " " <<
+        
+        TRACE("arith_eq_adapter_profile_detail", 
+              tout << "mk_detail " << mk_bounded_pp(n1->get_owner(), m, 5) << " " << 
               mk_bounded_pp(n2->get_owner(), m, 5) << "\n";);
-
+        
         app_ref t1_eq_t2(m);
-
+        
         t1_eq_t2 = ctx.mk_eq_atom(t1, t2);
         SASSERT(!m.is_false(t1_eq_t2));
-
-        TRACE("arith_eq_adapter_bug", tout << mk_bounded_pp(t1_eq_t2, m) << "\n"
+        
+        TRACE("arith_eq_adapter_bug", tout << mk_bounded_pp(t1_eq_t2, m) << "\n" 
               << mk_bounded_pp(t1, m) << "\n"
               << mk_bounded_pp(t2, m) << "\n";);
 
@@ -155,7 +155,7 @@ namespace smt {
         //         also reinitialized, but t1 is not. We only create a "name" for a term (* -1 x)
         //         if it is embedded in a function application.
         //      5) theory_arith fails to internalize (+ (* -1 x) (* -1 x)), and Z3 crashes.
-        //
+        // 
 
 #if 0
         // This block of code uses the simplifier for creating the literals t1 >= t2 and t1 <= t2.
@@ -171,8 +171,8 @@ namespace smt {
         // These inequalities imply that 1+a >= 2+b and 1+a <= 2+b,
         // but the tableau is complete different.
 
-
-        // BTW, note that we don't really need to handle the is_numeral case when using
+        
+        // BTW, note that we don't really need to handle the is_numeral case when using 
         // the simplifier. However, doing that, it seems we minimize the performance problem.
         expr_ref le(m);
         expr_ref ge(m);
@@ -190,7 +190,7 @@ namespace smt {
         TRACE("arith_eq_adapter_perf", tout << mk_ismt2_pp(t1_eq_t2, m) << "\n" << mk_ismt2_pp(le, m) << "\n" << mk_ismt2_pp(ge, m) << "\n";);
 #else
         // Old version that used to be buggy.
-        // I fixed the theory arithmetic internalizer to accept non simplified terms of the form t1 - t2
+        // I fixed the theory arithmetic internalizer to accept non simplified terms of the form t1 - t2 
         // if t1 and t2 already have slacks (theory variables) associated with them.
         app * le = 0;
         app * ge = 0;
@@ -215,9 +215,9 @@ namespace smt {
         ctx.push_trail(already_processed_trail(m_already_processed, n1, n2));
         m_already_processed.insert(n1, n2, data(t1_eq_t2, le, ge));
         TRACE("arith_eq_adapter_profile", tout << "insert #" << n1->get_owner_id() << " #" << n2->get_owner_id() << "\n";);
-        ctx.internalize(t1_eq_t2, true);
-        literal t1_eq_t2_lit(ctx.get_bool_var(t1_eq_t2));
-        TRACE("interface_eq",
+        ctx.internalize(t1_eq_t2, true); 
+        literal t1_eq_t2_lit(ctx.get_bool_var(t1_eq_t2)); 
+        TRACE("interface_eq", 
               tout << "core should try true phase first for the equality: " << t1_eq_t2_lit << "\n";
               tout << "#" << n1->get_owner_id() << " == #" << n2->get_owner_id() << "\n";
               tout << "try_true_first: " << ctx.try_true_first(t1_eq_t2_lit.var()) << "\n";);
@@ -244,8 +244,8 @@ namespace smt {
         ctx.mk_th_axiom(tid, ~t1_eq_t2_lit, ge_lit, m_proof_hint.size(), m_proof_hint.c_ptr());
         ctx.mk_th_axiom(tid, t1_eq_t2_lit, ~le_lit, ~ge_lit, m_proof_hint.size(), m_proof_hint.c_ptr());
         TRACE("arith_eq_adapter", tout << "internalizing: "
-              << " " << mk_pp(le, m) << ": " << le_lit
-              << " " << mk_pp(ge, m) << ": " << ge_lit
+              << " " << mk_pp(le, m) << ": " << le_lit 
+              << " " << mk_pp(ge, m) << ": " << ge_lit 
               << " " << mk_pp(t1_eq_t2, m) << ": " << t1_eq_t2_lit << "\n";);
 
         if (m_params.m_arith_add_binary_bounds) {
@@ -257,7 +257,7 @@ namespace smt {
             ctx.add_relevancy_eh(n1->get_owner(), eh);
             ctx.add_relevancy_eh(n2->get_owner(), eh);
         }
-        if (!m_params.m_arith_lazy_adapter && !ctx.at_base_level() &&
+        if (!m_params.m_arith_lazy_adapter && !ctx.at_base_level() && 
             n1->get_iscope_lvl() <= ctx.get_base_level() && n2->get_iscope_lvl() <= ctx.get_base_level()) {
             m_restart_pairs.push_back(enode_pair(n1, n2));
         }
@@ -286,7 +286,7 @@ namespace smt {
         m_stats             .reset();
     }
 
-    void arith_eq_adapter::restart_eh() {
+    void arith_eq_adapter::restart_eh() { 
         TRACE("arith_eq_adapter", tout << "restart\n";);
         svector<enode_pair> tmp(m_restart_pairs);
         svector<enode_pair>::iterator it  =  tmp.begin();

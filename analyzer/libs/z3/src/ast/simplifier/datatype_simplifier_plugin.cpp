@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     nbjorner 2008-11-6
-
+    
 --*/
 
 #include"datatype_simplifier_plugin.h"
@@ -40,7 +40,7 @@ bool datatype_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr *
         // simplify is_cons(nil) -> false
         //
         SASSERT(num_args == 1);
-
+        
         if (!is_app_of(args[0], get_family_id(), OP_DT_CONSTRUCTOR)) {
             return false;
         }
@@ -56,11 +56,11 @@ bool datatype_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr *
         return true;
     }
     case OP_DT_ACCESSOR: {
-        //
+        // 
         // simplify head(cons(x,y)) -> x
-        //
+        // 
         SASSERT(num_args == 1);
-
+        
         if (!is_app_of(args[0], get_family_id(), OP_DT_CONSTRUCTOR)) {
             return false;
         }
@@ -84,7 +84,7 @@ bool datatype_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr *
     default:
         UNREACHABLE();
     }
-
+    
     return false;
 }
 
@@ -99,9 +99,9 @@ bool datatype_simplifier_plugin::reduce_eq(expr * lhs, expr * rhs, expr_ref & re
             return true;
         }
         expr_ref_vector eqs(m_manager);
-        for (unsigned i = 0; i < a->get_num_args(); ++i) {
+        for (unsigned i = 0; i < a->get_num_args(); ++i) {            
             m_bsimp.mk_eq(a->get_arg(i),b->get_arg(i), result);
-            eqs.push_back(result);
+            eqs.push_back(result);                
         }
         m_bsimp.mk_and(eqs.size(), eqs.c_ptr(), result);
         return true;

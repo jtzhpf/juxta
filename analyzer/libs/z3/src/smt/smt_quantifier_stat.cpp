@@ -61,7 +61,7 @@ namespace smt {
                 depth_only  = true;
             }
             m_already_found.insert(n, depth);
-            if (depth >= r->m_depth)
+            if (depth >= r->m_depth) 
                 r->m_depth = depth;
             if (!depth_only) {
                 r->m_size++;

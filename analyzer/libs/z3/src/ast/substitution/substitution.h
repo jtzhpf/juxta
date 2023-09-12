@@ -21,7 +21,7 @@ Revision History:
         substitutions are invalidated.
       - reset_cache if a new binding was added after application
         of a substitution.
-      - Add m_refs to make sure terms in the range of the
+      - Add m_refs to make sure terms in the range of the 
         substitution have the same life-time as the substitution.
       - Remove reset_subst() function. If called without resetting the cache, then
         results of applying substitutions are incoherent.
@@ -66,13 +66,13 @@ class substitution {
 
 #ifdef Z3DEBUG
     unsigned                    m_max_offset_since_reset;
-#endif
+#endif 
     void apply_visit(expr_offset const & n, bool & visited);
 
 
     color get_color(expr_offset const & p) const;
     void set_color(expr_offset const & p, color c);
-
+    
     void visit(expr_offset const & p, bool & visited);
     bool visit_children(expr_offset const & p);
     bool acyclic(expr_offset p);
@@ -83,7 +83,7 @@ public:
 
     // -----------------------------------
     //
-    // Reserve memory for the given number of
+    // Reserve memory for the given number of 
     // offsets and variables.
     //
     // -----------------------------------
@@ -114,7 +114,7 @@ public:
     unsigned get_scope_lvl() { return m_scopes.size(); }
     bool top_scope_has_bindings() const { return m_scopes.empty() ? !m_vars.empty() : m_scopes.back() < m_vars.size(); }
     unsigned get_num_bindings() const { return m_vars.size(); }
-
+    
 
     // -----------------------------------
     //
@@ -127,7 +127,7 @@ public:
     // -----------------------------------
     //
     // Insertion & Lookup
-    //
+    // 
     // get_binding supplies a way to inspect the substitution.
     //
     // -----------------------------------
@@ -148,7 +148,7 @@ public:
 
     bool find(unsigned v_idx, unsigned offset, expr_offset & r) const { return m_subst.find(v_idx, offset, r); }
     bool find(var * v, unsigned offset, expr_offset & r) const { return find(v->get_idx(), offset, r); }
-    bool find(expr_offset v, expr_offset & r) const {
+    bool find(expr_offset v, expr_offset & r) const { 
         SASSERT(is_var(v.get_expr()));
         return find(to_var(v.get_expr()), v.get_offset(), r);
     }
@@ -165,22 +165,22 @@ public:
     // Application
     //
     // -----------------------------------
-
+    
     /**
        \brief Apply the current substitution to the given
        expression+offset. The result is an expression.
-
+       
        The argument num_actual_offsets is the maximum offset used in a
        insert method since the last reset.
-
+       
        The argument deltas is an array of size num_actual_offsets. It contains
        the variable delta for each offset. A free variable x:i in an expression offset t:j is mapped
-       to the variable x+delta[i].
+       to the variable x+delta[i]. 
     */
     void apply(unsigned num_actual_offsets, unsigned const * deltas, expr_offset const & n, expr_ref & result) {
         apply(num_actual_offsets, deltas, n, expr_offset(0, 0), expr_offset(0, 0), result);
     }
-
+    
     /**
        \brief Similar to the previous method, but occurrences of s in n are substituted by t.
        If s != expr_offset(0,0), then the cache is reset before and after the execution of this procedure.
@@ -197,7 +197,7 @@ public:
     // Debugging
     //
     // -----------------------------------
-
+ 
     /**
        \brief Dump the current substitution (for debugging purposes).
     */
@@ -208,7 +208,7 @@ public:
     */
     void display(std::ostream & out);
 
-
+    
     // -----------------------------------
     //
     // Compare terms modulo a substitution

@@ -26,7 +26,7 @@ Revision History:
 
 namespace smtlib {
     class parser {
-    public:
+    public:        
         static parser * create(ast_manager & ast_manager, bool ignore_user_patterns = false);
 
         virtual ~parser() {}

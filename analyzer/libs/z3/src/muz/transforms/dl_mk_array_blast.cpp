@@ -24,10 +24,10 @@ Revision History:
 namespace datalog {
 
 
-    mk_array_blast::mk_array_blast(context & ctx, unsigned priority) :
+    mk_array_blast::mk_array_blast(context & ctx, unsigned priority) : 
         rule_transformer::plugin(priority, false),
         m_ctx(ctx),
-        m(ctx.get_manager()),
+        m(ctx.get_manager()), 
         a(m),
         rm(ctx.get_rule_manager()),
         m_rewriter(m, m_params),
@@ -68,15 +68,15 @@ namespace datalog {
             e = ap->get_arg(0);
         }
     }
-
+     
     bool mk_array_blast::insert_def(rule const& r, app* e, var* v) {
         //
-        // For the Ackermann reduction we would like the arrays
-        // to be variables, so that variables can be
-        // assumed to represent difference (alias)
-        // classes. Ehm., Soundness of this approach depends on
+        // For the Ackermann reduction we would like the arrays 
+        // to be variables, so that variables can be 
+        // assumed to represent difference (alias) 
+        // classes. Ehm., Soundness of this approach depends on 
         // if the arrays are finite domains...
-        //
+        // 
 
         if (!is_var(get_select(e))) {
             return false;
@@ -112,7 +112,7 @@ namespace datalog {
         return false;
     }
 
-
+    
     bool mk_array_blast::ackermanize(rule const& r, expr_ref& body, expr_ref& head) {
         expr_ref_vector conjs(m), trail(m);
         qe::flatten_and(body, conjs);
@@ -170,7 +170,7 @@ namespace datalog {
                         cache.insert(e, v);
                     }
                     else if (!insert_def(r, e1, 0)) {
-                        return false;
+                        return false;                        
                     }
                     else {
                         cache.insert(e, m_defs.find(e1));
@@ -179,7 +179,7 @@ namespace datalog {
                 else {
                     cache.insert(e, e1);
                 }
-            }
+            }            
         }
         for (unsigned i = 0; i < conjs.size(); ++i) {
             expr* e = conjs[i].get();
@@ -226,8 +226,8 @@ namespace datalog {
                 conjs.push_back(m.mk_implies(m.mk_and(eqs.size(), eqs.c_ptr()), m.mk_eq(v1, v2)));
             }
         }
-        body = m.mk_and(conjs.size(), conjs.c_ptr());
-        m_rewriter(body);
+        body = m.mk_and(conjs.size(), conjs.c_ptr());        
+        m_rewriter(body);   
         return true;
     }
 
@@ -249,7 +249,7 @@ namespace datalog {
         qe::flatten_and(conjs);
         for (unsigned i = 0; i < conjs.size(); ++i) {
             expr* x, *y, *e = conjs[i].get();
-
+            
             if (is_store_def(e, x, y)) {
                 // enforce topological order consistency:
                 uint_set lhs = rm.collect_vars(x);
@@ -270,7 +270,7 @@ namespace datalog {
                 new_conjs.push_back(tmp);
             }
         }
-
+        
         expr_ref fml1(m), fml2(m), body(m), head(m);
         body = m.mk_and(new_conjs.size(), new_conjs.c_ptr());
         head = r.get_head();
@@ -288,7 +288,7 @@ namespace datalog {
         proof_ref p(m);
         rule_set new_rules(m_ctx);
         rm.mk_rule(fml2, p, new_rules, r.name());
-
+        
 
         rule_ref new_rule(rm);
         if (m_simplifier.transform_rule(new_rules.last(), new_rule)) {
@@ -297,7 +297,7 @@ namespace datalog {
                 r.to_formula(fml1);
                 p = m.mk_rewrite(fml1, fml2);
                 p = m.mk_modus_ponens(r.get_proof(), p);
-                new_rule->set_proof(m, p);
+                new_rule->set_proof(m, p);                
             }
             rules.add_rule(new_rule.get());
             rm.mk_rule_rewrite_proof(r, *new_rule.get());
@@ -305,7 +305,7 @@ namespace datalog {
         }
         return true;
     }
-
+    
     rule_set * mk_array_blast::operator()(rule_set const & source) {
 
         rule_set* rules = alloc(rule_set, m_ctx);
@@ -318,8 +318,8 @@ namespace datalog {
         if (!change) {
             dealloc(rules);
             rules = 0;
-        }
-        return rules;
+        }        
+        return rules;        
     }
 
 };

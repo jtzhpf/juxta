@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     ASTVector.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -34,7 +34,7 @@ class ASTVector extends Z3Object
      * Retrieves the i-th object in the vector. <remarks>May throw an
      * IndexOutOfBoundsException when <paramref name="i"/> is out of
      * range.</remarks> <param name="i">Index</param>
-     *
+     * 
      * @return An AST
      * @throws Z3Exception
      **/
@@ -72,7 +72,7 @@ class ASTVector extends Z3Object
     /**
      * Translates all ASTs in the vector to <paramref name="ctx"/>. <param
      * name="ctx">A context</param>
-     *
+     * 
      * @return A new ASTVector
      * @throws Z3Exception
      **/

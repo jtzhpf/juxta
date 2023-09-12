@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Clauses used in the Nonlinear arithmetic satisfiability procedure.
+    Clauses used in the Nonlinear arithmetic satisfiability procedure. 
 
 Author:
 

@@ -26,7 +26,7 @@ bool uses_theory(expr * n, family_id fid) {
 }
 
 namespace uses_theory_ns {
-    struct found {};
+    struct found {}; 
     struct proc {
         family_id m_fid;
         proc(family_id fid):m_fid(fid) {}

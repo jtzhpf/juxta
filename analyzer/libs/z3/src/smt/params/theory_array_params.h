@@ -62,11 +62,11 @@ struct theory_array_params : public array_simplifier_params {
         p.register_unsigned_param("array_laziness", m_array_laziness);
         p.register_bool_param("array_delay_exp_axiom", m_array_delay_exp_axiom);
         p.register_bool_param("array_cg", m_array_cg);
-        p.register_bool_param("array_always_prop_upward", m_array_always_prop_upward,
+        p.register_bool_param("array_always_prop_upward", m_array_always_prop_upward, 
                               "Disable the built-in filter upwards propagation");
         p.register_bool_param("array_lazy_ieq", m_array_lazy_ieq);
         p.register_unsigned_param("array_lazy_ieq_delay", m_array_lazy_ieq_delay);
-        p.register_bool_param("array_canonize", m_array_canonize_simplify,
+        p.register_bool_param("array_canonize", m_array_canonize_simplify, 
                               "Normalize arrays into normal form during simplification");
     }
 #endif

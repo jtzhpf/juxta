@@ -21,13 +21,13 @@ Revision History:
 #include"trace.h"
 
 namespace sat {
-
+    
     elim_eqs::elim_eqs(solver & s):
         m_solver(s) {
     }
 
     inline literal norm(literal_vector const & roots, literal l) {
-        if (l.sign())
+        if (l.sign()) 
             return ~roots[l.var()];
         else
             return roots[l.var()];
@@ -59,7 +59,7 @@ namespace sat {
                         continue;
                     }
                     if (l1 != r1) {
-                        // add half r1 => r2, the other half ~r2 => ~r1 is added when traversing l2
+                        // add half r1 => r2, the other half ~r2 => ~r1 is added when traversing l2 
                         m_solver.m_watches[(~r1).index()].push_back(watched(r2, it2->is_learned()));
                         continue;
                     }
@@ -123,7 +123,7 @@ namespace sat {
             if (i < sz) {
                 // clause is a tautology or was simplified
                 m_solver.del_clause(c);
-                continue;
+                continue; 
             }
             if (j == 0) {
                 // empty clause

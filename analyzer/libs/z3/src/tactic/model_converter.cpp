@@ -76,7 +76,7 @@ public:
         }
         UNREACHABLE();
     }
-
+    
     virtual char const * get_name() const { return "concat-star-model-converter"; }
 
     virtual model_converter * translate(ast_translation & translator) {
@@ -116,13 +116,13 @@ public:
 
     virtual void cancel() {
     }
-
+    
     virtual void display(std::ostream & out) {
         out << "(model->model-converter-wrapper\n";
         model_v2_pp(out, *m_model);
         out << ")\n";
-    }
-
+    }    
+    
     virtual model_converter * translate(ast_translation & translator) {
         model * m = m_model->translate(translator);
         return alloc(model2mc, m);

@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Failures
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-02-09.
@@ -27,8 +27,8 @@ namespace smt {
     enum failure {
         OK,
         UNKNOWN,
-        TIMEOUT,
-        MEMOUT,
+        TIMEOUT,    
+        MEMOUT,     
         CANCELED,      //!< External cancel flag was set
         NUM_CONFLICTS, //!< Maximum number of conflicts was reached
         THEORY,        //!< Theory is incomplete

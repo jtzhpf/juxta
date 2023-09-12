@@ -14,7 +14,7 @@ class reduce_hypotheses {
     obj_map<proof, expr_set*> m_hypmap;
     ptr_vector<expr_set>  m_hyprefs;
     ptr_vector<expr>      m_literals;
-
+    
     void reset() {
         m_refs.reset();
         m_cache.reset();
@@ -26,11 +26,11 @@ class reduce_hypotheses {
         m_hyprefs.reset();
         m_literals.reset();
     }
-
+    
     void push() {
         m_limits.push_back(m_units_trail.size());
     }
-
+    
     void pop() {
         unsigned sz = m_limits.back();
         while (m_units_trail.size() > sz) {
@@ -39,17 +39,17 @@ class reduce_hypotheses {
         }
         m_limits.pop_back();
     }
-
+    
     void get_literals(expr* clause) {
         m_literals.reset();
         if (m.is_or(clause)) {
-            m_literals.append(to_app(clause)->get_num_args(), to_app(clause)->get_args());
+            m_literals.append(to_app(clause)->get_num_args(), to_app(clause)->get_args());                
         }
         else {
             m_literals.push_back(clause);
         }
     }
-
+    
     void add_hypotheses(proof* p) {
         expr_set* hyps = 0;
         bool inherited = false;
@@ -88,7 +88,7 @@ class reduce_hypotheses {
             return expr_ref(m.mk_not(e), m);
         }
     }
-
+    
     bool in_hypotheses(expr* e, expr_set* hyps) {
         if (!hyps) {
             return false;
@@ -121,11 +121,11 @@ class reduce_hypotheses {
     bool is_closed(proof* p) {
         expr_set* hyps = m_hypmap.find(p);
         return !hyps || hyps->empty();
-    }
-
+    }    
+    
 public:
     reduce_hypotheses(ast_manager& m): m(m), m_refs(m) {}
-
+    
     void operator()(proof_ref& pr) {
         proof_ref tmp(m);
         tmp = pr;
@@ -135,9 +135,9 @@ public:
             tout << "Contains hypothesis:\n";
             tout << mk_ismt2_pp(tmp, m) << "\n====>\n";
             tout << mk_ismt2_pp(pr, m) << "\n";);
-
+        
     }
-
+    
     void elim(proof_ref& p) {
         proof_ref tmp(m);
         proof* result = p.get();
@@ -197,9 +197,9 @@ public:
             }
             m_hypmap.insert(result, new_hyps);
             m_hyprefs.push_back(new_hyps);
-            TRACE("proof_utils",
-                    tout << "New lemma: " << mk_pp(m.get_fact(p), m)
-                      << "\n==>\n"
+            TRACE("proof_utils",            
+                    tout << "New lemma: " << mk_pp(m.get_fact(p), m) 
+                      << "\n==>\n" 
                       << mk_pp(m.get_fact(result), m) << "\n";
                 if (hyps) {
                     expr_set::iterator it = hyps->begin();
@@ -207,8 +207,8 @@ public:
                     for (; it != end; ++it) {
                         tout << "Hypothesis: " << mk_pp(*it, m) << "\n";
                     }
-                });
-
+                });                               
+            
             break;
         }
         case PR_UNIT_RESOLUTION: {
@@ -225,7 +225,7 @@ public:
                     break;
                 }
                 SASSERT(m.get_fact(tmp) == m.get_fact(m.get_parent(p, i)));
-                parents.push_back(tmp);
+                parents.push_back(tmp);          
                 if (is_closed(tmp) && !m_units.contains(m.get_fact(tmp))) {
                     m_units.insert(m.get_fact(tmp), tmp);
                     m_units_trail.push_back(m.get_fact(tmp));
@@ -256,21 +256,21 @@ public:
                         parents[1] = parents[i].get();
                         parents.resize(2);
                         result = m.mk_unit_resolution(parents.size(), parents.c_ptr());
-                        m_refs.push_back(result);
+                        m_refs.push_back(result);               
                         add_hypotheses(result);
                         found = true;
-                    }
+                    }                    
                 }
                 if (!found) {
                     result = parents[0].get();
                 }
-                pop();
+                pop(); 
                 break;
             }
             //
             // case where new clause is a subset of old clause.
             // the literals in clause should be a subset of literals in old_clause.
-            //
+            // 
             get_literals(clause);
             for (unsigned i = 1; i < parents.size(); ++i) {
                 bool found = false;
@@ -292,12 +292,12 @@ public:
             }
             else {
                 result = m.mk_unit_resolution(parents.size(), parents.c_ptr());
-                m_refs.push_back(result);
+                m_refs.push_back(result);               
                 add_hypotheses(result);
             }
             pop();
             break;
-        }
+        }                
         default: {
             ptr_buffer<expr> args;
             bool change = false;
@@ -327,15 +327,15 @@ public:
             else {
                 tmp = p;
             }
-            result = tmp;
+            result = tmp;                
             add_hypotheses(result);
             break;
         }
-        }
+        }          
         SASSERT(m_hypmap.contains(result));
         m_cache.insert(p, result);
         p = result;
-    }
+    }        
 
     bool is_literal_in_clause(expr* fml, expr* clause) {
         if (!m.is_or(clause)) {
@@ -369,7 +369,7 @@ class proof_is_closed {
     }
 
     bool check(proof* p) {
-        // really just a partial check because nodes may be visited
+        // really just a partial check because nodes may be visited 
         // already under a different lemma scope.
         if (m_visit.is_marked(p)) {
             return true;
@@ -387,7 +387,7 @@ class proof_is_closed {
             SASSERT(m.get_num_parents(p) == 1);
             result = check(m.get_parent(p, 0));
             m_literals.resize(sz);
-            break;
+            break;            
         }
         case PR_HYPOTHESIS: {
             expr* fact = m.get_fact(p);
@@ -399,7 +399,7 @@ class proof_is_closed {
             }
             break;
         }
-        default:
+        default: 
             result = true;
             for (unsigned i = 0; i < m.get_num_parents(p); ++i) {
                 if (!check(m.get_parent(p, i))) {
@@ -409,10 +409,10 @@ class proof_is_closed {
             }
             break;
         }
-
+        
         return result;
     }
-
+    
 public:
     proof_is_closed(ast_manager& m): m(m) {}
 
@@ -433,21 +433,21 @@ static void permute_unit_resolution(expr_ref_vector& refs, obj_map<proof,proof*>
     ast_manager& m = pr.get_manager();
     proof* pr2 = 0;
     proof_ref_vector parents(m);
-    proof_ref prNew(pr);
+    proof_ref prNew(pr); 
     if (cache.find(pr, pr2)) {
         pr = pr2;
         return;
     }
-
+    
     for (unsigned i = 0; i < m.get_num_parents(pr); ++i) {
         prNew = m.get_parent(pr, i);
         permute_unit_resolution(refs, cache, prNew);
         parents.push_back(prNew);
     }
-
+    
     prNew = pr;
     if (pr->get_decl_kind() == PR_UNIT_RESOLUTION &&
-        parents[0]->get_decl_kind() == PR_TH_LEMMA) {
+        parents[0]->get_decl_kind() == PR_TH_LEMMA) { 
         /*
           Unit resolution:
           T1:      (or l_1 ... l_n l_1' ... l_m')
@@ -460,19 +460,19 @@ static void permute_unit_resolution(expr_ref_vector& refs, obj_map<proof,proof*>
           ...
           Tn:      (not l_n)
           [th-lemma T1 ... Tn]: (or l_{n+1} ... l_m)
-
+                    
           Such that (or l_1 .. l_n l_{n+1} .. l_m) is a theory axiom.
-
+                    
           Implement conversion:
-
-                 T1 |- not l_1 ... Tn |- not l_n
+                    
+                 T1 |- not l_1 ... Tn |- not l_n  
                  -------------------------------  TH_LEMMA
                           (or k_1 .. k_m j_1 ... j_m)    S1 |- not k_1 ... Sm |- not k_m
                           -------------------------------------------------------------- UNIT_RESOLUTION
                                         (or j_1 .. j_m)
 
 
-            |->
+            |-> 
 
                     T1 |- not l_1 ... Tn |- not l_n S1 |- not k_1 ... Sm |- not k_m
                     ---------------------------------------------------------------- TH_LEMMA
@@ -492,7 +492,7 @@ static void permute_unit_resolution(expr_ref_vector& refs, obj_map<proof,proof*>
         SASSERT(params[0].is_symbol());
         family_id tid = m.mk_family_id(params[0].get_symbol());
         SASSERT(tid != null_family_id);
-        prNew = m.mk_th_lemma(tid, m.get_fact(pr),
+        prNew = m.mk_th_lemma(tid, m.get_fact(pr), 
                               premises.size(), premises.c_ptr(), num_params-1, params+1);
     }
     else {
@@ -504,12 +504,12 @@ static void permute_unit_resolution(expr_ref_vector& refs, obj_map<proof,proof*>
             args.push_back(m.get_fact(pr));
         }
         prNew = m.mk_app(pr->get_decl(), args.size(), args.c_ptr());
-    }
-
+    }    
+    
     cache.insert(pr, prNew);
     refs.push_back(prNew);
     pr = prNew;
-}
+}	
 
 
 // permute unit resolution over Theory lemmas to track premises.
@@ -544,11 +544,11 @@ private:
                 substs[i].reset();
             }
             instantiate(sub, conclusion);
-            return
-                m.mk_hyper_resolve(premises.size(), premises.c_ptr(), conclusion,
-                                   positions,
+            return 
+                m.mk_hyper_resolve(premises.size(), premises.c_ptr(), conclusion, 
+                                   positions, 
                                    substs);
-        }
+        }        
         if (sub.empty()) {
             return p;
         }
@@ -560,7 +560,7 @@ private:
                 return push(p0, sub);
             }
             expr* e1, *e2;
-            if (m.is_rewrite(p1, e1, e2) &&
+            if (m.is_rewrite(p1, e1, e2) && 
                 is_quantifier(e1) && is_quantifier(e2) &&
                 to_quantifier(e1)->get_num_decls() == to_quantifier(e2)->get_num_decls()) {
                 expr_ref r1(e1,m), r2(e2,m);
@@ -581,7 +581,7 @@ private:
         for (unsigned i = 0; i < sub.size(); ++i) {
             expr_ref e(m);
             var_subst(m, false)(sub[i].get(), s0.size(), s0.c_ptr(), e);
-            sub[i] = e;
+            sub[i] = e;            
         }
     }
 

@@ -30,7 +30,7 @@ class uint_map {
 public:
     bool contains(unsigned k) const { return m_map.get(k, 0) != 0; }
 
-    bool find(unsigned k, T * & v) const {
+    bool find(unsigned k, T * & v) const { 
         if (k >= m_map.size())
             return false;
         else {
@@ -46,7 +46,7 @@ public:
     }
 
     void erase(unsigned k) {
-        if (k < m_map.size())
+        if (k < m_map.size()) 
             m_map[k] = 0;
     }
 

@@ -28,17 +28,17 @@ struct unit_subsumption_tactic : public tactic {
     unsigned        m_clause_count;
     bit_vector      m_is_deleted;
     unsigned_vector m_deleted;
-
+           
     unit_subsumption_tactic(
-        ast_manager& m,
+        ast_manager& m, 
         params_ref const& p):
-        m(m),
-        m_params(p),
-        m_cancel(false),
+        m(m), 
+        m_params(p), 
+        m_cancel(false), 
         m_context(m, m_fparams, p),
         m_clauses(m) {
     }
-
+           
     void set_cancel(bool f) {
         m_cancel = f;
         m_context.set_cancel_flag(f);
@@ -48,11 +48,11 @@ struct unit_subsumption_tactic : public tactic {
         set_cancel(false);
     }
 
-    virtual void operator()(/* in */  goal_ref const & in,
-                            /* out */ goal_ref_buffer & result,
-                            /* out */ model_converter_ref & mc,
+    virtual void operator()(/* in */  goal_ref const & in, 
+                            /* out */ goal_ref_buffer & result, 
+                            /* out */ model_converter_ref & mc, 
                             /* out */ proof_converter_ref & pc,
-                            /* out */ expr_dependency_ref & core) {
+                            /* out */ expr_dependency_ref & core) {        
         reduce_core(in, result);
     }
 
@@ -60,11 +60,11 @@ struct unit_subsumption_tactic : public tactic {
         m_params = p;
         // m_context.updt_params(p); does not exist.
     }
-
+    
     virtual tactic* translate(ast_manager& m) {
         return alloc(unit_subsumption_tactic, m, m_params);
     }
-
+    
     void checkpoint() {
         if (m_cancel) {
             throw tactic_exception(TACTIC_CANCELED_MSG);
@@ -75,12 +75,12 @@ struct unit_subsumption_tactic : public tactic {
         init(g);
         m_context.push();
         assert_clauses(g);
-        m_context.push();   // internalize assertions.
+        m_context.push();   // internalize assertions. 
         prune_clauses();
         goal_ref r(g);
         insert_result(r);
         r->elim_true();
-        result.push_back(r.get());
+        result.push_back(r.get());        
         m_context.pop(2);
         TRACE("unit_subsumption_tactic", g->display(tout); r->display(tout););
     }
@@ -110,14 +110,14 @@ struct unit_subsumption_tactic : public tactic {
         m_context.push(); // force propagation
         bool is_unsat = m_context.inconsistent();
         m_context.pop(2);
-        if (is_unsat) {
+        if (is_unsat) {            
             TRACE("unit_subsumption_tactic", tout << "Removing clause " << i << "\n";);
             m_is_deleted.set(i, true);
             m_deleted.push_back(i);
         }
     }
 
-    void insert_result(goal_ref& result) {
+    void insert_result(goal_ref& result) {        
         for (unsigned i = 0; i < m_deleted.size(); ++i) {
             result->update(m_deleted[i], m.mk_true()); // TBD proof?
         }
@@ -142,7 +142,7 @@ struct unit_subsumption_tactic : public tactic {
         return new_bool(m_clause_count, m_clauses, "#clause");
     }
 
-
+    
 };
 
 tactic * mk_unit_subsumption_tactic(ast_manager & m, params_ref const & p) {

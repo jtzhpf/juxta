@@ -29,7 +29,7 @@ public:
     typedef typename C::value_manager value_manager;
     typedef typename C::allocator     allocator;
 
-    class dependency {
+    class dependency { 
         unsigned  m_ref_count:30;
         unsigned  m_mark:1;
         unsigned  m_leaf:1;
@@ -56,7 +56,7 @@ private:
             m_children[1] = d2;
         }
     };
-
+    
     struct leaf : public dependency {
         value     m_value;
         leaf(value const & v):
@@ -117,7 +117,7 @@ private:
     }
 
 public:
-
+    
     dependency_manager(value_manager & m, allocator & a):
         m_vmanager(m),
         m_allocator(a) {
@@ -127,7 +127,7 @@ public:
         if (d)
             d->m_ref_count++;
     }
-
+    
     void dec_ref(dependency * d) {
         if (d) {
             SASSERT(d->m_ref_count > 0);
@@ -136,7 +136,7 @@ public:
                 del(d);
         }
     }
-
+        
     dependency * mk_empty() {
         return 0;
     }
@@ -146,13 +146,13 @@ public:
         inc_ref(v);
         return new (mem) leaf(v);
     }
-
+    
     dependency * mk_join(dependency * d1, dependency * d2) {
         if (d1 == 0) {
             return d2;
         }
         else if (d2 == 0) {
-            return d1;
+            return d1; 
         }
         else if (d1 == d2) {
             return d1;
@@ -222,9 +222,9 @@ public:
 };
 
 /**
-   \brief Version of the dependency_manager where
+   \brief Version of the dependency_manager where 
    memory management is scoped (i.e., reference counting is ignored),
-   and push_scope/pop_scope are used instead.
+   and push_scope/pop_scope are used instead. 
 
    Value must be a primitive type such as an integer or pointer.
 */
@@ -252,18 +252,18 @@ class scoped_dependency_manager {
             void * allocate(size_t sz) {
                 return m_region.allocate(sz);
             }
-
+            
             void deallocate(size_t sz, void * mem) {
             }
-
-            void push_scope() {
-                m_region.push_scope();
+            
+            void push_scope() { 
+                m_region.push_scope(); 
             }
-
+            
             void pop_scope(unsigned num) {
                 m_region.pop_scope(num);
             }
-
+            
             void reset() {
                 m_region.reset();
             }
@@ -288,27 +288,27 @@ public:
     dependency * mk_empty() {
         return m_dep_manager.mk_empty();
     }
-
+    
     dependency * mk_leaf(value const & v) {
-        return m_dep_manager.mk_leaf(v);
+        return m_dep_manager.mk_leaf(v); 
     }
-
+    
     dependency * mk_join(dependency * d1, dependency * d2) {
         return m_dep_manager.mk_join(d1, d2);
     }
 
     bool contains(dependency * d, value const & v) {
-        return m_dep_manager.contains(d, v);
+        return m_dep_manager.contains(d, v); 
     }
 
     void linearize(dependency * d, vector<value, false> & vs) {
         return m_dep_manager.linearize(d, vs);
-    }
-
+    }    
+    
     void reset() {
         m_allocator.reset();
     }
-
+    
     void push_scope() {
         m_allocator.push_scope();
     }
@@ -318,7 +318,7 @@ public:
     }
 };
 
-// Implement old dependency manager used by interval and groebner
+// Implement old dependency manager used by interval and groebner 
 typedef scoped_dependency_manager<void*>             v_dependency_manager;
 typedef scoped_dependency_manager<void*>::dependency v_dependency;
 

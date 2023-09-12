@@ -1,4 +1,4 @@
-muZ: routines related to solving satisfiability of Horn clauses and
+muZ: routines related to solving satisfiability of Horn clauses and 
 solving Datalog programs.
 
 - base - contains base routines and the main context for

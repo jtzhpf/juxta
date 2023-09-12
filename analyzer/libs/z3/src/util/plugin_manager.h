@@ -37,7 +37,7 @@ public:
         m_fid2plugins.reset();
         m_plugins.reset();
     }
-
+    
     void register_plugin(Plugin * p) {
         SASSERT(p);
         family_id fid = p->get_family_id();
@@ -45,7 +45,7 @@ public:
         m_fid2plugins.setx(fid, p, 0);
         m_plugins.push_back(p);
     }
-
+    
     Plugin * get_plugin(family_id fid) const {
         if (fid == null_family_id) {
             return 0;
@@ -53,12 +53,12 @@ public:
         return m_fid2plugins.get(fid, 0);
     }
 
-    typename ptr_vector<Plugin>::const_iterator begin() const {
-        return m_plugins.begin();
+    typename ptr_vector<Plugin>::const_iterator begin() const { 
+        return m_plugins.begin(); 
     }
 
-    typename ptr_vector<Plugin>::const_iterator end() const {
-        return m_plugins.end();
+    typename ptr_vector<Plugin>::const_iterator end() const { 
+        return m_plugins.end(); 
     }
 };
 

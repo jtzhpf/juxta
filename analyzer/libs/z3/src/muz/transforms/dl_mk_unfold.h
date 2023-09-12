@@ -43,7 +43,7 @@ namespace datalog {
            \brief Create unfold rule transformer.
          */
         mk_unfold(context & ctx);
-
+        
         rule_set * operator()(rule_set const & source);
     };
 

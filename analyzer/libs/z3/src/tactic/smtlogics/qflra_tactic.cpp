@@ -35,18 +35,18 @@ tactic * mk_qflra_tactic(ast_manager & m, params_ref const & p) {
     main_p.set_bool("elim_and", true);
     main_p.set_bool("som", true);
     main_p.set_bool("blast_distinct", true);
-
+    
     params_ref ctx_simp_p;
     ctx_simp_p.set_uint("max_depth", 30);
     ctx_simp_p.set_uint("max_steps", 5000000);
-
+    
     params_ref lhs_p;
     lhs_p.set_bool("arith_lhs", true);
     lhs_p.set_bool("eq2ineq", true);
-
+    
     params_ref elim_to_real_p;
     elim_to_real_p.set_bool("elim_to_real", true);
-
+    
 
 #if 0
     tactic * mip =

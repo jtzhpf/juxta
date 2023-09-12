@@ -30,7 +30,7 @@ namespace smt {
         bool m_found_unsupported_op;
 
         void found_unsupported_op(expr * n);
-
+        
         bool is_store(app const* n) const { return n->is_app_of(get_id(), OP_STORE); }
         bool is_map(app const* n) const { return n->is_app_of(get_id(), OP_ARRAY_MAP); }
         bool is_select(app const* n) const { return n->is_app_of(get_id(), OP_SELECT); }
@@ -56,7 +56,7 @@ namespace smt {
 
 
         unsigned get_dimension(sort* s) const;
-
+        
         ptr_vector<enode>                   m_axiom1_todo;
         svector<std::pair<enode*, enode*> > m_axiom2_todo;
         svector<std::pair<enode*, enode*> > m_extensionality_todo;
@@ -74,7 +74,7 @@ namespace smt {
 
         // --------------------------------------------------
         // Array sort -> extensionality skolems
-        //
+        // 
         // --------------------------------------------------
         ptr_vector<sort>                     m_sorts_trail;
         obj_map<sort, func_decl_ref_vector*> m_sort2skolem;
@@ -87,7 +87,7 @@ namespace smt {
         // Use select(A, i) nodes to represent an assignment for A.
         // This structure is used to minimize the number of times the
         // extensionality axiom is applied.
-        //
+        // 
         // --------------------------------------------------
         struct value_chasher {
             unsigned operator()(enode const * n, unsigned idx) const {
@@ -95,7 +95,7 @@ namespace smt {
             }
         };
         struct value_khasher { unsigned operator()(enode * n) const { return 17; } };
-        struct value_hash_proc {
+        struct value_hash_proc { 
             unsigned operator()(enode * n) const {
                 return get_composite_hash<enode *, value_khasher, value_chasher>(n, n->get_num_args() - 1);
             }
@@ -109,7 +109,7 @@ namespace smt {
         // --------------------------------------------------
         // Backtracking
         //
-        //
+        // 
         // --------------------------------------------------
         struct scope {
             unsigned m_sorts_trail_lim;
@@ -117,11 +117,11 @@ namespace smt {
         };
         svector<scope>                      m_scopes;
         void restore_sorts(unsigned old_size);
-
+        
         // --------------------------------------------------
         // Interface
         //
-        //
+        // 
         // --------------------------------------------------
         virtual bool is_shared(theory_var v) const;
         void collect_shared_vars(sbuffer<theory_var> & result);
@@ -132,7 +132,7 @@ namespace smt {
         virtual void push_scope_eh();
         virtual void pop_scope_eh(unsigned num_scopes);
         virtual void reset_eh();
-
+        
         void reset_queues();
         // -----------------------------------
         //
@@ -140,18 +140,18 @@ namespace smt {
         //
         // -----------------------------------
 
-
+        
         // I need a set of select enodes where select(A,i) = select(B,j) if i->get_root() == j->get_root()
         struct sel_khasher {
             unsigned operator()(enode const * n) const { return 0; }
         };
 
         struct sel_chasher {
-            unsigned operator()(enode const * n, unsigned idx) const {
+            unsigned operator()(enode const * n, unsigned idx) const { 
                 return n->get_arg(idx+1)->get_root()->hash();
             }
         };
-
+        
         struct sel_hash {
             unsigned operator()(enode * n) const;
         };
@@ -159,7 +159,7 @@ namespace smt {
         struct sel_eq {
             bool operator()(enode * n1, enode * n2) const;
         };
-
+        
         typedef ptr_hashtable<enode, sel_hash, sel_eq> select_set;
 
         array_factory *              m_factory;
@@ -167,7 +167,7 @@ namespace smt {
         ptr_vector<void>             m_else_values;    // tagged pointer: expr or extra_fresh_value
         svector<int>                 m_parents;        // temporary field for model construction
         obj_map<enode, select_set*>  m_selects;        // mapping from array -> relevant selects
-        ptr_vector<enode>            m_selects_domain;
+        ptr_vector<enode>            m_selects_domain; 
         ptr_vector<select_set>       m_selects_range;
         bool                         m_use_unspecified_default;  // temporary field for model construction
 
@@ -187,7 +187,7 @@ namespace smt {
         select_set * get_select_set(enode * n);
         virtual void finalize_model(model_generator & m);
         virtual model_value_proc * mk_value(enode * n, model_generator & m);
-
+        
     public:
         theory_array_base(ast_manager & m);
         virtual ~theory_array_base() { restore_sorts(0); }

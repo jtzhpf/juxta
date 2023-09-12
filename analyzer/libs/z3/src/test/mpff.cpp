@@ -250,11 +250,11 @@ static void tst_set64(unsigned N, unsigned prec) {
 
     for (unsigned i = 0; i < N; i++) {
         {
-            uint64 v = (static_cast<uint64>(rand()) << 32) + static_cast<uint64>(rand());
+            uint64 v = (static_cast<uint64>(rand()) << 32) + static_cast<uint64>(rand()); 
             fm.set(a, v);
             SASSERT(fm.is_uint64(a));
-
-            v = (static_cast<uint64>(rand() % 3) << 32) + static_cast<uint64>(rand());
+            
+            v = (static_cast<uint64>(rand() % 3) << 32) + static_cast<uint64>(rand()); 
             fm.set(a, v);
             SASSERT(fm.is_uint64(a));
         }
@@ -307,7 +307,7 @@ static void tst_power(unsigned prec = 2) {
     m.set(a, -33);
     m.power(a, 0, a);
     SASSERT(m.is_one(a));
-
+    
     // a^1 == a
     m.set(a, 33);
     m.power(a, 1, b);
@@ -316,7 +316,7 @@ static void tst_power(unsigned prec = 2) {
     m.power(a, 1, b);
     SASSERT(m.eq(a, b));
 
-    // checking special support for powers of 2
+    // checking special support for powers of 2 
 #ifdef Z3DEBUG
     unsigned k;
 #endif
@@ -361,7 +361,7 @@ static void tst_power(unsigned prec = 2) {
     m.power(a, 3, a);
     m.set(b, 5*5*5);
     SASSERT(m.eq(a,b));
-
+    
     m.set(a, -5);
     m.power(a, 3, a);
     m.set(b, -5*5*5);
@@ -439,8 +439,8 @@ static void tst_limits(unsigned prec) {
     m.set_max(a);
     m.dec(a);
     SASSERT(m.eq(a, b));
-
-
+    
+    
     m.set_min(a);
     m.set_min(b);
     m.round_to_minus_inf();
@@ -485,17 +485,17 @@ static void tst_limits(unsigned prec) {
     m.neg(a);
     SASSERT(!m.is_plus_epsilon(a));
     SASSERT(m.is_minus_epsilon(a));
-
+    
     for (unsigned i = 0; i < 2; i++) {
         m.set_rounding(i == 0);
-
+        
         m.set_plus_epsilon(a);
         m.floor(a);
         SASSERT(m.is_zero(a));
         m.set_plus_epsilon(a);
         m.ceil(a);
         SASSERT(m.is_one(a));
-
+        
         m.set_minus_epsilon(a);
         m.floor(a);
         SASSERT(m.is_minus_one(a));
@@ -558,7 +558,7 @@ static void tst_decimal() {
     tst_decimal(-1, 3, true, 2, "-0.3333333333333333333152632971252415927665424533188343048095703125");
     tst_decimal(-1, 3, false, 2, "-0.33333333333333333334236835143737920361672877334058284759521484375");
     tst_decimal(0, 1, false, 2,  "0");
-    tst_decimal(2, 1, false, 2,  "2");
+    tst_decimal(2, 1, false, 2,  "2");    
     tst_decimal(-3, 1, false, 2,  "-3");
     tst_decimal(INT64_MAX, 1, false, 2, "9223372036854775807");
     tst_decimal(4, 5, false, 2, "0.79999999999999999995663191310057982263970188796520233154296875");

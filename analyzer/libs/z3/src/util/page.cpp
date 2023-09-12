@@ -20,7 +20,7 @@ Revision History:
 #include"debug.h"
 
 inline void set_page_header(char * page, char * prev, bool default_page) {
-    size_t header = reinterpret_cast<size_t>(prev) | static_cast<size_t>(default_page);
+    size_t header = reinterpret_cast<size_t>(prev) | static_cast<size_t>(default_page); 
     reinterpret_cast<size_t *>(page)[-1] = header;
     SASSERT(is_default_page(page) == default_page);
     SASSERT(prev_page(page) == prev);

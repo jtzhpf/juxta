@@ -32,7 +32,7 @@ class param_descrs;
 
 class params_ref {
     static params_ref g_empty_params_ref;
-
+    
     params * m_params;
     void init();
     void copy_core(params const * p);
@@ -40,11 +40,11 @@ public:
     params_ref():m_params(0) {}
     params_ref(params_ref const & p);
     ~params_ref();
-
+    
     static params_ref const & get_empty() { return g_empty_params_ref; }
-
+    
     params_ref & operator=(params_ref const & p);
-
+    
     // copy params from src
     void copy(params_ref const & src);
     void append(params_ref const & src) { copy(src); }
@@ -85,7 +85,7 @@ public:
     void set_str(symbol const & k, char const * v);
     void set_str(char const * k, char const * v);
     void set_rat(symbol const & k, rational const & v);
-    void set_rat(char const * k, rational const & v);
+    void set_rat(char const * k, rational const & v); 
     void set_sym(symbol const & k, symbol const & v);
     void set_sym(char const * k, symbol const & v);
 
@@ -96,7 +96,7 @@ public:
 
     /*
       \brief Display the value of the given parameter.
-
+      
       It displays 'default' if k is not in the parameter set.
     */
     void display(std::ostream & out, char const * k) const;
@@ -129,7 +129,7 @@ public:
     char const * get_default(char const * name) const;
     char const * get_default(symbol const & name) const;
     void display(std::ostream & out, unsigned indent = 0, bool smt2_style=false, bool include_descr=true) const;
-    unsigned size() const;
+    unsigned size() const; 
     symbol get_param_name(unsigned idx) const;
     char const * get_module(symbol const& name) const;
 };

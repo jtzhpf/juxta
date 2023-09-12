@@ -14,7 +14,7 @@ Author:
     Leonardo de Moura (leonardo) 2012-12-08
 
 Notes:
-
+    
 --*/
 #include<iostream>
 #include"z3.h"
@@ -35,7 +35,7 @@ namespace api {
 
     pmanager::~pmanager() {
     }
-
+    
     void pmanager::set_cancel(bool f) {
         m_pm.set_cancel(f);
     }

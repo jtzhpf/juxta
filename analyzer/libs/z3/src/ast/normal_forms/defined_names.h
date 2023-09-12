@@ -43,8 +43,8 @@ public:
     // -----------------------------------
 
     /**
-       \brief Create a name for expression \c e if it doesn't already exists.
-
+       \brief Create a name for expression \c e if it doesn't already exists. 
+       
        Return true if a new name was created, and false if a name already exists for \c e.
 
        The resultant new name is stored in n, and a [apply-def] proof
@@ -67,7 +67,7 @@ public:
 
     /**
        \brief Create a name for a positive occurrence of the expression \c e.
-
+       
        Return true if a new pos-name was created, and false if a pos-name already exists for \c e.
 
        If true is returned, then the definition of the new name is stored into new_def.

@@ -26,7 +26,7 @@ Revision History:
 
 namespace datalog {
     register_engine::register_engine(): m_ctx(0) {}
-
+    
     engine_base* register_engine::mk_engine(DL_ENGINE engine_type) {
         switch(engine_type) {
         case PDR_ENGINE:

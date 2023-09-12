@@ -49,7 +49,7 @@ class dl_edge {
     dl_var      m_source;
     dl_var      m_target;
     numeral     m_weight;
-    unsigned    m_timestamp;
+    unsigned    m_timestamp;  
     explanation m_explanation;
     bool        m_enabled;
 public:
@@ -58,7 +58,7 @@ public:
         m_source(s),
         m_target(t),
         m_weight(w),
-        m_timestamp(ts),
+        m_timestamp(ts), 
         m_explanation(ex),
         m_enabled(false) {
     }
@@ -78,8 +78,8 @@ public:
     const explanation & get_explanation() const {
         return m_explanation;
     }
-
-    unsigned get_timestamp() const {
+    
+    unsigned get_timestamp() const { 
         return m_timestamp;
     }
 
@@ -148,7 +148,7 @@ class dl_graph {
     typedef vector<numeral> assignment;
     typedef dl_edge<Ext>    edge;
     typedef vector<edge>    edges;
-
+    
     class assignment_trail {
         dl_var  m_var;
         numeral m_old_value;
@@ -157,7 +157,7 @@ class dl_graph {
             m_var(v),
             m_old_value(val) {
         }
-
+        
         dl_var get_var() const {
             return m_var;
         }
@@ -172,10 +172,10 @@ class dl_graph {
     assignment              m_assignment;       // per var
     assignment_stack        m_assignment_stack; // temporary stack for restoring the assignment
     edges                   m_edges;
-
+    
     typedef int_vector      edge_id_vector;
     typedef int_vector      dl_var_vector;
-
+    
     vector<edge_id_vector>  m_out_edges;  // per var
     vector<edge_id_vector>  m_in_edges;   // per var
 
@@ -196,7 +196,7 @@ class dl_graph {
     vector<numeral>         m_gamma;    // per var
     svector<char>           m_mark;     // per var
     edge_id_vector          m_parent;   // per var
-    dl_var_vector           m_visited;
+    dl_var_vector           m_visited; 
     typedef heap<dl_var_lt<Ext> > var_heap;
     var_heap                m_heap;
 
@@ -207,7 +207,7 @@ class dl_graph {
     // SCC for cheap equality propagation --
     svector<char>           m_unfinished_set; // per var
     int_vector              m_dfs_time;       // per var
-    dl_var_vector           m_roots;
+    dl_var_vector           m_roots;     
     dl_var_vector           m_unfinished;
     int                     m_next_dfs_time;
     int                     m_next_scc_id;
@@ -259,10 +259,10 @@ class dl_graph {
         return true;
     }
 
-
+    
     bool is_feasible(const edge & e) const {
-        return
-            !e.is_enabled() ||
+        return 
+            !e.is_enabled() || 
             m_assignment[e.get_target()] - m_assignment[e.get_source()] <= e.get_weight();
     }
 
@@ -322,7 +322,7 @@ private:
     }
 
     // Store in gamma the normalized weight. The normalized weight is given
-    // by the formula
+    // by the formula  
     // m_assignment[e.get_source()] - m_assignment[e.get_target()] + e.get_weight()
     void set_gamma(const edge & e, numeral & gamma) {
         gamma  = m_assignment[e.get_source()];
@@ -347,10 +347,10 @@ private:
         }
         return true;
     }
-
+    
     // Make the assignment feasible. An assignment is feasible if
     // Forall edge e. m_assignment[e.get_target()] - m_assignment[e.get_source()] <= e.get_weight()
-    //
+    // 
     // This method assumes that if the assignment is not feasible, then the only infeasible edge
     // is the last added edge.
     bool make_feasible(edge_id id) {
@@ -385,7 +385,7 @@ private:
                 undo_assignments();
                 return false;
             }
-
+            
             typename edge_id_vector::iterator it  = m_out_edges[source].begin();
             typename edge_id_vector::iterator end = m_out_edges[source].end();
             for (; it != end; ++it) {
@@ -396,7 +396,7 @@ private:
                     continue;
                 }
                 set_gamma(e, gamma);
-
+                
                 if (gamma.is_neg()) {
                     target   = e.get_target();
                     switch (m_mark[target]) {
@@ -444,7 +444,7 @@ private:
         for (; it != end; ++it) {
             edge_id e_id = *it;
             edge const& e2 = m_edges[e_id];
-            if (e2.get_target() == dst &&
+            if (e2.get_target() == dst && 
                 e2.is_enabled() && // or at least not be inconsistent with current choices
                 e2.get_weight() > w && (e2.get_weight() - w + gamma).is_neg()) {
                 e = &e2;
@@ -457,7 +457,7 @@ private:
     }
 
 public:
-
+    
     dl_graph():
         m_heap(1024, dl_var_lt<Ext>(m_gamma)),
         m_timestamp(0),
@@ -525,7 +525,7 @@ public:
                 r = make_feasible(id);
             }
             SASSERT(check_invariant());
-            SASSERT(!r || is_feasible());
+            SASSERT(!r || is_feasible()); 
             m_enabled_edges.push_back(id);
         }
         return r;
@@ -558,7 +558,7 @@ public:
 
 
     //
-    // Here is a version that tries to
+    // Here is a version that tries to 
     // Find shortcuts on the cycle.
     // A shortcut is an edge that that is subsumed
     // by the current edges, but provides for a shorter
@@ -566,7 +566,7 @@ public:
     // Example (<= (- a b) k1) (<= (- b c) k2) (<= (- c d) k3)
     // An edge (<= (- a d) k4) where k1 + k2 + k3 <= k4, but gamma + k4 - (k1+k2+k3) < 0
     // is still a conflict.
-    //
+    // 
     template<typename Functor>
     void traverse_neg_cycle2(bool try_relax, Functor & f) {
         static unsigned num_conflicts = 0;
@@ -588,16 +588,16 @@ public:
             const edge & e = m_edges[e_id];
             dl_var src = e.get_source();
             potential += e.get_weight();
-
+                        
             //
             // search for edges that can reduce size of negative cycle.
             //
             typename edge_id_vector::iterator it = m_out_edges[src].begin();
-            typename edge_id_vector::iterator end = m_out_edges[src].end();
+            typename edge_id_vector::iterator end = m_out_edges[src].end();            
             for (; it != end; ++it) {
                 edge_id e_id2 = *it;
                 edge const& e2 = m_edges[e_id2];
-                dl_var src2 = e2.get_target();
+                dl_var src2 = e2.get_target();                
                 if (e_id2 == e_id || !e2.is_enabled()) {
                     continue;
                 }
@@ -619,7 +619,7 @@ public:
                         nodes.shrink(j + 1);
                         potentials.shrink(j + 1);
                         edges.shrink(j + 1);
-                        edges.push_back(e_id2);
+                        edges.push_back(e_id2);           
                         potential = potentials[j] + weight;
                         break;
                     }
@@ -631,12 +631,12 @@ public:
             potentials.push_back(potential);
             nodes.push_back(src);
             e_id = m_parent[src];
-
+                  
             SASSERT(check_path(potentials, nodes, edges));
         }
         while (e_id != last_id);
-
-        TRACE("diff_logic_traverse", {
+        
+        TRACE("diff_logic_traverse", {   
                 tout << "Num conflicts: " << num_conflicts << "\n";
                 tout << "Resulting path:\n";
                 for (unsigned i = 0; i < edges.size(); ++i) {
@@ -648,7 +648,7 @@ public:
         if (!check_explanation(edges.size(), edges.c_ptr())) {
             throw default_exception("edges are not inconsistent");
         }
-
+       
         // allow theory to introduce shortcut lemmas.
         prune_edges(edges, f);
 
@@ -658,10 +658,10 @@ public:
         }
     }
 
-    //
+    // 
     // Create fresh literals obtained by resolving a pair (or more)
     // literals associated with the edges.
-    //
+    // 
 
     template<typename Functor>
     void prune_edges(svector<edge_id>& edges, Functor & f) {
@@ -688,12 +688,12 @@ public:
             if (m_activity[e_id] < min_activity) {
                 min_activity = m_activity[e_id];
                 idx = i;
-            }
+            }                
         }
-
+        
         dl_var dst = get_source(edges[idx+1]);
         dl_var src = get_target(edges[idx]);
-
+        
         f.new_edge(src, dst, 2, edges.begin()+idx);
     }
 
@@ -722,12 +722,12 @@ public:
                 max_idx = i;
             }
         }
-
+        
         //
         // e1 e2 i1 e4 e5 e6 .. e8 i2 e9 e10
         // =>
         // e1 e2 e_new d9 e10
-        //
+        // 
         // alternative:
         // e_new e4 ... e8 is the new edge.
         //
@@ -735,12 +735,12 @@ public:
         //
         if (idx2 < idx1) {
             std::swap(idx1,idx2);
-        }
+        }        
         SASSERT(idx1 < idx2 && idx2 < edges.size());
         SASSERT(max_idx < edges.size());
         dst = get_source(edges[idx2]);
         src = get_target(edges[idx1]);
-
+        
         f.new_edge(src, dst, idx2-idx1+1, edges.begin()+idx1);
     }
 
@@ -750,7 +750,7 @@ public:
         // SASSERT(is_feasible()); <<< I relaxed this condition
         m_trail_stack.push_back(scope(m_edges.size(), m_enabled_edges.size(), m_timestamp));
     }
-
+    
     // Backtrack num_scopes scopes.
     // Restore the previous number of edges.
     void pop(unsigned num_scopes) {
@@ -780,7 +780,7 @@ public:
             m_edges.pop_back();
         }
         m_trail_stack.shrink(new_lvl);
-        SASSERT(check_invariant());
+        SASSERT(check_invariant()); 
         // SASSERT(is_feasible()); <<< I relaxed the condition in push(), so this assertion is not valid anymore.
     }
 
@@ -834,7 +834,7 @@ public:
 
     void inc_assignment(dl_var v, numeral const& inc) {
         m_assignment[v] += inc;
-    }
+    }    
 
 
     struct every_var_proc {
@@ -859,7 +859,7 @@ public:
             }
         }
         out << "digraph "" {\n";
-
+        
         unsigned n = m_assignment.size();
         for (unsigned v = 0; v < n; v++) {
             if (vars.contains(v)) {
@@ -978,13 +978,13 @@ public:
         for (dl_var v = 0; v < n; v++) {
             if (m_dfs_time[v] == -1) {
                 dfs(v, scc_id);
-            }
+            }        
         }
         TRACE("eq_scc",
               for (dl_var v = 0; v < n; v++) {
                   tout << "$" << v << " -> " << scc_id[v] << "\n";
               });
-    }
+    }    
 
     void dfs(dl_var v, int_vector & scc_id) {
         m_dfs_time[v] = m_next_dfs_time;
@@ -1073,7 +1073,7 @@ public:
     }
 
     numeral get_assignment(dl_var v) const {
-        return m_assignment[v];
+        return m_assignment[v]; 
     }
 
     unsigned get_timestamp() const {
@@ -1109,16 +1109,16 @@ private:
         // Debug:
         numeral potential0;
         for (unsigned i = 0; i < edges.size(); ++i) {
-
+            
             potential0 += m_edges[edges[i]].get_weight();
-            if (potential0 != potentials[i] ||
+            if (potential0 != potentials[i] || 
                 nodes[i] != m_edges[edges[i]].get_source()) {
                 TRACE("diff_logic_traverse", tout << "checking index " << i << " ";
                       tout << "potential: " << potentials[i] << " ";
                       display_edge(tout, m_edges[edges[i]]);
                       );
                 return false;
-            }
+            }                
         }
         return true;
     }
@@ -1131,7 +1131,7 @@ private:
             e_id = m_parent[m_edges[e_id].get_source()];
         }
         while (e_id != last_id);
-
+        
         return gamma2 == m_gamma[m_edges[last_id].get_source()];
     }
 
@@ -1157,10 +1157,10 @@ public:
         svector<bfs_elem> bfs_todo;
         svector<char>     bfs_mark;
         bfs_mark.resize(m_assignment.size(), false);
-
+        
         bfs_todo.push_back(bfs_elem(source, -1, null_edge_id));
         bfs_mark[source] = true;
-
+        
         unsigned  m_head = 0;
         numeral gamma;
         while (m_head < bfs_todo.size()) {
@@ -1183,7 +1183,7 @@ public:
                 TRACE("dl_bfs", tout << "processing edge: "; display_edge(tout, e); tout << "gamma: " << gamma << "\n";);
                 if (gamma.is_zero() && e.get_timestamp() < timestamp) {
                     dl_var curr_target = e.get_target();
-                    TRACE("dl_bfs", tout << "curr_target: " << curr_target <<
+                    TRACE("dl_bfs", tout << "curr_target: " << curr_target << 
                           ", mark: " << static_cast<int>(bfs_mark[curr_target]) << "\n";);
                     if (curr_target == target) {
                         TRACE("dl_bfs", tout << "found path\n";);
@@ -1228,7 +1228,7 @@ public:
             }
         }
         return false;
-    }
+    } 
 
 
     //
@@ -1236,23 +1236,23 @@ public:
     // Given a (newly) added edge id, find the ids of un-asserted edges that
     // that are subsumed by the id.
     // Separately, reproduce explanations for those ids.
-    //
+    // 
     // The algorithm works in the following way:
     // 1. Let e = source -- weight --> target be the edge at id.
     // 2. Compute successors (over the assigned edges) of source,
     //    those traversing source-target and those leaving source over different edges.
     //    compute forward potential of visited nodes.
     //    queue up nodes that are visited, and require the source->target edge.
-    // 3. Compute pre-decessors (over the assigned edges) of target,
+    // 3. Compute pre-decessors (over the assigned edges) of target, 
     //    those traversing source-target, and those entering target
     //    without visiting source. Maintain only nodes that enter target
     //    compute backward potential of visited nodes.
     //    Queue up nodes that are visited, and require the source->target edge.
     // 4. traverse the smaller of the two lists.
-    //    check if there is an edge between the two sets such that
-    //    the weight of the edge is >= than the sum of the two potentials - weight
+    //    check if there is an edge between the two sets such that 
+    //    the weight of the edge is >= than the sum of the two potentials - weight 
     //    (since 'weight' is added twice in the traversal.
-    //
+    // 
 private:
     struct dfs_state {
         class hp_lt {
@@ -1264,7 +1264,7 @@ private:
                 numeral const& delta1 = m_delta[v1];
                 numeral const& delta2 = m_delta[v2];
                 return delta1 < delta2 ||
-                    (delta1 == delta2 &&
+                    (delta1 == delta2 && 
                      m_mark[v1] == DL_PROP_IRRELEVANT && m_mark[v2] == DL_PROP_RELEVANT);
             }
         };
@@ -1287,7 +1287,7 @@ private:
         void add_size(unsigned n) { m_num_edges += n; }
         unsigned get_size() const { return m_num_edges; }
 
-        bool contains(dl_var v) const {
+        bool contains(dl_var v) const { 
             // TBD can be done better using custom marking.
             for (unsigned i = 0; i < m_visited.size(); ++i) {
                 if (v == m_visited[i]) {
@@ -1336,9 +1336,9 @@ private:
         state.m_heap.insert(target);
         unsigned num_relevant = 1;
         TRACE("diff_logic", display(tout); );
-
+                
         while (!state.m_heap.empty() && num_relevant > 0) {
-
+                      
             ++m_stats.m_implied_literal_cost;
 
             source = state.m_heap.erase_min();
@@ -1354,7 +1354,7 @@ private:
                 m_mark[source] = DL_PROP_PROCESSED_IRRELEVANT;
             }
             TRACE("diff_logic", tout << "source: " << source << "\n";);
-
+  
             typename edge_id_vector::const_iterator it  = edges[source].begin();
             typename edge_id_vector::const_iterator end = edges[source].end();
 
@@ -1374,7 +1374,7 @@ private:
                 target = is_fw?e.get_target():e.get_source();
                 delta  = get_reduced_weight(state, source, e);
                 SASSERT(delta >= state.m_delta[source]);
-
+                
                 target_mark = static_cast<dl_prop_search_mark>(m_mark[target]);
                 switch(target_mark) {
                 case DL_PROP_UNMARKED: {
@@ -1390,8 +1390,8 @@ private:
                 case DL_PROP_RELEVANT:
                 case DL_PROP_IRRELEVANT: {
                     numeral const& old_delta = state.m_delta[target];
-                    if (delta < old_delta ||
-                        (delta == old_delta &&
+                    if (delta < old_delta || 
+                        (delta == old_delta && 
                          source_mark == DL_PROP_IRRELEVANT && target_mark == DL_PROP_RELEVANT)) {
                         state.m_delta[target] = delta;
                         m_mark[target]  = source_mark;
@@ -1406,12 +1406,12 @@ private:
                     }
                     break;
                 }
-                case DL_PROP_PROCESSED_RELEVANT:
+                case DL_PROP_PROCESSED_RELEVANT: 
                     TRACE("diff_logic", tout << delta << " ?> " << state.m_delta[target] << "\n";);
                     SASSERT(delta >= state.m_delta[target]);
                     SASSERT(!(delta == state.m_delta[target] && source_mark == DL_PROP_IRRELEVANT));
                     break;
-                case DL_PROP_PROCESSED_IRRELEVANT:
+                case DL_PROP_PROCESSED_IRRELEVANT: 
                     TRACE("diff_logic", tout << delta << " ?> " << state.m_delta[target] << "\n";);
                     SASSERT(delta >= state.m_delta[target]);
                     break;
@@ -1419,8 +1419,8 @@ private:
                     UNREACHABLE();
                 }
             }
-        }
-
+        }        
+        
         //
         // Clear marks using m_visited and m_heap.
         //
@@ -1463,7 +1463,7 @@ private:
         dl_var b = e0.get_target();
         numeral n0 = m_assignment[b] - m_assignment[a] - e0.get_weight();
         vector<edge_id_vector> const& edges = m_out_edges;
-        TRACE("diff_logic", tout << "$" << a << " a:" << m_assignment[a] << " $" << b << " b: " << m_assignment[b]
+        TRACE("diff_logic", tout << "$" << a << " a:" << m_assignment[a] << " $" << b << " b: " << m_assignment[b] 
               << " e0: " << e0.get_weight() << " n0: " << n0 << "\n";
               display_edge(tout, e0);
               );
@@ -1484,9 +1484,9 @@ private:
                 numeral n2 = n1 + tgt.m_delta[d] + m_assignment[d];
 
                 if (tgt.contains(d) && n2 <= e1.get_weight()) {
-                    TRACE("diff_logic",
+                    TRACE("diff_logic", 
                           tout << "$" << c << " delta_c: " << src.m_delta[c] << " c: " << m_assignment[c] << "\n";
-                          tout << "$" << d << " delta_d: " << src.m_delta[d] << " d: " << m_assignment[d]
+                          tout << "$" << d << " delta_d: " << src.m_delta[d] << " d: " << m_assignment[d] 
                           << " n2: " << n2 << " e1: " << e1.get_weight() << "\n";
                           display_edge(tout << "found: ", e1););
                     ++m_stats.m_num_implied_literals;
@@ -1499,13 +1499,13 @@ private:
 public:
     void find_subsumed(edge_id id, svector<edge_id>& subsumed) {
         fix_sizes();
-        find_relevant<true>(m_fw, id);
+        find_relevant<true>(m_fw, id);        
         find_relevant<false>(m_bw, id);
         find_subsumed(id, m_bw, m_fw, subsumed);
         m_fw.m_visited.reset();
         m_bw.m_visited.reset();
         if (!subsumed.empty()) {
-            TRACE("diff_logic",
+            TRACE("diff_logic", 
                   display(tout);
                   tout << "subsumed\n";
                   for (unsigned i = 0; i < subsumed.size(); ++i) {
@@ -1554,11 +1554,11 @@ public:
     // Find edges that are subsumed by id, or is an edge between
     // a predecessor of id's source and id's destination, or
     // is an edge between a successor of id's dst, and id's source.
-    //
+    // 
     //        src - id -> dst
-    //     -                 -
+    //     -                 - 
     //  src'                  dst'
-    //
+    // 
     // so searching for:
     // . src - id' -> dst
     // . src' - id' -> dst
@@ -1622,13 +1622,13 @@ public:
                     ++m_stats.m_num_implied_literals;
                 }
             }
-        }
+        }        
     }
 
     template<class Functor>
     void explain_subsumed_lazy(edge_id bridge_id, edge_id subsumed_id, Functor& f) {
         edge const& e1 = m_edges[bridge_id];
-        edge const& e2 = m_edges[subsumed_id];
+        edge const& e2 = m_edges[subsumed_id];        
         dl_var src2 = e2.get_source();
         dl_var dst2 = e2.get_target();
         unsigned timestamp = e1.get_timestamp();
@@ -1638,11 +1638,11 @@ public:
         // timestamp, and of length no longer than weight of e2.
         //
         // use basic O(m*n) algorithm that traverses each edge once per node.
-        //
+        // 
 
         ++m_stats.m_num_helpful_implied_literals;
-
-        SASSERT(m_heap.empty());
+        
+        SASSERT(m_heap.empty());       
         SASSERT(e1.is_enabled());
 
         m_gamma[src2].reset();
@@ -1650,11 +1650,11 @@ public:
         m_heap.insert(src2);
         m_visited.push_back(src2);
 
-        TRACE("diff_logic",
-              display_edge(tout << "bridge:   ", e1);
-              display_edge(tout << "subsumed: ", e2);
+        TRACE("diff_logic", 
+              display_edge(tout << "bridge:   ", e1); 
+              display_edge(tout << "subsumed: ", e2); 
               display(tout); );
-
+        
         while (true) {
             SASSERT(!m_heap.empty());
             dl_var v = m_heap.erase_min();
@@ -1681,7 +1681,7 @@ public:
                 if (w == dst2 && gamma <= e2.get_weight()) {
                     // found path.
                     reset_marks();
-                    m_heap.reset();
+                    m_heap.reset();              
                     unsigned length = 0;
                     do {
                         inc_activity(m_parent[w]);

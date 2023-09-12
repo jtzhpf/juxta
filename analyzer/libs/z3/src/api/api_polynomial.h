@@ -14,7 +14,7 @@ Author:
     Leonardo de Moura (leonardo) 2012-12-08
 
 Notes:
-
+    
 --*/
 #ifndef _API_POLYNOMIAL_H_
 #define _API_POLYNOMIAL_H_
@@ -22,7 +22,7 @@ Notes:
 #include"polynomial.h"
 
 namespace api {
-
+    
     class pmanager {
         unsynch_mpz_manager m_nm;
         polynomial::manager m_pm;

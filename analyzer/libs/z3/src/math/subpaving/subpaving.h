@@ -14,7 +14,7 @@ Abstract:
     Thus, it assumes that polynomials have precise integer coefficients, and
     bounds are rationals. If a particular implementation uses floats, then
     internally the bounds are approximated.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-08-07.
@@ -48,7 +48,7 @@ public:
        \brief Return the number of variables in this subpaving object.
     */
     virtual unsigned num_vars() const = 0;
-
+    
     /**
        \brief Create a new variable.
     */
@@ -58,20 +58,20 @@ public:
        \brief Return true if \c x is an integer variable.
     */
     virtual bool is_int(var x) const = 0;
-
+    
     /**
        \brief Create the monomial xs[0]^ks[0] * ... * xs[sz-1]^ks[sz-1].
        The result is a variable y s.t. y = xs[0]^ks[0] * ... * xs[sz-1]^ks[sz-1].
-
+       
        \pre for all i \in [0, sz-1] : ks[i] > 0
        \pre sz > 0
     */
     virtual var mk_monomial(unsigned sz, power const * pws) = 0;
-
+    
     /**
        \brief Create the sum c + as[0]*xs[0] + ... + as[sz-1]*xs[sz-1].
        The result is a variable y s.t. y = c + as[0]*xs[0] + ... + as[sz-1]*xs[sz-1].
-
+       
        \pre sz > 0
        \pre for all i \in [0, sz-1] : as[i] != 0
     */
@@ -89,7 +89,7 @@ public:
        \pre sz >= 1
     */
     virtual void add_clause(unsigned sz, ineq * const * atoms) = 0;
-
+    
     /**
        \brief Display constraints asserted in the subpaving.
     */

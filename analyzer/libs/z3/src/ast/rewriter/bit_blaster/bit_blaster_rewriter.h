@@ -34,7 +34,7 @@ public:
     ast_manager & m() const;
     unsigned get_num_steps() const;
     void cleanup();
-    obj_map<func_decl, expr*> const& const2bits() const;
+    obj_map<func_decl, expr*> const& const2bits() const; 
     void operator()(expr * e, expr_ref & result, proof_ref & result_proof);
 };
 

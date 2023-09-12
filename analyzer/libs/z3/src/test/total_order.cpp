@@ -114,7 +114,7 @@ static void tst4(unsigned sz, unsigned num_rounds) {
         unsigned v1 = rand() % sz;
         unsigned v2 = rand() % sz;
         if (v1 != v2) {
-            to.move_after(v1, v2);
+            to.move_after(v1, v2); 
             move_after(v, inv_v, v1, v2);
         }
         for (unsigned k = 0; k < sz - 1; k++) {

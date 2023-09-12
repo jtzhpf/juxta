@@ -25,7 +25,7 @@ namespace smt {
 #if 0
     unsigned cg_table::cg_hash::operator()(enode * n) const {
         if (n->is_commutative()) {
-            return  combine_hash(n->get_decl_id(),
+            return  combine_hash(n->get_decl_id(), 
                                  n->get_arg(0)->get_root()->hash() *
                                  n->get_arg(1)->get_root()->hash());
         }
@@ -33,7 +33,7 @@ namespace smt {
             unsigned num = n->get_num_args();
             switch (num) {
             case 0: UNREACHABLE(); return 0;
-            case 1:
+            case 1: 
                 return combine_hash(n->get_decl_id(), n->get_arg(0)->get_root()->hash());
             case 2: {
                 unsigned a = n->get_decl_id();
@@ -53,22 +53,22 @@ namespace smt {
         static unsigned counter = 0;
         static unsigned failed  = 0;
         bool r = congruent(n1, n2, m_commutativity);
-        if (!r)
+        if (!r) 
             failed++;
         counter++;
-        if (counter % 100000 == 0)
+        if (counter % 100000 == 0) 
             std::cout << "cg_eq: " << counter << " " << failed << "\n";
         return r;
 #else
         return congruent(n1, n2, m_commutativity);
 #endif
     }
-
+    
     cg_table::cg_table(ast_manager & m):
         m_manager(m),
         m_table(DEFAULT_HASHTABLE_INITIAL_CAPACITY, cg_hash(), cg_eq(m_commutativity)) {
     }
-
+    
     void cg_table::display(std::ostream & out) const {
         out << "congruence table:\n";
         table::iterator it  = m_table.begin();
@@ -111,8 +111,8 @@ namespace smt {
         SASSERT(n->get_decl()->is_flat_associative() || n->get_num_args() >= 3);
         unsigned a, b, c;
         a = b = 0x9e3779b9;
-        c = 11;
-
+        c = 11;    
+        
         unsigned i = n->get_num_args();
         while (i >= 3) {
             i--;
@@ -123,7 +123,7 @@ namespace smt {
             c += n->get_arg(i)->get_root()->hash();
             mix(a, b, c);
         }
-
+        
         switch (i) {
         case 2:
             b += n->get_arg(1)->get_root()->hash();
@@ -139,7 +139,7 @@ namespace smt {
         SASSERT(n1->get_num_args() == n2->get_num_args());
         SASSERT(n1->get_decl() == n2->get_decl());
         unsigned num = n1->get_num_args();
-        for (unsigned i = 0; i < num; i++)
+        for (unsigned i = 0; i < num; i++) 
             if (n1->get_arg(i)->get_root() != n2->get_arg(i)->get_root())
                 return false;
         return true;
@@ -178,7 +178,7 @@ namespace smt {
                 SASSERT(GET_TAG(r) == BINARY);
                 return r;
             }
-        default:
+        default: 
             r = TAG(void*, alloc(table), NARY);
             SASSERT(GET_TAG(r) == NARY);
             return r;
@@ -203,7 +203,7 @@ namespace smt {
         });
         return tid;
     }
-
+    
     void cg_table::reset() {
         ptr_vector<void>::iterator it  = m_tables.begin();
         ptr_vector<void>::iterator end = m_tables.end();
@@ -227,7 +227,7 @@ namespace smt {
         m_tables.reset();
         obj_map<func_decl, unsigned>::iterator it2  = m_func_decl2id.begin();
         obj_map<func_decl, unsigned>::iterator end2 = m_func_decl2id.end();
-        for (; it2 != end2; ++it2)
+        for (; it2 != end2; ++it2) 
             m_manager.dec_ref(it2->m_key);
         m_func_decl2id.reset();
     }

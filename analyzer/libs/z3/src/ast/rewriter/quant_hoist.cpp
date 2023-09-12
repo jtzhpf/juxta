@@ -30,31 +30,31 @@ Revision History:
 
 //
 // Bring quantifiers of common type into prenex form.
-//
+// 
 class quantifier_hoister::impl {
     ast_manager&        m;
     bool_rewriter       m_rewriter;
-
+    
 public:
     impl(ast_manager& m) :
         m(m),
         m_rewriter(m)
     {}
-
+    
     void operator()(expr* fml, app_ref_vector& vars, bool& is_fa, expr_ref& result) {
         quantifier_type qt = Q_none_pos;
         pull_quantifier(fml, qt, vars, result);
-        TRACE("qe_verbose",
+        TRACE("qe_verbose", 
               tout << mk_pp(fml, m) << "\n";
               tout << mk_pp(result, m) << "\n";);
         SASSERT(is_positive(qt));
         is_fa = (Q_forall_pos == qt);
     }
-
+    
     void pull_exists(expr* fml, app_ref_vector& vars, expr_ref& result) {
         quantifier_type qt = Q_exists_pos;
         pull_quantifier(fml, qt, vars, result);
-        TRACE("qe_verbose",
+        TRACE("qe_verbose", 
               tout << mk_pp(fml, m) << "\n";
               tout << mk_pp(result, m) << "\n";);
     }
@@ -63,12 +63,12 @@ public:
         quantifier_type qt = is_forall?Q_forall_pos:Q_exists_pos;
         expr_ref result(m);
         pull_quantifier(fml, qt, vars, result);
-        TRACE("qe_verbose",
+        TRACE("qe_verbose", 
               tout << mk_pp(fml, m) << "\n";
               tout << mk_pp(result, m) << "\n";);
         fml = result;
     }
-
+    
     void extract_quantifier(quantifier* q, app_ref_vector& vars, expr_ref& result) {
         unsigned nd = q->get_num_decls();
         for (unsigned i = 0; i < nd; ++i) {
@@ -109,7 +109,7 @@ public:
             app* v = vars[i].get();
             if (names) {
                 bound_names.push_back(v->get_decl()->get_name());
-            }
+            }                
             if (sorts) {
                 bound_sorts.push_back(m.get_sort(v));
             }
@@ -129,10 +129,10 @@ public:
         }
         rep(fml);
         return index;
-    }
-
+    }    
+    
 private:
-
+    
     enum quantifier_type {
         Q_forall_pos = 0x10,
         Q_exists_pos = 0x20,
@@ -141,7 +141,7 @@ private:
         Q_exists_neg = 0x21,
         Q_none_neg   = 0x41
     };
-
+    
     void display(quantifier_type qt, std::ostream& out) {
         switch(qt) {
         case Q_forall_pos: out << "Forall+"; break;
@@ -152,22 +152,22 @@ private:
         case Q_none_neg:   out << "None-"; break;
         }
     }
-
+    
     quantifier_type& negate(quantifier_type& qt) {
         TRACE("qe", display(qt, tout); tout << "\n";);
         qt = static_cast<quantifier_type>(qt ^0x1);
         TRACE("qe", display(qt, tout); tout << "\n";);
         return qt;
     }
-
+    
     static bool is_negative(quantifier_type qt) {
         return 0 != (qt & 0x1);
     }
-
+    
     static bool is_positive(quantifier_type qt) {
         return 0 == (qt & 0x1);
     }
-
+    
     static void set_quantifier_type(quantifier_type& qt, bool is_forall) {
         switch(qt) {
         case Q_forall_pos: SASSERT(is_forall); break;
@@ -178,7 +178,7 @@ private:
         case Q_none_neg: qt = is_forall?Q_exists_neg:Q_forall_neg; break;
         }
     }
-
+    
     bool is_compatible(quantifier_type qt, bool is_forall) {
         switch(qt) {
         case Q_forall_pos: return is_forall;
@@ -192,15 +192,15 @@ private:
         }
         return false;
     }
-
-
+    
+    
     void pull_quantifier(expr* fml, quantifier_type& qt, app_ref_vector& vars, expr_ref& result) {
-
+        
         if (!has_quantifiers(fml)) {
             result = fml;
             return;
         }
-
+        
         switch(fml->get_kind()) {
         case AST_APP: {
             expr_ref_vector args(m);
@@ -267,7 +267,7 @@ private:
         }
     }
 
-};
+};   
 
 quantifier_hoister::quantifier_hoister(ast_manager& m) {
     m_impl = alloc(impl, m);

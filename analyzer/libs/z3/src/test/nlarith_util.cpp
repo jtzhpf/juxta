@@ -30,7 +30,7 @@ void tst_nlarith_util() {
         std::cout << "Failed to create branches\n";
         return;
     }
-
+    
     for (unsigned i = 0; i < preds.size(); ++i) {
         std::cout << "Pred: " << mk_pp(preds[i].get(), M) << "\n";
     }
@@ -38,7 +38,7 @@ void tst_nlarith_util() {
     for (unsigned i = 0; i < branches.size(); ++i) {
         std::cout << "Branch:\n" << mk_pp(branches[i].get(), M) << "\n";
         for (unsigned j = 0; j < substs[i].size(); ++j) {
-            std::cout << mk_pp(preds[j].get(), M) << " |-> "
+            std::cout << mk_pp(preds[j].get(), M) << " |-> " 
                       << mk_pp(substs[i][j].get(), M) << "\n";
         }
     }

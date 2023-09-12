@@ -35,44 +35,44 @@ Revision History:
 #include "iz3profiling.h"
 
 namespace Duality {
-
+  
   void show_time(){
     output_time(std::cout,current_time());
     std::cout << "\n";
   }
 
   typedef std::map<const char*, struct node> nmap;
-
+  
   struct node {
     std::string name;
     clock_t time;
     clock_t start_time;
     nmap sub;
     struct node *parent;
-
+    
     node();
   } top;
-
+  
   node::node(){
     time =  0;
     parent = 0;
   }
-
+  
   struct node *current;
-
+  
   struct init {
     init(){
       top.name = "TOTAL";
       current = &top;
     }
   } initializer;
-
+  
   struct time_entry {
     clock_t t;
     time_entry(){t = 0;};
     void add(clock_t incr){t += incr;}
   };
-
+  
   struct ltstr
   {
     bool operator()(const char* s1, const char* s2) const
@@ -80,7 +80,7 @@ namespace Duality {
       return strcmp(s1, s2) < 0;
     }
   };
-
+  
   typedef  std::map<const char*, time_entry, ltstr> tmap;
 
   static std::ostream *pfs;
@@ -96,7 +96,7 @@ namespace Duality {
     for(nmap::iterator it = top.sub.begin(); it != top.sub.end(); it++)
       print_node(it->second,indent+1,totals);
   }
-
+  
   void print_profile(std::ostream &os) {
     pfs = &os;
     top.time = 0;
@@ -112,7 +112,7 @@ namespace Duality {
     }
     profiling::print(os); // print the interpolation stats
   }
-
+  
   void timer_start(const char *name){
     node &child = current->sub[name];
     if(child.name.empty()){ // a new node

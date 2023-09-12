@@ -1,8 +1,8 @@
 ############################################
 # Copyright (c) 2012 Microsoft Corporation
-#
+# 
 # Complex numbers in Z3
-# See http://research.microsoft.com/en-us/um/people/leonardo/blog/2013/01/26/complex.html
+# See http://research.microsoft.com/en-us/um/people/leonardo/blog/2013/01/26/complex.html 
 #
 # Author: Leonardo de Moura (leonardo)
 ############################################
@@ -66,7 +66,7 @@ class ComplexExpr:
         return Not(self.__eq__(other))
 
     def __pow__(self, k):
-
+        
 
     def simplify(self):
         return ComplexExpr(simplify(self.r), simplify(self.i))

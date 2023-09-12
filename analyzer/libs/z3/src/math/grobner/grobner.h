@@ -45,7 +45,7 @@ public:
     class monomial {
         rational         m_coeff;
         ptr_vector<expr> m_vars;  //!< sorted variables
-
+        
         friend class grobner;
         friend struct monomial_lt;
 
@@ -103,7 +103,7 @@ protected:
     equation_vector         m_equations_to_unfreeze;
     equation_vector         m_equations_to_delete;
     bool                    m_changed_leading_term; // set to true, if the leading term was simplified.
-    equation *              m_unsat;
+    equation *              m_unsat; 
     struct scope {
         unsigned m_equations_to_unfreeze_lim;
         unsigned m_equations_to_delete_lim;
@@ -149,7 +149,7 @@ protected:
     bool is_inconsistent(equation * eq) const;
 
     bool is_trivial(equation * eq) const;
-
+    
     void normalize_coeff(ptr_vector<monomial> & monomials);
 
     void simplify(ptr_vector<monomial> & monomials);
@@ -254,8 +254,8 @@ public:
     bool inconsistent() const { return m_unsat != 0; }
 
     /**
-       \brief Simplify the given expression using the equalities asserted
-       using assert_eq. Store the result in 'result'.
+       \brief Simplify the given expression using the equalities asserted 
+       using assert_eq. Store the result in 'result'. 
     */
     void simplify(expr * n, expr_ref & result);
 
@@ -265,7 +265,7 @@ public:
     void reset();
 
     void get_equations(ptr_vector<equation> & result) const;
-
+    
     void push_scope();
 
     void pop_scope(unsigned num_scopes);

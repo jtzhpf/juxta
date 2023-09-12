@@ -209,12 +209,12 @@ public:
                                 param_name.bare_str(), new_name, new_name);
             }
             else if (is_old_param_name(param_name)) {
-                throw exception("unknown parameter '%s', this is an old parameter name, invoke 'z3 -p' to obtain the new parameter list",
+                throw exception("unknown parameter '%s', this is an old parameter name, invoke 'z3 -p' to obtain the new parameter list", 
                                 param_name.bare_str());
             }
             else {
                 std::stringstream strm;
-                strm << "unknown parameter '" << param_name << "'\n";
+                strm << "unknown parameter '" << param_name << "'\n";    
                 strm << "Legal parameters are:\n";
                 d.display(strm, 2, false, false);
                 throw default_exception(strm.str());
@@ -238,25 +238,25 @@ public:
         case CPK_UINT:
             for (; *value; ++value) {
                 if (!('0' <= *value && *value <= '9')) {
-                    strm << "Expected values for parameter " << name
+                    strm << "Expected values for parameter " << name 
                          << " is an unsigned integer. It was given argument '" << _value << "'";
-                    throw default_exception(strm.str());
+                    throw default_exception(strm.str());                    
                 }
             }
             break;
         case CPK_DOUBLE:
             for (; *value; ++value) {
                 if (!('0' <= *value && *value <= '9') && *value != '.' && *value != '-' && *value != '/') {
-                    strm << "Expected values for parameter " << name
+                    strm << "Expected values for parameter " << name 
                          << " is a double. It was given argument '" << _value << "'";
-                    throw default_exception(strm.str());
+                    throw default_exception(strm.str());                                        
                 }
             }
             break;
 
         case CPK_BOOL:
             if (strcmp(value, "true") != 0 && strcmp(value, "false") != 0) {
-                strm << "Expected values for parameter " << name
+                strm << "Expected values for parameter " << name 
                      << " are 'true' or 'false'. It was given argument '" << value << "'";
                 throw default_exception(strm.str());
             }
@@ -304,9 +304,9 @@ public:
             //    1) Modify params_ref to create a copy of set_str parameters.
             //       This solution is not nice since we create copies and move the params_ref around.
             //       We would have to keep copying the strings.
-            //       Moreover, when we use params_ref internally, the value is usually a static value.
+            //       Moreover, when we use params_ref internally, the value is usually a static value. 
             //       So, we would be paying this price for nothing.
-            //    2) "Copy" value by transforming it into a symbol.
+            //    2) "Copy" value by transforming it into a symbol. 
             //       I'm using this solution for now.
             ps.set_str(param_name, symbol(value).bare_str());
         }
@@ -362,7 +362,7 @@ public:
             throw_unknown_parameter(p, d, m);
         }
         char const * r = d.get_default(p);
-        if (r == 0)
+        if (r == 0) 
             return "default";
         return r;
     }
@@ -422,8 +422,8 @@ public:
         }
         return result;
     }
-
-    params_ref get() {
+    
+    params_ref get() { 
         params_ref result;
         TRACE("gparams", tout << "get() m_params: " << m_params << "\n";);
         #pragma omp critical (gparams)

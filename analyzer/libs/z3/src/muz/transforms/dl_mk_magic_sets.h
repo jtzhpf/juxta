@@ -33,11 +33,11 @@ namespace datalog {
     /**
        \brief Implements magic sets rule transformation.
 
-       According to A. Voronkov. Foundations of Deductive Databases.
-
-       The stratified negation is not in the book addressed wrt. magic sets, but it seems
-       that, for the purpose of magic sets, the negated literals should be treated just as
-       if they were non-negated (we are interested only in values of arguments, not in the
+       According to A. Voronkov. Foundations of Deductive Databases. 
+       
+       The stratified negation is not in the book addressed wrt. magic sets, but it seems 
+       that, for the purpose of magic sets, the negated literals should be treated just as 
+       if they were non-negated (we are interested only in values of arguments, not in the 
        actual content of relations, at that point).
     */
     class mk_magic_sets : public rule_transformer::plugin {
@@ -68,7 +68,7 @@ namespace datalog {
 
             adornment_desc() {}
             adornment_desc(func_decl * pred) : m_pred(pred) {}
-            adornment_desc(func_decl * pred, const adornment & a)
+            adornment_desc(func_decl * pred, const adornment & a) 
                 : m_pred(pred), m_adornment(a) {}
 
             bool operator==(const adornment_desc & o) const {
@@ -86,9 +86,9 @@ namespace datalog {
             ptr_vector<app> m_tail;
         };
 
-        typedef hashtable<adornment_desc, obj_hash<adornment_desc>,
+        typedef hashtable<adornment_desc, obj_hash<adornment_desc>, 
             default_eq<adornment_desc> >  adornment_set;
-        typedef map<adornment_desc, func_decl *, obj_hash<adornment_desc>,
+        typedef map<adornment_desc, func_decl *, obj_hash<adornment_desc>, 
             default_eq<adornment_desc> >  adornment_map;
         typedef obj_map<func_decl, adornment> pred_adornment_map;
         typedef obj_map<func_decl, func_decl *> pred2pred;
@@ -108,7 +108,7 @@ namespace datalog {
         pred_adornment_map     m_adornments;
         pred2pred              m_magic_preds;
         func_decl_ref          m_goal;
-
+        
         void reset();
 
         float get_unbound_cost(app * lit, const var_idx_set & bound_vars);
@@ -125,7 +125,7 @@ namespace datalog {
            the \c goal_rule must be present in the \c rule_set that is being transformed.
          */
         mk_magic_sets(context & ctx, func_decl* goal);
-
+        
         rule_set * operator()(rule_set const & source);
     };
 

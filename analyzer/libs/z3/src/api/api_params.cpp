@@ -7,9 +7,9 @@ Module Name:
 
 Abstract:
     API for creating parameter sets.
-
+    
     This is essentially a wrapper for params_ref.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-03-05.
@@ -25,7 +25,7 @@ Revision History:
 #include"params.h"
 
 extern "C" {
-
+    
     Z3_params Z3_API Z3_mk_params(Z3_context c) {
         Z3_TRY;
         LOG_Z3_mk_params(c);
@@ -36,7 +36,7 @@ extern "C" {
         RETURN_Z3(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     /**
        \brief Increment the reference counter of the given parameter set.
     */
@@ -102,7 +102,7 @@ extern "C" {
         to_params(p)->m_params.set_sym(norm_param_name(to_symbol(k)).c_str(), to_symbol(v));
         Z3_CATCH;
     }
-
+    
     /**
        \brief Convert a parameter set into a string. This function is mainly used for printing the
        contents of a parameter set.
@@ -157,7 +157,7 @@ extern "C" {
         }
         Z3_CATCH_RETURN(Z3_PK_INVALID);
     }
-
+    
     unsigned Z3_API Z3_param_descrs_size(Z3_context c, Z3_param_descrs p) {
         Z3_TRY;
         LOG_Z3_param_descrs_size(c, p);
@@ -187,7 +187,7 @@ extern "C" {
         buffer << "(";
         unsigned sz = to_param_descrs_ptr(p)->size();
         for (unsigned i = 0; i < sz; i++) {
-            if (i > 0)
+            if (i > 0) 
                 buffer << ", ";
             buffer << to_param_descrs_ptr(p)->get_param_name(i);
         }

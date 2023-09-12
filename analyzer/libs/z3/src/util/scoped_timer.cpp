@@ -42,14 +42,14 @@ Revision History:
    #ifdef _LINUX_
    #define CLOCKID CLOCK_PROCESS_CPUTIME_ID
    #else
-   // FreeBSD does not support CLOCK_PROCESS_CPUTIME_ID
+   // FreeBSD does not support CLOCK_PROCESS_CPUTIME_ID 
    #define CLOCKID CLOCK_MONOTONIC
    #endif
 #define SIG     SIGRTMIN
 // ---------
 #else
 // Other platforms
-#endif
+#endif 
 
 #include"scoped_timer.h"
 #ifdef _CYGWIN
@@ -69,7 +69,7 @@ struct scoped_timer::imp {
     // Mac OS X
     pthread_t        m_thread_id;
     pthread_attr_t   m_attributes;
-    unsigned         m_interval;
+    unsigned         m_interval;    
     pthread_mutex_t  m_mutex;
     pthread_cond_t   m_condition_var;
     struct timespec  m_end_time;
@@ -93,7 +93,7 @@ struct scoped_timer::imp {
 #elif defined(__APPLE__) && defined(__MACH__)
     // Mac OS X
     static void * thread_func(void * arg) {
-        scoped_timer::imp * st = static_cast<scoped_timer::imp*>(arg);
+        scoped_timer::imp * st = static_cast<scoped_timer::imp*>(arg);  
 
         pthread_mutex_lock(&st->m_mutex);
 
@@ -120,13 +120,13 @@ struct scoped_timer::imp {
         m_eh(eh) {
 #if defined(_WINDOWS) || defined(_CYGWIN)
         m_first = true;
-        CreateTimerQueueTimer(&m_timer,
-                              NULL,
+        CreateTimerQueueTimer(&m_timer,			
+                              NULL,				
                               abort_proc,
                               this,
-                              0,
-                              ms,
-                              WT_EXECUTEINTIMERTHREAD);
+                              0,				
+                              ms,				
+                              WT_EXECUTEINTIMERTHREAD);	
 #elif defined(__APPLE__) && defined(__MACH__)
         // Mac OS X
         m_interval = ms?ms:0xFFFFFFFF;
@@ -140,7 +140,7 @@ struct scoped_timer::imp {
         clock_serv_t host_clock;
         mach_timespec_t now;
         unsigned long long nano = static_cast<unsigned long long>(m_interval) * 1000000ull;
-
+        
         host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &host_clock);
         m_end_time.tv_sec  = nano / 1000000000ull;
         m_end_time.tv_nsec = nano % 1000000000ull;
@@ -166,7 +166,7 @@ struct scoped_timer::imp {
 	its.it_value.tv_nsec = nano % 1000000000ull;
 	its.it_interval.tv_sec  = 0; // timer experies once
 	its.it_interval.tv_nsec = 0;
-
+        
 	if (timer_settime(m_timerid, 0, &its, NULL) == -1)
 	    throw default_exception("failed to set timer");
 #else
@@ -182,8 +182,8 @@ struct scoped_timer::imp {
 #elif defined(__APPLE__) && defined(__MACH__)
         // Mac OS X
 
-        // If the waiting-thread is not up and waiting yet,
-        // we can make sure that it finishes quickly by
+        // If the waiting-thread is not up and waiting yet, 
+        // we can make sure that it finishes quickly by 
         // setting the end-time to zero.
         m_end_time.tv_sec = 0;
         m_end_time.tv_nsec = 0;
@@ -218,7 +218,7 @@ scoped_timer::scoped_timer(unsigned ms, event_handler * eh) {
     else
         m_imp = 0;
 }
-
+    
 scoped_timer::~scoped_timer() {
     if (m_imp)
         dealloc(m_imp);

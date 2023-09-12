@@ -82,7 +82,7 @@ void macro_substitution::insert(func_decl * f, quantifier * q, proof * pr, expr_
         expr * rhs = body->get_arg(1);
         SASSERT(is_app_of(lhs, f) || is_app_of(rhs, f));
     });
-    obj_map<func_decl, quantifier *>::obj_map_entry * entry = m_decl2macro.insert_if_not_there2(f, 0);
+    obj_map<func_decl, quantifier *>::obj_map_entry * entry = m_decl2macro.insert_if_not_there2(f, 0); 
     if (entry->get_data().m_value == 0) {
         // new entry
         m_manager.inc_ref(f);
@@ -120,7 +120,7 @@ void macro_substitution::insert(func_decl * f, quantifier * q, proof * pr, expr_
         }
     }
 }
-
+ 
 void macro_substitution::erase(func_decl * f) {
     if (proofs_enabled()) {
         proof * pr = 0;

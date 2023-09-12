@@ -31,14 +31,14 @@ class subpaving_tactic : public tactic {
 
     struct display_var_proc : public subpaving::display_var_proc {
         expr_ref_vector m_inv;
-
+        
         display_var_proc(expr2var & e2v):m_inv(e2v.m()) {
             e2v.mk_inv(m_inv);
         }
-
+        
         ast_manager & m() const { return m_inv.get_manager(); }
-
-        virtual void operator()(std::ostream & out, subpaving::var x) const {
+        
+        virtual void operator()(std::ostream & out, subpaving::var x) const { 
             expr * t = m_inv.get(x, 0);
             if (t != 0)
                 out << mk_ismt2_pp(t, m());
@@ -65,7 +65,7 @@ class subpaving_tactic : public tactic {
         expr2var                        m_e2v;
         scoped_ptr<expr2subpaving>      m_e2s;
         bool                            m_display;
-
+        
         imp(ast_manager & m, params_ref const & p):
             m_manager(m),
             m_fm(m_fm_core),
@@ -75,17 +75,17 @@ class subpaving_tactic : public tactic {
             m_e2v(m) {
             updt_params(p);
         }
-
+        
         ast_manager & m() const { return m_manager; }
-
-        void collect_param_descrs(param_descrs & r) {
+        
+        void collect_param_descrs(param_descrs & r) {        
             m_ctx->collect_param_descrs(r);
             // #ifndef _EXTERNAL_RELEASE
             r.insert("numeral", CPK_SYMBOL, "(default: mpq) options: mpq, mpf, hwf, mpff, mpfx.");
             r.insert("print_nodes", CPK_BOOL, "(default: false) display subpaving tree leaves.");
             // #endif
         }
-
+        
         void updt_params(params_ref const & p) {
             m_display = p.get_bool("print_nodes", false);
             symbol engine = p.get_sym("numeral", symbol("mpq"));
@@ -98,7 +98,7 @@ class subpaving_tactic : public tactic {
                 new_kind = MPFF;
             else if (engine == "mpfx")
                 new_kind = MPFX;
-            else
+            else 
                 new_kind = HWF;
             if (m_kind != new_kind) {
                 m_kind = new_kind;
@@ -179,7 +179,7 @@ class subpaving_tactic : public tactic {
             }
             m_ctx->add_clause(sz, ineq_buffer.c_ptr());
         }
-
+        
         void internalize(goal const & g) {
             try {
                 for (unsigned i = 0; i < g.size(); i++) {
@@ -208,7 +208,7 @@ class subpaving_tactic : public tactic {
             }
         }
     };
-
+    
     imp *       m_imp;
     params_ref  m_params;
     statistics  m_stats;
@@ -232,7 +232,7 @@ public:
         m_imp->updt_params(p);
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) {        
         m_imp->collect_param_descrs(r);
     }
 
@@ -244,9 +244,9 @@ public:
         m_stats.reset();
     }
 
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         try {
@@ -263,7 +263,7 @@ public:
             throw tactic_exception(ex.msg());
         }
     }
-
+    
     virtual void cleanup() {
         ast_manager & m = m_imp->m();
         imp * d = m_imp;
@@ -273,7 +273,7 @@ public:
         }
         dealloc(d);
         d = alloc(imp, m, m_params);
-        #pragma omp critical (tactic_cancel)
+        #pragma omp critical (tactic_cancel) 
         {
             m_imp = d;
         }

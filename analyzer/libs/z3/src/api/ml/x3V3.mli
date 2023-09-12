@@ -43,13 +43,13 @@ val get_tuple_sort: context -> sort -> (func_decl * func_decl array)
 
 (**
   \[ [ datatype_constructor_refined ] \] is the refinement of a datatype constructor.
-
+  
   It contains the constructor declaration, recognizer, and list of accessor functions.
 *)
-type datatype_constructor_refined = {
-   constructor : func_decl;
-   recognizer : func_decl;
-   accessors : func_decl array
+type datatype_constructor_refined = { 
+   constructor : func_decl; 
+   recognizer : func_decl; 
+   accessors : func_decl array 
 }
 
 (**
@@ -98,9 +98,9 @@ val get_model_func_entries: context -> model -> int -> (ast array * ast) array;;
   - {b See also}: {!Z3.get_model_func_entries}
   - {b See also}: {!Z3.get_model_func_else}
 *)
-val get_model_funcs: context -> model ->
+val get_model_funcs: context -> model -> 
   (symbol *
-   (ast array * ast) array *
+   (ast array * ast) array * 
    ast) array
 
 (**
@@ -164,7 +164,7 @@ val get_smtlib_decls: context -> func_decl array
 val get_smtlib_parse_results: context -> (ast array * ast array * func_decl array)
 
 (**
-  \[ [ parse_smtlib_string_formula c ... ] \] calls [(parse_smtlib_string c ...)] and returns the single formula produced.
+  \[ [ parse_smtlib_string_formula c ... ] \] calls [(parse_smtlib_string c ...)] and returns the single formula produced. 
 
   Recommended for functional style interface to the SMT-LIB parser.
 
@@ -174,7 +174,7 @@ val get_smtlib_parse_results: context -> (ast array * ast array * func_decl arra
 val parse_smtlib_string_formula: context -> string -> symbol array -> sort array -> symbol array -> func_decl array -> ast
 
 (**
-  \[ [ parse_smtlib_file_formula c ... ] \] calls [(parse_smtlib_file c ...)] and returns the single formula produced.
+  \[ [ parse_smtlib_file_formula c ... ] \] calls [(parse_smtlib_file c ...)] and returns the single formula produced. 
 
   Recommended for functional style interface to the SMT-LIB parser.
 
@@ -257,7 +257,7 @@ val sort_refine: context -> sort -> sort_refined;;
 
   - {b See also}: {!Z3.term_refined}
 *)
-type binder_type = | Forall | Exists
+type binder_type = | Forall | Exists 
 
 (**
   \[ [ numeral_refined ] \] is the refinement of a numeral .
@@ -266,7 +266,7 @@ type binder_type = | Forall | Exists
   64 bit integers are treated as small.
 
 *)
-type numeral_refined =
+type numeral_refined = 
   | Numeral_small  of int64 * int64
   | Numeral_large  of string
 
@@ -275,7 +275,7 @@ type numeral_refined =
 
   - {b See also}: {!Z3.term_refine}
 *)
-type term_refined =
+type term_refined = 
   | Term_app        of decl_kind * func_decl * ast array
   | Term_quantifier of binder_type * int * ast array array * (symbol * sort) array * ast
   | Term_numeral    of numeral_refined * sort
@@ -288,7 +288,7 @@ type term_refined =
 *)
 val term_refine : context -> ast -> term_refined
 
-(**
+(** 
   \[ [mk_theory c name ] \] create a custom theory.
 
 *)
@@ -322,7 +322,7 @@ val set_new_app_callback : theory -> (ast -> unit) -> unit
 (**
   \[ [set_new_elem_callback th cb] \] set callback for registering new element.
 
-  - {b See also}: the help for the corresponding C API function.
+  - {b See also}: the help for the corresponding C API function.  
 *)
 val set_new_elem_callback : theory -> (ast -> unit) -> unit
 

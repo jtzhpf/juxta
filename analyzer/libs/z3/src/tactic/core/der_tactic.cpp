@@ -21,22 +21,22 @@ class der_tactic : public tactic {
     struct imp {
         ast_manager &   m_manager;
         der_rewriter    m_r;
-
+        
         imp(ast_manager & m):
             m_manager(m),
             m_r(m) {
         }
-
+        
         ast_manager & m() const { return m_manager; }
-
+        
         void set_cancel(bool f) {
             m_r.set_cancel(f);
         }
-
+        
         void reset() {
             m_r.reset();
         }
-
+        
         void operator()(goal & g) {
             SASSERT(g.is_well_sorted());
             bool proofs_enabled = g.proofs_enabled();
@@ -76,10 +76,10 @@ public:
     virtual ~der_tactic() {
         dealloc(m_imp);
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         mc = 0; pc = 0; core = 0;
@@ -97,7 +97,7 @@ public:
         }
         dealloc(d);
     }
-
+    
     virtual void set_cancel(bool f) {
         if (m_imp)
             m_imp->set_cancel(f);

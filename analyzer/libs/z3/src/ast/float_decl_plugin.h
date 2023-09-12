@@ -24,7 +24,7 @@ Revision History:
 #include"arith_decl_plugin.h"
 #include"bv_decl_plugin.h"
 #include"mpf.h"
-
+ 
 enum float_sort_kind {
     FLOAT_SORT,
     ROUNDING_MODE_SORT,
@@ -47,7 +47,7 @@ enum float_op_kind {
     OP_FLOAT_NAN,
     OP_FLOAT_PLUS_ZERO,
     OP_FLOAT_MINUS_ZERO,
-
+    
     OP_FLOAT_ADD,
     OP_FLOAT_SUB,
     OP_FLOAT_NEG,
@@ -70,7 +70,7 @@ enum float_op_kind {
     OP_FLOAT_IS_INF,
     OP_FLOAT_IS_ZERO,
     OP_FLOAT_IS_NORMAL,
-    OP_FLOAT_IS_SUBNORMAL,
+    OP_FLOAT_IS_SUBNORMAL,    
     OP_FLOAT_IS_PZERO,
     OP_FLOAT_IS_NZERO,
     OP_FLOAT_IS_NEGATIVE,
@@ -80,11 +80,11 @@ enum float_op_kind {
     OP_FLOAT_TO_IEEE_BV,
 
     OP_FLOAT_FP,
-    OP_FLOAT_TO_FP,
+    OP_FLOAT_TO_FP,    
     OP_FLOAT_TO_UBV,
     OP_FLOAT_TO_SBV,
     OP_FLOAT_TO_REAL,
-
+    
     LAST_FLOAT_OP
 };
 
@@ -100,7 +100,7 @@ class float_decl_plugin : public decl_plugin {
         mpf_eq_proc(scoped_mpf_vector const & values):m_values(values) {}
         bool operator()(unsigned id1, unsigned id2) const { return m_values.m().eq_core(m_values[id1], m_values[id2]); }
     };
-
+    
     typedef chashtable<unsigned, mpf_hash_proc, mpf_eq_proc> value_table;
 
 
@@ -145,29 +145,29 @@ class float_decl_plugin : public decl_plugin {
                              unsigned arity, sort * const * domain, sort * range);
     func_decl * mk_to_real(decl_kind k, unsigned num_parameters, parameter const * parameters,
                               unsigned arity, sort * const * domain, sort * range);
-
+    
     virtual void set_manager(ast_manager * m, family_id id);
     unsigned mk_id(mpf const & v);
     void recycled_id(unsigned id);
 public:
     float_decl_plugin();
-
+    
     bool is_float_sort(sort * s) const { return is_sort_of(s, m_family_id, FLOAT_SORT); }
     bool is_rm_sort(sort * s) const { return is_sort_of(s, m_family_id, ROUNDING_MODE_SORT); }
 
     virtual ~float_decl_plugin();
     virtual void finalize();
-
+    
     virtual decl_plugin * mk_fresh();
     virtual sort * mk_sort(decl_kind k, unsigned num_parameters, parameter const * parameters);
-    virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+    virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                      unsigned arity, sort * const * domain, sort * range);
     virtual void get_op_names(svector<builtin_name> & op_names, symbol const & logic);
     virtual void get_sort_names(svector<builtin_name> & sort_names, symbol const & logic);
     virtual expr * get_some_value(sort * s);
     virtual bool is_value(app* e) const;
     virtual bool is_unique_value(app* e) const { return is_value(e); }
-
+    
     mpf_manager & fm() { return m_fm; }
     func_decl * mk_value_decl(mpf const & v);
     app * mk_value(mpf const & v);
@@ -176,7 +176,7 @@ public:
     bool is_rm_value(expr * n, mpf_rounding_mode & val);
     bool is_rm_value(expr * n) { mpf_rounding_mode t; return is_rm_value(n, t); }
 
-    mpf const & get_value(unsigned id) const {
+    mpf const & get_value(unsigned id) const { 
         SASSERT(m_value_table.contains(id));
         return m_values[id];
     }
@@ -189,7 +189,7 @@ class float_util {
     ast_manager &       m_manager;
     float_decl_plugin * m_plugin;
     family_id           m_fid;
-    arith_util          m_a_util;
+    arith_util          m_a_util;    
 public:
     float_util(ast_manager & m);
     ~float_util();
@@ -225,7 +225,7 @@ public:
 
     app * mk_value(mpf const & v) { return m_plugin->mk_value(v); }
     bool is_value(expr * n) { return m_plugin->is_value(n); }
-    bool is_value(expr * n, mpf & v) { return m_plugin->is_value(n, v); }
+    bool is_value(expr * n, mpf & v) { return m_plugin->is_value(n, v); }     
     bool is_rm_value(expr * n, mpf_rounding_mode & v) { return m_plugin->is_rm_value(n, v); }
 
     app * mk_pzero(unsigned ebits, unsigned sbits);
@@ -233,7 +233,7 @@ public:
     app * mk_pzero(sort * s) { return mk_pzero(get_ebits(s), get_sbits(s)); }
     app * mk_nzero(sort * s) { return mk_nzero(get_ebits(s), get_sbits(s)); }
 
-    bool is_nan(expr * n) { scoped_mpf v(fm()); return is_value(n, v) && fm().is_nan(v); }
+    bool is_nan(expr * n) { scoped_mpf v(fm()); return is_value(n, v) && fm().is_nan(v); } 
     bool is_plus_inf(expr * n) { scoped_mpf v(fm()); return is_value(n, v) && fm().is_pinf(v); }
     bool is_minus_inf(expr * n) { scoped_mpf v(fm()); return is_value(n, v) && fm().is_ninf(v); }
     bool is_zero(expr * n) { scoped_mpf v(fm()); return is_value(n, v) && fm().is_zero(v); }
@@ -242,7 +242,7 @@ public:
 
     bool is_to_float(expr * n) { return is_app_of(n, m_fid, OP_TO_FLOAT); }
 
-    app * mk_to_float(expr * arg1, expr * arg2) { return m().mk_app(m_fid, OP_TO_FLOAT, arg1, arg2); }
+    app * mk_to_float(expr * arg1, expr * arg2) { return m().mk_app(m_fid, OP_TO_FLOAT, arg1, arg2); }    
     app * mk_add(expr * arg1, expr * arg2, expr * arg3) { return m().mk_app(m_fid, OP_FLOAT_ADD, arg1, arg2, arg3); }
     app * mk_mul(expr * arg1, expr * arg2, expr * arg3) { return m().mk_app(m_fid, OP_FLOAT_MUL, arg1, arg2, arg3); }
     app * mk_sub(expr * arg1, expr * arg2, expr * arg3) { return m().mk_app(m_fid, OP_FLOAT_SUB, arg1, arg2, arg3); }
@@ -277,7 +277,7 @@ public:
     app * mk_is_negative(expr * arg1) { return m().mk_app(m_fid, OP_FLOAT_IS_NEGATIVE, arg1); }
 
     bool is_neg(expr * a) { return is_app_of(a, m_fid, OP_FLOAT_NEG); }
-
+    
     app * mk_float_to_ieee_bv(expr * arg1) { return m().mk_app(m_fid, OP_FLOAT_TO_IEEE_BV, arg1); }
 };
 

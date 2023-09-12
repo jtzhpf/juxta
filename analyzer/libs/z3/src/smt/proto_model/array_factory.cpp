@@ -87,7 +87,7 @@ bool array_factory::mk_two_diff_values_for(sort * s) {
     get_some_args_for(s, args);
     func_interp * fi1;
     func_interp * fi2;
-    mk_array_interp(s, fi1);
+    mk_array_interp(s, fi1);    
     mk_array_interp(s, fi2);
     fi1->insert_entry(args.c_ptr(), r1);
     fi2->insert_entry(args.c_ptr(), r2);
@@ -107,7 +107,7 @@ bool array_factory::get_some_values(sort * s, expr_ref & v1, expr_ref & v2) {
     m_sort2value_set.find(s, set);
     SASSERT(set != 0);
     SASSERT(set->size() > 0);
-
+    
     if (set->size() == 1) {
         v1 = *(set->begin());
         v2 = get_fresh_value(s);
@@ -134,7 +134,7 @@ bool array_factory::get_some_values(sort * s, expr_ref & v1, expr_ref & v2) {
 expr * array_factory::get_fresh_value(sort * s) {
     value_set * set = get_value_set(s);
     if (set->empty()) {
-        // easy case
+        // easy case 
         return get_some_value(s);
     }
     sort * range    = get_array_range(s);
@@ -159,7 +159,7 @@ expr * array_factory::get_fresh_value(sort * s) {
             // Proof: let assume there is an Array A' such that A' = A.
             // Then A[i1] == A'[i1] and A[i2] == A'[i2]. Since, i1 and i2 are fresh,
             // A' does not have an entry for i1 or i2, So A'[i1] == A'[i2] == A'.m_else.
-            // Thus, A[i1] == A[i2] which is a contradiction since v1 != v2 and A[i1] = v1 and A[i2] = v2.
+            // Thus, A[i1] == A[i2] which is a contradiction since v1 != v2 and A[i1] = v1 and A[i2] = v2. 
             TRACE("array_factory_bug", tout << "v1: " << mk_pp(v1, m_manager) << " v2: " << mk_pp(v2, m_manager) << "\n";);
             ptr_buffer<expr> args1;
             ptr_buffer<expr> args2;
@@ -190,15 +190,15 @@ expr * array_factory::get_fresh_value(sort * s) {
             }
         }
     }
-
+    
     // TODO: use more expensive procedures to create a fresh array value.
     // Example: track the values used in the domain.
-
+    
     // Remark: in the current implementation, this function
     // will never fail, since if a type is finite, then
     // type_pred will be applied and get_fresh_value will not
     // need to be used.
-
+    
     // failed to create a fresh array value
     TRACE("array_factory_bug", tout << "failed to build fresh array value\n";);
     return 0;

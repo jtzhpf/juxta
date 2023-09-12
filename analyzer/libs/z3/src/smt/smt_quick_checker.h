@@ -28,12 +28,12 @@ namespace smt {
 
     /**
        \brief Simple object for finding quantifier instantiations that are falsified by the current model.
-
+       
        \remark The code for selecting candidates is very naive.
     */
     class quick_checker {
         typedef obj_hashtable<enode> enode_set;
-
+        
         /**
            \brief Functor for collecting candidates for quantifier instantiation.
         */
@@ -54,7 +54,7 @@ namespace smt {
                 unsigned hash() const { return m_parent ? mk_mix(m_expr->get_id(), m_parent->get_id(), m_parent_pos) : m_expr->get_id(); }
                 bool operator==(entry const & e) const { return m_expr == e.m_expr && m_parent == e.m_parent && m_parent_pos == e.m_parent_pos; }
             };
-
+            
             typedef hashtable<entry, obj_hash<entry>, default_eq<entry> > cache;
             cache                m_cache;
 
@@ -80,12 +80,12 @@ namespace smt {
         simplifier &         m_simplifier;
         collector            m_collector;
         expr_ref_vector      m_new_exprs;
-        vector<enode_vector> m_candidate_vectors;
+        vector<enode_vector> m_candidate_vectors; 
         check_cache          m_check_cache;
         canonize_cache       m_canonize_cache;
         unsigned             m_num_bindings;
         ptr_vector<enode>    m_bindings;
-
+        
         bool all_args(app * a, bool is_true);
         bool any_arg(app * a, bool is_true);
         bool check_core(expr * n, bool is_true);
@@ -93,7 +93,7 @@ namespace smt {
         bool check_quantifier(quantifier * n, bool is_true);
         expr * canonize(expr * n);
         bool process_candidates(quantifier * q, bool unsat);
-
+        
     public:
         quick_checker(context & c);
         bool instantiate_unsat(quantifier * q);

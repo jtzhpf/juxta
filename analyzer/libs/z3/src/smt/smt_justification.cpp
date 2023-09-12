@@ -27,20 +27,20 @@ namespace smt {
     justification_proof_wrapper::justification_proof_wrapper(context & ctx, proof * pr, bool in_region):
         justification(in_region),
         m_proof(pr) {
-        ctx.get_manager().inc_ref(pr);
+        ctx.get_manager().inc_ref(pr); 
     }
 
     void justification_proof_wrapper::del_eh(ast_manager & m) {
         m.dec_ref(m_proof);
     }
-
+    
     proof * justification_proof_wrapper::mk_proof(conflict_resolution & cr) {
         return m_proof;
     }
 
-    unit_resolution_justification::unit_resolution_justification(region & r,
-                                                                 justification * js,
-                                                                 unsigned num_lits,
+    unit_resolution_justification::unit_resolution_justification(region & r, 
+                                                                 justification * js, 
+                                                                 unsigned num_lits, 
                                                                  literal const * lits):
         m_antecedent(js),
         m_num_literals(num_lits) {
@@ -54,8 +54,8 @@ namespace smt {
               tout << "\n";);
     }
 
-    unit_resolution_justification::unit_resolution_justification(justification * js,
-                                                                 unsigned num_lits,
+    unit_resolution_justification::unit_resolution_justification(justification * js, 
+                                                                 unsigned num_lits, 
                                                                  literal const * lits):
         justification(false), // object is not allocated in a region
         m_antecedent(js),
@@ -130,7 +130,7 @@ namespace smt {
             if (pr && m.fine_grain_proofs())
                 pr = m.mk_symmetry(pr);
             prs.push_back(pr);
-            if (!pr)
+            if (!pr) 
                 visited = false;
         }
 
@@ -143,13 +143,13 @@ namespace smt {
         if (m_node2 != m_node2->get_root()) {
             proof * pr = cr.get_proof(m_node2, m_node2->get_root());
             prs.push_back(pr);
-            if (!pr)
+            if (!pr) 
                 visited = false;
         }
-
+        
         if (!visited)
             return 0;
-
+        
         expr * lhs = m_node1->get_root()->get_owner();
         expr * rhs = m_node2->get_root()->get_owner();
         proof * pr1 = m.mk_transitivity(prs.size(), prs.c_ptr(), lhs, rhs);
@@ -171,7 +171,7 @@ namespace smt {
             expr * lit;
             if (m.is_true(val))
                 lit = var;
-            else
+            else 
                 lit = m.mk_not(var);
             proof * pr2 = m.mk_rewrite(m.get_fact(pr1), lit);
             return m.mk_modus_ponens(pr1, pr2);
@@ -210,7 +210,7 @@ namespace smt {
             proof * pr;
             SASSERT(m.has_fact(pr1));
             SASSERT(m.has_fact(pr2));
-            app* fact1 = to_app(m.get_fact(pr1));
+            app* fact1 = to_app(m.get_fact(pr1));  
             app* fact2 = to_app(m.get_fact(pr2));
             SASSERT(m.is_iff(fact1));
             if (fact1->get_arg(1) == fact2) {
@@ -218,8 +218,8 @@ namespace smt {
                 fact1 = to_app(m.get_fact(pr1));
             }
             SASSERT(m.is_iff(fact1));
-
-            if (l.sign()) {
+            
+            if (l.sign()) { 
                 SASSERT(m.is_not(fact2));
                 expr* lhs = fact1->get_arg(0);
                 expr* rhs = fact1->get_arg(1);
@@ -234,7 +234,7 @@ namespace smt {
                 pr1 = m.mk_congruence(new_lhs, new_rhs, 1, &pr1);
             }
             pr = m.mk_modus_ponens(pr2, pr1);
-
+            
             TRACE("mp_iff_justification", tout << mk_pp(fact1, m) << "\n" << mk_pp(fact2, m) << "\n" <<
                   mk_pp(m.get_fact(pr), m) << "\n";);
             return pr;
@@ -347,7 +347,7 @@ namespace smt {
         ctx.literal2expr(m_consequent, fact);
         return m.mk_th_lemma(m_th_id, fact, prs.size(), prs.c_ptr(), m_params.size(), m_params.c_ptr());
     }
-
+    
     proof * ext_theory_conflict_justification::mk_proof(conflict_resolution & cr) {
         ptr_buffer<proof> prs;
         if (!antecedent2proof(cr, prs))
@@ -366,7 +366,7 @@ namespace smt {
         return m.mk_th_lemma(m_th_id, fact, prs.size(), prs.c_ptr(), m_params.size(), m_params.c_ptr());
     }
 
-
+    
     theory_lemma_justification::theory_lemma_justification(family_id fid, context & ctx, unsigned num_lits, literal const * lits,
                                                            unsigned num_params, parameter* params):
         justification(false),
@@ -386,9 +386,9 @@ namespace smt {
 
     theory_lemma_justification::~theory_lemma_justification() {
         SASSERT(!in_region());
-        dealloc_svect(m_literals);
+        dealloc_svect(m_literals); 
     }
-
+    
     void theory_lemma_justification::del_eh(ast_manager & m) {
         for (unsigned i = 0; i < m_num_literals; i++) {
             m.dec_ref(UNTAG(expr*, m_literals[i]));
@@ -403,7 +403,7 @@ namespace smt {
             bool sign   = GET_TAG(m_literals[i]) != 0;
             expr * v    = UNTAG(expr*, m_literals[i]);
             expr_ref l(m);
-            if (sign)
+            if (sign) 
                 l       = m.mk_not(v);
             else
                 l       = v;

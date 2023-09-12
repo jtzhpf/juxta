@@ -32,7 +32,7 @@ public:
         SASSERT(goal_idx == 0);
         operator()(m);
     }
-
+    
     virtual model_converter * translate(ast_translation & translator) = 0;
 };
 

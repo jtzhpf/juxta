@@ -47,16 +47,16 @@ unsigned msb_pos(unsigned v) {
     unsigned expected = slow_msb_pos(v);
 #endif
     unsigned r, shift;
-    r = (v > 0xFFFF) << 4;
+    r = (v > 0xFFFF) << 4; 
     v >>= r;
-    shift = (v > 0xFF) << 3;
-    v >>= shift;
+    shift = (v > 0xFF) << 3; 
+    v >>= shift; 
     r |= shift;
-    shift = (v > 0xF) << 2;
-    v >>= shift;
+    shift = (v > 0xF) << 2; 
+    v >>= shift; 
     r |= shift;
-    shift = (v > 0x3) << 1;
-    v >>= shift;
+    shift = (v > 0x3) << 1; 
+    v >>= shift; 
     r |= shift;
     r |= (v >> 1);
     SASSERT(r == expected);
@@ -125,17 +125,17 @@ unsigned ntz(unsigned sz, unsigned const * data) {
 
 /**
    \brief dst <- src
-
+   
    Trucate if src_sz > dst_sz.
    Fill range [src_sz, dst_sz) of dst with zeros if dst_sz > src_sz.
 */
-void copy(unsigned src_sz, unsigned const * src,
+void copy(unsigned src_sz, unsigned const * src, 
           unsigned dst_sz, unsigned * dst) {
     if (dst_sz >= src_sz) {
         unsigned i;
-        for (i = 0; i < src_sz; i++)
+        for (i = 0; i < src_sz; i++) 
             dst[i] = src[i];
-        for (; i < dst_sz; i++)
+        for (; i < dst_sz; i++) 
             dst[i] = 0;
     }
     else {
@@ -149,7 +149,7 @@ void copy(unsigned src_sz, unsigned const * src,
    \brief Return true if all words of data are zero.
 */
 bool is_zero(unsigned sz, unsigned const * data) {
-    for (unsigned i = 0; i < sz; i++)
+    for (unsigned i = 0; i < sz; i++) 
         if (data[i])
             return false;
     return true;
@@ -171,7 +171,7 @@ void reset(unsigned sz, unsigned * data) {
    \pre src_sz != 0
    \pre dst_sz != 0
 */
-void shl(unsigned src_sz, unsigned const * src, unsigned k,
+void shl(unsigned src_sz, unsigned const * src, unsigned k, 
          unsigned dst_sz, unsigned * dst) {
     SASSERT(src_sz != 0);
     SASSERT(dst_sz != 0);
@@ -183,7 +183,7 @@ void shl(unsigned src_sz, unsigned const * src, unsigned k,
         unsigned i = src_sz + word_shift;
         if (i > dst_sz) {
             if (j >= i - dst_sz)
-                j -= (i - dst_sz);
+                j -= (i - dst_sz); 
             else
                 j = 0;
             i  = dst_sz;
@@ -390,9 +390,9 @@ bool lt(unsigned sz, unsigned * data1, unsigned * data2) {
 bool add(unsigned sz, unsigned const * a, unsigned const * b, unsigned * c) {
     unsigned k = 0;
     for (unsigned j = 0; j < sz; j++) {
-        unsigned r = a[j] + b[j];
+        unsigned r = a[j] + b[j]; 
         bool c1 = r < a[j];
-        c[j] = r + k;
+        c[j] = r + k;    
         bool c2 = c[j] < r;
         k = c1 | c2;
     }

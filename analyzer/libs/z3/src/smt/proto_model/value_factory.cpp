@@ -20,7 +20,7 @@ Revision History:
 #include"value_factory.h"
 
 value_factory::value_factory(ast_manager & m, family_id fid):
-    m_manager(m),
+    m_manager(m), 
     m_fid(fid) {
 }
 
@@ -45,12 +45,12 @@ bool basic_factory::get_some_values(sort * s, expr_ref & v1, expr_ref & v2) {
     }
     return false;
 }
-
+    
 expr * basic_factory::get_fresh_value(sort * s) {
     return 0;
 }
 
-user_sort_factory::user_sort_factory(ast_manager & m):
+user_sort_factory::user_sort_factory(ast_manager & m): 
     simple_factory<unsigned>(m, m.mk_family_id("user-sort")) {
 }
 

@@ -20,7 +20,7 @@ namespace qe {
         eq_atoms(ast_manager& m):
           m_eqs(m),
           m_neqs(m),
-          m_eq_atoms(m),
+          m_eq_atoms(m), 
           m_neq_atoms(m) {}
 
           unsigned num_eqs() const { return m_eqs.size(); }
@@ -40,9 +40,9 @@ namespace qe {
         expr_ref_vector           m_trail;
         eqs_cache                 m_eqs_cache;
 
-
+        
     public:
-        dl_plugin(i_solver_context& ctx, ast_manager& m) :
+        dl_plugin(i_solver_context& ctx, ast_manager& m) : 
             qe_solver_plugin(m, m.mk_family_id("datalog_relation"), ctx),
             m_replace(m),
             m_util(m),
@@ -76,7 +76,7 @@ namespace qe {
 
         void assign(contains_app & x,expr * fml,const rational & v) {
             SASSERT(v.is_unsigned());
-            eq_atoms& eqs = get_eqs(x.x(), fml);
+            eq_atoms& eqs = get_eqs(x.x(), fml);            
             unsigned uv = v.get_unsigned();
             uint64 domain_size;
             if (is_small_domain(x, eqs, domain_size)) {
@@ -90,7 +90,7 @@ namespace qe {
 
         void subst(contains_app & x,const rational & v,expr_ref & fml, expr_ref* def) {
             SASSERT(v.is_unsigned());
-            eq_atoms& eqs = get_eqs(x.x(), fml);
+            eq_atoms& eqs = get_eqs(x.x(), fml);           
             unsigned uv = v.get_unsigned();
             uint64 domain_size;
             if (is_small_domain(x, eqs, domain_size)) {
@@ -150,7 +150,7 @@ namespace qe {
                 expr* e = eqs.eq(w);
                 m_replace.apply_substitution(x.x(), e, fml);
             }
-            else {
+            else {               
                 for (unsigned i = 0; i < eqs.num_eqs(); ++i) {
                     m_replace.apply_substitution(eqs.eq_atom(i), m.mk_false(), fml);
                 }
@@ -194,7 +194,7 @@ namespace qe {
             atom_set::iterator it = tbl.begin(), end = tbl.end();
             expr* x = contains_x.x();
             for (; it != end; ++it) {
-                app* e = *it;
+                app* e = *it; 
                 if (!contains_x(e)) {
                     continue;
                 }
@@ -219,7 +219,7 @@ namespace qe {
                 else {
                     eqs.add_neq(e, e2);
                 }
-            }
+            }    
             return true;
         }
 

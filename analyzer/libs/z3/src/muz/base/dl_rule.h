@@ -52,14 +52,14 @@ namespace datalog {
     {
         class remove_label_cfg : public default_rewriter_cfg {
             family_id m_label_fid;
-        public:
+        public:        
             remove_label_cfg(ast_manager& m): m_label_fid(m.get_label_family_id()) {}
             virtual ~remove_label_cfg();
-
-            br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result,
+            
+            br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, 
                                  proof_ref & result_pr);
         };
-
+    
         ast_manager&         m;
         context&             m_ctx;
         rule_counter         m_counter;
@@ -150,7 +150,7 @@ namespace datalog {
         /**
            \brief Create a Datalog rule from a Horn formula.
            The formula is of the form (forall (...) (forall (...) (=> (and ...) head)))
-
+           
         */
         void mk_rule(expr* fml, proof* p, rule_set& rules, symbol const& name = symbol::null);
 
@@ -163,10 +163,10 @@ namespace datalog {
         /**
            \brief Create a Datalog rule head :- tail[0], ..., tail[n-1].
            Return 0 if it is not a valid rule.
-
+           
            \remark A tail may contain negation. tail[i] is assumed to be negated if is_neg != 0 && is_neg[i] == true
         */
-        rule * mk(app * head, unsigned n, app * const * tail, bool const * is_neg = 0,
+        rule * mk(app * head, unsigned n, app * const * tail, bool const * is_neg = 0, 
                   symbol const& name = symbol::null, bool normalize = true);
 
         /**
@@ -232,7 +232,7 @@ namespace datalog {
         unsigned m_uninterp_cnt;
         symbol   m_name;
         /**
-           The following field is an array of tagged pointers.
+           The following field is an array of tagged pointers. 
            - Tag 0: the atom is not negated
            - Tag 1: the atom is negated.
 
@@ -244,8 +244,8 @@ namespace datalog {
 
            The negated flag is never set for interpreted tails.
         */
-        app *   m_tail[0];
-
+        app *   m_tail[0]; 
+        
         static unsigned get_obj_size(unsigned n) { return sizeof(rule) + n * sizeof(app *); }
 
         rule() : m_ref_cnt(0) {}
@@ -254,13 +254,13 @@ namespace datalog {
         void deallocate(ast_manager & m);
 
         void get_used_vars(used_vars& uv) const;
-
+        
     public:
 
         proof * get_proof() const { return m_proof; }
 
         void set_proof(ast_manager& m, proof* p);
-
+        
         app * get_head() const { return m_head; }
 
         func_decl* get_decl() const { return get_head()->get_decl(); }
@@ -276,8 +276,8 @@ namespace datalog {
         unsigned get_uninterpreted_tail_size() const { return m_uninterp_cnt; }
 
         /**
-           \brief Return i-th tail atom. The first \c get_uninterpreted_tail_size()
-             atoms are uninterpreted and the first \c get_positive_tail_size() are
+           \brief Return i-th tail atom. The first \c get_uninterpreted_tail_size() 
+             atoms are uninterpreted and the first \c get_positive_tail_size() are 
              uninterpreted and non-negated.
         */
         app * get_tail(unsigned i) const { SASSERT(i < m_tail_size); return UNTAG(app *, m_tail[i]); }
@@ -288,7 +288,7 @@ namespace datalog {
 
         /**
         Check whether predicate p is in the interpreted tail.
-
+        
         If only_positive is true, only the positive predicate tail atoms are checked.
         */
         bool is_in_tail(const func_decl * p, bool only_positive=false) const;
@@ -318,7 +318,7 @@ namespace datalog {
 
     };
 
-    struct rule_eq_proc {
+    struct rule_eq_proc { 
         bool operator()(const rule * r1, const rule * r2) const;
     };
     struct rule_hash_proc {

@@ -52,15 +52,15 @@ Example from Boogie:
 #include "qe_util.h"
 
 namespace datalog {
-
+    
     /**
        \brief push hyper-resolution steps upwards such that every use of
        hyper-resolution uses a premise that is not derived from hyper-resolution.
-
+              
        perform the following rewrite:
-
+       
        hr(hr(p1,p2,p3,..),p4,p5) => hr(p1,hr(p2,p4),p3,..,p5)
-
+      
     */
 
     void mk_input_resolution(proof_ref& pr) {
@@ -70,7 +70,7 @@ namespace datalog {
         expr_ref conclusion1(m), conclusion2(m), conclusion(m);
         svector<std::pair<unsigned, unsigned> > positions1, positions2, positions;
         vector<expr_ref_vector> substs1, substs2, substs;
-
+        
         if (m.is_hyper_resolve(pr, premises1, conclusion1, positions1, substs1) &&
             m.is_hyper_resolve(premises1[0].get(), premises, conclusion2, positions, substs2)) {
             for (unsigned i = 1; i < premises1.size(); ++i) {
@@ -94,7 +94,7 @@ namespace datalog {
                 qe::flatten_and(l1, literals);
                 positions2.reset();
                 premises2.reset();
-                premises2.push_back(premise);
+                premises2.push_back(premise);       
                 substs2.reset();
                 for (unsigned j = 0; j < literals.size(); ++j) {
                     expr* lit = literals[j].get();
@@ -108,12 +108,12 @@ namespace datalog {
                     }
                 }
                 premises[i] = m.mk_hyper_resolve(premises2.size(), premises2.c_ptr(), l2, positions2, substs2);
-            }
+            }        
             conclusion = conclusion1;
             pr = m.mk_hyper_resolve(premises.size(), premises.c_ptr(), conclusion, positions, substs);
         }
     }
-
+    
     void boogie_proof::set_proof(proof* p) {
         std::cout << "set proof\n";
         m_proof = p;
@@ -121,11 +121,11 @@ namespace datalog {
         mk_input_resolution(m_proof);
         std::cout << "proof set\n";
     }
-
+        
     void boogie_proof::set_model(model* m) {
         m_model = m;
     }
-
+    
     void boogie_proof::pp(std::ostream& out) {
         if (m_proof) {
             pp_proof(out);
@@ -142,7 +142,7 @@ namespace datalog {
         steps.push_back(step());
         obj_map<proof, unsigned> index;
         index.insert(m_proof, 0);
-
+		
         for (unsigned j = 0; j < rules.size(); ++j) {
             proof* p = rules[j];
             proof_ref_vector premises(m);
@@ -165,7 +165,7 @@ namespace datalog {
                         rules.push_back(premise);
                         steps.push_back(step());
                         index.insert(premise, position);
-                    }
+                    }   
                     steps[j].m_refs.push_back(position);
                 }
                 get_rule_name(premises[0].get(), steps[j].m_rule_name);
@@ -207,7 +207,7 @@ namespace datalog {
             expr_ref conclusion(m);
             svector<std::pair<unsigned, unsigned> >  positions;
             vector<expr_ref_vector> substs;
-            if (m.is_hyper_resolve(p, premises, conclusion, positions, substs)) {
+            if (m.is_hyper_resolve(p, premises, conclusion, positions, substs)) {               
                 expr_ref_vector const& sub = substs[0];
                 if (!sub.empty()) {
                     quantifier* q = to_quantifier(m.get_fact(premises[0].get()));
@@ -231,7 +231,7 @@ namespace datalog {
     }
 
     void boogie_proof::get_labels(proof* p, labels& lbls) {
-
+        
     }
 
     void boogie_proof::pp_steps(std::ostream& out, vector<step>& steps) {
@@ -246,7 +246,7 @@ namespace datalog {
     // step       :: "(" "step" step-name fact rule-name subst labels premises ")"
     void boogie_proof::pp_step(std::ostream& out, unsigned id, step& s) {
         out << "(step\n";
-        out << " s!" << id << " ";
+        out << " s!" << id << " "; 
         pp_fact(out, s.m_fact);
         out << " " << s.m_rule_name << "\n";
         pp_subst(out << " ", s.m_subst);

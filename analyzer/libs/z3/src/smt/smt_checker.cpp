@@ -63,14 +63,14 @@ namespace smt {
                 return is_true ? all_args(a, true) : any_arg(a, false);
             case OP_IFF:
                 if (is_true) {
-                    return
+                    return 
                         (check(a->get_arg(0), true) &&
                          check(a->get_arg(1), true)) ||
                         (check(a->get_arg(0), false) &&
                          check(a->get_arg(1), false));
                 }
                 else {
-                    return
+                    return 
                         (check(a->get_arg(0), true) &&
                          check(a->get_arg(1), false)) ||
                         (check(a->get_arg(0), false) &&
@@ -109,7 +109,7 @@ namespace smt {
         }
         return false;
     }
-
+    
     bool checker::check(expr * n, bool is_true) {
         bool r;
         if (n->get_ref_count() > 1 && m_is_true_cache[is_true].find(n, r))
@@ -125,7 +125,7 @@ namespace smt {
         unsigned num = n->get_num_args();
         for (unsigned i = 0; i < num; i++) {
             enode * arg = get_enode_eq_to(n->get_arg(i));
-            if (arg == 0)
+            if (arg == 0) 
                 return 0;
             buffer.push_back(arg);
         }
@@ -136,7 +136,7 @@ namespace smt {
     }
 
     enode * checker::get_enode_eq_to(expr * n) {
-        if (is_var(n)) {
+        if (is_var(n)) { 
             unsigned idx = to_var(n)->get_idx();
             if (idx >= m_num_bindings)
                 return 0;
@@ -147,7 +147,7 @@ namespace smt {
         if (!is_app(n) || to_app(n)->get_num_args() == 0)
             return 0;
         enode * r = 0;
-        if (n->get_ref_count() > 1 && m_to_enode_cache.find(n, r))
+        if (n->get_ref_count() > 1 && m_to_enode_cache.find(n, r)) 
             return r;
         r = get_enode_eq_to_core(to_app(n));
         if (n->get_ref_count() > 1)
@@ -181,7 +181,7 @@ namespace smt {
         m_num_bindings(0),
         m_bindings(0) {
     }
-
+   
 };
 
 

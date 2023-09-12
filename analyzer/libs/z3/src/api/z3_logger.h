@@ -14,7 +14,7 @@ Author:
     Leonardo de Moura (leonardo) 2011-09-22
 
 Notes:
-
+    
 --*/
 #include<iostream>
 #include"symbol.h"
@@ -27,7 +27,7 @@ static void __declspec(noinline) I(__int64 i)   { *g_z3_log << "I " << i << "\n"
 static void __declspec(noinline) U(__uint64 u)   { *g_z3_log << "U " << u << "\n"; g_z3_log->flush(); }
 static void __declspec(noinline) D(double d)   { *g_z3_log << "D " << d << "\n"; g_z3_log->flush(); }
 static void __declspec(noinline) S(Z3_string str) { *g_z3_log << "S \"" << ll_escaped(str) << "\"\n"; g_z3_log->flush(); }
-static void __declspec(noinline) Sy(Z3_symbol sym) {
+static void __declspec(noinline) Sy(Z3_symbol sym) { 
     symbol s = symbol::mk_symbol_from_c_ptr(reinterpret_cast<void *>(sym));
     if (s == symbol::null) {
         *g_z3_log << "N\n";

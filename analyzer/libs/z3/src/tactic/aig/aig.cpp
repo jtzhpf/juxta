@@ -89,7 +89,7 @@ struct aig_eq {
     bool operator()(aig * n1, aig * n2) const {
         SASSERT(!is_var(n1));
         SASSERT(!is_var(n2));
-        return
+        return 
             n1->m_children[0] == n2->m_children[0] &&
             n1->m_children[1] == n2->m_children[1];
     }
@@ -100,7 +100,7 @@ public:
 };
 
 struct aig_lit_lt {
-    bool operator()(aig_lit const & l1, aig_lit const & l2) const {
+    bool operator()(aig_lit const & l1, aig_lit const & l2) const { 
         if (id(l1) < id(l2)) return true;
         if (id(l1) == id(l2)) return l1.is_inverted() && !l2.is_inverted();
         return false;
@@ -140,7 +140,7 @@ struct aig_manager::imp {
 
     void dec_ref_result(aig * n) { SASSERT(n->m_ref_count > 0); n->m_ref_count--; }
     void dec_ref_result(aig_lit const & r) { dec_ref_result(r.ptr()); }
-
+    
     void process_to_delete() {
         while (!m_to_delete.empty()) {
             aig * n = m_to_delete.back();
@@ -219,14 +219,14 @@ struct aig_manager::imp {
         aig * n1   = l.ptr();
         bool sign2 = r.is_inverted();
         aig * n2   = r.ptr();
-
+        
         if (n1->m_id == 0) {
             if (sign1)
-                return m_false; // false and r
+                return m_false; // false and r 
             else
                 return r; // true and r
         }
-
+        
         if (n2->m_id == 0) {
             if (sign2)
                 return m_false; // l and false;
@@ -266,7 +266,7 @@ struct aig_manager::imp {
                 }
                 else {
                     // substitution
-                    return l; // (a and b) and r --> (a and b)  IF  a = r
+                    return l; // (a and b) and r --> (a and b)  IF  a = r 
                 }
             }
             if  (b == r) {
@@ -282,7 +282,7 @@ struct aig_manager::imp {
                     return l; // (a and b) and r --> (a and b)  IF b = r;
                 }
             }
-
+        
             if (!is_var(n2)) {
                 aig_lit c = n2->m_children[0];
                 aig_lit d = n2->m_children[1];
@@ -294,12 +294,12 @@ struct aig_manager::imp {
                     // idempotence
                     if (a == c || b == c) {
                         r = d;          // (a and b) and (c and d) --> (a and b) and d   IF a == c or b == c
-                        goto start;
+                        goto start; 
                     }
                     // idempotence
                     if (b == c || b == d) {
                         l = a;          //  (a and b) and (c and d) --> a and (c and d)  IF b == c or b == d
-                        goto start;
+                        goto start; 
                     }
                     // idempotence
                     if (a == d || b == d) {
@@ -356,11 +356,11 @@ struct aig_manager::imp {
                         goto start;
                     }
                 }
-
+                
                 if (sign1 && sign2) {
                     // resolution
                     if (a == c && is_not_eq(b, d)) {
-                        a.invert();    // (not (a and b)) and (not (a and (not b))) --> not a
+                        a.invert();    // (not (a and b)) and (not (a and (not b))) --> not a     
                         return a;
                     }
                     SASSERT(!(a == d && is_not_eq(b, c))); // cannot happen because we sort args
@@ -418,7 +418,7 @@ struct aig_manager::imp {
 
         if (n1->m_id > n2->m_id)
             return mk_node_core(r, l);
-        else
+        else 
             return mk_node_core(l, r);
     }
 
@@ -433,32 +433,32 @@ struct aig_manager::imp {
         svector<frame>         m_frame_stack;
         svector<aig_lit>       m_result_stack;
         obj_map<expr, aig_lit> m_cache;
-
+        
         expr2aig(imp & _m):m(_m) {}
-
+        
         ~expr2aig() {
             obj_map<expr, aig_lit>::iterator it  = m_cache.begin();
             obj_map<expr, aig_lit>::iterator end = m_cache.end();
             for (; it != end; ++it) {
-                TRACE("expr2aig", tout << "dec-ref: "; m.display_ref(tout, it->m_value);
+                TRACE("expr2aig", tout << "dec-ref: "; m.display_ref(tout, it->m_value); 
                       tout << " ref-count: " << ref_count(it->m_value) << "\n";);
                 m.dec_ref(it->m_value);
             }
             restore_result_stack(0);
         }
-
+        
         void save_result(aig_lit & r) {
             m.inc_ref(r);
             m_result_stack.push_back(r);
         }
 
         void cache_result(expr * t, aig_lit const & r) {
-            TRACE("expr2aig", tout << "caching:\n" << mk_ismt2_pp(t, m.m()) << "\n---> "; m.display_ref(tout, r); tout << "\n";);
+            TRACE("expr2aig", tout << "caching:\n" << mk_ismt2_pp(t, m.m()) << "\n---> "; m.display_ref(tout, r); tout << "\n";); 
             SASSERT(!m_cache.contains(t));
             m.inc_ref(r);
             m_cache.insert(t, r);
         }
-
+        
         bool is_cached(expr * t) {
             aig_lit r;
             if (m_cache.find(t, r)) {
@@ -480,19 +480,19 @@ struct aig_manager::imp {
         void mk_frame(app * t) {
             m_frame_stack.push_back(frame(t, m_result_stack.size()));
         }
-
+        
         bool visit(expr * t) {
             if (is_app(t)) {
                 app * tapp = to_app(t);
                 if (tapp->get_family_id() == m.m().get_basic_family_id()) {
                     switch (tapp->get_decl_kind()) {
                     case OP_TRUE:    save_result(m.m_true); return true;
-                    case OP_FALSE:   save_result(m.m_false); return true;
+                    case OP_FALSE:   save_result(m.m_false); return true; 
                     case OP_EQ:
                         if (!m.m().is_bool(tapp->get_arg(0)))
                             break;
                     case OP_NOT:
-                    case OP_OR:
+                    case OP_OR:      
                     case OP_AND:
                     case OP_IFF:
                     case OP_XOR:
@@ -510,12 +510,12 @@ struct aig_manager::imp {
                 return true;
             }
             else {
-                // quantifiers and free variables are handled as aig variables
+                // quantifiers and free variables are handled as aig variables                
                 process_var(t);
                 return true;
             }
         }
-
+        
         void restore_result_stack(unsigned old_sz) {
             unsigned sz = m_result_stack.size();
             SASSERT(old_sz <= sz);
@@ -531,7 +531,7 @@ struct aig_manager::imp {
             SASSERT(ref_count(r) >= 2);
             m.dec_ref(r);
         }
-
+                
         void mk_or(unsigned spos) {
             SASSERT(spos <= m_result_stack.size());
             unsigned num = m_result_stack.size() - spos;
@@ -557,7 +557,7 @@ struct aig_manager::imp {
             aig_lit r = m.mk_iff(m_result_stack[spos], m_result_stack[spos+1]);
             save_node_result(spos, r);
         }
-
+        
         void mk_xor(unsigned spos) {
             SASSERT(spos + 2 == m_result_stack.size());
             aig_lit r = m.mk_xor(m_result_stack[spos], m_result_stack[spos+1]);
@@ -576,7 +576,7 @@ struct aig_manager::imp {
             case OP_NOT:
                 m_result_stack[fr.m_spos].invert();
                 break;
-            case OP_OR:
+            case OP_OR: 
                 mk_or(fr.m_spos);
                 break;
             case OP_AND:
@@ -605,7 +605,7 @@ struct aig_manager::imp {
                 cache_result(fr.m_t, m_result_stack.back());
             }
         }
-
+        
         aig_lit operator()(expr * n) {
             SASSERT(check_cache());
             if (!visit(n)) {
@@ -664,7 +664,7 @@ struct aig_manager::imp {
                 return false;
             aig_lit l1 = left(l_ptr);
             aig_lit l2 = right(l_ptr);
-            aig_lit r1 = left(r_ptr);
+            aig_lit r1 = left(r_ptr); 
             aig_lit r2 = right(r_ptr);
             if (is_not_eq(l1, r1)) {
                 if (Collect) {
@@ -680,7 +680,7 @@ struct aig_manager::imp {
             }
             else if (is_not_eq(l1, r2)) {
                 if (Collect) {
-                    l1.invert(); l2.invert(); r1.invert(); r2.invert();
+                    l1.invert(); l2.invert(); r1.invert(); r2.invert();                
                     if (l1.is_inverted()) {
                         c = r2; t = l2; e = r1;
                     }
@@ -692,7 +692,7 @@ struct aig_manager::imp {
             }
             else if (is_not_eq(l2, r1)) {
                 if (Collect) {
-                    l1.invert(); l2.invert(); r1.invert(); r2.invert();
+                    l1.invert(); l2.invert(); r1.invert(); r2.invert();                
                     if (l2.is_inverted()) {
                         c = r1; t = l1; e = r2;
                     }
@@ -704,7 +704,7 @@ struct aig_manager::imp {
             }
             else if (is_not_eq(l2, r2)) {
                 if (Collect) {
-                    l1.invert(); l2.invert(); r1.invert(); r2.invert();
+                    l1.invert(); l2.invert(); r1.invert(); r2.invert();                
                     if (l2.is_inverted()) {
                         c = r2; t = l1; e = r1;
                     }
@@ -751,9 +751,9 @@ struct aig_manager::imp {
     struct aig2expr {
         imp &           m;
         ast_manager &   ast_mng;
-        enum kind { AIG_AND,
+        enum kind { AIG_AND,       
                     AIG_AUX_AND,  // does not have an associated expr
-                    AIG_ITE
+                    AIG_ITE 
         };
         struct frame {
             aig *       m_node;
@@ -765,7 +765,7 @@ struct aig_manager::imp {
         svector<frame>  m_frame_stack;
 
         aig2expr(imp & _m):m(_m), ast_mng(m.m()), m_cache(ast_mng) {}
-
+        
         expr * get_cached(aig * n) {
             if (is_var(n)) {
                 return n->m_id == 0 ? ast_mng.mk_true() : m.var2expr(n);
@@ -878,7 +878,7 @@ struct aig_manager::imp {
             if (m.is_not_eq(t, e)) {
                 r = ast_mng.mk_iff(get_cached(c), get_cached(t));
             }
-            else {
+            else { 
                 r = ast_mng.mk_ite(get_cached(c), get_cached(t), get_cached(e));
             }
             cache_result(n, r);
@@ -950,7 +950,7 @@ struct aig_manager::imp {
         }
 
         /**
-           \brief (Debugging) Naive AIG -> EXPR
+           \brief (Debugging) Naive AIG -> EXPR 
         */
         void naive(aig_lit const & l, expr_ref & r) {
             expr_ref_vector cache(ast_mng);
@@ -976,7 +976,7 @@ struct aig_manager::imp {
                         ok = false;
                     }
                 }
-                if (!ok)
+                if (!ok) 
                     continue;
                 expr * args[2];
                 for (unsigned i = 0; i < 2; i++) {
@@ -1132,9 +1132,9 @@ struct aig_manager::imp {
             aig_lit a = left(left(n));
             aig_lit b = right(left(n));
             aig_lit c = right(n);
-            TRACE("max_sharing",
-                  tout << "trying (and "; m.display_ref(tout, a);
-                  tout << " (and ";       m.display_ref(tout, b);
+            TRACE("max_sharing", 
+                  tout << "trying (and "; m.display_ref(tout, a); 
+                  tout << " (and ";       m.display_ref(tout, b); 
                   tout << " ";            m.display_ref(tout, c);
                   tout << "))\n";);
             aig_lit bc = m.mk_and(b, c);
@@ -1149,10 +1149,10 @@ struct aig_manager::imp {
                 return true;
             }
             m.dec_ref(bc);
-
-            TRACE("max_sharing",
-                  tout << "trying (and "; m.display_ref(tout, a);
-                  tout << " (and ";       m.display_ref(tout, c);
+            
+            TRACE("max_sharing", 
+                  tout << "trying (and "; m.display_ref(tout, a); 
+                  tout << " (and ";       m.display_ref(tout, c); 
                   tout << " ";            m.display_ref(tout, b);
                   tout << "))\n";);
             aig_lit ac = m.mk_and(a, c);
@@ -1177,9 +1177,9 @@ struct aig_manager::imp {
             aig_lit a = left(n);
             aig_lit b = left(right(n));
             aig_lit c = right(right(n));
-            TRACE("max_sharing",
-                  tout << "trying (and (and "; m.display_ref(tout, a);
-                  tout << " ";                 m.display_ref(tout, b);
+            TRACE("max_sharing", 
+                  tout << "trying (and (and "; m.display_ref(tout, a); 
+                  tout << " ";                 m.display_ref(tout, b); 
                   tout << ") ";                m.display_ref(tout, c);
                   tout << ")\n";);
             aig_lit ab = m.mk_and(a, b);
@@ -1194,11 +1194,11 @@ struct aig_manager::imp {
                 return true;
             }
             m.dec_ref(ab);
-
+            
             aig_lit ac = m.mk_and(a, c);
-            TRACE("max_sharing",
-                  tout << "trying (and (and "; m.display_ref(tout, a);
-                  tout << " ";                 m.display_ref(tout, c);
+            TRACE("max_sharing", 
+                  tout << "trying (and (and "; m.display_ref(tout, a); 
+                  tout << " ";                 m.display_ref(tout, c); 
                   tout << ") ";                m.display_ref(tout, b);
                   tout << ")\n";);
             m.inc_ref(ac);
@@ -1264,7 +1264,7 @@ struct aig_manager::imp {
                 aig * n    = fr.m_node;
                 TRACE("max_sharing", tout << "processing "; m.display_ref(tout, n); tout << " idx: " << fr.m_idx << "\n";);
                 switch (fr.m_idx) {
-                case 0:
+                case 0: 
                     fr.m_idx++;
                     if (!visit(left(n)))
                         goto start;
@@ -1319,7 +1319,7 @@ public:
         m_max_memory = max_memory;
         m_default_gate_encoding = default_gate_encoding;
     }
-
+    
     ~imp() {
         dec_ref(m_true);
         dec_ref(m_false);
@@ -1332,7 +1332,7 @@ public:
 
     void inc_ref(aig * n) { n->m_ref_count++; }
     void inc_ref(aig_lit const & r) { inc_ref(r.ptr()); }
-    void dec_ref(aig * n) {
+    void dec_ref(aig * n) { 
         dec_ref_core(n);
         process_to_delete();
     }
@@ -1340,17 +1340,17 @@ public:
 
     void dec_array_ref(unsigned sz, aig * const * ns) {
         for (unsigned i = 0; i < sz; i++)
-            if (ns[i])
+            if (ns[i]) 
                 dec_ref(ns[i]);
     }
 
     aig_lit mk_and(aig_lit r1, aig_lit r2) {
         aig_lit r = mk_node(r1, r2);
-        TRACE("mk_and_bug",
+        TRACE("mk_and_bug", 
               display(tout, r1);
               tout << "AND\n";
               display(tout, r2);
-              tout << "-->\n";
+              tout << "-->\n"; 
               display(tout, r);
               tout << "\n";);
         return r;
@@ -1496,7 +1496,7 @@ public:
 
     aig_lit mk_aig(expr * t) {
         aig_lit r;
-        {
+        { 
             expr2aig proc(*this);
             r = proc(t);
             inc_ref(r);
@@ -1506,7 +1506,7 @@ public:
     }
 
     template<typename S>
-    aig_lit mk_aig(S const & s) {
+    aig_lit mk_aig(S const & s) { 
         aig_lit r;
 	r   = m_true;
 	inc_ref(r);
@@ -1540,7 +1540,7 @@ public:
         aig2expr proc(*this);
         proc(r, g);
     }
-
+    
     void to_formula(aig_lit const & r, expr_ref & result) {
         aig2expr proc(*this);
         proc(r, result);
@@ -1552,7 +1552,7 @@ public:
     }
 
     void display_ref(std::ostream & out, aig * r) const {
-        if (is_var(r))
+        if (is_var(r)) 
             out << "#" << r->m_id;
         else
             out << "@" << (r->m_id - FIRST_NODE_ID);
@@ -1565,7 +1565,7 @@ public:
     }
 
     void display(std::ostream & out, aig_lit const & r) const {
-        display_ref(out, r);
+        display_ref(out, r); 
         out << "\n";
         ptr_vector<aig> queue;
         unsigned        qhead = 0;
@@ -1741,7 +1741,7 @@ void aig_manager::to_formula(aig_ref const & r, goal & g) {
 void aig_manager::to_formula(aig_ref const & r, expr_ref & res) {
     return m_imp->to_formula(aig_lit(r), res);
 }
-
+ 
 void aig_manager::display(std::ostream & out, aig_ref const & r) const {
     m_imp->display(out, aig_lit(r));
 }

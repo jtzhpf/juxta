@@ -4,7 +4,7 @@ import unittest
 # Run from the root dir
 sys.path.insert(0, '.')
 
-from pycparser import c_parser, c_generator, c_ast
+from pycparser import c_parser, c_generator
 
 _c_parser = c_parser.CParser(
                 lex_optimize=False,
@@ -21,7 +21,6 @@ def compare_asts(ast1, ast2):
             return False
         ast1 = ast1[1]
         ast2 = ast2[1]
-        return compare_asts(ast1, ast2)
     for attr in ast1.attr_names:
         if getattr(ast1, attr) != getattr(ast2, attr):
             return False
@@ -33,29 +32,6 @@ def compare_asts(ast1, ast2):
 
 def parse_to_ast(src):
     return _c_parser.parse(src)
-
-
-class TestFunctionDeclGeneration(unittest.TestCase):
-    class _FuncDeclVisitor(c_ast.NodeVisitor):
-        def __init__(self):
-            self.stubs = []
-
-        def visit_FuncDecl(self, node):
-            gen = c_generator.CGenerator()
-            self.stubs.append(gen.visit(node))
-
-    def test_partial_funcdecl_generation(self):
-        src = r'''
-            void noop(void);
-            void *something(void *thing);
-            int add(int x, int y);'''
-        ast = parse_to_ast(src)
-        v = TestFunctionDeclGeneration._FuncDeclVisitor()
-        v.visit(ast)
-        self.assertEqual(len(v.stubs), 3)
-        self.assertTrue(r'void noop(void)' in v.stubs)
-        self.assertTrue(r'void *something(void *thing)' in v.stubs)
-        self.assertTrue(r'int add(int x, int y)' in v.stubs)
 
 
 class TestCtoC(unittest.TestCase):
@@ -212,32 +188,7 @@ class TestCtoC(unittest.TestCase):
             }
         ''')
 
-    def test_exprlist_with_subexprlist(self):
-        self._assert_ctoc_correct(r'''
-            void x() {
-                (a = b, (b = c, c = a));
-            }
-        ''')
-
-    def test_comma_operator_funcarg(self):
-        self._assert_ctoc_correct(r'''
-            void f(int x) { return x; }
-            int main(void) { f((1, 2)); return 0; }
-        ''')
-
-    def test_comma_op_in_ternary(self):
-        self._assert_ctoc_correct(r'''
-            void f() {
-                (0, 0) ? (0, 0) : (0, 0);
-            }
-        ''')
-
-    def test_comma_op_assignment(self):
-        self._assert_ctoc_correct(r'''
-            void f() {
-                i = (a, b, c);
-            }
-        ''')
 
 if __name__ == "__main__":
     unittest.main()
+

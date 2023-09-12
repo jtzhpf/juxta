@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Context.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -39,9 +39,9 @@ public class Context extends IDisposable
     /**
      * Constructor.
      * <remarks>
-     * The following parameters can be set:
+     * The following parameters can be set:        
      *     - proof  (Boolean)           Enable proof generation
-     *     - debug_ref_count (Boolean)  Enable debug support for Z3_ast reference counting
+     *     - debug_ref_count (Boolean)  Enable debug support for Z3_ast reference counting 
      *     - trace  (Boolean)           Tracing support for VCC
      *     - trace_file_name (String)   Trace out file for VCC traces
      *     - timeout (unsigned)         default timeout (in milliseconds) used for solvers
@@ -50,7 +50,7 @@ public class Context extends IDisposable
      *     - model                      model generation for solvers, this parameter can be overwritten when creating a solver
      *     - model_validate             validate models produced by solvers
      *     - unsat_core                 unsat-core generation for solvers, this parameter can be overwritten when creating a solver
-     * Note that in previous versions of Z3, this constructor was also used to set global and
+     * Note that in previous versions of Z3, this constructor was also used to set global and 
      * module parameters. For this purpose we should now use <see cref="Global.setParameter"/>
      * </remarks>
      **/
@@ -297,7 +297,7 @@ public class Context extends IDisposable
      * Create a datatype constructor. <param name="name"></param> <param
      * name="recognizer"></param> <param name="fieldNames"></param> <param
      * name="sorts"></param> <param name="sortRefs"></param>
-     *
+     * 
      * @return
      **/
     public Constructor mkConstructor(String name, String recognizer,
@@ -365,7 +365,7 @@ public class Context extends IDisposable
     /**
      * Create mutually recursive data-types. <param name="names"></param> <param
      * name="c"></param>
-     *
+     * 
      * @return
      **/
     public DatatypeSort[] mkDatatypeSorts(String[] names, Constructor[][] c)
@@ -904,7 +904,7 @@ public class Context extends IDisposable
     /**
      * Coerce an integer to a real. <remarks> There is also a converse operation
      * exposed. It follows the semantics prescribed by the SMT-LIB standard.
-     *
+     * 
      * You can take the floor of a real by creating an auxiliary integer Term
      * <code>k</code> and and asserting
      * <code>MakeInt2Real(k) &lt;= t1 &lt; MkInt2Real(k)+1</code>. The argument
@@ -1120,13 +1120,13 @@ public class Context extends IDisposable
 
     /**
      * Signed division. <remarks> It is defined in the following way:
-     *
+     * 
      * - The \c floor of <code>t1/t2</code> if \c t2 is different from zero, and
      * <code>t1*t2 >= 0</code>.
-     *
+     * 
      * - The \c ceiling of <code>t1/t2</code> if \c t2 is different from zero,
      * and <code>t1*t2 &lt; 0</code>.
-     *
+     * 
      * If <code>t2</code> is zero, then the result is undefined. The arguments
      * must have the same bit-vector sort. </remarks>
      **/
@@ -1159,7 +1159,7 @@ public class Context extends IDisposable
      * <code>t1 - (t1 /s t2) * t2</code>, where <code>/s</code> represents
      * signed division. The most significant bit (sign) of the result is equal
      * to the most significant bit of \c t1.
-     *
+     * 
      * If <code>t2</code> is zero, then the result is undefined. The arguments
      * must have the same bit-vector sort. </remarks>
      **/
@@ -1293,11 +1293,11 @@ public class Context extends IDisposable
     /**
      * Bit-vector concatenation. <remarks> The arguments must have a bit-vector
      * sort. </remarks>
-     *
+     * 
      * @return The result is a bit-vector of size <code>n1+n2</code>, where
      *         <code>n1</code> (<code>n2</code>) is the size of <code>t1</code>
      *         (<code>t2</code>).
-     *
+     * 
      **/
     public BitVecExpr mkConcat(BitVecExpr t1, BitVecExpr t2) throws Z3Exception
     {
@@ -1367,11 +1367,11 @@ public class Context extends IDisposable
     /**
      * Shift left. <remarks> It is equivalent to multiplication by
      * <code>2^x</code> where \c x is the value of <paramref name="t2"/>.
-     *
+     * 
      * NB. The semantics of shift operations varies between environments. This
      * definition does not necessarily capture directly the semantics of the
      * programming language or assembly architecture you are modeling.
-     *
+     * 
      * The arguments must have a bit-vector sort. </remarks>
      **/
     public BitVecExpr mkBVSHL(BitVecExpr t1, BitVecExpr t2) throws Z3Exception
@@ -1386,11 +1386,11 @@ public class Context extends IDisposable
     /**
      * Logical shift right <remarks> It is equivalent to unsigned division by
      * <code>2^x</code> where \c x is the value of <paramref name="t2"/>.
-     *
+     * 
      * NB. The semantics of shift operations varies between environments. This
      * definition does not necessarily capture directly the semantics of the
      * programming language or assembly architecture you are modeling.
-     *
+     * 
      * The arguments must have a bit-vector sort. </remarks>
      **/
     public BitVecExpr mkBVLSHR(BitVecExpr t1, BitVecExpr t2) throws Z3Exception
@@ -1406,11 +1406,11 @@ public class Context extends IDisposable
      * Arithmetic shift right <remarks> It is like logical shift right except
      * that the most significant bits of the result always copy the most
      * significant bit of the second argument.
-     *
+     * 
      * NB. The semantics of shift operations varies between environments. This
      * definition does not necessarily capture directly the semantics of the
      * programming language or assembly architecture you are modeling.
-     *
+     * 
      * The arguments must have a bit-vector sort. </remarks>
      **/
     public BitVecExpr mkBVASHR(BitVecExpr t1, BitVecExpr t2) throws Z3Exception
@@ -1481,7 +1481,7 @@ public class Context extends IDisposable
      * <paramref name="t"/>. <remarks> NB. This function is essentially treated
      * as uninterpreted. So you cannot expect Z3 to precisely reflect the
      * semantics of this function when solving constraints with this function.
-     *
+     * 
      * The argument must be of integer sort. </remarks>
      **/
     public BitVecExpr mkInt2BV(int n, IntExpr t) throws Z3Exception
@@ -1499,11 +1499,11 @@ public class Context extends IDisposable
      * <code>[0..2^N-1]</code>, where N are the number of bits in <paramref
      * name="t"/>. If \c is_signed is true, \c t1 is treated as a signed
      * bit-vector.
-     *
+     * 
      * NB. This function is essentially treated as uninterpreted. So you cannot
      * expect Z3 to precisely reflect the semantics of this function when
      * solving constraints with this function.
-     *
+     * 
      * The argument must be of bit-vector sort. </remarks>
      **/
     public IntExpr mkBV2Int(BitVecExpr t, boolean signed) throws Z3Exception
@@ -1650,7 +1650,7 @@ public class Context extends IDisposable
     /**
      * Array read. <remarks> The argument <code>a</code> is the array and
      * <code>i</code> is the index of the array that gets read.
-     *
+     * 
      * The node <code>a</code> must have an array sort
      * <code>[domain -> range]</code>, and <code>i</code> must have the sort
      * <code>domain</code>. The sort of the result is <code>range</code>.
@@ -1883,7 +1883,7 @@ public class Context extends IDisposable
      * <code>[num]* / [num]*</code>.</param> <param name="ty">The sort of the
      * numeral. In the current implementation, the given sort can be an int,
      * real, or bit-vectors of arbitrary size. </param>
-     *
+     * 
      * @return A Term with value <paramref name="v"/> and sort <paramref
      *         name="ty"/>
      **/
@@ -1901,7 +1901,7 @@ public class Context extends IDisposable
      * <code>MakeNumeral</code> since it is not necessary to parse a string.
      * <param name="v">Value of the numeral</param> <param name="ty">Sort of the
      * numeral</param>
-     *
+     * 
      * @return A Term with value <paramref name="v"/> and type <paramref
      *         name="ty"/>
      **/
@@ -1918,7 +1918,7 @@ public class Context extends IDisposable
      * <code>MakeNumeral</code> since it is not necessary to parse a string.
      * <param name="v">Value of the numeral</param> <param name="ty">Sort of the
      * numeral</param>
-     *
+     * 
      * @return A Term with value <paramref name="v"/> and type <paramref
      *         name="ty"/>
      **/
@@ -1933,7 +1933,7 @@ public class Context extends IDisposable
     /**
      * Create a real from a fraction. <param name="num">numerator of
      * rational.</param> <param name="den">denominator of rational.</param>
-     *
+     * 
      * @return A Term with value <paramref name="num"/>/<paramref name="den"/>
      *         and sort Real <seealso cref="MkNumeral(string, Sort)"/>
      **/
@@ -1948,7 +1948,7 @@ public class Context extends IDisposable
     /**
      * Create a real numeral. <param name="v">A string representing the Term
      * value in decimal notation.</param>
-     *
+     * 
      * @return A Term with value <paramref name="v"/> and sort Real
      **/
     public RatNum mkReal(String v) throws Z3Exception
@@ -1960,7 +1960,7 @@ public class Context extends IDisposable
 
     /**
      * Create a real numeral. <param name="v">value of the numeral.</param>
-     *
+     * 
      * @return A Term with value <paramref name="v"/> and sort Real
      **/
     public RatNum mkReal(int v) throws Z3Exception
@@ -1972,7 +1972,7 @@ public class Context extends IDisposable
 
     /**
      * Create a real numeral. <param name="v">value of the numeral.</param>
-     *
+     * 
      * @return A Term with value <paramref name="v"/> and sort Real
      **/
     public RatNum mkReal(long v) throws Z3Exception
@@ -1995,7 +1995,7 @@ public class Context extends IDisposable
 
     /**
      * Create an integer numeral. <param name="v">value of the numeral.</param>
-     *
+     * 
      * @return A Term with value <paramref name="v"/> and sort Integer
      **/
     public IntNum mkInt(int v) throws Z3Exception
@@ -2007,7 +2007,7 @@ public class Context extends IDisposable
 
     /**
      * Create an integer numeral. <param name="v">value of the numeral.</param>
-     *
+     * 
      * @return A Term with value <paramref name="v"/> and sort Integer
      **/
     public IntNum mkInt(long v) throws Z3Exception
@@ -2171,7 +2171,7 @@ public class Context extends IDisposable
      * category.</param> <param name="assumptions">Auxiliary
      * assumptions.</param> <param name="formula">Formula to be checked for
      * consistency in conjunction with assumptions.</param>
-     *
+     * 
      * @return A string representation of the benchmark.
      **/
     public String benchmarkToSMTString(String name, String logic,
@@ -2325,7 +2325,7 @@ public class Context extends IDisposable
     /**
      * Parse the given string using the SMT-LIB2 parser. <seealso
      * cref="ParseSMTLIBString"/>
-     *
+     * 
      * @return A conjunction of assertions in the scope (up to push/pop) at the
      *         end of the string.
      **/
@@ -2915,7 +2915,7 @@ public class Context extends IDisposable
      * configuration parameters can be obtained using the Z3 executable:
      * <code>z3.exe -ini?</code> Only a few configuration parameters are mutable
      * once the context is created. An exception is thrown when trying to modify
-     * an immutable parameter. </remarks>
+     * an immutable parameter. </remarks> 
      **/
     public void updateParamValue(String id, String value) throws Z3Exception
     {
@@ -3058,7 +3058,7 @@ public class Context extends IDisposable
                 // OK.
             }
             m_ctx = 0;
-        }
+        } 
         /*
         else
             CMW: re-queue the finalizer? */

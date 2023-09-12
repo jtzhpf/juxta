@@ -27,7 +27,7 @@ struct for_each_file_proc {
 };
 
 bool for_each_file(for_each_file_proc& proc, const char* base, const char* suffix);
-
+    
 
 #endif /* _FOR_EACH_FILE_H_ */
 

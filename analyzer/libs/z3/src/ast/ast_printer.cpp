@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Abstract AST printer
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-10-21
@@ -35,9 +35,9 @@ public:
     }
     virtual void pp(sort * s, format_ns::format_ref & r) const { mk_smt2_format(s, env(), params_ref(), r); }
     virtual void pp(func_decl * f, format_ns::format_ref & r) const { mk_smt2_format(f, env(), params_ref(), r); }
-    virtual void pp(expr * n, format_ns::format_ref & r) const {
+    virtual void pp(expr * n, format_ns::format_ref & r) const { 
         sbuffer<symbol> buf;
-        mk_smt2_format(n, env(), params_ref(), 0, 0, r, buf);
+        mk_smt2_format(n, env(), params_ref(), 0, 0, r, buf); 
     }
     virtual void pp(expr * n, unsigned num_vars, char const * var_prefix, format_ns::format_ref & r, sbuffer<symbol> & var_names) const {
         mk_smt2_format(n, env(), params_ref(), num_vars, var_prefix, r, var_names);

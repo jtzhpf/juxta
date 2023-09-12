@@ -12,8 +12,8 @@ Abstract:
     A binary rational is a number of the form a/2^k.
     All integers are binary rationals.
     Binary rational numbers can be implemented more efficiently than rationals.
-    Binary rationals form a Ring.
-    They are not closed under division.
+    Binary rationals form a Ring. 
+    They are not closed under division. 
     In Z3, they are used to implement algebraic numbers.
     The root isolation operations only use division by 2.
 
@@ -29,7 +29,7 @@ Revision History:
 
 #ifdef Z3DEBUG
 #define MPBQ_DEBUG
-#endif
+#endif 
 
 rational to_rational(mpbq const & v) {
     rational r(v.numerator());
@@ -144,7 +144,7 @@ void mpbq_manager::add(mpbq const & a, mpbq const & b, mpbq & r) {
 #ifdef MPBQ_DEBUG
     rational _r = to_rational(r);
     SASSERT(_a + _b == _r);
-#endif
+#endif 
 }
 
 void mpbq_manager::add(mpbq const & a, mpz const & b, mpbq & r) {
@@ -166,7 +166,7 @@ void mpbq_manager::add(mpbq const & a, mpz const & b, mpbq & r) {
     rational _r = to_rational(r);
     TRACE("mpbq_bug", tout << "add a: " << _a << ", b: " << _b << ", r: " << _r << ", expected: " << (_a + _b) << "\n";);
     SASSERT(_a + _b == _r);
-#endif
+#endif 
 }
 
 void mpbq_manager::sub(mpbq const & a, mpbq const & b, mpbq & r) {
@@ -194,7 +194,7 @@ void mpbq_manager::sub(mpbq const & a, mpbq const & b, mpbq & r) {
     rational _r = to_rational(r);
     TRACE("mpbq_bug", tout << "sub a: " << _a << ", b: " << _b << ", r: " << _r << ", expected: " << (_a - _b) << "\n";);
     SASSERT(_a - _b == _r);
-#endif
+#endif 
 }
 
 void mpbq_manager::sub(mpbq const & a, mpz const & b, mpbq & r) {
@@ -215,7 +215,7 @@ void mpbq_manager::sub(mpbq const & a, mpz const & b, mpbq & r) {
 #ifdef MPBQ_DEBUG
     rational _r = to_rational(r);
     SASSERT(_a - _b == _r);
-#endif
+#endif 
 }
 
 void mpbq_manager::mul(mpbq const & a, mpbq const & b, mpbq & r) {
@@ -232,7 +232,7 @@ void mpbq_manager::mul(mpbq const & a, mpbq const & b, mpbq & r) {
 #ifdef MPBQ_DEBUG
     rational _r = to_rational(r);
     SASSERT(_a * _b == _r);
-#endif
+#endif 
 }
 
 void mpbq_manager::mul(mpbq const & a, mpz const & b, mpbq & r) {
@@ -246,7 +246,7 @@ void mpbq_manager::mul(mpbq const & a, mpz const & b, mpbq & r) {
 #ifdef MPBQ_DEBUG
     rational _r = to_rational(r);
     SASSERT(_a * _b == _r);
-#endif
+#endif 
 }
 
 void mpbq_manager::power(mpbq & a, unsigned k) {
@@ -305,11 +305,11 @@ bool mpbq_manager::lt(mpbq const & a, mpbq const & b) {
     // Given, a = n1/2^k1    b = n2/2^k2
     // Suppose n1 > 0 and n2 > 0,
     // Then, we have, n1 <= 2^{log2(n1) - k1}  2^{log2(n2) - 1 - k2} <= n2
-    // Thus, log2(n1) - k1 < log2(n2) - 1 - k2      implies a < b
+    // Thus, log2(n1) - k1 < log2(n2) - 1 - k2      implies a < b   
     // Similarly: log2(n2) - k2 < log2(n1) - 1 - k1 implies b < a
     // That is we compare the "magnitude" of the numbers before performing mul2k
-    //
-    // If n1 < 0 and n2 < 0, a similar trick can be implemented using mlog2 instead log2.
+    // 
+    // If n1 < 0 and n2 < 0, a similar trick can be implemented using mlog2 instead log2. 
     //
     // It seems the trick is not useful when n1 and n2 are small
     // numbers, and k1 and k2 very small < 8.  Since, no bignumber
@@ -447,7 +447,7 @@ void mpbq_manager::display_decimal(std::ostream & out, mpbq const & a, unsigned 
         m_manager.div(n1, two_k, v1);
         m_manager.rem(n1, two_k, n1);
         out << m_manager.to_string(v1);
-        if (m_manager.is_zero(n1))
+        if (m_manager.is_zero(n1)) 
             goto end;
     }
     out << "?";
@@ -482,7 +482,7 @@ void mpbq_manager::display_decimal(std::ostream & out, mpbq const & a, mpbq cons
         out << "?";
         goto end;
     }
-
+    
     out << m_manager.to_string(v1);
     if (m_manager.is_zero(n1) && m_manager.is_zero(n2))
         goto end; // number is an integer
@@ -541,7 +541,7 @@ void mpbq_manager::refine_upper(mpq const & q, mpbq & l, mpbq & u) {
     SASSERT(lt(l, q) && gt(u, q));
     SASSERT(!m_manager.is_power_of_two(q.denominator()));
     // l < q < u
-    mpbq mid;
+    mpbq mid; 
     while (true) {
         add(l, u, mid);
         div2(mid);
@@ -559,7 +559,7 @@ void mpbq_manager::refine_lower(mpq const & q, mpbq & l, mpbq & u) {
     SASSERT(lt(l, q) && gt(u, q));
     SASSERT(!m_manager.is_power_of_two(q.denominator()));
     // l < q < u
-    mpbq mid;
+    mpbq mid; 
     while (true) {
         add(l, u, mid);
         div2(mid);
@@ -686,11 +686,11 @@ void mpbq_manager::select_small_core(mpbq const & lower, mpbq const & upper, mpb
         return;
     }
 
-    // At this point we know that k=0 does not work, since there is no integer
+    // At this point we know that k=0 does not work, since there is no integer 
     // in the interval [lower, upper]
     unsigned min_k = 0;
     unsigned max_k = std::min(lower.m_k, upper.m_k);
-
+    
     if (max_k <= LINEAR_SEARCH_THRESHOLD) {
         unsigned k = 0;
         mpbq & l2k = m_select_small_tmp1;
@@ -757,7 +757,7 @@ void mpbq_manager::select_small_core(unsynch_mpq_manager & qm, mpq const & lower
         return;
     }
 
-    // At this point we know that k=0 does not work, since there is no integer
+    // At this point we know that k=0 does not work, since there is no integer 
     // in the interval [lower, upper]
     unsigned k = 0;
     scoped_mpq l2k(qm);
@@ -784,7 +784,7 @@ void mpbq_manager::select_small_core(unsynch_mpq_manager & qm, mpbq const & lowe
         return;
     }
 
-    // At this point we know that k=0 does not work, since there is no integer
+    // At this point we know that k=0 does not work, since there is no integer 
     // in the interval [lower, upper]
     unsigned k = 0;
     mpbq & l2k = m_select_small_tmp2;
@@ -811,7 +811,7 @@ void mpbq_manager::select_small_core(unsynch_mpq_manager & qm, mpq const & lower
         return;
     }
 
-    // At this point we know that k=0 does not work, since there is no integer
+    // At this point we know that k=0 does not work, since there is no integer 
     // in the interval [lower, upper]
     unsigned k = 0;
     scoped_mpq l2k(qm);
@@ -906,7 +906,7 @@ void mpbq_manager::approx_div(mpbq const & a, mpbq const & b, mpbq & c, unsigned
         }
         c.m_k = k;
         m_manager.div(norm_a, abs_b, c.m_num);
-        if (sgn != to_plus_inf)
+        if (sgn != to_plus_inf) 
             m_manager.inc(c.m_num);
         if (sgn)
             m_manager.neg(c.m_num);

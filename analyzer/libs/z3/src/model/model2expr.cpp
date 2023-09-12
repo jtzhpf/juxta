@@ -55,7 +55,7 @@ symbol mk_fresh_name::next() {
             symbol name(_name.str().c_str());
             if (!m_symbols.contains(name)) {
                 return name;
-            }
+            }                
         }
         m_char = 'A';
     }
@@ -73,12 +73,12 @@ static void mk_entry_cond(unsigned arity, func_entry const* entry, expr_ref& res
             conjs.push_back(m.mk_eq(m.mk_var(i, m.get_sort(e)), e));
         }
     }
-    bool_rewriter(m).mk_and(conjs.size(), conjs.c_ptr(), result);
+    bool_rewriter(m).mk_and(conjs.size(), conjs.c_ptr(), result);        
 }
 
 void model2expr(model& md, expr_ref& result) {
     ast_manager& m = result.get_manager();
-
+    
     expr_ref_vector conjs(m);
     expr_ref tmp(m);
     unsigned sz;
@@ -95,7 +95,7 @@ void model2expr(model& md, expr_ref& result) {
 
         func_decl* f = md.get_function(i);
         func_interp* fi = md.get_func_interp(f);
-
+        
         // Register names.
         mk_fresh_name fresh_name;
         unsigned num_entries = fi->num_entries();
@@ -107,7 +107,7 @@ void model2expr(model& md, expr_ref& result) {
                 fresh_name.add(entry->get_arg(k));
             }
         }
-
+        
         expr_ref func(m), cond(m);
         expr_ref_vector args(m);
         for (unsigned j = 0; j < f->get_arity(); ++j) {

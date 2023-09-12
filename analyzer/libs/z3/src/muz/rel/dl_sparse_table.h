@@ -51,7 +51,7 @@ namespace datalog {
         class negated_join_fn;
 
         typedef ptr_vector<sparse_table> sp_table_vector;
-        typedef map<table_signature, sp_table_vector *,
+        typedef map<table_signature, sp_table_vector *, 
             table_signature::hash, table_signature::eq > table_pool;
 
         table_pool m_pool;
@@ -71,7 +71,7 @@ namespace datalog {
         sparse_table_plugin(relation_manager & manager);
         ~sparse_table_plugin();
 
-        virtual bool can_handle_signature(const table_signature & s)
+        virtual bool can_handle_signature(const table_signature & s) 
         { return s.size()>0; }
 
         virtual table_base * mk_empty(const table_signature & s);
@@ -81,23 +81,23 @@ namespace datalog {
         virtual table_join_fn * mk_join_fn(const table_base & t1, const table_base & t2,
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2);
         virtual table_join_fn * mk_join_project_fn(const table_base & t1, const table_base & t2,
-            unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
+            unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
             const unsigned * removed_cols);
-        virtual table_union_fn * mk_union_fn(const table_base & tgt, const table_base & src,
+        virtual table_union_fn * mk_union_fn(const table_base & tgt, const table_base & src, 
             const table_base * delta);
-        virtual table_transformer_fn * mk_project_fn(const table_base & t, unsigned col_cnt,
+        virtual table_transformer_fn * mk_project_fn(const table_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
         virtual table_transformer_fn * mk_rename_fn(const table_base & t, unsigned permutation_cycle_len,
             const unsigned * permutation_cycle);
-        virtual table_transformer_fn * mk_select_equal_and_project_fn(const table_base & t,
+        virtual table_transformer_fn * mk_select_equal_and_project_fn(const table_base & t, 
             const table_element & value, unsigned col);
-        virtual table_intersection_filter_fn * mk_filter_by_negation_fn(const table_base & t,
-                const table_base & negated_obj, unsigned joined_col_cnt,
+        virtual table_intersection_filter_fn * mk_filter_by_negation_fn(const table_base & t, 
+                const table_base & negated_obj, unsigned joined_col_cnt, 
                 const unsigned * t_cols, const unsigned * negated_cols);
         virtual table_intersection_join_filter_fn* mk_filter_by_negated_join_fn(
-            const table_base & t,
-            const table_base & src1,
-            const table_base & src2,
+            const table_base & t, 
+            const table_base & src1, 
+            const table_base & src2, 
             unsigned_vector const& t_cols,
             unsigned_vector const& src_cols,
             unsigned_vector const& src1_cols,
@@ -120,18 +120,18 @@ namespace datalog {
             storage & m_storage;
             unsigned m_unique_entry_size;
         public:
-            offset_hash_proc(storage & s, unsigned unique_entry_sz)
+            offset_hash_proc(storage & s, unsigned unique_entry_sz) 
                 : m_storage(s), m_unique_entry_size(unique_entry_sz) {}
             unsigned operator()(store_offset ofs) const {
                 return string_hash(m_storage.c_ptr()+ofs, m_unique_entry_size, 0);
-            }
+            } 
         };
 
         class offset_eq_proc {
             storage & m_storage;
             unsigned m_unique_entry_size;
         public:
-            offset_eq_proc(storage & s, unsigned unique_entry_sz)
+            offset_eq_proc(storage & s, unsigned unique_entry_sz) 
                 : m_storage(s), m_unique_entry_size(unique_entry_sz) {}
             bool operator()(store_offset o1, store_offset o2) const {
                 const char * base = m_storage.c_ptr();
@@ -148,11 +148,11 @@ namespace datalog {
         size_t m_data_size;
         /**
            Invariant: Every or all but one blocks of length \c m_entry_size in the \c m_data vector
-           are unique sequences of bytes and have their offset stored in the \c m_data_indexer hashtable.
+           are unique sequences of bytes and have their offset stored in the \c m_data_indexer hashtable. 
            If the offset of the last block is not stored in the hashtable, it is stored in the \c m_reserve
            variable. Otherwise \c m_reserve==NO_RESERVE.
 
-           The size of m_data is actually 8 bytes larger than stated in m_data_size, so that we may
+           The size of m_data is actually 8 bytes larger than stated in m_data_size, so that we may 
            deref an uint64 pointer at the end of the array.
         */
         storage m_data;
@@ -162,7 +162,7 @@ namespace datalog {
         entry_storage(unsigned entry_size, unsigned functional_size = 0, unsigned init_size = 0)
             :   m_entry_size(entry_size),
                 m_unique_part_size(entry_size-functional_size),
-                m_data_indexer(next_power_of_two(std::max(8u,init_size)),
+                m_data_indexer(next_power_of_two(std::max(8u,init_size)), 
                     offset_hash_proc(m_data, m_unique_part_size), offset_eq_proc(m_data, m_unique_part_size)),
                 m_reserve(NO_RESERVE) {
             SASSERT(entry_size>0);
@@ -174,16 +174,16 @@ namespace datalog {
             :   m_entry_size(s.m_entry_size),
                 m_unique_part_size(s.m_unique_part_size),
                 m_data_size(s.m_data_size),
-                m_data(s.m_data),
-                m_data_indexer(next_power_of_two(std::max(8u,s.entry_count())),
-                    offset_hash_proc(m_data, m_unique_part_size), offset_eq_proc(m_data, m_unique_part_size)),
+                m_data(s.m_data), 
+                m_data_indexer(next_power_of_two(std::max(8u,s.entry_count())), 
+                    offset_hash_proc(m_data, m_unique_part_size), offset_eq_proc(m_data, m_unique_part_size)), 
                 m_reserve(s.m_reserve) {
             store_offset after_last=after_last_offset();
             for(store_offset i=0; i<after_last; i+=m_entry_size) {
                 m_data_indexer.insert(i);
             }
         }
-
+        
         entry_storage & operator=(const entry_storage & o) {
             m_data_indexer.reset();
             m_entry_size = o.m_entry_size;
@@ -207,12 +207,12 @@ namespace datalog {
         unsigned entry_size() const { return m_entry_size; }
         unsigned get_size_estimate_bytes() const;
         char * get(store_offset ofs) { return m_data.begin()+ofs; }
-        const char * get(store_offset ofs) const
+        const char * get(store_offset ofs) const 
         { return const_cast<entry_storage *>(this)->get(ofs); }
 
         unsigned entry_count() const { return m_data_indexer.size(); }
 
-        store_offset after_last_offset() const {
+        store_offset after_last_offset() const { 
             return (m_reserve==NO_RESERVE) ? m_data_size : m_reserve;
         }
 
@@ -281,7 +281,7 @@ namespace datalog {
         /**
            Remove data at the offset \c ofs.
 
-           Data with offset lower than \c ofs are not be modified by this function, data with
+           Data with offset lower than \c ofs are not be modified by this function, data with 
            higher offset may be moved.
         */
         void remove_offset(store_offset ofs);
@@ -317,7 +317,7 @@ namespace datalog {
         class full_signature_key_indexer;
         typedef entry_storage::store_offset store_offset;
 
-
+        
         class column_info {
             unsigned m_big_offset;
             unsigned m_small_offset;
@@ -328,11 +328,11 @@ namespace datalog {
             unsigned m_length; //!< in bits
 
             column_info(unsigned offset, unsigned length) \
-                    : m_big_offset(offset/8),
+                    : m_big_offset(offset/8), 
                     m_small_offset(offset%8),
                     m_mask( length==64 ? ULLONG_MAX : (static_cast<uint64>(1)<<length)-1 ),
                     m_write_mask( ~(m_mask<<m_small_offset) ),
-                    m_offset(offset),
+                    m_offset(offset), 
                     m_length(length) {
                 SASSERT(length<=64);
                 SASSERT(length+m_small_offset<=64);
@@ -373,7 +373,7 @@ namespace datalog {
                 return (*this)[col].set(rec, val);
             }
         };
-
+        
 
         typedef svector<unsigned> key_spec;        //sequence of columns in a key
         typedef svector<table_element> key_value;  //values of key columns
@@ -404,27 +404,27 @@ namespace datalog {
 
         /**
            \brief Return reference to an indexer over columns in \c key_cols.
-
+           
            An indexer can retrieve a sequence of offsets that with \c key_cols columns equal to
            the specified key. Indexers are populated lazily -- they remember the position of the
            last fact they contain, and when an indexer is retrieved by the \c get_key_indexer function,
            all the new facts are added into the indexer.
 
-           When a fact is removed from the table, all indexers are destroyed. This is not an extra
-           expense in the current use scenario, because we first perform all fact removals and do the
+           When a fact is removed from the table, all indexers are destroyed. This is not an extra 
+           expense in the current use scenario, because we first perform all fact removals and do the 
            joins only after that (joins are the only operations that lead to index construction).
         */
         key_indexer& get_key_indexer(unsigned key_len, const unsigned * key_cols) const;
 
         void reset_indexes();
 
-        static void copy_columns(const column_layout & src_layout, const column_layout & dest_layout,
-            unsigned start_index, unsigned after_last, const char * src, char * dest,
+        static void copy_columns(const column_layout & src_layout, const column_layout & dest_layout, 
+            unsigned start_index, unsigned after_last, const char * src, char * dest, 
             unsigned & dest_idx, unsigned & pre_projection_idx, const unsigned * & next_removed);
 
         /**
             \c array \c removed_cols contains column indexes to be removed in ascending order and
-            is terminated by a number greated than the highest column index of a join the the two tables.
+            is terminated by a number greated than the highest column index of a join the the two tables. 
             This is to simplify the traversal of the array when building facts.
          */
         static void concatenate_rows(const column_layout & layout1, const column_layout & layout2,
@@ -436,7 +436,7 @@ namespace datalog {
            columns from t2 using indexing.
 
            \c array \c removed_cols contains column indexes to be removed in ascending order and
-           is terminated by a number greated than the highest column index of a join the the two tables.
+           is terminated by a number greated than the highest column index of a join the the two tables. 
            This is to simplify the traversal of the array when building facts.
 
            \c tables_swapped value means that the resulting facts should contain facts from t2 first,
@@ -472,7 +472,7 @@ namespace datalog {
 
         unsigned row_count() const { return m_data.entry_count(); }
 
-        sparse_table_plugin & get_plugin() const
+        sparse_table_plugin & get_plugin() const 
         { return static_cast<sparse_table_plugin &>(table_base::get_plugin()); }
 
         virtual bool empty() const { return row_count()==0; }

@@ -78,9 +78,8 @@ Prerequisites
   Windows. It should work on any later version (in both the 2.x and 3.x lines)
   as well.
 
-* **pycparser** has no external dependencies. The only non-stdlib library it
-  uses is PLY, which is bundled in ``pycparser/ply``. The current PLY version is
-  3.4
+**pycparser** has no external dependencies. The only non-stdlib library it uses
+is PLY, which is bundled in ``pycparser/ply``. The current PLY version is 3.4
 
 Installation process
 --------------------
@@ -95,6 +94,10 @@ Alternatively, since **pycparser** is listed in the `Python Package Index
 favorite Python packaging/distribution tool, for example with::
 
     > pip install pycparser
+
+It's recommended to run ``_build_tables.py`` in the **pycparser** code directory
+after installation to make sure the parsing tables are pre-generated. This can
+make your code run faster.
 
 Known problems
 --------------
@@ -129,11 +132,6 @@ provided in the ``utils`` directory in **pycparser**'s distribution. This
 ``cpp`` executable was compiled from the `LCC distribution
 <http://www.cs.princeton.edu/software/lcc/>`_, and is provided under LCC's
 license terms.
-
-Note also that you can use ``gcc -E`` or ``clang -E`` instead of ``cpp``. See
-the ``using_gcc_E_libc.py`` example for more details. Windows folks can download
-and install a binary build of Clang for Windows `from this website
-<http://llvm.org/releases/download.html>`_.
 
 What about the standard C library headers?
 ------------------------------------------

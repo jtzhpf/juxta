@@ -37,8 +37,8 @@ struct func_decl_triple {
             f_exp = exp;
         }
         func_decl * f_sgn;
-        func_decl * f_sig;
-        func_decl * f_exp;
+        func_decl * f_sig;        
+        func_decl * f_exp;        
     };
 
 class fpa2bv_converter {
@@ -48,16 +48,16 @@ class fpa2bv_converter {
     bv_util                    m_bv_util;
     arith_util                 m_arith_util;
     mpf_manager              & m_mpf_manager;
-    unsynch_mpz_manager      & m_mpz_manager;
+    unsynch_mpz_manager      & m_mpz_manager;    
     float_decl_plugin        * m_plugin;
 
     obj_map<func_decl, expr*>  m_const2bv;
     obj_map<func_decl, expr*>  m_rm_const2bv;
-    obj_map<func_decl, func_decl*>  m_uf2bvuf;
+    obj_map<func_decl, func_decl*>  m_uf2bvuf;        
     obj_map<func_decl, func_decl_triple>  m_uf23bvuf;
-
+    
 public:
-    fpa2bv_converter(ast_manager & m);
+    fpa2bv_converter(ast_manager & m);    
     ~fpa2bv_converter();
 
     float_util & fu() { return m_util; }
@@ -81,7 +81,7 @@ public:
 
     void mk_rounding_mode(func_decl * f, expr_ref & result);
     void mk_value(func_decl * f, unsigned num, expr * const * args, expr_ref & result);
-    void mk_const(func_decl * f, expr_ref & result);
+    void mk_const(func_decl * f, expr_ref & result);    
     void mk_rm_const(func_decl * f, expr_ref & result);
     void mk_uninterpreted_function(func_decl * f, unsigned num, expr * const * args, expr_ref & result);
     void mk_var(unsigned base_inx, sort * srt, expr_ref & result);
@@ -166,7 +166,7 @@ protected:
     void mk_unbias(expr * e, expr_ref & result);
 
     void unpack(expr * e, expr_ref & sgn, expr_ref & sig, expr_ref & exp, expr_ref & lz, bool normalize);
-    void round(sort * s, expr_ref & rm, expr_ref & sgn, expr_ref & sig, expr_ref & exp, expr_ref & result);
+    void round(sort * s, expr_ref & rm, expr_ref & sgn, expr_ref & sig, expr_ref & exp, expr_ref & result);        
 
     void add_core(unsigned sbits, unsigned ebits, expr_ref & rm,
         expr_ref & c_sgn, expr_ref & c_sig, expr_ref & c_exp, expr_ref & d_sgn, expr_ref & d_sig, expr_ref & d_exp,

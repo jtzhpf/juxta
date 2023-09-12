@@ -50,7 +50,7 @@ static void validate_quant_solutions(app* x, expr* fml, expr_ref_vector& guards)
     return;
     // quant_elim option got removed...
     // verify:
-    //    fml <=> guard_1 \/ guard_2 \/ ...
+    //    fml <=> guard_1 \/ guard_2 \/ ... 
     ast_manager& m = guards.get_manager();
     expr_ref tmp(m), fml2(m);
     tmp = m.mk_or(guards.size(), guards.c_ptr());
@@ -85,10 +85,10 @@ static void test_quant_solver(ast_manager& m, unsigned sz, app*const* xs, expr* 
     bool success = qe.solve_for_vars(sz, xs, fml, defs);
     std::cout << "------------------------\n";
     std::cout << mk_pp(fml, m) << "\n";
-    if (success) {
+    if (success) {        
         defs.display(std::cout);
-
-        for (unsigned i = 0; validate && i < defs.size(); ++i) {
+        
+        for (unsigned i = 0; validate && i < defs.size(); ++i) {     
             validate_quant_solution(m, fml, defs.guard(i), defs.defs(i));
         }
     }
@@ -194,7 +194,7 @@ static void test_quant_solve1() {
     test_quant_solver(m, x, "(and (<= a x) (<= (* 3 x) b))");
     test_quant_solver(m, x, "(and (<= (* 3 a) x) (<= x b))");
     test_quant_solver(m, x, "(and (<= (* 3 a) x) (<= (* 3 x) b))");
-    test_quant_solver(m, x, "(and (< a (* 3 x)) (< (* 3 x) b))");
+    test_quant_solver(m, x, "(and (< a (* 3 x)) (< (* 3 x) b))");    
     test_quant_solver(m, x, "(< (* 3 x) a)");
     test_quant_solver(m, x, "(= (* 3 x) a)");
     test_quant_solver(m, x, "(< (* 3 x) a)");
@@ -245,7 +245,7 @@ static void test_quant_solve1() {
 void tst_quant_solve() {
     disable_debug("heap");
 
-    test_quant_solve1();
+    test_quant_solve1();   
 
     memory::finalize();
 #ifdef _WINDOWS

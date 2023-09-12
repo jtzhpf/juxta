@@ -38,11 +38,11 @@ namespace nlsat {
         /**
            \brief Evaluate the given literal in the current model.
            All variables in the atom must be assigned.
-
+           
            The result is true if the literal is satisfied, and false otherwise.
         */
         bool eval(atom * a, bool neg);
-
+        
         /**
            \brief Return the infeasible interval set for the given literal.
            All but the a->max_var() must be assigned in the current model.
@@ -55,7 +55,7 @@ namespace nlsat {
         void push();
         void pop(unsigned num_scopes);
     };
-
+    
 };
 
 #endif

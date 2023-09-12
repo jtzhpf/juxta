@@ -32,7 +32,7 @@ enum dtoken {
     TK_GT,
     TK_EQ,
     TK_NEG
-};
+};    
 
 static char const* dtoken_strings[] = { "(", ")", "<string>", "<id>", "<num>", ".", ".include", ",", ":", "_", ":-", "<eos>", "\\n", "<error>", "!=", "<", ">", "=", "!" };
 
@@ -50,8 +50,8 @@ class line_reader {
     bool m_eof;
     bool m_eof_behind_buffer;
     unsigned m_next_index;
-
-    //actually by one larger than the actual size of m_data,
+    
+    //actually by one larger than the actual size of m_data, 
     //to fit in the terminating delimiter
     unsigned m_data_size;
 
@@ -89,19 +89,19 @@ class line_reader {
 public:
 
 #if 0
-    line_reader(std::istream & stm)
-            : m_stm(stm),
-            m_eof(false),
-            m_eof_behind_buffer(false),
+    line_reader(std::istream & stm) 
+            : m_stm(stm), 
+            m_eof(false), 
+            m_eof_behind_buffer(false), 
             m_next_index(0),
             m_data_size(0) {
         m_data.resize(2*s_expansion_step);
         resize_data(0);
     }
 #else
-    line_reader(const char * fname)
-            :m_eof(false),
-            m_eof_behind_buffer(false),
+    line_reader(const char * fname) 
+            :m_eof(false), 
+            m_eof_behind_buffer(false), 
             m_next_index(0),
             m_data_size(0) {
         m_data.resize(2*s_expansion_step);
@@ -209,20 +209,20 @@ class dlexer {
     reserved_symbols m_reserved_symbols;
 
 public:
-    //when parsing domains, we want '.' character to be allowed in IDs, but elsewhere
+    //when parsing domains, we want '.' character to be allowed in IDs, but elsewhere 
     //we don't (because of the "y." in rules like "P(x,y):-x=y.")
     bool m_parsing_domains;
 
     bool eos() const {
         return m_curr_char == EOF;
     }
-
+    
     void next() {
         m_prev_char = m_curr_char;
         m_curr_char = m_input->get();
         m_pos++;
     }
-
+    
     void save_char(char c) {
         m_buffer << c;
     }
@@ -242,8 +242,8 @@ public:
         m_parsing_domains(false) {
     }
 
-    void set_stream(std::istream& s) {
-        m_input = &s;
+    void set_stream(std::istream& s) { 
+        m_input = &s; 
         next();
     }
 
@@ -251,20 +251,20 @@ public:
     dtoken read_num() {
         while(isdigit(m_curr_char)) {
             save_and_next();
-        }
+        }        
         return TK_NUM;
     }
 
     dtoken read_id() {
-        while (!eos() && m_curr_char != '(' && m_curr_char != ')' &&
-               m_curr_char != '#' && m_curr_char != ',' && (m_parsing_domains || m_curr_char != '.') &&
+        while (!eos() && m_curr_char != '(' && m_curr_char != ')' && 
+               m_curr_char != '#' && m_curr_char != ',' && (m_parsing_domains || m_curr_char != '.') && 
                m_curr_char != ':' && m_curr_char != '=' && !iswspace(m_curr_char) ) {
             save_and_next();
         }
         return m_reserved_symbols.string2dtoken(m_buffer.c_str());
     }
-
-    // read an id of the form '|'.*'|'
+    
+    // read an id of the form '|'.*'|' 
     dtoken read_bid() {
         while (!eos() && m_curr_char != '|') {
             save_and_next();
@@ -275,21 +275,21 @@ public:
         return m_reserved_symbols.string2dtoken(m_buffer.c_str());
     }
 
-    dtoken read_string() {
-        m_tok_pos = m_pos;
-        next();
-        while (m_curr_char != '"') {
+    dtoken read_string() { 
+        m_tok_pos = m_pos; 
+        next(); 
+        while (m_curr_char != '"') { 
             if (m_input->eof()) {
                 return TK_ERROR;
             }
             if (m_curr_char == '\n') {
                 return TK_ERROR;
             }
-            save_and_next();
+            save_and_next(); 
         }
-        next();
+        next(); 
         return TK_STRING;
-    }
+    } 
 
     void read_comment() {
         bool line_comment = m_prev_char=='\n' || m_prev_char == 0;
@@ -326,7 +326,7 @@ public:
             if (eos()) {
                 return TK_EOS;
             }
-
+            
             m_buffer.reset();
             switch (m_curr_char) {
             case '#': // comment
@@ -353,15 +353,15 @@ public:
             case ')':
                 m_tok_pos = m_pos;
                 next();
-                return TK_RP;
+                return TK_RP;               
             case ',':
                 m_tok_pos = m_pos;
                 next();
-                return TK_COMMA;
+                return TK_COMMA; 
             case '=':
                 m_tok_pos = m_pos;
                 next();
-                return TK_EQ;
+                return TK_EQ; 
             case '!':
                 m_tok_pos = m_pos;
                 next();
@@ -369,7 +369,7 @@ public:
                     next();
                     return TK_NEQ;
                 }
-                return TK_NEG;
+                return TK_NEG; 
             case ':':
                 m_tok_pos = m_pos;
                 next();
@@ -418,8 +418,8 @@ public:
 
     unsigned get_line() const { return m_line; }
 
-
-
+    
+      
 };
 
 class dparser : public parser {
@@ -442,7 +442,7 @@ protected:
     std::string       m_path;
     str2sort          m_sort_dict;
 
-
+    
     // true if an error occured during the current call to the parse_stream
     // function
     bool              m_error;
@@ -480,7 +480,7 @@ public:
         std::istringstream is(s);
         return parse_stream(is);
     }
-
+    
 protected:
 
     void reset() {
@@ -541,7 +541,7 @@ protected:
                     tok = unexpected(tok, "a string");
                     break;
                 }
-                tok = parse_include(m_lexer->get_token_data(), true);
+                tok = parse_include(m_lexer->get_token_data(), true);                
                 if(tok!=TK_NEWLINE) {
                     tok = unexpected(tok, "newline expected after include statement");
                 }
@@ -611,14 +611,14 @@ protected:
                 break;
             case TK_NEWLINE:
                 tok = m_lexer->next_token();
-                break;
+                break;                
             case TK_INCLUDE:
                 tok = m_lexer->next_token();
                 if (tok != TK_STRING) {
                     tok = unexpected(tok, "a string");
                     break;
                 }
-                tok = parse_include(m_lexer->get_token_data(), false);
+                tok = parse_include(m_lexer->get_token_data(), false);                
                 break;
             default:
                 tok = unexpected(tok, "identifier");
@@ -630,7 +630,7 @@ protected:
 
     dtoken unexpected(dtoken tok, char const* msg) {
 #if 1
-        throw default_exception("%s at line %u '%s' found '%s'\n", msg,
+        throw default_exception("%s at line %u '%s' found '%s'\n", msg, 
             m_lexer->get_line(), m_lexer->get_token_data(), dtoken_strings[tok]);
 
         SASSERT(false);
@@ -689,7 +689,7 @@ protected:
         app_ref_vector body(m_manager);
         svector<bool> polarity_vect;
         dtoken tok = m_lexer->next_token();
-        while (tok != TK_ERROR && tok != TK_EOS) {
+        while (tok != TK_ERROR && tok != TK_EOS) {            
             if (tok == TK_PERIOD) {
                 SASSERT(body.size()==polarity_vect.size());
                 add_rule(head, body.size(), body.c_ptr(), polarity_vect.c_ptr());
@@ -730,7 +730,7 @@ protected:
                 tok = unexpected(tok, "expected comma or period");
                 return tok;
             }
-        }
+        }    
         return tok;
     }
 
@@ -738,7 +738,7 @@ protected:
     // infix:
     // Sym REL Sym
     // Sym ::= String | NUM | Var
-    //
+    // 
     dtoken parse_infix(dtoken tok1, char const* td, app_ref& pred) {
         symbol td1(td);
         expr* v1 = 0, *v2 = 0;
@@ -765,7 +765,7 @@ protected:
         }
         if (v1) {
             s = m_manager.get_sort(v1);
-        }
+        }        
         else {
             s = m_manager.get_sort(v2);
         }
@@ -792,14 +792,14 @@ protected:
         default:
             UNREACHABLE();
         }
-
+        
         return m_lexer->next_token();
     }
 
 
     dtoken parse_pred(dtoken tok, symbol const& s, app_ref& pred, bool & is_predicate_declaration) {
 
-        expr_ref_vector args(m_manager);
+        expr_ref_vector args(m_manager);        
         svector<symbol> arg_names;
         func_decl* f = m_context.try_get_predicate_decl(s);
         tok = parse_args(tok, f, args, arg_names);
@@ -814,7 +814,7 @@ protected:
             f = m_manager.mk_func_decl(s, domain.size(), domain.c_ptr(), m_manager.mk_bool_sort());
 
             m_context.register_predicate(f, true);
-
+        
             while (tok == TK_ID) {
                 char const* pred_pragma = m_lexer->get_token_data();
                 if(strcmp(pred_pragma, "printtuples")==0 || strcmp(pred_pragma, "outputtuples")==0) {
@@ -856,7 +856,7 @@ protected:
                 symbol var_symbol(m_lexer->get_token_data());
                 tok = m_lexer->next_token();
                 if (tok != TK_COLON) {
-                    tok = unexpected(tok,
+                    tok = unexpected(tok, 
                         "Expecting colon in declaration (first occurence of a predicate must be a declaration)");
                     return tok;
                 }
@@ -893,7 +893,7 @@ protected:
             }
             if (tok == TK_COMMA) {
                 tok = m_lexer->next_token();
-            }
+            }            
         }
         return tok;
     }
@@ -941,7 +941,7 @@ protected:
                 return unexpected(tok, "integer expected");
             }
             uint64 int_num = num.get_uint64();
-
+            
             app * numeral = mk_symbol_const(int_num, s);
             args.push_back(numeral);
             break;
@@ -960,7 +960,7 @@ protected:
     dtoken parse_decl(dtoken tok) {
 
         return tok;
-    }
+    }    
 
     dtoken parse_include(char const* filename, bool parsing_domain) {
         std::string path(m_path);
@@ -999,8 +999,8 @@ protected:
         std::string line;
         while(read_line(stream, line)) {
             symbol sym=symbol(line.c_str());
-            m_context.get_constant_number(s, sym);
-        }
+            m_context.get_constant_number(s, sym); 
+        }        
         return m_lexer->next_token();
     }
 
@@ -1109,19 +1109,19 @@ protected:
 };
 
 /*
-
+  
   Program     ::== Sort* (Rule | Include | Decl)*
   Comment     ::== '#...'
   Rule        ::== Fact | InfRule
   Fact        ::== Identifier(Element*).
   InfRule     ::== Identifier(Element*) :- (Identifier(Element*))+.
   Element     ::== '_' | 'string' | integer | Identifier
-
+ 
   Sort        ::== Identifier (Number [map-file]| 'int')
   Decl        ::== Identifier(SortDecl) [Pragma] \n
   SortDecl    ::== Identifier ':' Identifier
 
-  Pragma      ::== 'input' | 'printtuples' |
+  Pragma      ::== 'input' | 'printtuples' | 
 
 
   If sort name ends with a sequence of digits, they are ignored (so V and V1234 stand for the same sort)
@@ -1159,8 +1159,8 @@ class wpa_parser_impl : public wpa_parser, dparser {
         return *e->get_data().m_value;
     }
 
-public:
-    wpa_parser_impl(context & ctx)
+public:        
+    wpa_parser_impl(context & ctx) 
         : dparser(ctx, ctx.get_manager()),
           m_bool_sort(ctx.get_manager()),
           m_short_sort(ctx.get_manager()),
@@ -1248,7 +1248,7 @@ private:
         SASSERT(e->get_data().m_value);
         uint64_set & sort_content = *e->get_data().m_value;
         if(!sort_content.contains(num)) {
-            warning_msg("symbol number %I64u on line %d in file %s does not belong to sort %s",
+            warning_msg("symbol number %I64u on line %d in file %s does not belong to sort %s", 
                 num, m_current_line, m_current_file.c_str(), s->get_name().bare_str());
             return false;
         }
@@ -1261,7 +1261,7 @@ private:
             if(num==0) {
                 const_name = symbol("<zero element>");
             } else if(!m_number_names.find(num, const_name)) {
-                throw default_exception("unknown symbol number %I64u on line %d in file %s",
+                throw default_exception("unknown symbol number %I64u on line %d in file %s", 
                     num, m_current_line, m_current_file.c_str());
             }
             res =  mk_table_const(const_name, s);
@@ -1300,11 +1300,11 @@ private:
             }
             uint64 num;
             if(!read_uint64(ptr, num)) {
-                throw default_exception("number expected on line %d in file %s",
+                throw default_exception("number expected on line %d in file %s", 
                     m_current_line, m_current_file.c_str());
             }
             if(*ptr!=' ' && *ptr!=0) {
-                throw default_exception("' ' expected to separate numbers on line %d in file %s, got '%s'",
+                throw default_exception("' ' expected to separate numbers on line %d in file %s, got '%s'", 
                                 m_current_line, m_current_file.c_str(), ptr);
             }
             args.push_back(num);
@@ -1325,7 +1325,7 @@ private:
 
         func_decl * pred = m_context.try_get_predicate_decl(predicate_name);
         if(!pred) {
-            throw default_exception("tuple file %s for undeclared predicate %s",
+            throw default_exception("tuple file %s for undeclared predicate %s", 
                 m_current_file.c_str(), predicate_name.bare_str());
         }
         unsigned pred_arity = pred->get_arity();
@@ -1347,7 +1347,7 @@ private:
                 continue;
             }
             if(args.size()!=pred_arity) {
-                throw default_exception("invalid number of arguments on line %d in file %s",
+                throw default_exception("invalid number of arguments on line %d in file %s", 
                     m_current_line, m_current_file.c_str());
             }
 
@@ -1445,7 +1445,7 @@ private:
             const char * const ignored_suffix = "Constant ";
             const size_t ignored_suffix_len = 9;
 
-            if(rest_of_line.size()>ignored_suffix_len &&
+            if(rest_of_line.size()>ignored_suffix_len && 
                     rest_of_line.substr(rest_of_line.size()-ignored_suffix_len)==ignored_suffix) {
                 rest_of_line = rest_of_line.substr(0, rest_of_line.size()-ignored_suffix_len);
             }
@@ -1486,11 +1486,11 @@ private:
             }
 
             sort_elements.insert(num);
-
+            
             if(m_use_map_names) {
                 num2sym::entry * e = m_number_names.insert_if_not_there2(num, el_name);
                 if(e->get_data().m_value!=el_name) {
-                    warning_msg("mismatch of number names on line %d in file %s. old: \"%s\" new: \"%s\"",
+                    warning_msg("mismatch of number names on line %d in file %s. old: \"%s\" new: \"%s\"", 
                         m_current_line, fname.c_str(), e->get_data().m_value.bare_str(), el_name.bare_str());
                 }
             }

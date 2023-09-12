@@ -61,7 +61,7 @@ namespace sat {
         void reset();
         void collect_statistics(statistics & st) const;
     };
-
+    
     class solver {
     public:
         struct abort_solver {};
@@ -90,20 +90,20 @@ namespace sat {
         unsigned                m_num_frozen;
         vector<watch_list>      m_watches;
         svector<lbool>          m_assignment;
-        svector<justification>  m_justification;
+        svector<justification>  m_justification; 
         svector<char>           m_decision;
         svector<char>           m_mark;
         svector<char>           m_lit_mark;
         svector<char>           m_eliminated;
         svector<char>           m_external;
-        svector<unsigned>       m_level;
+        svector<unsigned>       m_level; 
         svector<unsigned>       m_activity;
         unsigned                m_activity_inc;
-        svector<char>           m_phase;
+        svector<char>           m_phase; 
         svector<char>           m_prev_phase;
         svector<char>           m_assigned_since_gc;
         bool                    m_phase_cache_on;
-        unsigned                m_phase_counter;
+        unsigned                m_phase_counter; 
         var_queue               m_case_split_queue;
         unsigned                m_qhead;
         unsigned                m_scope_lvl;
@@ -146,15 +146,15 @@ namespace sat {
         void collect_statistics(statistics & st);
         void reset_statistics();
         void display_status(std::ostream & out) const;
-
+        
         /**
            \brief Copy (non learned) clauses from src to this solver.
            Create missing variables if needed.
-
+           
            \pre the model converter of src and this must be empty
         */
         void copy(solver const & src);
-
+        
         // -----------------------
         //
         // Variable & Clause creation
@@ -243,7 +243,7 @@ namespace sat {
 
     protected:
         bool propagate_core(bool update);
-
+        
         // -----------------------
         //
         // Search
@@ -300,7 +300,7 @@ namespace sat {
             justification const & jst = m_justification[l0.var()];
             return !jst.is_clause() || m_cls_allocator.get_clause(jst.get_clause_offset()) != &c;
         }
-
+        
         // -----------------------
         //
         // Conflict resolution
@@ -415,7 +415,7 @@ namespace sat {
         bool check_missed_propagation() const;
         bool check_marks() const;
     };
-
+    
     struct mk_stat {
         solver const & m_solver;
         mk_stat(solver const & s):m_solver(s) {}

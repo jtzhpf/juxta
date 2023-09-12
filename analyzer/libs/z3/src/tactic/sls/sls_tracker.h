@@ -28,9 +28,9 @@ class sls_tracker {
     random_gen            m_rng;
     unsigned              m_random_bits;
     unsigned              m_random_bits_cnt;
-    mpz                   m_zero, m_one, m_two;
-
-    struct value_score {
+    mpz                   m_zero, m_one, m_two;    
+    
+    struct value_score { 
         value_score() : m(0), value(unsynch_mpz_manager::mk_z(0)), score(0.0), distance(0) { };
         ~value_score() { if (m) m->del(value); }
         unsynch_mpz_manager * m;
@@ -51,8 +51,8 @@ public:
     typedef obj_map<func_decl, expr* > entry_point_type;
 
 private:
-    typedef obj_map<expr, value_score> scores_type;
-    typedef obj_map<expr, ptr_vector<expr> > uplinks_type;
+    typedef obj_map<expr, value_score> scores_type;    
+    typedef obj_map<expr, ptr_vector<expr> > uplinks_type;    
     typedef obj_map<expr, ptr_vector<func_decl> > occ_type;
     scores_type           m_scores;
     uplinks_type          m_uplinks;
@@ -61,22 +61,22 @@ private:
     ptr_vector<func_decl> m_temp_constants;
     occ_type              m_constants_occ;
 
-public:
+public:    
     sls_tracker(ast_manager & m, bv_util & bvu, unsynch_mpz_manager & mm, powers & p) :
         m_manager(m),
         m_mpz_manager(mm),
         m_bv_util(bvu),
         m_powers(p),
-        m_random_bits_cnt(0),
+        m_random_bits_cnt(0),        
         m_zero(m_mpz_manager.mk_z(0)),
         m_one(m_mpz_manager.mk_z(1)),
         m_two(m_mpz_manager.mk_z(2)) {
     }
-
+            
     ~sls_tracker() {
         m_mpz_manager.del(m_zero);
         m_mpz_manager.del(m_one);
-        m_mpz_manager.del(m_two);
+        m_mpz_manager.del(m_two);            
     }
 
     inline void set_value(expr * n, const mpz & r) {
@@ -90,7 +90,7 @@ public:
         set_value(ep, r);
     }
 
-    inline mpz & get_value(expr * n) {
+    inline mpz & get_value(expr * n) {            
         SASSERT(m_scores.contains(n));
         return m_scores.find(n).value;
     }
@@ -99,17 +99,17 @@ public:
         SASSERT(m_entry_points.contains(fd));
         expr * ep = get_entry_point(fd);
         return get_value(ep);
-    }
+    }        
 
     inline void set_score(expr * n, double score) {
         SASSERT(m_scores.contains(n));
         m_scores.find(n).score = score;
     }
 
-    inline void set_score(func_decl * fd, double score) {
+    inline void set_score(func_decl * fd, double score) {            
         SASSERT(m_entry_points.contains(fd));
         expr * ep = get_entry_point(fd);
-        set_score(ep, score);
+        set_score(ep, score);    
     }
 
     inline double & get_score(expr * n) {
@@ -162,7 +162,7 @@ public:
         // Update uplinks
         unsigned na = n->get_num_args();
         for (unsigned i = 0; i < na; i++) {
-            expr * c = n->get_arg(i);
+            expr * c = n->get_arg(i); 
             uplinks_type::obj_map_entry * entry = m_uplinks.insert_if_not_there2(c, ptr_vector<expr>());
             entry->get_data().m_value.push_back(n);
         }
@@ -182,40 +182,40 @@ public:
                 m_entry_points.insert_if_not_there(d, n);
                 m_constants.push_back(d);
             }
-        }
+        }            
     }
 
     struct init_proc {
-        ast_manager & m_manager;
+        ast_manager & m_manager;        
         sls_tracker & m_tracker;
 
         init_proc(ast_manager & m, sls_tracker & tracker):
             m_manager(m),
             m_tracker(tracker) {
         }
-
+        
         void operator()(var * n) {}
-
+        
         void operator()(quantifier * n) {}
-
+        
         void operator()(app * n) {
             m_tracker.initialize(n);
         }
     };
 
     struct find_func_decls_proc {
-        ast_manager   & m_manager;
+        ast_manager   & m_manager;        
         ptr_vector<func_decl> & m_occs;
 
         find_func_decls_proc (ast_manager & m, ptr_vector<func_decl> & occs):
             m_manager(m),
             m_occs(occs) {
         }
-
+        
         void operator()(var * n) {}
-
+        
         void operator()(quantifier * n) {}
-
+        
         void operator()(app * n) {
             if (n->get_num_args() != 0)
                 return;
@@ -235,11 +235,11 @@ public:
         while (!stack.empty()) {
             app * cur = stack.back();
             stack.pop_back();
-
+                
             unsigned d = get_distance(cur);
 
             for (unsigned i = 0; i < cur->get_num_args(); i++) {
-                app * child = to_app(cur->get_arg(i));
+                app * child = to_app(cur->get_arg(i));                    
                 unsigned d_child = get_distance(child);
                 if (d >= d_child) {
                     set_distance(child, d+1);
@@ -254,7 +254,7 @@ public:
         expr_mark visited;
         unsigned sz = g->size();
         for (unsigned i = 0; i < sz; i++) {
-            expr * e = g->form(i);
+            expr * e = g->form(i);                
             for_each_expr(proc, visited, e);
         }
 
@@ -311,14 +311,14 @@ public:
     mpz get_random_bv(sort * s) {
         SASSERT(m_bv_util.is_bv_sort(s));
         unsigned bv_size = m_bv_util.get_bv_size(s);
-        mpz r; m_mpz_manager.set(r, 0);
+        mpz r; m_mpz_manager.set(r, 0);            
 
         mpz temp;
         do
-        {
-            m_mpz_manager.mul(r, m_two, temp);
+        {                
+            m_mpz_manager.mul(r, m_two, temp);                
             m_mpz_manager.add(temp, get_random_bool(), r);
-        } while (--bv_size > 0);
+        } while (--bv_size > 0);            
         m_mpz_manager.del(temp);
 
         return r;
@@ -366,7 +366,7 @@ public:
             return get_random_bool();
         else
             NOT_IMPLEMENTED_YET(); // This only works for bit-vectors for now.
-    }
+    }    
 
     void randomize() {
         TRACE("sls", tout << "Abandoned model:" << std::endl; show_model(tout); );
@@ -380,7 +380,7 @@ public:
         }
 
         TRACE("sls", tout << "Randomized model:" << std::endl; show_model(tout); );
-    }
+    }              
 
 #define _SCORE_AND_MIN
 
@@ -388,14 +388,14 @@ public:
         TRACE("sls_score", tout << ((negated)?"NEG ":"") << "BOOL: " << mk_ismt2_pp(n, m_manager) << std::endl; );
 
         double res = 0.0;
-
+            
         if (is_uninterp_const(n)) {
             const mpz & r = get_value(n);
             if (negated)
                 res = (m_mpz_manager.is_one(r)) ? 0.0 : 1.0;
             else
                 res = (m_mpz_manager.is_one(r)) ? 1.0 : 0.0;
-        }
+        }            
         else if (m_manager.is_and(n)) {
             SASSERT(!negated);
             app * a = to_app(n);
@@ -407,7 +407,7 @@ public:
                 if (cur < min) min = cur;
             }
             res = min;
-            #else
+            #else 
             double sum = 0.0;
             for (unsigned i = 0; i < a->get_num_args(); i++)
                 sum += get_score(args[i]);
@@ -434,7 +434,7 @@ public:
             double s_f = get_score(a->get_arg(2));
             res = (m_mpz_manager.is_one(cond)) ? s_t : s_f;
         }
-        else if (m_manager.is_eq(n) || m_manager.is_iff(n)) {
+        else if (m_manager.is_eq(n) || m_manager.is_iff(n)) {                
             app * a = to_app(n);
             SASSERT(a->get_num_args() == 2);
             expr * arg0 = a->get_arg(0);
@@ -442,14 +442,14 @@ public:
             const mpz & v0 = get_value(arg0);
             const mpz & v1 = get_value(arg1);
 
-            if (negated) {
+            if (negated) {                    
                 res = (m_mpz_manager.eq(v0, v1)) ? 0.0 : 1.0;
-                TRACE("sls_score", tout << "V0 = " << m_mpz_manager.to_string(v0) << " ; V1 = " <<
+                TRACE("sls_score", tout << "V0 = " << m_mpz_manager.to_string(v0) << " ; V1 = " << 
                                         m_mpz_manager.to_string(v1) << std::endl; );
             }
             else if (m_manager.is_bool(arg0)) {
                 res = m_mpz_manager.eq(v0, v1) ? 1.0 : 0.0;
-                TRACE("sls_score", tout << "V0 = " << m_mpz_manager.to_string(v0) << " ; V1 = " <<
+                TRACE("sls_score", tout << "V0 = " << m_mpz_manager.to_string(v0) << " ; V1 = " << 
                                         m_mpz_manager.to_string(v1) << std::endl; );
             }
             else if (m_bv_util.is_bv(arg0)) {
@@ -468,22 +468,22 @@ public:
                     }
                     m_mpz_manager.machine_div(diff, m_two, diff);
                 }
-                res = 1.0 - (hamming_distance / (double) bv_sz);
-                #else
+                res = 1.0 - (hamming_distance / (double) bv_sz);                    
+                #else                    
                 rational r(diff);
                 r /= m_powers(bv_sz);
                 double dbl = r.get_double();
                 res = (dbl < 0.0) ? 1.0 : (dbl > 1.0) ? 0.0 : 1.0 - dbl;
                 #endif
-                TRACE("sls_score", tout << "V0 = " << m_mpz_manager.to_string(v0) << " ; V1 = " <<
-                                        m_mpz_manager.to_string(v1) << " ; HD = " << hamming_distance <<
-                                        " ; SZ = " << bv_sz << std::endl; );
+                TRACE("sls_score", tout << "V0 = " << m_mpz_manager.to_string(v0) << " ; V1 = " << 
+                                        m_mpz_manager.to_string(v1) << " ; HD = " << hamming_distance << 
+                                        " ; SZ = " << bv_sz << std::endl; );                    
                 m_mpz_manager.del(diff);
                 m_mpz_manager.del(diff_m1);
             }
             else
                 NOT_IMPLEMENTED_YET();
-        }
+        }            
         else if (m_bv_util.is_bv_ule(n)) { // x <= y
             app * a = to_app(n);
             SASSERT(a->get_num_args() == 2);
@@ -493,13 +493,13 @@ public:
 
             if (negated) {
                 if (m_mpz_manager.gt(x, y))
-                    res = 1.0;
+                    res = 1.0; 
                 else {
                     mpz diff;
                     m_mpz_manager.sub(y, x, diff);
-                    m_mpz_manager.inc(diff);
+                    m_mpz_manager.inc(diff);                            
                     rational n(diff);
-                    n /= rational(m_powers(bv_sz));
+                    n /= rational(m_powers(bv_sz));                            
                     double dbl = n.get_double();
                     // In extreme cases, n is 0.9999 but to_double returns something > 1.0
                     res = (dbl > 1.0) ? 0.0 : (dbl < 0.0) ? 1.0 : 1.0 - dbl;
@@ -507,8 +507,8 @@ public:
                 }
             }
             else {
-                if (m_mpz_manager.le(x, y))
-                    res = 1.0;
+                if (m_mpz_manager.le(x, y))                        
+                    res = 1.0; 
                 else {
                     mpz diff;
                     m_mpz_manager.sub(x, y, diff);
@@ -519,7 +519,7 @@ public:
                     m_mpz_manager.del(diff);
                 }
             }
-            TRACE("sls_score", tout << "x = " << m_mpz_manager.to_string(x) << " ; y = " <<
+            TRACE("sls_score", tout << "x = " << m_mpz_manager.to_string(x) << " ; y = " << 
                                     m_mpz_manager.to_string(y) << " ; SZ = " << bv_sz << std::endl; );
         }
         else if (m_bv_util.is_bv_sle(n)) { // x <= y
@@ -530,8 +530,8 @@ public:
             unsigned bv_sz = m_bv_util.get_bv_size(a->get_decl()->get_domain()[0]);
             const mpz & p = m_powers(bv_sz);
             const mpz & p_half = m_powers(bv_sz-1);
-            if (x >= p_half) { m_mpz_manager.sub(x, p, x); }
-            if (y >= p_half) { m_mpz_manager.sub(y, p, y); }
+            if (x >= p_half) { m_mpz_manager.sub(x, p, x); } 
+            if (y >= p_half) { m_mpz_manager.sub(y, p, y); }                 
 
             if (negated) {
                 if (x > y)
@@ -546,7 +546,7 @@ public:
                     res = (dbl > 1.0) ? 0.0 : (dbl < 0.0) ? 1.0 : 1.0 - dbl;
                     m_mpz_manager.del(diff);
                 }
-                TRACE("sls_score", tout << "x = " << m_mpz_manager.to_string(x) << " ; y = " <<
+                TRACE("sls_score", tout << "x = " << m_mpz_manager.to_string(x) << " ; y = " << 
                                         m_mpz_manager.to_string(y) << " ; SZ = " << bv_sz << std::endl; );
             }
             else {
@@ -561,13 +561,13 @@ public:
                     res = (dbl > 1.0) ? 1.0 : (dbl < 0.0) ? 0.0 : dbl;
                     m_mpz_manager.del(diff);
                 }
-                TRACE("sls_score", tout << "x = " << m_mpz_manager.to_string(x) << " ; y = " <<
+                TRACE("sls_score", tout << "x = " << m_mpz_manager.to_string(x) << " ; y = " << 
                                         m_mpz_manager.to_string(y) << " ; SZ = " << bv_sz << std::endl; );
             }
             m_mpz_manager.del(x);
-            m_mpz_manager.del(y);
+            m_mpz_manager.del(y);                
         }
-        else if (m_manager.is_not(n)) {
+        else if (m_manager.is_not(n)) {                
             SASSERT(!negated);
             app * a = to_app(n);
             SASSERT(a->get_num_args() == 1);
@@ -589,7 +589,7 @@ public:
                     if (v0 != v1)
                         distinct_pairs++;
                 }
-            }
+            }                
             res = (distinct_pairs/(double)pairs);
             if (negated) res = 1.0 - res;
         }
@@ -622,7 +622,7 @@ public:
             m_mpz_manager.set(result, temp.numerator());
         }
         else
-            NOT_IMPLEMENTED_YET();
+            NOT_IMPLEMENTED_YET();            
     }
 
     expr_ref mpz2value(sort * s, const mpz & r) {
@@ -645,7 +645,7 @@ public:
             return score_bv(n);
         else
             NOT_IMPLEMENTED_YET();
-    }
+    }    
 
     ptr_vector<func_decl> & get_unsat_constants(goal_ref const & g) {
         unsigned sz = g->size();

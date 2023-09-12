@@ -19,7 +19,7 @@ Notes:
 #include"smt2_util.h"
 
 bool is_smt2_simple_symbol_char(char s) {
-    return
+    return 
         ('0' <= s && s <= '9') ||
         ('a' <= s && s <= 'z') ||
         ('A' <= s && s <= 'Z') ||

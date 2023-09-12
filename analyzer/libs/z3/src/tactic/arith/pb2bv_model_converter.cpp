@@ -29,7 +29,7 @@ pb2bv_model_converter::pb2bv_model_converter(ast_manager & _m, obj_map<func_decl
         m_c2bit.push_back(func_decl_pair(it->m_key, to_app(it->m_value)->get_decl()));
         m.inc_ref(it->m_key);
         m.inc_ref(to_app(it->m_value)->get_decl());
-    }
+    }      
     bound_manager::iterator it2  = bm.begin();
     bound_manager::iterator end2 = bm.end();
     for (; it2 != end2; ++it2) {
@@ -43,7 +43,7 @@ pb2bv_model_converter::pb2bv_model_converter(ast_manager & _m, obj_map<func_decl
         }
     }
 }
-
+    
 pb2bv_model_converter::~pb2bv_model_converter() {
     svector<func_decl_pair>::const_iterator it  = m_c2bit.begin();
     svector<func_decl_pair>::const_iterator end = m_c2bit.end();
@@ -68,10 +68,10 @@ void pb2bv_model_converter::operator()(model_ref & md, unsigned goal_idx) {
         if (it->second) {
             expr * val = md->get_const_interp(it->second);
             if (val == 0 || m.is_false(val)) {
-                /* false's and don't cares get the integer 0 solution*/
+                /* false's and don't cares get the integer 0 solution*/ 
                 md->register_decl(it->first, a_util.mk_numeral(rational(0), true));
-            }
-            else {
+            } 
+            else { 
                 md->register_decl(it->first, a_util.mk_numeral(rational(1), true));
             }
         }
@@ -87,7 +87,7 @@ void pb2bv_model_converter::display(std::ostream & out) {
     svector<func_decl_pair>::const_iterator it  = m_c2bit.begin();
     svector<func_decl_pair>::const_iterator end = m_c2bit.end();
     for (; it != end; ++it) {
-        out << "\n  (" << it->first->get_name() << " ";
+        out << "\n  (" << it->first->get_name() << " ";            
         if (it->second == 0)
             out << "0";
         else

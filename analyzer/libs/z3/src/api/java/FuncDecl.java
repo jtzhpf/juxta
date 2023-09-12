@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     FuncDecl.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -28,7 +28,7 @@ public class FuncDecl extends AST
 {
     /**
      * Comparison operator.
-     *
+     * 
      * @return True if <paramref name="a"/> and <paramref name="b"/> share the
      *         same context and are equal, false otherwise.
      **/
@@ -36,7 +36,7 @@ public class FuncDecl extends AST
 
     /**
      * Comparison operator.
-     *
+     * 
      * @return True if <paramref name="a"/> and <paramref name="b"/> do not
      *         share the same context or are not equal, false otherwise.
      **/
@@ -377,7 +377,7 @@ public class FuncDecl extends AST
     /**
      * Create expression that applies function to arguments. <param
      * name="args"></param>
-     *
+     * 
      * @return
      **/
     public Expr apply(Expr ... args) throws Z3Exception

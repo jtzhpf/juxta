@@ -49,7 +49,7 @@ namespace datalog {
         rule * get_e_rule(rule * r);
 
         /**
-           If \c m_relation_level is true, ensure \c e_decl predicate will be represented by
+           If \c m_relation_level is true, ensure \c e_decl predicate will be represented by 
            the right relation object. \c orig is the predicate corresponding to \c e_decl without
            the explanation column.
         */
@@ -57,7 +57,7 @@ namespace datalog {
         void translate_rel_level_relation(relation_manager & rmgr, relation_base & orig, relation_base & e_rel);
 
         void transform_rules(const rule_set & src, rule_set & dst);
-
+        
         void transform_facts(relation_manager & rmgr, rule_set const& src, rule_set& dst);
     public:
         /**

@@ -37,15 +37,15 @@ struct expr_replacer::scoped_set_subst {
     ~scoped_set_subst() { m_r.set_substitution(0); }
 };
 
-void expr_replacer::apply_substitution(expr * s, expr * def, proof * def_pr, expr_ref & t) {
-    expr_substitution sub(m());
+void expr_replacer::apply_substitution(expr * s, expr * def, proof * def_pr, expr_ref & t) { 
+    expr_substitution sub(m()); 
     sub.insert(s, def, def_pr);
     scoped_set_subst set(*this, sub);
     (*this)(t);
 }
-
-void expr_replacer::apply_substitution(expr * s, expr * def, expr_ref & t) {
-    expr_substitution sub(m());
+    
+void expr_replacer::apply_substitution(expr * s, expr * def, expr_ref & t) { 
+    expr_substitution sub(m()); 
     sub.insert(s, def);
     scoped_set_subst set(*this, sub);
     (*this)(t);
@@ -62,7 +62,7 @@ struct default_expr_replacer_cfg : public default_rewriter_cfg  {
         m_used_dependencies(_m) {
     }
 
-    bool get_subst(expr * s, expr * & t, proof * & pr) {
+    bool get_subst(expr * s, expr * & t, proof * & pr) { 
         if (m_subst == 0)
             return false;
         expr_dependency * d = 0;
@@ -73,7 +73,7 @@ struct default_expr_replacer_cfg : public default_rewriter_cfg  {
         return false;
     }
 
-    bool max_steps_exceeded(unsigned num_steps) const {
+    bool max_steps_exceeded(unsigned num_steps) const { 
         cooperate("simplifier");
         return false;
     }
@@ -89,14 +89,14 @@ public:
         m_cfg(m),
         m_replacer(m, m.proofs_enabled(), m_cfg) {
     }
-
+    
     virtual ast_manager & m() const { return m_replacer.m(); }
 
-    virtual void set_substitution(expr_substitution * s) {
+    virtual void set_substitution(expr_substitution * s) { 
         m_replacer.cleanup();
         m_replacer.cfg().m_subst = s;
     }
-
+    
     virtual void operator()(expr * t, expr_ref & result, proof_ref & result_pr, expr_dependency_ref & result_dep) {
         result_dep = 0;
         m_replacer.operator()(t, result, result_pr);
@@ -150,7 +150,7 @@ public:
         m_r.set_cancel(f);
     }
 
-    virtual unsigned get_num_steps() const {
+    virtual unsigned get_num_steps() const { 
         return m_r.get_num_steps();
     }
 

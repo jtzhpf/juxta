@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    An explanation for a (Boolean) assignment in the
+    An explanation for a (Boolean) assignment in the 
     nlsat procedure
 
 Author:
@@ -30,7 +30,7 @@ namespace nlsat {
     // - clause
     //
     // - lazy_justification: it is a set of arithmetic literals s.t.
-    // the maximal variable in each literal is the same.
+    // the maximal variable in each literal is the same. 
     // The set is inconsistent in the current model.
     // Thus, our nonlinear procedure may be applied to it
     // to produce a clause.
@@ -68,7 +68,7 @@ namespace nlsat {
         bool operator==(justification other) const { return m_data == other.m_data; }
         bool operator!=(justification other) const { return m_data != other.m_data; }
     };
-
+    
     const justification null_justification;
     const justification decided_justification(true);
 

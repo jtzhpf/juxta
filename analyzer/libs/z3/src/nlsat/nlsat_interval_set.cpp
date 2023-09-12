@@ -99,7 +99,7 @@ namespace nlsat {
         }
         return true;
     }
-
+    
     // Check if the intervals are valid, ordered, and are disjoint.
     bool check_interval_set(anum_manager & am, unsigned sz, interval const * ints) {
         for (unsigned i = 0; i < sz; i++) {
@@ -117,10 +117,10 @@ namespace nlsat {
         m_am(m),
         m_allocator(a) {
     }
-
+     
     interval_set_manager::~interval_set_manager() {
     }
-
+    
     void interval_set_manager::del(interval_set * s) {
         if (s == 0)
             return;
@@ -144,8 +144,8 @@ namespace nlsat {
     void interval_set_manager::inc_ref(interval_set * s) {
         s->m_ref_count++;
     }
-
-    interval_set * interval_set_manager::mk(bool lower_open, bool lower_inf, anum const & lower,
+    
+    interval_set * interval_set_manager::mk(bool lower_open, bool lower_inf, anum const & lower, 
                                             bool upper_open, bool upper_inf, anum const & upper,
                                             literal justification) {
         void * mem = m_allocator.allocate(interval_set::get_obj_size(1));
@@ -216,7 +216,7 @@ namespace nlsat {
             return 0;
         return -1;
     }
-
+    
     typedef sbuffer<interval, 128> interval_buffer;
 
     // Given two interval in an interval set s.t. curr occurs before next.
@@ -234,8 +234,8 @@ namespace nlsat {
         return false;
     }
 
-    inline void push_back(anum_manager & am, interval_buffer & buf,
-                          bool lower_open, bool lower_inf, anum const & lower,
+    inline void push_back(anum_manager & am, interval_buffer & buf, 
+                          bool lower_open, bool lower_inf, anum const & lower, 
                           bool upper_open, bool upper_inf, anum const & upper,
                           literal justification) {
         buf.push_back(interval());
@@ -304,7 +304,7 @@ namespace nlsat {
             interval const & int2 = s2->m_intervals[i2];
             int l1_l2_sign = compare_lower_lower(m_am, int1, int2);
             int u1_u2_sign = compare_upper_upper(m_am, int1, int2);
-            TRACE("nlsat_interval",
+            TRACE("nlsat_interval", 
                   tout << "i1: " << i1 << ", i2: " << i2 << "\n";
                   tout << "int1: "; nlsat::display(tout, m_am, int1); tout << "\n";
                   tout << "int2: "; nlsat::display(tout, m_am, int2); tout << "\n";);
@@ -357,10 +357,10 @@ namespace nlsat {
                             // 1)   [   ]
                             //          [    ]
                             SASSERT(!int2.m_lower_open);
-                            push_back(m_am, result,
+                            push_back(m_am, result, 
                                       int1.m_lower_open, int1.m_lower_inf,  int1.m_lower,
-                                      true /* open */, false /* not +oo */, int1.m_upper,
-                                      int1.m_justification);
+                                      true /* open */, false /* not +oo */, int1.m_upper, 
+                                      int1.m_justification); 
                             i1++;
                         }
                         else {
@@ -389,10 +389,10 @@ namespace nlsat {
                             SASSERT(u1_l2_sign > 0);
                             // 2) [        ]
                             //         [        ]
-                            push_back(m_am, result,
+                            push_back(m_am, result, 
                                       int1.m_lower_open,     int1.m_lower_inf, int1.m_lower,
                                       !int2.m_lower_open, false /* not +oo */, int2.m_lower,
-                                      int1.m_justification);
+                                      int1.m_justification); 
                             i1++;
                         }
                     }
@@ -433,12 +433,12 @@ namespace nlsat {
                         SASSERT(!int1.m_lower_open && !int2.m_upper_open);
                         SASSERT(!int1.m_lower_inf);
                         // Case:
-                        //      [    ]
+                        //      [    ]   
                         //  [   ]
-                        push_back(m_am, result,
+                        push_back(m_am, result, 
                                   int2.m_lower_open,     int2.m_lower_inf, int2.m_lower,
-                                  true /* open */,    false /* not +oo */, int2.m_upper,
-                                  int2.m_justification);
+                                  true /* open */,    false /* not +oo */, int2.m_upper, 
+                                  int2.m_justification); 
                         i2++;
                     }
                     else {
@@ -449,10 +449,10 @@ namespace nlsat {
                         // Case:
                         //     [        ]
                         // [        ]
-                        push_back(m_am, result,
+                        push_back(m_am, result, 
                                   int2.m_lower_open,     int2.m_lower_inf, int2.m_lower,
                                   !int1.m_lower_open, false /* not +oo */, int1.m_lower,
-                                  int2.m_justification);
+                                  int2.m_justification); 
                         i2++;
                     }
                 }
@@ -466,11 +466,11 @@ namespace nlsat {
         // Compress
         // Remark: we only combine adjacent intervals when they have the same justification
         unsigned j  = 0;
-        unsigned sz = result.size();
+        unsigned sz = result.size(); 
         for (unsigned i = 1; i < sz; i++) {
             interval & curr = result[j];
             interval & next = result[i];
-            if (curr.m_justification == next.m_justification &&
+            if (curr.m_justification == next.m_justification && 
                 adjacent(m_am, curr, next)) {
                 // merge them
                 curr.m_upper_inf  = next.m_upper_inf;
@@ -523,7 +523,7 @@ namespace nlsat {
         if (s == 0) return 0;
         return s->m_num_intervals;
     }
-
+    
     bool interval_set_manager::subset(interval_set const * s1, interval_set const * s2) {
         if (s1 == s2)
             return true;
@@ -569,7 +569,7 @@ namespace nlsat {
                 }
                 else if (u1_u2_sign < 0) {
                     TRACE("nlsat_interval", tout << "case 2, break\n";);
-                    // consume only int1, int2 may cover other intervals of s1
+                    // consume only int1, int2 may cover other intervals of s1 
                     // s1:  ... ]
                     // s2:    ... ]
                     i1++;
@@ -623,7 +623,7 @@ namespace nlsat {
         // TODO: check if bottleneck, then replace simple implementation
         return subset(s1, s2) && subset(s2, s1);
     }
-
+        
     bool interval_set_manager::eq(interval_set const * s1, interval_set const * s2) {
         if (s1 == 0 || s2 == 0)
             return s1 == s2;
@@ -631,7 +631,7 @@ namespace nlsat {
             return false;
         for (unsigned i = 0; i < s1->m_num_intervals; i++) {
             interval const & int1 = s1->m_intervals[i];
-            interval const & int2 = s2->m_intervals[i];
+            interval const & int2 = s2->m_intervals[i]; 
             if (int1.m_lower_inf  != int2.m_lower_inf ||
                 int1.m_lower_open != int2.m_lower_open ||
                 int1.m_upper_inf  != int2.m_upper_inf ||
@@ -661,7 +661,7 @@ namespace nlsat {
             m_already_visited[lidx] = false;
         }
     }
-
+    
     interval_set * interval_set_manager::get_interval(interval_set const * s, unsigned idx) const {
         SASSERT(idx < num_intervals(s));
         interval_buffer result;
@@ -690,9 +690,9 @@ namespace nlsat {
                 return;
             }
         }
-
+        
         unsigned n = 0;
-
+        
         unsigned num = num_intervals(s);
         if (!s->m_intervals[0].m_lower_inf) {
             // lower is not -oo
@@ -709,7 +709,7 @@ namespace nlsat {
             if (!randomize)
                 return;
         }
-
+        
         // Try to find a gap that is not an unit.
         for (unsigned i = 1; i < num; i++) {
             if (m_am.lt(s->m_intervals[i-1].m_upper, s->m_intervals[i].m_lower)) {
@@ -720,10 +720,10 @@ namespace nlsat {
                     return;
             }
         }
-
+        
         if (n > 0)
             return;
-
+        
         // Try to find a rational
         unsigned irrational_i = UINT_MAX;
         for (unsigned i = 1; i < num; i++) {

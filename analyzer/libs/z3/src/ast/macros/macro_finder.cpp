@@ -32,14 +32,14 @@ bool macro_finder::is_macro(expr * n, app * & head, expr * & def) {
 }
 
 /**
-   \brief Detect macros of the form
+   \brief Detect macros of the form 
    1- (forall (X) (= (+ (f X) (R X)) c))
    2- (forall (X) (<= (+ (f X) (R X)) c))
    3- (forall (X) (>= (+ (f X) (R X)) c))
 
    The second and third cases are first converted into
    (forall (X) (= (f X) (+ c (* -1 (R x)) (k X))))
-   and
+   and 
    (forall (X) (<= (k X) 0)) when case 2
    (forall (X) (>= (k X) 0)) when case 3
 
@@ -52,7 +52,7 @@ bool macro_finder::is_arith_macro(expr * n, proof * pr, expr_ref_vector & new_ex
     arith_util & autil = as->get_arith_util();
     expr * body        = to_quantifier(n)->get_expr();
     unsigned num_decls = to_quantifier(n)->get_num_decls();
-
+    
     if (!autil.is_le(body) && !autil.is_ge(body) && !m_manager.is_eq(body))
         return false;
     if (!as->is_add(to_app(body)->get_arg(0)))
@@ -63,7 +63,7 @@ bool macro_finder::is_arith_macro(expr * n, proof * pr, expr_ref_vector & new_ex
     if (!m_util.is_arith_macro(body, num_decls, head, def, inv))
         return false;
     app_ref new_body(m_manager);
-
+    
     if (!inv || m_manager.is_eq(body))
         new_body = m_manager.mk_app(to_app(body)->get_decl(), head, def);
     else if (as->is_le(body))
@@ -71,7 +71,7 @@ bool macro_finder::is_arith_macro(expr * n, proof * pr, expr_ref_vector & new_ex
     else
         new_body = autil.mk_le(head, def);
 
-    quantifier_ref new_q(m_manager);
+    quantifier_ref new_q(m_manager); 
     new_q = m_manager.update_quantifier(to_quantifier(n), new_body);
     proof * new_pr      = 0;
     if (m_manager.proofs_enabled()) {
@@ -82,7 +82,7 @@ bool macro_finder::is_arith_macro(expr * n, proof * pr, expr_ref_vector & new_ex
         return m_macro_manager.insert(head->get_decl(), new_q, new_pr);
     }
     // is ge or le
-    //
+    // 
     TRACE("macro_finder", tout << "is_arith_macro: is_ge or is_le\n";);
     func_decl * f   = head->get_decl();
     func_decl * k   = m_manager.mk_fresh_func_decl(f->get_name(), symbol::null, f->get_arity(), f->get_domain(), f->get_range());
@@ -118,7 +118,7 @@ bool macro_finder::is_arith_macro(expr * n, proof * pr, expr_ref_vector & new_ex
    n is of the form: (forall (X) (iff (= (f X) t) def[X]))
 
    Convert it into:
-
+   
    (forall (X) (= (f X) (ite def[X] t (k X))))
    (forall (X) (not (= (k X) t)))
 
@@ -126,13 +126,13 @@ bool macro_finder::is_arith_macro(expr * n, proof * pr, expr_ref_vector & new_ex
 
    The new quantifiers and proofs are stored in new_exprs and new_prs
 */
-static void pseudo_predicate_macro2macro(ast_manager & m, app * head, app * t, expr * def, quantifier * q, proof * pr,
+static void pseudo_predicate_macro2macro(ast_manager & m, app * head, app * t, expr * def, quantifier * q, proof * pr, 
                                          expr_ref_vector & new_exprs, proof_ref_vector & new_prs) {
     func_decl * f = head->get_decl();
     func_decl * k = m.mk_fresh_func_decl(f->get_name(), symbol::null, f->get_arity(), f->get_domain(), f->get_range());
     app * k_app   = m.mk_app(k, head->get_num_args(), head->get_args());
     app * ite     = m.mk_ite(def, t, k_app);
-    app * body_1  = m.mk_eq(head, ite);
+    app * body_1  = m.mk_eq(head, ite); 
     app * body_2  = m.mk_not(m.mk_eq(k_app, t));
     quantifier * q1 = m.update_quantifier(q, body_1);
     expr * pats[1] = { m.mk_pattern(k_app) };
@@ -185,8 +185,8 @@ bool macro_finder::expand_macros(unsigned num, expr * const * exprs, proof * con
             TRACE("macro_finder_found", tout << "found new arith macro:\n" << mk_pp(new_n, m_manager) << "\n";);
             found_new_macro = true;
         }
-        else if (m_util.is_pseudo_predicate_macro(new_n, head, t, def)) {
-            TRACE("macro_finder_found", tout << "found new pseudo macro:\n" << mk_pp(head, m_manager) << "\n" << mk_pp(t, m_manager) << "\n" <<
+        else if (m_util.is_pseudo_predicate_macro(new_n, head, t, def)) { 
+            TRACE("macro_finder_found", tout << "found new pseudo macro:\n" << mk_pp(head, m_manager) << "\n" << mk_pp(t, m_manager) << "\n" << 
                   mk_pp(def, m_manager) << "\n";);
             pseudo_predicate_macro2macro(m_manager, head, t, def, to_quantifier(new_n), new_pr, new_exprs, new_prs);
             found_new_macro = true;

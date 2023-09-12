@@ -12,19 +12,19 @@
 
 #ifndef __ecount
 #define __ecount(num_args)
-#endif
+#endif 
 
 #ifndef __in_ecount
 #define __in_ecount(num_args) __in __ecount(num_args)
-#endif
+#endif 
 
 #ifndef __out_ecount
 #define __out_ecount(num_args) __out __ecount(num_args)
-#endif
+#endif 
 
 #ifndef __inout_ecount
 #define __inout_ecount(num_args) __in __out __ecount(num_args)
-#endif
+#endif 
 
 #ifndef __inout
 #define __inout __in __out
@@ -36,7 +36,7 @@
 
 #ifndef Z3_API
 #define Z3_API
-#endif
+#endif 
 
 #ifndef DEFINE_TYPE
 #define DEFINE_TYPE(T) typedef struct _ ## T *T

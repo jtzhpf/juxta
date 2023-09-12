@@ -75,11 +75,20 @@ class NodeVisitor(object):
 
 
 if __name__ == "__main__":
-    source_code = r'''void foo() {
-    L"hi" L"there";
-}
+    source_code = r'''
+    typedef struct
+    {
+    int number;
+    }Number;
+
+    struct XYZ
+    {
+    Number Number[10];
+    }xyz;
     '''
 
     parser = CParser()
     ast = parser.parse(source_code, filename='zz')
-    ast.show(showcoord=True, attrnames=True, nodenames=True)
+    ast.show(showcoord=False, attrnames=True, nodenames=True)
+
+

@@ -35,7 +35,7 @@ namespace smt {
             return kind_hash;
         unsigned a = 0x9e3779b9;
         unsigned b = 0x9e3779b9;
-        unsigned c = 11;
+        unsigned c = 11;    
 
         switch (num_args) {
         case 2:
@@ -62,7 +62,7 @@ namespace smt {
                 c += arg_hash(n, num_args);
                 mix(a, b, c);
             }
-
+            
             a += kind_hash;
             switch (num_args) {
             case 2:

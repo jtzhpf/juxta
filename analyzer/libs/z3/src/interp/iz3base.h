@@ -36,7 +36,7 @@ namespace hash_space {
 
 /* Base class for interpolators. Includes an AST manager and a scoping
    object as bases. */
-
+ 
 class iz3base : public iz3mgr, public scopes {
 
  public:
@@ -51,7 +51,7 @@ class iz3base : public iz3mgr, public scopes {
   range &ast_scope(ast);
 
   /** Get the range of a symbol. This is the smallest subtree containing
-      all occurrences of the symbol. */
+      all occurrences of the symbol. */ 
   range &sym_range(symb);
 
   /** Is an expression local (in scope in some frame)? */
@@ -102,7 +102,7 @@ class iz3base : public iz3mgr, public scopes {
   void set_option(const std::string &name, const std::string &value){
     if(name == "weak" && value == "1") weak = true;
   }
-
+  
   /* Are we doing weak interpolants? */
   bool weak_mode(){return weak;}
 
@@ -125,14 +125,14 @@ class iz3base : public iz3mgr, public scopes {
     cs.push_back(cnsts[rng.hi]);
     return make(And,cs);
   }
-
+  
   int frame_of_assertion(const ast &ass){
     stl_ext::hash_map<ast,int>::iterator it = frame_map.find(ass);
     if(it == frame_map.end())
       throw "unknown assertion";
     return it->second;
   }
-
+  
 
   void to_parents_vec_representation(const std::vector<ast> &_cnsts,
 				     const ast &tree,
@@ -176,7 +176,7 @@ class iz3base : public iz3mgr, public scopes {
   void gather_conjuncts(ast n, std::vector<ast> &conjuncts);
   ast simplify_and(std::vector<ast> &conjuncts);
   ast simplify_with_lit_rec(ast n, ast lit, stl_ext::hash_map<ast,ast> &memo, int depth);
-  ast simplify_with_lit(ast n, ast lit);
+  ast simplify_with_lit(ast n, ast lit);  
   void find_children(const stl_ext::hash_set<ast> &cnsts_set,
 		     const ast &tree,
 		     std::vector<ast> &cnsts,

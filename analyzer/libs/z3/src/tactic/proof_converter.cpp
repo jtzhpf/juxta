@@ -124,7 +124,7 @@ public:
 
     virtual void display(std::ostream & out) {
         out << "(proof->proof-converter-wrapper\n" << mk_ismt2_pp(m_pr.get(), m_pr.get_manager()) << ")\n";
-    }
+    }    
 };
 
 proof_converter * proof2proof_converter(ast_manager & m, proof * pr) {
@@ -145,7 +145,7 @@ void apply(ast_manager & m, proof_converter * pc, proof_ref & pr) {
    That is, they are functors of the form: unit -> Proof
    Then, this function applies pc1 to the proofs produced by pc2s's and store
    the resultant proof in result.
-
+   
    pc1 and pc2s must be different from 0.
 */
 void apply(ast_manager & m, proof_converter_ref & pc1, proof_converter_ref_buffer & pc2s, proof_ref & result) {

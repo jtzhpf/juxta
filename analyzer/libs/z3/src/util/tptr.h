@@ -25,7 +25,7 @@ Revision History:
 #define TAG_SHIFT        PTR_ALIGNMENT
 #define ALIGNMENT_VALUE  (1 << PTR_ALIGNMENT)
 #define TAG_MASK         (ALIGNMENT_VALUE - 1)
-#define PTR_MASK         (~TAG_MASK)
+#define PTR_MASK         (~TAG_MASK)  
 
 #define ALIGN(T, PTR) reinterpret_cast<T>(((reinterpret_cast<size_t>(PTR) >> PTR_ALIGNMENT) + \
                          static_cast<size_t>((reinterpret_cast<size_t>(PTR) & TAG_MASK) != 0)) << PTR_ALIGNMENT)

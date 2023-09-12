@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Basic infrastructure for managing linear equations of the form:
-
+    
     a_1 * x_1 + ... + a_n * x_n = 0
 
 Author:
@@ -78,7 +78,7 @@ public:
     // Return b1 * eq1 + b2 * eq2
     // return 0 if the b1 * eq1 + b2 * eq2 == 0
     linear_equation * mk(mpz const & b1, linear_equation const & eq1, mpz const & b2, linear_equation const & eq2);
-
+    
     void display(std::ostream & out, linear_equation const & eq) const;
 };
 

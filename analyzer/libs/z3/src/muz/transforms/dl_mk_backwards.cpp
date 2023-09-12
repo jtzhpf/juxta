@@ -25,11 +25,11 @@ namespace datalog {
     mk_backwards::mk_backwards(context & ctx, unsigned priority):
         plugin(priority),
         m(ctx.get_manager()),
-        m_ctx(ctx) {
+        m_ctx(ctx) {        
     }
 
     mk_backwards::~mk_backwards() { }
-
+        
     rule_set * mk_backwards::operator()(rule_set const & source) {
         context& ctx = source.get_context();
         rule_manager& rm = source.get_rule_manager();
@@ -43,7 +43,7 @@ namespace datalog {
         query = m.mk_fresh_const("Q", m.mk_bool_sort());
         result->set_output_predicate(query->get_decl());
         m_ctx.register_predicate(query->get_decl(), false);
-        for (unsigned i = 0; i < sz; ++i) {
+        for (unsigned i = 0; i < sz; ++i) {            
             tail.reset();
             neg.reset();
             rule & r = *source.get_rule(i);
@@ -57,7 +57,7 @@ namespace datalog {
                 tail.push_back(r.get_tail(j));
                 neg.push_back(false);
             }
-            for (unsigned j = 0; j <= utsz; ++j) {
+            for (unsigned j = 0; j <= utsz; ++j) {                
                 if (j == utsz && j > 0) {
                     break;
                 }

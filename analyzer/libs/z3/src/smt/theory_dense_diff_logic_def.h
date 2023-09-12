@@ -92,7 +92,7 @@ namespace smt {
             // internalizer is marking enodes as interpreted whenever the associated ast is a value and a constant.
             // e->mark_as_interpreted();
             theory_var v = mk_var(e);
-            if (_k.is_zero())
+            if (_k.is_zero()) 
                 return v;
             theory_var z = internalize_term_core(mk_zero_for(n));
             numeral k(_k);
@@ -123,7 +123,7 @@ namespace smt {
             m_non_diff_logic_exprs = true;
         }
     }
-
+                          
     template<typename Ext>
     bool theory_dense_diff_logic<Ext>::internalize_atom(app * n, bool gate_ctx) {
         if (memory::above_high_watermark()) {
@@ -214,7 +214,7 @@ namespace smt {
         app * lhs      = to_app(atom->get_arg(0));
         app * rhs      = to_app(atom->get_arg(1));
         app * s;
-        if (m_autil.is_add(lhs) && to_app(lhs)->get_num_args() == 2 && is_times_minus_one(to_app(lhs)->get_arg(1), s)
+        if (m_autil.is_add(lhs) && to_app(lhs)->get_num_args() == 2 && is_times_minus_one(to_app(lhs)->get_arg(1), s) 
             && m_autil.is_numeral(rhs)) {
             // force axioms for (= (+ x (* -1 y)) k)
             // this is necessary because (+ x (* -1 y)) is not a diff logic term.
@@ -230,7 +230,7 @@ namespace smt {
                 m_arith_eq_adapter.mk_axioms(n1, n2);
         }
     }
-
+    
     template<typename Ext>
     void theory_dense_diff_logic<Ext>::apply_sort_cnstr(enode * n, sort * s) {
         // do nothing...
@@ -283,7 +283,7 @@ namespace smt {
     void theory_dense_diff_logic<Ext>::conflict_resolution_eh(app * atom, bool_var v) {
         // do nothing
     }
-
+    
     template<typename Ext>
     void theory_dense_diff_logic<Ext>::push_scope_eh() {
         theory::push_scope_eh();
@@ -333,7 +333,7 @@ namespace smt {
             m_bv2atoms[a->get_bool_var()] = 0;
             theory_var s = a->get_source();
             theory_var t = a->get_target();
-            TRACE("del_atoms", tout << "m_matrix.size() " << m_matrix.size() <<
+            TRACE("del_atoms", tout << "m_matrix.size() " << m_matrix.size() << 
                   ", m_matrix[s].size() " << m_matrix[s].size() <<
                   ", m_matrix[t].size(): " << m_matrix[t].size() <<
                   ", t: " << t << ", s: " << s << "\n";);
@@ -342,7 +342,7 @@ namespace smt {
             m_matrix[s][t].m_occs.pop_back();
             m_matrix[t][s].m_occs.pop_back();
             dealloc(a);
-        }
+        } 
         m_atoms.shrink(old_size);
     }
 
@@ -361,7 +361,7 @@ namespace smt {
             }
         }
     }
-
+        
     template<typename Ext>
     void theory_dense_diff_logic<Ext>::restart_eh() {
         m_arith_eq_adapter.restart_eh();
@@ -380,14 +380,14 @@ namespace smt {
         // logical context contains arithmetic expressions that are not
         // in the difference logic fragment.
         if (m_non_diff_logic_exprs)
-            return FC_GIVEUP;
+            return FC_GIVEUP; 
         return FC_DONE;
     }
-
+        
     template<typename Ext>
     bool theory_dense_diff_logic<Ext>::can_propagate() {
         // do nothing
-        return false;
+        return false; 
     }
 
     template<typename Ext>
@@ -415,7 +415,7 @@ namespace smt {
         m_edges.push_back(edge());
         theory::reset_eh();
     }
-
+    
     template<typename Ext>
     bool theory_dense_diff_logic<Ext>::validate_eq_in_model(theory_var v1, theory_var v2, bool is_true) const {
         return is_true ? m_assignment[v1] == m_assignment[v2] : m_assignment[v1] != m_assignment[v2];
@@ -440,15 +440,15 @@ namespace smt {
             theory_var s    = curr.first;
             theory_var t    = curr.second;
             todo.pop_back();
-
+        
             SASSERT(is_connected(s, t));
             cell & c        = m_matrix[s][t];
             SASSERT(c.m_edge_id != self_edge_id);
-
+            
             edge & e    = m_edges[c.m_edge_id];
             if (e.m_justification != null_literal)
                 result.push_back(e.m_justification);
-
+            
             if (s != e.m_source)
                 todo.push_back(var_pair(s, e.m_source));
             if (e.m_target != t)
@@ -467,7 +467,7 @@ namespace smt {
         // Compute set F of nodes such that:
         // x in F iff
         //    k + d(t, x) < d(s, x)
-
+        
         numeral new_dist;
         row & t_row                = m_matrix[t];
         typename row::iterator it           = t_row.begin();
@@ -479,7 +479,7 @@ namespace smt {
                 new_dist    = k;
                 new_dist   += it->m_distance;
                 cell & s_x  = m_matrix[s][x];
-                TRACE("ddl",
+                TRACE("ddl", 
                       tout << "s: #" << get_enode(s)->get_owner_id() << " x: #" << get_enode(x)->get_owner_id() << " new_dist: " << new_dist << "\n";
                       tout << "already has edge: " << s_x.m_edge_id << "  old dist: " << s_x.m_distance << "\n";);
                 if (s_x.m_edge_id == null_edge_id || new_dist < s_x.m_distance) {
@@ -489,9 +489,9 @@ namespace smt {
                 }
             }
         }
-
+        
         typename f_targets::iterator fend = target;
-
+        
         // For each node y such that y --> s, and for each node x in F,
         // check whether d(y, s) + new_dist(x) < d(y, x).
         typename matrix::iterator it2    = m_matrix.begin();
@@ -533,7 +533,7 @@ namespace smt {
         get_antecedents(source, target, antecedents);
         ctx.assign(l, ctx.mk_justification(theory_propagation_justification(get_id(), ctx.get_region(), antecedents.size(), antecedents.c_ptr(), l)));
     }
-
+    
     template<typename Ext>
     void theory_dense_diff_logic<Ext>::propagate_using_cell(theory_var source, theory_var target) {
         cell & c = m_matrix[source][target];
@@ -589,7 +589,7 @@ namespace smt {
             ctx.set_conflict(ctx.mk_justification(theory_conflict_justification(get_id(), r, antecedents.size(), antecedents.c_ptr())));
             return;
         }
-
+        
         cell & c = m_matrix[source][target];
         if (c.m_edge_id == null_edge_id || offset < c.m_distance) {
             TRACE("ddl", tout << "adding edge: #" << get_enode(source)->get_owner_id() << " -- " << offset << " --> #" << get_enode(target)->get_owner_id() << "\n";);
@@ -639,7 +639,7 @@ namespace smt {
         }
         return true;
     }
-#endif
+#endif        
 
     template<typename Ext>
     void theory_dense_diff_logic<Ext>::display(std::ostream & out) const {
@@ -712,7 +712,7 @@ namespace smt {
         }
         for (int i = 0; i < num_vars; i++)
             m_assignment[i].neg();
-        TRACE("ddl_model",
+        TRACE("ddl_model", 
               tout << "ddl model\n";
               for (theory_var v = 0; v < num_vars; v++) {
                   tout << "#" << mk_pp(get_enode(v)->get_owner(), get_manager()) << " = " << m_assignment[v] << "\n";
@@ -722,7 +722,7 @@ namespace smt {
     /**
        The arithmetic module uses infinitesimals. So,
        an inf_numeral (n,k) represents  n + k*epsilon
-       where epsilon is a very small number.
+       where epsilon is a very small number. 
        In order to generate a model, we need to compute
        a value for epsilon in a way all inequalities remain
        satisfied.
@@ -734,18 +734,18 @@ namespace smt {
        (n_x, k_x) and (n_y, k_y).
 
        So,
-
+       
        (n_x, k_x) <= (n_y + n_c, k_y + k_c)
+       
 
-
-       The only intersting case is n_x < n_y + n_c and k_x > k_y + k_c.
+       The only intersting case is n_x < n_y + n_c and k_x > k_y + k_c. 
        Using the definition of infinitesimal numbers
        we have:
-
+       
        n_x + k_x * epsilon <= n_y + n_c + (k_y + k_c) * epsilon
 
        Therefore:
-
+       
        epsilon <= (n_y + n_c - n_x) / (k_x - k_y - k_c)
     */
     template<typename Ext>
@@ -756,7 +756,7 @@ namespace smt {
         // first edge is null
         SASSERT(it->m_target == null_theory_var);
         SASSERT(it->m_source == null_theory_var);
-        ++it;
+        ++it; 
         for (; it != end; ++it) {
             edge const & e = *it;
             rational n_x = m_assignment[e.m_target].get_rational().to_rational();
@@ -794,7 +794,7 @@ namespace smt {
                 SASSERT(m_assignment[v].is_zero());
             }
         }
-        TRACE("ddl_model",
+        TRACE("ddl_model", 
               tout << "ddl model\n";
               for (theory_var v = 0; v < num_vars; v++) {
                   tout << "#" << mk_pp(get_enode(v)->get_owner(), get_manager()) << " = " << m_assignment[v] << "\n";

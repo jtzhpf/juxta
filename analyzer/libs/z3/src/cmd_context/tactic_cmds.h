@@ -39,9 +39,9 @@ public:
     ~tactic_cmd();
 
     symbol get_name() const { return m_name; }
-
+    
     char const * get_descr() const { return m_descr; }
-
+    
     tactic * mk(ast_manager & m);
 };
 
@@ -58,7 +58,7 @@ public:
 
     symbol get_name() const { return m_name; }
     char const * get_descr() const { return m_descr; }
-
+    
     probe * get() const { return m_probe.get(); }
 };
 

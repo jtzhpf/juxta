@@ -9,12 +9,12 @@ namespace karr {
     struct matrix {
         vector<vector<rational> > A;
         vector<rational>          b;
-
+        
         unsigned size() const { return A.size(); }
 
-        void reset() {
-            A.reset();
-            b.reset();
+        void reset() { 
+            A.reset(); 
+            b.reset(); 
         }
 
         matrix& operator=(matrix const& other) {
@@ -130,7 +130,7 @@ namespace karr {
         }
         for (unsigned i = 0; i < src.size(); ++i) {
             T.A.push_back(src.A[i]);
-            T.A.back().append(zeros);
+            T.A.back().append(zeros);            
         }
         T.b.append(src.b);
         T.append(Ab);
@@ -140,7 +140,7 @@ namespace karr {
         dualizeI(TD, T);
         TD.display(std::cout << "TD:\n");
         for (unsigned i = 0; i < TD.size(); ++i) {
-            vector<rational> v;
+            vector<rational> v;            
             v.append(src.size(), TD.A[i].c_ptr() + src.size());
             dst.A.push_back(v);
             dst.b.push_back(TD.b[i]);
@@ -194,8 +194,8 @@ namespace karr {
     static void tst1() {
         matrix Theta;
         matrix Ab;
-
-        //
+        
+        // 
         Theta.A.push_back(V(1, 0));
         Theta.b.push_back(R(0));
         Theta.A.push_back(V(0, 1));
@@ -226,7 +226,7 @@ namespace karr {
         joinD(e2, t2D, ThetaD);
 
         t2D.display(std::cout << "t2D\n");
-        e2.display(std::cout << "e2\n");
+        e2.display(std::cout << "e2\n");        
     }
 
     void tst2() {
@@ -258,7 +258,7 @@ namespace karr {
 
         N.display(std::cout << "N\n");
 
-
+        
     }
 
     void tst3() {
@@ -282,7 +282,7 @@ namespace karr {
 
         N.display(std::cout << "N\n");
 
-
+        
     }
 
 };

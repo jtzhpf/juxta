@@ -46,7 +46,7 @@ std::ostream &operator <<(std::ostream &s, const iz3mgr::ast &a){
 }
 
 
-iz3mgr::ast iz3mgr::make_var(const std::string &name, type ty){
+iz3mgr::ast iz3mgr::make_var(const std::string &name, type ty){ 
   symbol s = symbol(name.c_str());
   return cook(m().mk_const(m().mk_const_decl(s, ty)));
 }
@@ -100,7 +100,7 @@ iz3mgr::ast iz3mgr::make(opr op, int n, raw_ast **args){
 }
 
 iz3mgr::ast iz3mgr::mki(family_id fid, decl_kind dk, int n, raw_ast **args){
-  return cook(m().mk_app(fid, dk, 0, 0, n, (expr **)args));
+  return cook(m().mk_app(fid, dk, 0, 0, n, (expr **)args));        
 }
 
 iz3mgr::ast iz3mgr::make(opr op, const std::vector<ast> &args){
@@ -137,7 +137,7 @@ iz3mgr::ast iz3mgr::make(opr op, const ast &arg0, const ast &arg1, const ast &ar
 }
 
 iz3mgr::ast iz3mgr::make(symb sym, int n, raw_ast **args){
-  return cook(m().mk_app(sym, n, (expr **) args));
+  return cook(m().mk_app(sym, n, (expr **) args));   
 }
 
 iz3mgr::ast iz3mgr::make(symb sym, const std::vector<ast> &args){
@@ -194,9 +194,9 @@ iz3mgr::ast iz3mgr::make_quant(opr op, const std::vector<ast> &bvs, ast &body){
   expr_abstract(m(), 0, num_bound, &bound_asts[0], to_expr(body.raw()), abs_body);
   expr_ref result(m());
   result = m().mk_quantifier(
-			     op == Forall,
-			     names.size(), &types[0], &names[0], abs_body.get(),
-			     0,
+			     op == Forall, 
+			     names.size(), &types[0], &names[0], abs_body.get(),            
+			     0, 
 			     symbol("itp"),
 			     symbol(),
 			     0, 0,
@@ -241,7 +241,7 @@ iz3mgr::ast iz3mgr::clone(const ast &t, const std::vector<ast> &_args){
   }
   default:
     break;
-  }
+  }            
   return cook(a);
 }
 
@@ -289,7 +289,7 @@ void iz3mgr::print_lit(ast lit){
   }
   else
     std::cout << lit;
-}
+}  
 
 
 static int pretty_cols = 79;
@@ -402,7 +402,7 @@ iz3mgr::opr iz3mgr::op(const ast &t){
 	case OP_TO_INT: return ToInt;
 	case OP_IS_INT: return IsInt;
 	default:
-	  if (m().is_unique_value(e))
+	  if (m().is_unique_value(e)) 
 	    return Numeral;
 	  return Other;
 	  }
@@ -424,7 +424,7 @@ iz3mgr::opr iz3mgr::op(const ast &t){
 	  return Other;
 	}
       }
-
+      
       return Other;
     }
 
@@ -453,7 +453,7 @@ void iz3mgr::print_sat_problem(std::ostream &out, const ast &t){
 
 iz3mgr::ast iz3mgr::z3_simplify(const ast &e){
     ::expr * a = to_expr(e.raw());
-    params_ref p;
+    params_ref p; 
     th_rewriter m_rw(m(), p);
     expr_ref    result(m());
     m_rw(a, result);
@@ -533,7 +533,7 @@ void iz3mgr::get_farkas_coeffs(const ast &proof, std::vector<rational>& rats){
     bool ok = s->get_parameter(i).is_rational(r);
     if(!ok)
       throw "Bad Farkas coefficient";
-#if 0
+#if 0 
     {
       ast con = conc(prem(proof,i-2));
       ast temp = make_real(r); // for debugging
@@ -659,14 +659,14 @@ void iz3mgr::linear_comb(ast &P, const ast &c, const ast &Q, bool round_off){
     case Gt:
       Qrhs = make(Sub,arg(nQ,1),arg(nQ,0));
       break;
-    case Lt:
+    case Lt: 
       Qrhs = make(Sub,arg(nQ,0),arg(nQ,1));
       break;
     case Geq:
       Qrhs = make(Sub,arg(nQ,1),arg(nQ,0));
       qstrict = true;
       break;
-    case Leq:
+    case Leq: 
       Qrhs = make(Sub,arg(nQ,0),arg(nQ,1));
       qstrict = true;
       break;
@@ -679,14 +679,14 @@ void iz3mgr::linear_comb(ast &P, const ast &c, const ast &Q, bool round_off){
     case Leq:
       Qrhs = make(Sub,arg(Q,1),arg(Q,0));
       break;
-    case Geq:
+    case Geq: 
       Qrhs = make(Sub,arg(Q,0),arg(Q,1));
       break;
     case Lt:
       Qrhs = make(Sub,arg(Q,1),arg(Q,0));
       qstrict = true;
       break;
-    case Gt:
+    case Gt: 
       Qrhs = make(Sub,arg(Q,0),arg(Q,1));
       qstrict = true;
       break;
@@ -824,7 +824,7 @@ iz3mgr::ast iz3mgr::cont_eq(stl_ext::hash_set<ast> &cont_eq_memo, bool truth, as
 }
 
   // substitute a term t for unbound occurrences of variable v in e
-
+  
 iz3mgr::ast iz3mgr::subst(stl_ext::hash_map<ast,ast> &subst_memo, ast var, ast t, ast e){
   if(e == var) return t;
   std::pair<ast,ast> foo(e,ast());
@@ -877,7 +877,7 @@ iz3mgr::ast iz3mgr::apply_quant(opr quantifier, ast var, ast e){
     return make(op(e),args);
   }
   if(!occurs_in(var,e))return e;
-  hash_set<ast> cont_eq_memo;
+  hash_set<ast> cont_eq_memo; 
   ast cterm = cont_eq(cont_eq_memo, quantifier == Forall, var, e);
   if(!cterm.null()){
     return subst(var,cterm,e);
@@ -891,8 +891,8 @@ void iz3mgr::get_bound_substitutes(stl_ext::hash_map<ast,bool> &memo, const ast 
   std::pair<ast,bool> foo(e,false);
   std::pair<hash_map<ast,bool>::iterator,bool> bar = memo.insert(foo);
   if(bar.second){
-    if(op(e) ==
+    if(op(e) == 
   }
-
+ 
 }
 #endif

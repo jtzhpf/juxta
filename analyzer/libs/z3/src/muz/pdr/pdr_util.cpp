@@ -16,8 +16,8 @@ Author:
 Revision History:
 
 
-Notes:
-
+Notes: 
+    
 
 --*/
 
@@ -67,7 +67,7 @@ namespace pdr {
     std::string pp_cube(const app_ref_vector& model, ast_manager& m) {
         return pp_cube(model.size(), model.c_ptr(), m);
     }
-
+    
     std::string pp_cube(const app_vector& model, ast_manager& m) {
         return pp_cube(model.size(), model.c_ptr(), m);
     }
@@ -95,7 +95,7 @@ namespace pdr {
     /////////////////////////
     // model_evaluator
     //
-
+    
 
     void model_evaluator::assign_value(expr* e, expr* val) {
         rational r;
@@ -125,14 +125,14 @@ namespace pdr {
         rational r;
         unsigned sz = model->get_num_constants();
         for (unsigned i = 0; i < sz; i++) {
-            func_decl * d = model->get_constant(i);
+            func_decl * d = model->get_constant(i); 
             expr* val = model->get_const_interp(d);
             expr* e = m.mk_const(d);
             m_refs.push_back(e);
             assign_value(e, val);
         }
     }
-
+    
     void model_evaluator::reset() {
         m1.reset();
         m2.reset();
@@ -142,41 +142,41 @@ namespace pdr {
         m_refs.reset();
         m_model = 0;
     }
-
+    
     expr_ref_vector model_evaluator::minimize_model(ptr_vector<expr> const & formulas, model_ref& mdl) {
         setup_model(mdl);
-
-        TRACE("pdr_verbose",
+        
+        TRACE("pdr_verbose", 
               tout << "formulas:\n";
-              for (unsigned i = 0; i < formulas.size(); ++i) tout << mk_pp(formulas[i], m) << "\n";
+              for (unsigned i = 0; i < formulas.size(); ++i) tout << mk_pp(formulas[i], m) << "\n"; 
               );
-
+        
         expr_ref_vector model = prune_by_cone_of_influence(formulas);
         TRACE("pdr_verbose",
               tout << "pruned model:\n";
               for (unsigned i = 0; i < model.size(); ++i) tout << mk_pp(model[i].get(), m) << "\n";);
-
+        
         reset();
-
+        
         DEBUG_CODE(
             setup_model(mdl);
             VERIFY(check_model(formulas));
             reset(););
-
+        
         return model;
     }
-
+    
     expr_ref_vector model_evaluator::minimize_literals(ptr_vector<expr> const& formulas, model_ref& mdl) {
-
-        TRACE("pdr",
+        
+        TRACE("pdr", 
               tout << "formulas:\n";
-              for (unsigned i = 0; i < formulas.size(); ++i) tout << mk_pp(formulas[i], m) << "\n";
+              for (unsigned i = 0; i < formulas.size(); ++i) tout << mk_pp(formulas[i], m) << "\n"; 
               );
-
+        
         expr_ref_vector result(m);
         expr_ref tmp(m);
         ptr_vector<expr> tocollect;
-
+        
         setup_model(mdl);
         collect(formulas, tocollect);
         for (unsigned i = 0; i < tocollect.size(); ++i) {
@@ -201,14 +201,14 @@ namespace pdr {
             }
         }
         reset();
-        TRACE("pdr",
+        TRACE("pdr", 
               tout << "minimized model:\n";
-              for (unsigned i = 0; i < result.size(); ++i) tout << mk_pp(result[i].get(), m) << "\n";
+              for (unsigned i = 0; i < result.size(); ++i) tout << mk_pp(result[i].get(), m) << "\n"; 
               );
-
+        
         return result;
     }
-
+    
     void model_evaluator::process_formula(app* e, ptr_vector<expr>& todo, ptr_vector<expr>& tocollect) {
         SASSERT(m.is_bool(e));
         SASSERT(is_true(e) || is_false(e));
@@ -225,7 +225,7 @@ namespace pdr {
             case OP_IFF:
                 if (args[0] == args[1]) {
                     SASSERT(v);
-                    // no-op
+                    // no-op                    
                 }
                 else if (m.is_bool(args[0])) {
                     todo.append(sz, args);
@@ -233,7 +233,7 @@ namespace pdr {
                 else {
                     tocollect.push_back(e);
                 }
-                break;
+                break;                              
             case OP_DISTINCT:
                 tocollect.push_back(e);
                 break;
@@ -262,7 +262,7 @@ namespace pdr {
                 }
                 else {
                     unsigned i = 0;
-                    for (; !is_false(args[i]) && i < sz; ++i);
+                    for (; !is_false(args[i]) && i < sz; ++i);     
                     if (i == sz) {
                         fatal_error(1);
                     }
@@ -284,7 +284,7 @@ namespace pdr {
                     todo.append(sz, args);
                 }
                 break;
-            case OP_XOR:
+            case OP_XOR: 
             case OP_NOT:
                 todo.append(sz, args);
                 break;
@@ -314,14 +314,14 @@ namespace pdr {
             tocollect.push_back(e);
         }
     }
-
+    
     void model_evaluator::collect(ptr_vector<expr> const& formulas, ptr_vector<expr>& tocollect) {
         ptr_vector<expr> todo;
         todo.append(formulas);
         m_visited.reset();
-
+        
         VERIFY(check_model(formulas));
-
+        
         while (!todo.empty()) {
             app*  e = to_app(todo.back());
             todo.pop_back();
@@ -332,13 +332,13 @@ namespace pdr {
         }
         m_visited.reset();
     }
-
+    
     expr_ref_vector model_evaluator::prune_by_cone_of_influence(ptr_vector<expr> const & formulas) {
         ptr_vector<expr> tocollect;
         collect(formulas, tocollect);
         m1.reset();
         m2.reset();
-        for (unsigned i = 0; i < tocollect.size(); ++i) {
+        for (unsigned i = 0; i < tocollect.size(); ++i) {     
             TRACE("pdr_verbose", tout << "collect: " << mk_pp(tocollect[i], m) << "\n";);
             for_each_expr(*this, m_visited, tocollect[i]);
         }
@@ -356,15 +356,15 @@ namespace pdr {
         m_visited.reset();
         TRACE("pdr", tout << sz << " ==> " << model.size() << "\n";);
         return model;
-
+        
     }
-
+    
     void model_evaluator::eval_arith(app* e) {
         rational r, r2;
-
+        
 #define ARG1 e->get_arg(0)
-#define ARG2 e->get_arg(1)
-
+#define ARG2 e->get_arg(1)     
+        
         unsigned arity = e->get_num_args();
         for (unsigned i = 0; i < arity; ++i) {
             expr* arg = e->get_arg(i);
@@ -375,11 +375,11 @@ namespace pdr {
             SASSERT(!is_unknown(arg));
         }
         switch(e->get_decl_kind()) {
-        case OP_NUM:
+        case OP_NUM: 
             VERIFY(m_arith.is_numeral(e, r));
             set_number(e, r);
-            break;
-        case OP_IRRATIONAL_ALGEBRAIC_NUM:
+            break;                
+        case OP_IRRATIONAL_ALGEBRAIC_NUM:  
             set_x(e);
             break;
         case OP_LE:
@@ -394,32 +394,32 @@ namespace pdr {
         case OP_GT:
             set_bool(e, get_number(ARG1) > get_number(ARG2));
             break;
-        case OP_ADD:
+        case OP_ADD: 
             r = rational::zero();
             for (unsigned i = 0; i < arity; ++i) {
                 r += get_number(e->get_arg(i));
             }
             set_number(e, r);
-            break;
-        case OP_SUB:
+            break;                                    
+        case OP_SUB: 
             r = get_number(e->get_arg(0));
             for (unsigned i = 1; i < arity; ++i) {
                 r -= get_number(e->get_arg(i));
             }
             set_number(e, r);
-            break;
-        case OP_UMINUS:
+            break;                            
+        case OP_UMINUS: 
             SASSERT(arity == 1);
             set_number(e, get_number(e->get_arg(0)));
-            break;
-        case OP_MUL:
+            break;                
+        case OP_MUL: 
             r = rational::one();
             for (unsigned i = 0; i < arity; ++i) {
                 r *= get_number(e->get_arg(i));
             }
             set_number(e, r);
-            break;
-        case OP_DIV:
+            break;                
+        case OP_DIV: 
             SASSERT(arity == 2);
             r = get_number(ARG2);
             if (r.is_zero()) {
@@ -428,8 +428,8 @@ namespace pdr {
             else {
                 set_number(e, get_number(ARG1) / r);
             }
-            break;
-        case OP_IDIV:
+            break;                
+        case OP_IDIV: 
             SASSERT(arity == 2);
             r = get_number(ARG2);
             if (r.is_zero()) {
@@ -438,8 +438,8 @@ namespace pdr {
             else {
                 set_number(e, div(get_number(ARG1), r));
             }
-            break;
-        case OP_REM:
+            break;                
+        case OP_REM: 
             // rem(v1,v2) = if v2 >= 0 then mod(v1,v2) else -mod(v1,v2)
             SASSERT(arity == 2);
             r = get_number(ARG2);
@@ -452,7 +452,7 @@ namespace pdr {
                 set_number(e, r2);
             }
             break;
-        case OP_MOD:
+        case OP_MOD: 
             SASSERT(arity == 2);
             r = get_number(ARG2);
             if (r.is_zero()) {
@@ -461,16 +461,16 @@ namespace pdr {
             else {
                 set_number(e, mod(get_number(ARG1), r));
             }
-            break;
-        case OP_TO_REAL:
+            break;                   
+        case OP_TO_REAL: 
             SASSERT(arity == 1);
             set_number(e, get_number(ARG1));
-            break;
-        case OP_TO_INT:
+            break;                
+        case OP_TO_INT: 
             SASSERT(arity == 1);
             set_number(e, floor(get_number(ARG1)));
-            break;
-        case OP_IS_INT:
+            break;                
+        case OP_IS_INT: 
             SASSERT(arity == 1);
             set_bool(e, get_number(ARG1).is_int());
             break;
@@ -483,7 +483,7 @@ namespace pdr {
             break;
         }
     }
-
+    
     void model_evaluator::inherit_value(expr* e, expr* v) {
         expr* w;
         SASSERT(!is_unknown(v));
@@ -523,10 +523,10 @@ namespace pdr {
             }
         }
     }
-
+    
     bool model_evaluator::extract_array_func_interp(expr* a, vector<expr_ref_vector>& stores, expr_ref& else_case) {
         SASSERT(m_array.is_array(a));
-
+        
         TRACE("pdr", tout << mk_pp(a, m) << "\n";);
         while (m_array.is_store(a)) {
             expr_ref_vector store(m);
@@ -535,12 +535,12 @@ namespace pdr {
             stores.push_back(store);
             a = to_app(a)->get_arg(0);
         }
-
+        
         if (m_array.is_const(a)) {
             else_case = to_app(a)->get_arg(0);
             return true;
         }
-
+        
         while (m_array.is_as_array(a)) {
             func_decl* f = m_array.get_as_array_func_decl(to_app(a));
             func_interp* g = m_model->get_func_interp(f);
@@ -559,7 +559,7 @@ namespace pdr {
                 }
                 eval_exprs(store);
                 stores.push_back(store);
-            }
+            }        
             else_case = g->get_else();
             if (!else_case) {
                 TRACE("pdr", tout << "no else case " << mk_pp(a, m) << "\n";);
@@ -577,10 +577,10 @@ namespace pdr {
             return true;
         }
         TRACE("pdr", tout << "no translation: " << mk_pp(a, m) << "\n";);
-
+        
         return false;
     }
-
+    
     /**
        best effort evaluator of extensional array equality.
      */
@@ -612,8 +612,8 @@ namespace pdr {
 
         if (else1 != else2) {
             if (m.is_value(else1) && m.is_value(else2)) {
-                TRACE("pdr", tout
-                      << "defaults are different: " << mk_pp(e, m) << " "
+                TRACE("pdr", tout 
+                      << "defaults are different: " << mk_pp(e, m) << " " 
                       << mk_pp(else1, m) << " " << mk_pp(else2, m) << "\n";);
                 set_false(e);
             }
@@ -627,10 +627,10 @@ namespace pdr {
             return;
         }
 
-        expr_ref s1(m), s2(m), w1(m), w2(m);
+        expr_ref s1(m), s2(m), w1(m), w2(m);        
         expr_ref_vector args1(m), args2(m);
         args1.push_back(v1);
-        args2.push_back(v2);
+        args2.push_back(v2);        
         for (unsigned i = 0; i < store.size(); ++i) {
             args1.resize(1);
             args2.resize(1);
@@ -644,7 +644,7 @@ namespace pdr {
                 continue;
             }
             if (m.is_value(w1) && m.is_value(w2)) {
-                TRACE("pdr", tout << "Equality evaluation: " << mk_pp(e, m) << "\n";
+                TRACE("pdr", tout << "Equality evaluation: " << mk_pp(e, m) << "\n"; 
                       tout << mk_pp(s1, m) << " |-> " << mk_pp(w1, m) << "\n";
                       tout << mk_pp(s2, m) << " |-> " << mk_pp(w2, m) << "\n";);
                 set_false(e);
@@ -676,7 +676,7 @@ namespace pdr {
             eq = m.mk_eq(arg1, arg2);
             m_model->eval(eq, vl);
             if (m.is_true(vl)) {
-                set_bool(e, true);
+                set_bool(e, true);                
             }
             else if (m.is_false(vl)) {
                 set_bool(e, false);
@@ -694,7 +694,7 @@ namespace pdr {
             }
             else {
                 set_false(e);
-            }
+            }            
         }
         else if (m_arith.is_int_real(arg1)) {
             set_bool(e, get_number(arg1) == get_number(arg2));
@@ -721,7 +721,7 @@ namespace pdr {
         bool has_x = false;
         unsigned arity = e->get_num_args();
         switch(e->get_decl_kind()) {
-        case OP_AND:
+        case OP_AND: 
             for (unsigned j = 0; j < arity; ++j) {
                 expr * arg = e->get_arg(j);
                 if (is_false(arg)) {
@@ -742,7 +742,7 @@ namespace pdr {
                 set_true(e);
             }
             break;
-        case OP_OR:
+        case OP_OR: 
             for (unsigned j = 0; j < arity; ++j) {
                 expr * arg = e->get_arg(j);
                 if (is_true(arg)) {
@@ -763,7 +763,7 @@ namespace pdr {
                 set_false(e);
             }
             break;
-        case OP_NOT:
+        case OP_NOT: 
             VERIFY(m.is_not(e, arg));
             if (is_true(arg)) {
                 set_false(e);
@@ -776,7 +776,7 @@ namespace pdr {
                 set_x(e);
             }
             break;
-        case OP_IMPLIES:
+        case OP_IMPLIES: 
             VERIFY(m.is_implies(e, arg1, arg2));
             if (is_false(arg1) || is_true(arg2)) {
                 set_true(e);
@@ -792,13 +792,13 @@ namespace pdr {
                 set_x(e);
             }
             break;
-        case OP_IFF:
+        case OP_IFF: 
             VERIFY(m.is_iff(e, arg1, arg2));
             eval_eq(e, arg1, arg2);
             break;
-        case OP_ITE:
+        case OP_ITE: 
             VERIFY(m.is_ite(e, argCond, argThen, argElse));
-            if (is_true(argCond)) {
+            if (is_true(argCond)) { 
                 inherit_value(e, argThen);
             }
             else if (is_false(argCond)) {
@@ -855,23 +855,23 @@ namespace pdr {
         }
         default:
             IF_VERBOSE(0, verbose_stream() << "Term not handled " << mk_pp(e, m) << "\n";);
-            UNREACHABLE();
+            UNREACHABLE();        
         }
     }
-
+    
     bool model_evaluator::check_model(ptr_vector<expr> const& formulas) {
         ptr_vector<expr> todo(formulas);
-
+        
         while (!todo.empty()) {
             expr * curr_e = todo.back();
-
-            if (!is_app(curr_e)) {
+            
+            if (!is_app(curr_e)) { 
                 todo.pop_back();
                 continue;
             }
             app * curr = to_app(curr_e);
-
-            if (!is_unknown(curr)) {
+            
+            if (!is_unknown(curr)) { 
                 todo.pop_back();
                 continue;
             }
@@ -896,26 +896,26 @@ namespace pdr {
                 m_model->eval(curr, vl);
                 assign_value(curr, vl);
             }
-
-            IF_VERBOSE(35,verbose_stream() << "assigned "<<mk_pp(curr_e,m)
+            
+            IF_VERBOSE(35,verbose_stream() << "assigned "<<mk_pp(curr_e,m) 
                        <<(is_true(curr_e) ? "true" : is_false(curr_e) ? "false" : "unknown") << "\n";);
             SASSERT(!is_unknown(curr));
         }
-
+        
         bool has_x = false;
         for (unsigned i = 0; i < formulas.size(); ++i) {
             expr * form = formulas[i];
             SASSERT(!is_unknown(form));
-            TRACE("pdr_verbose",
+            TRACE("pdr_verbose", 
                   tout << "formula is " << (is_true(form) ? "true" : is_false(form) ? "false" : "unknown") << "\n" <<mk_pp(form, m)<< "\n";);
-
+            
             if (is_false(form)) {
                 IF_VERBOSE(0, verbose_stream() << "formula false in model: " << mk_pp(form, m) << "\n";);
                 UNREACHABLE();
             }
             if (is_x(form)) {
                 IF_VERBOSE(0, verbose_stream() << "formula undetermined in model: " << mk_pp(form, m) << "\n";);
-                TRACE("pdr", model_smt2_pp(tout, m, *m_model, 0););
+                TRACE("pdr", model_smt2_pp(tout, m, *m_model, 0);); 
                 has_x = true;
             }
         }
@@ -1024,14 +1024,14 @@ namespace pdr {
                 else {
                     conjs[i] = tmp;
                 }
-            }
+            }            
             IF_VERBOSE(2, verbose_stream() << "Deleted " << num_deleted << " disequalities " << conjs.size() << " conjuncts\n";);
         }
-        fml = m.mk_and(conjs.size(), conjs.c_ptr());
+        fml = m.mk_and(conjs.size(), conjs.c_ptr());        
     }
 
-    //
-    // (f (if c1 (if c2 e1 e2) e3) b c) ->
+    // 
+    // (f (if c1 (if c2 e1 e2) e3) b c) -> 
     // (if c1 (if c2 (f e1 b c)
 
     class ite_hoister {
@@ -1071,7 +1071,7 @@ namespace pdr {
         br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) {
             return m_r.mk_app_core(f, num, args, result);
         }
-        ite_hoister_cfg(ast_manager & m, params_ref const & p):m_r(m) {}
+        ite_hoister_cfg(ast_manager & m, params_ref const & p):m_r(m) {}        
     };
 
     class ite_hoister_star : public rewriter_tpl<ite_hoister_cfg> {
@@ -1089,7 +1089,7 @@ namespace pdr {
         ite_hoister_star ite_rw(m, p);
         expr_ref tmp(m);
         ite_rw(fml, tmp);
-        fml = tmp;
+        fml = tmp;        
     }
 
     class test_diff_logic {
@@ -1109,7 +1109,7 @@ namespace pdr {
             }
             return false;
         }
-
+        
         bool is_arith_expr(expr *e) const {
             return is_app(e) && a.get_family_id() == to_app(e)->get_family_id();
         }
@@ -1145,8 +1145,8 @@ namespace pdr {
             return !is_arith_expr(e);
         }
 
-        bool is_minus_one(expr const * e) const {
-            rational r; return a.is_numeral(e, r) && r.is_minus_one();
+        bool is_minus_one(expr const * e) const { 
+            rational r; return a.is_numeral(e, r) && r.is_minus_one(); 
         }
 
         bool test_ineq(expr* e) const {
@@ -1154,23 +1154,23 @@ namespace pdr {
             SASSERT(to_app(e)->get_num_args() == 2);
             expr * lhs = to_app(e)->get_arg(0);
             expr * rhs = to_app(e)->get_arg(1);
-            if (is_offset(lhs) && is_offset(rhs))
-                return true;
-            if (!is_numeric(rhs))
+            if (is_offset(lhs) && is_offset(rhs)) 
+                return true;    
+            if (!is_numeric(rhs)) 
                 std::swap(lhs, rhs);
-            if (!is_numeric(rhs))
-                return false;
+            if (!is_numeric(rhs)) 
+                return false;    
             // lhs can be 'x' or '(+ x (* -1 y))'
             if (is_offset(lhs))
                 return true;
             expr* arg1, *arg2;
-            if (!a.is_add(lhs, arg1, arg2))
-                return false;
+            if (!a.is_add(lhs, arg1, arg2)) 
+                return false;    
             // x
             if (m_test_for_utvpi) {
                 return is_offset(arg1) && is_offset(arg2);
             }
-            if (is_arith_expr(arg1))
+            if (is_arith_expr(arg1)) 
                 std::swap(arg1, arg2);
             if (is_arith_expr(arg1))
                 return false;
@@ -1190,8 +1190,8 @@ namespace pdr {
             if (a.is_numeral(lhs) || a.is_numeral(rhs)) {
                 return test_ineq(e);
             }
-            return
-                test_term(lhs) &&
+            return 
+                test_term(lhs) && 
                 test_term(rhs) &&
                 !a.is_mul(lhs) &&
                 !a.is_mul(rhs);
@@ -1226,12 +1226,12 @@ namespace pdr {
             }
             family_id fid = to_app(e)->get_family_id();
 
-            if (fid == null_family_id &&
-                !m.is_bool(e) &&
+            if (fid == null_family_id && 
+                !m.is_bool(e) && 
                 to_app(e)->get_num_args() > 0) {
                 return true;
             }
-            return
+            return 
                 fid != m.get_basic_family_id() &&
                 fid != null_family_id &&
                 fid != a.get_family_id() &&
@@ -1240,7 +1240,7 @@ namespace pdr {
 
     public:
         test_diff_logic(ast_manager& m): m(m), a(m), bv(m), m_is_dl(true), m_test_for_utvpi(false) {}
-
+       
         void test_for_utvpi() { m_test_for_utvpi = true; }
 
         void operator()(expr* e) {
@@ -1257,7 +1257,7 @@ namespace pdr {
                 m_is_dl = false;
             }
             else if (is_app(e)) {
-                app* a = to_app(e);
+                app* a = to_app(e);                
                 for (unsigned i = 0; m_is_dl && i < a->get_num_args(); ++i) {
                     m_is_dl = test_term(a->get_arg(i));
                 }
@@ -1280,9 +1280,9 @@ namespace pdr {
         expr_fast_mark1 mark;
         for (unsigned i = 0; i < num_fmls; ++i) {
             quick_for_each_expr(test, mark, fmls[i]);
-        }
+        } 
         return test.is_dl();
-    }
+    }  
 
     bool is_utvpi_logic(ast_manager& m, unsigned num_fmls, expr* const* fmls) {
         test_diff_logic test(m);
@@ -1290,9 +1290,9 @@ namespace pdr {
         expr_fast_mark1 mark;
         for (unsigned i = 0; i < num_fmls; ++i) {
             quick_for_each_expr(test, mark, fmls[i]);
-        }
+        } 
         return test.is_dl();
-    }
+    }  
 
     class arith_normalizer : public poly_rewriter<arith_rewriter_core> {
         ast_manager& m;
@@ -1300,7 +1300,7 @@ namespace pdr {
         enum op_kind { LE, GE, EQ };
     public:
         arith_normalizer(ast_manager& m, params_ref const& p = params_ref()): poly_rewriter<arith_rewriter_core>(m, p), m(m), m_util(m) {}
-
+        
         br_status mk_app_core(func_decl* f, unsigned num_args, expr* const* args, expr_ref& result) {
             br_status st = BR_FAILED;
             if (m.is_eq(f)) {
@@ -1320,10 +1320,10 @@ namespace pdr {
             default: st = BR_FAILED; break;
             }
             return st;
-        }
+        }      
 
     private:
-
+        
         br_status mk_eq_core(expr* arg1, expr* arg2, expr_ref& result) {
             return mk_le_ge_eq_core(arg1, arg2, EQ, result);
         }
@@ -1365,7 +1365,7 @@ namespace pdr {
             if (g.is_zero() || abs(r) < g) {
                 g = abs(r);
             }
-        }
+        }        
 
         void get_coeffs(expr* e, numeral& g) {
             rational r;
@@ -1385,7 +1385,7 @@ namespace pdr {
             SASSERT(g.is_pos());
             SASSERT(!g.is_one());
             expr_ref_vector monomes(m);
-            unsigned sz;
+            unsigned sz;           
             expr* const* args = get_monomials(e, sz);
             for (unsigned i = 0; i < sz; ++i) {
                 expr* arg = args[i];
@@ -1407,9 +1407,9 @@ namespace pdr {
             mk_add(monomes.size(), monomes.c_ptr(), result);
             return result;
         }
-
+                
     };
-
+    
 
     struct arith_normalizer_cfg: public default_rewriter_cfg {
         arith_normalizer m_r;
@@ -1417,7 +1417,7 @@ namespace pdr {
         br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) {
             return m_r.mk_app_core(f, num, args, result);
         }
-        arith_normalizer_cfg(ast_manager & m, params_ref const & p):m_r(m,p) {}
+        arith_normalizer_cfg(ast_manager & m, params_ref const & p):m_r(m,p) {}        
     };
 
     class arith_normalizer_star : public rewriter_tpl<arith_normalizer_cfg> {
@@ -1436,7 +1436,7 @@ namespace pdr {
         arith_normalizer_star rw(m, p);
         expr_ref tmp(m);
         rw(t, tmp);
-        t = tmp;
+        t = tmp;                
     }
 
 }

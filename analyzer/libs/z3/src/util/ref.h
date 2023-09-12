@@ -23,13 +23,13 @@ template<typename T>
 class ref {
     T * m_ptr;
 
-    void inc_ref() {
+    void inc_ref() { 
         if (m_ptr) {
             m_ptr->inc_ref();
         }
     }
 
-    void dec_ref() {
+    void dec_ref() { 
         if (m_ptr) {
             m_ptr->dec_ref();
         }
@@ -94,7 +94,7 @@ public:
         m_ptr = 0;
     }
 
-    T* detach() {
+    T* detach() { 
         T* tmp = m_ptr;
         m_ptr = 0;
         return tmp;

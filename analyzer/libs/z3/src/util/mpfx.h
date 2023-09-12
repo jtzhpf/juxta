@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Multi precision fixed point numbers.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-09-19
@@ -37,8 +37,8 @@ public:
         m_sign(0),
         m_sig_idx(0) {
     }
-
-    void swap(mpfx & other) {
+    
+    void swap(mpfx & other) { 
         unsigned sign    = m_sign;    m_sign    = other.m_sign;    other.m_sign = sign;
         unsigned sig_idx = m_sig_idx; m_sig_idx = other.m_sig_idx; other.m_sig_idx = sig_idx;
     }
@@ -58,7 +58,7 @@ typedef mpq_manager<false> unsynch_mpq_manager;
 class mpfx_manager {
     // Every mpfx numeral from a given mpfx_manager uses the same number of words
     // to encode the integer and fractional parts.
-    //
+    // 
     // The number of words used to encode the integer part may be different from the number of words
     // used to encode the fractional part.
     //
@@ -67,7 +67,7 @@ class mpfx_manager {
     // If the result of an operation does not fit in the integer part, then an overflow exception is thrown.
     //
     // If the fractional part uses n words, then the error of every operation is less than 1/2^(32*n).
-    //
+    // 
     // Machine integer values (int, unsigned, int64, uint64) can be easily converted into mpfx numerals.
     //
     // The result of addition and subtraction operations are always precise. Note that overflows will trigger
@@ -88,12 +88,12 @@ class mpfx_manager {
     unsigned sz(unsigned * ws) const;
 
     void ensure_capacity(unsigned sig_idx) {
-        while (sig_idx >= m_capacity)
+        while (sig_idx >= m_capacity) 
             expand();
     }
-
+    
     void expand();
-
+    
     void allocate_if_needed(mpfx & n) {
         if (n.m_sig_idx == 0)
             allocate(n);
@@ -125,11 +125,11 @@ public:
     class exception : public z3_exception {
         virtual char const * msg() const { return "multi-precision fixed point (mpfx) exception"; }
     };
-
+    
     class overflow_exception : public exception {
         virtual char const * msg() const { return "multi-precision fixed point (mpfx) overflow"; }
     };
-
+    
     class div0_exception : public exception {
         virtual char const * msg() const { return "multi-precision fixed point (mpfx) division by zero"; }
     };
@@ -141,7 +141,7 @@ public:
     void round_to_minus_inf() { m_to_plus_inf = false; }
     void set_rounding(bool to_plus_inf) { m_to_plus_inf = to_plus_inf; }
     bool rounding_to_plus_inf() const { return m_to_plus_inf; }
-
+    
     /**
        \brief Return true if n is negative
     */
@@ -156,7 +156,7 @@ public:
        \brief Return true if n is an integer.
     */
     bool is_int(mpfx const & n) const;
-
+    
     /**
        \brief Return true if n is zero.
     */
@@ -176,7 +176,7 @@ public:
        \brief Return true if n is non positive.
     */
     static bool is_nonpos(mpfx const & n) { return !is_pos(n); }
-
+    
     /**
        \brief Return true if n is non negative.
     */
@@ -186,7 +186,7 @@ public:
        \brief Return true if the absolute value of n is 1.
      */
     bool is_abs_one(mpfx const & n) const;
-
+    
     /**
        \brief Return true if n is one.
     */
@@ -206,12 +206,12 @@ public:
        \brief Return true if \c a is a non-negative integer and fits in an int64 machine integer.
     */
     bool is_uint64(mpfx const & a) const;
-
+    
     /**
        \brief Delete the resources associated with n.
     */
     void del(mpfx & n);
-
+    
     /**
        \brief a <- -a
     */
@@ -251,7 +251,7 @@ public:
 
     /**
        \brief c <- a / b
-
+       
        \pre !is_zero(b)
     */
     void div(mpfx const & a, mpfx const & b, mpfx & c);
@@ -268,7 +268,7 @@ public:
        \brief a <- a/2^k
     */
     void div2k(mpfx & a, unsigned k);
-
+    
     /**
        \brief b <- a/2^k
     */
@@ -288,13 +288,13 @@ public:
        \brief b <- a^k
     */
     void power(mpfx const & a, unsigned k, mpfx & b);
-
+    
     /**
        \brief Return true if \c a is a power of 2. That is, a is equal to 2^k for some k >= 0.
     */
     bool is_power_of_two(mpfx const & a, unsigned & k) const;
     bool is_power_of_two(mpfx const & a) const;
-
+    
     bool eq(mpfx const & a, mpfx const & b) const;
     bool neq(mpfx const & a, mpfx const & b) const { return !eq(a, b); }
     bool lt(mpfx const & a, mpfx const & b) const;
@@ -310,20 +310,20 @@ public:
     void set(mpfx & n, int64 num, uint64 den);
     void set(mpfx & n, mpfx const & v);
     void set(mpfx & n, unsynch_mpz_manager & m, mpz const & v);
-    void set(mpfx & n, synch_mpz_manager & m, mpz const & v);
+    void set(mpfx & n, synch_mpz_manager & m, mpz const & v); 
     void set(mpfx & n, unsynch_mpq_manager & m, mpq const & v);
     void set(mpfx & n, synch_mpq_manager & m, mpq const & v);
 
-    /**
+    /** 
         \brief Set n to the smallest representable numeral greater than zero.
     */
     void set_plus_epsilon(mpfx & n);
 
-    /**
+    /** 
         \brief Set n to the greatest representable numeral less than zero.
     */
     void set_minus_epsilon(mpfx & n);
-
+    
     /**
        \brief n <- floor(n)
     */
@@ -352,14 +352,14 @@ public:
 
     /**
        \brief Convert n into a mpz numeral.
-
+       
        \pre is_int(n)
     */
     void to_mpz(mpfx const & n, unsynch_mpz_manager & m, mpz & t);
 
     /**
        \brief Convert n into a mpz numeral.
-
+       
        \pre is_int(n)
     */
     void to_mpz(mpfx const & n, synch_mpz_manager & m, mpz & t);
@@ -376,7 +376,7 @@ public:
 
     /**
        \brief Return the biggest k s.t. 2^k <= a.
-
+       
        \remark Return 0 if a is not positive.
     */
     unsigned prev_power_of_two(mpfx const & a);

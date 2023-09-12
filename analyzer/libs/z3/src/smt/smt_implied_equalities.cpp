@@ -33,7 +33,7 @@ Revision History:
 namespace smt {
 
     class get_implied_equalities_impl {
-
+        
         ast_manager&                       m;
         solver&                            m_solver;
         union_find_default_ctx             m_df;
@@ -44,17 +44,17 @@ namespace smt {
         stopwatch                          m_stats_val_eq_timer;
         static stopwatch                   s_timer;
         static stopwatch                   s_stats_val_eq_timer;
-
+                
         struct term_id {
             expr_ref term;
             unsigned id;
             term_id(expr_ref t, unsigned id): term(t), id(id) {}
         };
-
+        
         typedef vector<term_id> term_ids;
-
+        
         typedef obj_map<sort, term_ids> sort2term_ids; // partition of terms by sort.
-
+        
         void partition_terms(unsigned num_terms, expr* const* terms, sort2term_ids& termids) {
             for (unsigned i = 0; i < num_terms; ++i) {
                 sort* s = m.get_sort(terms[i]);
@@ -62,15 +62,15 @@ namespace smt {
                 vec.push_back(term_id(expr_ref(terms[i],m), i));
             }
         }
-
+        
         /**
            \brief Basic implied equalities method.
            It performs a simple N^2 loop over all pairs of terms.
 
-           n1, .., n_k,
+           n1, .., n_k, 
            t1, .., t_l
         */
-
+        
         void get_implied_equalities_filter_basic(uint_set const& non_values, term_ids& terms) {
             m_stats_timer.start();
             uint_set root_indices;
@@ -106,7 +106,7 @@ namespace smt {
                         }
                     }
                 }
-            }
+            }            
             m_stats_timer.stop();
         }
 
@@ -130,26 +130,26 @@ namespace smt {
                     if (is_eq) {
                         m_uf.merge(terms[i].id, terms[j].id);
                         break;
-                    }
+                    }                    
                 }
             }
-        }
-
+        }                
+        
         /**
            \brief Extract implied equalities for a collection of terms in the current context.
-
-           The routine relies on model values being unique for equal terms.
+           
+           The routine relies on model values being unique for equal terms.           
            So in particular, arrays that are equal should be canonized to the same value.
            This is not the case for Z3's models of arrays.
            Arrays are treated by extensionality: introduce a fresh index and compare
            the select of the arrays.
         */
         void get_implied_equalities_model_based(model_ref& model, term_ids& terms) {
-
+            
             SASSERT(!terms.empty());
 
             sort* srt = m.get_sort(terms[0].term);
-
+                       
             if (m_array_util.is_array(srt)) {
 
                 m_solver.push();
@@ -177,7 +177,7 @@ namespace smt {
             }
 
             uint_set non_values;
-
+            
             if (!is_value_sort(m, srt)) {
                 for (unsigned i = 0; i < terms.size(); ++i) {
                     non_values.insert(i);
@@ -186,11 +186,11 @@ namespace smt {
                 //get_implied_equalities_basic(terms);
                 return;
             }
-
+            
             expr_ref_vector vals(m);
             expr_ref vl(m), eq(m);
             obj_map<expr, unsigned_vector>  vals_map;
-
+            
             m_stats_val_eq_timer.start();
             s_stats_val_eq_timer.start();
 
@@ -241,20 +241,20 @@ namespace smt {
             }
         }
 
-
+        
         void get_implied_equalities_core(model_ref& model, term_ids& terms) {
             get_implied_equalities_model_based(model, terms);
             //get_implied_equalities_basic(terms);
         }
-
+        
 
         void assert_relevant(unsigned num_terms, expr* const* terms) {
-            for (unsigned i = 0; i < num_terms; ++i) {
+            for (unsigned i = 0; i < num_terms; ++i) {                
                 sort* srt = m.get_sort(terms[i]);
                 if (!m_array_util.is_array(srt)) {
                     m_solver.assert_expr(m.mk_app(m.mk_func_decl(symbol("Relevant!"), 1, &srt, m.mk_bool_sort()), terms[i]));
                 }
-            }
+            }            
         }
 
         void assert_relevant(term_ids& terms) {
@@ -272,10 +272,10 @@ namespace smt {
             while (m.is_ite(vl, c, e1, e2)) {
                 lbool r = reduce_cond(model, c);
                 switch(r) {
-                case l_true:
+                case l_true: 
                     vl = e1;
                     break;
-                case l_false:
+                case l_false: 
                     vl = e2;
                     break;
                 default:
@@ -306,21 +306,21 @@ namespace smt {
                         }
                     }
                     func_entry* h2 = fi2->get_entry(h1->get_args());
-                    if (h2 &&
+                    if (h2 && 
                         h1->get_result() != h2->get_result() &&
                         m.is_value(h1->get_result()) &&
                         m.is_value(h2->get_result())) {
                         return l_false;
                     }
-                }
+                }                               
             }
             return l_undef;
         }
 
     public:
-
+        
         get_implied_equalities_impl(ast_manager& m, solver& s) : m(m), m_solver(s), m_uf(m_df), m_array_util(m), m_stats_calls(0) {}
-
+        
         lbool operator()(unsigned num_terms, expr* const* terms, unsigned* class_ids) {
             params_ref p;
             p.set_bool("produce_models", true);
@@ -337,17 +337,17 @@ namespace smt {
             m_solver.push();
             assert_relevant(num_terms, terms);
             lbool is_sat = m_solver.check_sat(0,0);
-
-            if (is_sat != l_false) {
+            
+            if (is_sat != l_false) {      
                 model_ref model;
                 m_solver.get_model(model);
                 SASSERT(model.get());
-
+                  
                 partition_terms(num_terms, terms, termids);
                 sort2term_ids::iterator it = termids.begin(), end = termids.end();
                 for (; it != end; ++it) {
                     term_ids& term_ids = it->m_value;
-                    get_implied_equalities_core(model, term_ids);
+                    get_implied_equalities_core(model, term_ids);                
                     for (unsigned i = 0; i < term_ids.size(); ++i) {
                         class_ids[term_ids[i].id] = m_uf.find(term_ids[i].id);
                     }
@@ -360,9 +360,9 @@ namespace smt {
             m_solver.pop(1);
             timer.stop();
             s_timer.stop();
-            IF_VERBOSE(1, verbose_stream()  << s_timer.get_seconds() << "\t" << num_terms << "\t"
-                       << timer.get_seconds()   << "\t" << m_stats_calls << "\t"
-                       << m_stats_timer.get_seconds() << "\t"
+            IF_VERBOSE(1, verbose_stream()  << s_timer.get_seconds() << "\t" << num_terms << "\t" 
+                       << timer.get_seconds()   << "\t" << m_stats_calls << "\t" 
+                       << m_stats_timer.get_seconds() << "\t" 
                        << m_stats_val_eq_timer.get_seconds() << "\t"
                        << s_stats_val_eq_timer.get_seconds() << "\n";);
             return is_sat;
@@ -372,7 +372,7 @@ namespace smt {
     stopwatch get_implied_equalities_impl::s_timer;
     stopwatch get_implied_equalities_impl::s_stats_val_eq_timer;
 
-    lbool implied_equalities(ast_manager& m, solver& solver, unsigned num_terms, expr* const* terms, unsigned* class_ids) {
+    lbool implied_equalities(ast_manager& m, solver& solver, unsigned num_terms, expr* const* terms, unsigned* class_ids) {        
         get_implied_equalities_impl gi(m, solver);
         return gi(num_terms, terms, class_ids);
     }
@@ -403,22 +403,22 @@ namespace smt {
         union_find<union_find_default_ctx> m_uf;
         obj_map<expr,unsigned>             m_term2idx;
         ptr_vector<expr>                   m_idx2term;
-
+        
     public:
         term_equivs(): m_uf(m_df) {}
-
+        
         void merge(expr* t, expr* s) {
             m_uf.merge(var(t), var(s));
         }
     private:
         unsigned var(expr* t) {
             map::obj_map_entry* e = m_term2idx.insert_if_not_there(t, m_idx2term.size());
-            unsigned idx = e->get_data().m_value;
+            unsigned idx = e->get_data().m_value; 
             if (idx == m_idx2term.size()) {
                 m_idx2term.push_back(t);
             }
             return idx;
-        }
+        }            
     };
 
     /**
@@ -427,7 +427,7 @@ namespace smt {
        It implements the following half-naive algorithm.
        The algorithm is half-naive because the terms being checked for equivalence class membership
        are foreign and it is up to the theory integration whether pairs of interface equalities
-       are checked. The idea is that the model-based combination would avoid useless equality literals
+       are checked. The idea is that the model-based combination would avoid useless equality literals 
        in the core.
        An alternative algorithm could use 'distinct' and an efficient solver for 'distinct'.
 
@@ -440,10 +440,10 @@ namespace smt {
        - for i = m to 2 do:
        -   Let A = A_i B = A_{i-1}
        -   assert g(A) = 0, g(B) = 1
-       -   find MAX-SAT set C over this constraint.
-       -   For each element t from A\C
+       -   find MAX-SAT set C over this constraint. 
+       -   For each element t from A\C 
        -           check if g(t) = 0 and g(B) = 1 is unsat
-       -           minimize core, if there is pair such that
+       -           minimize core, if there is pair such that 
        -           g(t) = 0, g(b) = 1 is unsat, then equality is forced.
     */
 
@@ -471,7 +471,7 @@ namespace smt {
             symbol f("f"), g("g");
             unsigned log_terms = 1, nt = num_terms;
             while (nt > 0) { log_terms++; nt /= 2; }
-
+            
             bv = m_bv.mk_bv_sort(log_terms);
             for (unsigned i = 0; i < num_terms; ++i) {
                 expr* t = terms[i];
@@ -485,21 +485,21 @@ namespace smt {
             }
         }
 
-        //
+        // 
         // For each t in src, check if t can be different from all s in dst.
         // - if it can, then add t to dst.
         // - if it cannot, then record equivalence class.
-        //
+        // 
         void merge_classes(expr_ref_vector& src, expr_ref_vector& dst, equivs& eqs) {
-
+            
         }
     };
 
     lbool implied_equalities_core_based(
         solver& solver,
-        unsigned num_terms, expr* const* terms,
-        unsigned* class_ids,
-        unsigned num_assumptions, expr * const * assumptions) {
+        unsigned num_terms, expr* const* terms, 
+        unsigned* class_ids,            
+        unsigned num_assumptions, expr * const * assumptions) {        
         implied_equalities_finder ief(solver);
 
         solver.push();
@@ -514,7 +514,7 @@ namespace smt {
 
         /**
            \brief Extract implied equalities for a collection of terms in the current context.
-
+           
            The routine uses a partition refinement approach.
            It assumes that all terms have the same sort.
 
@@ -525,16 +525,16 @@ namespace smt {
            if it is unsat, then all terms are equal.
            Otherwise, partition the terms by the equalities that are true in the current model,
            iterate.
+           
 
-
-           This version does not attempt to be economical on how many equalities are introduced and the
+           This version does not attempt to be economical on how many equalities are introduced and the 
            size of the resulting clauses. The more advanced version of this approach re-uses
            equalities from a previous iteration and also represents a binary tree of propositional variables
            that cover multiple equalities. Eg.,
 
                  E_12 => E_1 & E_2,   E_34 => E_3 & E_4, ...
-
-
+           
+           
         */
 
         void get_implied_equalities_eq_based(term_ids& terms) {
@@ -563,7 +563,7 @@ namespace smt {
                     expr_ref vl(m);
                     model->eval(terms[i].term, vl);
                     if (m.is_false(vl)) {
-
+                        
                     }
                 }
                 break;
@@ -572,10 +572,10 @@ namespace smt {
             m_solver.pop(1);
         }
 
-
+    
 #endif
+   
 
-
-
+ 
 
 

@@ -71,12 +71,12 @@ bool is_debug_enabled(const char * tag);
 #define VERIFY(_x_) if (!(_x_)) {                               \
         std::cerr << "Failed to verify: " << #_x_ << "\n";      \
         UNREACHABLE();                                          \
-    }
+    }                                                           
 #else
 #define VERIFY(_x_) (void)(_x_)
 #endif
 
-#define MAKE_NAME2(LINE) zofty_ ## LINE
+#define MAKE_NAME2(LINE) zofty_ ## LINE 
 #define MAKE_NAME(LINE) MAKE_NAME2(LINE)
 #define DBG_UNIQUE_NAME MAKE_NAME(__LINE__)
 #ifdef __GNUC__

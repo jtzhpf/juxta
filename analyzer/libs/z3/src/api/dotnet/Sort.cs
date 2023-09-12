@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -33,7 +33,7 @@ namespace Microsoft.Z3
         /// </summary>
         /// <param name="a">A Sort</param>
         /// <param name="b">A Sort</param>
-        /// <returns>True if <paramref name="a"/> and <paramref name="b"/> are from the same context
+        /// <returns>True if <paramref name="a"/> and <paramref name="b"/> are from the same context 
         /// and represent the same sort; false otherwise.</returns>
         public static bool operator ==(Sort a, Sort b)
         {
@@ -49,7 +49,7 @@ namespace Microsoft.Z3
         /// </summary>
         /// <param name="a">A Sort</param>
         /// <param name="b">A Sort</param>
-        /// <returns>True if <paramref name="a"/> and <paramref name="b"/> are not from the same context
+        /// <returns>True if <paramref name="a"/> and <paramref name="b"/> are not from the same context 
         /// or represent different sorts; false otherwise.</returns>
         public static bool operator !=(Sort a, Sort b)
         {
@@ -151,5 +151,5 @@ namespace Microsoft.Z3
             }
         }
         #endregion
-    }
+    }    
 }

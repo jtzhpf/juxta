@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Version of flet using "omp critical" directive.
-
+    
     Warning: it uses omp critical section "critical_flet"
 
 Author:

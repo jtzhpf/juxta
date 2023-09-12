@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-20
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -54,7 +54,7 @@ namespace Microsoft.Z3
         public void Add(Symbol name, double value)
         {
             Contract.Requires(name != null);
-
+            
             Native.Z3_params_set_double(Context.nCtx, NativeObject, name.NativeObject, value);
         }
 
@@ -149,7 +149,7 @@ namespace Microsoft.Z3
             {
                 Native.Z3_params_dec_ref(ctx.nCtx, obj);
             }
-        };
+        };        
 
         internal override void IncRef(IntPtr o)
         {

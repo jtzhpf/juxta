@@ -9,7 +9,7 @@ Abstract:
 
     Fix a difference logic variable to 0.
     If the problem is in the difference logic fragment, that is, all arithmetic terms
-    are of the form (x + k), and the arithmetic atoms are of the
+    are of the form (x + k), and the arithmetic atoms are of the 
     form x - y <= k or x - y = k. Then, we can set one variable to 0.
 
     This is useful because, many bounds can be exposed after this operation is performed.
@@ -43,12 +43,12 @@ class fix_dl_var_tactic : public tactic {
             m(u.get_manager()),
             m_util(u) {
         }
-
+        
         void throw_failed(expr * ctx1, expr * ctx2 = 0) {
             TRACE("fix_dl_var", tout << mk_ismt2_pp(ctx1, m) << "\n"; if (ctx2) tout << mk_ismt2_pp(ctx2, m) << "\n";);
             throw failed();
         }
-
+        
         bool is_arith(expr * n) {
             sort * s = m.get_sort(n);
             return s->get_family_id() == m_util.get_family_id();
@@ -60,10 +60,10 @@ class fix_dl_var_tactic : public tactic {
 
         // Remark: we say an expression is nested, if it occurs inside the boolean structure of the formula.
         // That is, the expression is not part of an unit clause comprising of a single inequality/equality.
-
+        
         void inc_occ(expr * n, bool nested) {
             if (is_uninterp_const(n) && is_arith(n)) {
-                obj_map<app, unsigned>::obj_map_entry * entry = m_occs.insert_if_not_there2(to_app(n), 0);
+                obj_map<app, unsigned>::obj_map_entry * entry = m_occs.insert_if_not_there2(to_app(n), 0); 
                 entry->get_data().m_value++;
 
                 if (!nested) {
@@ -80,7 +80,7 @@ class fix_dl_var_tactic : public tactic {
                 m_todo.push_back(n);
             }
         }
-
+        
         void process_app(app * t) {
             unsigned num = t->get_num_args();
             for (unsigned i = 0; i < num; i++)
@@ -96,10 +96,10 @@ class fix_dl_var_tactic : public tactic {
 
             if (m_util.is_numeral(lhs))
                 std::swap(lhs, rhs);
-
+            
             if (!m_util.is_numeral(rhs))
                 throw_failed(lhs, rhs);
-
+            
             expr * t, * ms, * s;
             // check if lhs is of the form: (+ t (* (- 1) s))
             if (m_util.is_add(lhs, t, ms) && m_util.is_times_minus_one(ms, s) && is_uninterp(t) && is_uninterp(s)) {
@@ -147,7 +147,7 @@ class fix_dl_var_tactic : public tactic {
         void process(expr * n) {
             if (m_visited->is_marked(n))
                 return;
-
+            
             while (m.is_not(n, n))
                 ;
 
@@ -155,19 +155,19 @@ class fix_dl_var_tactic : public tactic {
                 process_arith(to_app(n), false);
                 return;
             }
-
+            
             m_todo.push_back(n);
             m_visited->mark(n);
 
             while (!m_todo.empty()) {
                 expr * n = m_todo.back();
                 m_todo.pop_back();
-
+                
                 if (!is_app(n))
                     throw_failed(n);
-
+                
                 app * t = to_app(n);
-
+                
                 if (m.is_eq(t))
                     process_eq(t, true);
                 else if (t->get_family_id() ==  m_util.get_family_id())
@@ -201,7 +201,7 @@ class fix_dl_var_tactic : public tactic {
             app * r1, * r2;
             r1 = most_occs(m_non_nested_occs, best1);
             r2 = most_occs(m_occs, best2);
-            TRACE("fix_dl_var_choice",
+            TRACE("fix_dl_var_choice", 
                   if (r1) {
                       tout << "r1 occs: " << best1 << "\n";
                       tout << mk_ismt2_pp(r1, m) << "\n";
@@ -237,24 +237,24 @@ class fix_dl_var_tactic : public tactic {
         arith_util    u;
         th_rewriter   m_rw;
         bool          m_produce_models;
-
+        
         imp(ast_manager & _m, params_ref const & p):
             m(_m),
             u(m),
             m_rw(m, p) {
         }
-
+        
         void updt_params(params_ref const & p) {
             m_rw.updt_params(p);
         }
-
+        
         void set_cancel(bool f) {
             m_rw.set_cancel(f);
         }
-
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -267,18 +267,18 @@ class fix_dl_var_tactic : public tactic {
             if (var != 0) {
                 IF_VERBOSE(TACTIC_VERBOSITY_LVL, verbose_stream() << "(fixing-at-zero " << var->get_decl()->get_name() << ")\n";);
                 tactic_report report("fix-dl-var", *g);
-
+                
                 expr_substitution subst(m);
                 app * zero = u.mk_numeral(rational(0), u.is_int(var));
                 subst.insert(var, zero);
                 m_rw.set_substitution(&subst);
-
+            
                 if (m_produce_models) {
                     extension_model_converter * _mc = alloc(extension_model_converter, m);
                     _mc->insert(var->get_decl(), zero);
                     mc = _mc;
                 }
-
+                
                 expr_ref   new_curr(m);
                 proof_ref  new_pr(m);
                 unsigned size = g->size();
@@ -298,7 +298,7 @@ class fix_dl_var_tactic : public tactic {
             SASSERT(g->is_well_sorted());
         }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
 public:
@@ -310,7 +310,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(fix_dl_var_tactic, m, m_params);
     }
-
+        
     virtual ~fix_dl_var_tactic() {
         dealloc(m_imp);
     }
@@ -323,10 +323,10 @@ public:
     virtual void collect_param_descrs(param_descrs & r) {
         th_rewriter::get_param_descrs(r);
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         try {
@@ -336,7 +336,7 @@ public:
             throw tactic_exception(ex.msg());
         }
     }
-
+    
     virtual void cleanup() {
         imp * d = alloc(imp, m_imp->m, m_params);
         #pragma omp critical (tactic_cancel)

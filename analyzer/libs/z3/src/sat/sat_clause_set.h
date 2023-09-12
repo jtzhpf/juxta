@@ -24,15 +24,15 @@ Revision History:
 namespace sat {
 
     class clause_set {
-        unsigned_vector m_id2pos;
+        unsigned_vector m_id2pos; 
         clause_vector   m_set;
     public:
         typedef clause_vector::const_iterator iterator;
 
-        bool contains(clause const & cls) const {
-            if (cls.id() >= m_id2pos.size())
-                return false;
-            return m_id2pos[cls.id()] != UINT_MAX;
+        bool contains(clause const & cls) const { 
+            if (cls.id() >= m_id2pos.size()) 
+                return false; 
+            return m_id2pos[cls.id()] != UINT_MAX; 
         }
         bool empty() const { return m_set.empty(); }
         unsigned size() const { return m_set.size(); }
@@ -50,7 +50,7 @@ namespace sat {
 
         bool check_invariant() const;
     };
-
+    
 };
 
 #endif

@@ -163,7 +163,7 @@ namespace smt {
         for (unsigned r_id = 0; r_id < num; r_id++) {
             row const & r = m_rows[r_id];
             if (r.m_base_var != null_theory_var) {
-                if (is_one_minus_one_row(r))
+                if (is_one_minus_one_row(r)) 
                     num_trivial++;
                 else
                     display_row_shape(out, r);
@@ -185,7 +185,7 @@ namespace smt {
                         numeral const & c = it->m_coeff;
                         if (c.to_rational().is_big()) {
                             std::string str = c.to_rational().to_string();
-                            if (str.length() > 48)
+                            if (str.length() > 48) 
                                 out << str << "\n";
                         }
                     }
@@ -280,7 +280,7 @@ namespace smt {
         display_row(out, r, true);
         typename vector<row_entry>::const_iterator it  = r.begin_entries();
         typename vector<row_entry>::const_iterator end = r.end_entries();
-        for (; it != end; ++it)
+        for (; it != end; ++it) 
             if (!it->is_dead())
                 display_var(out, it->m_var);
     }
@@ -302,7 +302,7 @@ namespace smt {
             theory_var v      = it->m_var;
             numeral const & c = it->m_coeff;
             if (is_fixed(v)) {
-                k += c * lower_bound(v).get_rational();
+                k += c * lower_bound(v).get_rational(); 
                 continue;
             }
             if (!c.is_int())
@@ -324,7 +324,7 @@ namespace smt {
         if (has_rat_coeff) {
             typename vector<row_entry>::const_iterator it  = r.begin_entries();
             typename vector<row_entry>::const_iterator end = r.end_entries();
-            for (; it != end; ++it)
+            for (; it != end; ++it) 
                 if (!it->is_dead() && (is_base(it->m_var) || (!is_fixed(it->m_var) && (lower(it->m_var) || upper(it->m_var)))))
                     display_var(out, it->m_var);
         }
@@ -412,14 +412,14 @@ namespace smt {
         out << "asserted atoms:\n";
         for (unsigned i = 0; i < m_asserted_qhead; i++) {
             bound * b = m_asserted_bounds[i];
-            if (b->is_atom())
+            if (b->is_atom()) 
                 display_atom(out, static_cast<atom*>(b), true);
         }
         if (m_asserted_qhead < m_asserted_bounds.size()) {
             out << "delayed atoms:\n";
             for (unsigned i = m_asserted_qhead; i < m_asserted_bounds.size(); i++) {
                 bound * b = m_asserted_bounds[i];
-                if (b->is_atom())
+                if (b->is_atom()) 
                     display_atom(out, static_cast<atom*>(b), true);
             }
         }
@@ -431,9 +431,9 @@ namespace smt {
         numeral const & k = a->get_k();
         enode *         e = get_enode(v);
         if (show_sign) {
-            if (!a->is_true())
+            if (!a->is_true()) 
                 out << "not ";
-            else
+            else 
                 out << "    ";
         }
         out << "v";

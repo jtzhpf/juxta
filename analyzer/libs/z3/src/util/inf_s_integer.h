@@ -30,7 +30,7 @@ class inf_s_integer {
     int m_second;
  public:
 
-    unsigned hash() const {
+    unsigned hash() const { 
         return m_first ^ (m_second + 1);
     }
 
@@ -38,7 +38,7 @@ class inf_s_integer {
 
     struct eq_proc { bool operator()(inf_s_integer const& r1, inf_s_integer const& r2) const { return r1 == r2; } };
 
-    void swap(inf_s_integer & n) {
+    void swap(inf_s_integer & n) { 
         std::swap(m_first, n.m_first);
         std::swap(m_second, n.m_second);
     }
@@ -56,7 +56,7 @@ class inf_s_integer {
     explicit inf_s_integer(rational const& r):m_first(static_cast<int>(r.get_int64())), m_second(0) {}
     inf_s_integer(s_integer const& r, s_integer const& i):m_first(r.get_int()), m_second(i.get_int()) {}
     void reset() { m_first = 0; m_second = 0; }
-    bool is_int() const { return m_second == 0; }
+    bool is_int() const { return m_second == 0; } 
     bool is_int64() const { return m_second == 0; }
     bool is_uint64() const { return m_second == 0; }
     bool is_rational() const { return m_second == 0; }
@@ -64,7 +64,7 @@ class inf_s_integer {
     uint64 get_uint64() const { return m_first; }
     s_integer get_rational() const { return s_integer(m_first); }
     s_integer get_infinitesimal() const { return s_integer(m_second); }
-    inf_s_integer & operator=(const inf_s_integer & r) {
+    inf_s_integer & operator=(const inf_s_integer & r) { 
         m_first = r.m_first;
         m_second = r.m_second;
 	return *this;
@@ -87,30 +87,30 @@ class inf_s_integer {
         SASSERT(r.m_second == 0);
         return inf_s_integer(1);
     }
-    inf_s_integer & operator+=(const inf_s_integer & r) {
+    inf_s_integer & operator+=(const inf_s_integer & r) { 
         m_first  += r.m_first;
         m_second += r.m_second;
-	return *this;
+	return *this; 
     }
-    inf_s_integer & operator-=(const inf_s_integer & r) {
+    inf_s_integer & operator-=(const inf_s_integer & r) { 
         m_first  -= r.m_first;
         m_second -= r.m_second;
-	return *this;
+	return *this; 
     }
-    inf_s_integer & operator+=(const s_integer & r) {
+    inf_s_integer & operator+=(const s_integer & r) { 
         m_first  += r.get_int();
-	return *this;
+	return *this; 
     }
-    inf_s_integer & operator-=(const s_integer & r) {
+    inf_s_integer & operator-=(const s_integer & r) { 
         m_first  -= r.get_int();
-	return *this;
+	return *this; 
     }
     inf_s_integer & operator*=(const s_integer & r1) {
         m_first  *= r1.get_int();
         m_second *= r1.get_int();
         return *this;
     }
-
+    
 //     friend inf_s_integer inf_mult(inf_s_integer const& r1, inf_s_integer const& r2);
 //     friend inf_s_integer sup_mult(inf_s_integer const& r1, inf_s_integer const& r2);
 
@@ -138,7 +138,7 @@ class inf_s_integer {
     }
 
     const inf_s_integer operator++(int) { inf_s_integer tmp(*this); ++(*this); return tmp; }
-
+  
     inf_s_integer & operator--() {
         --m_first;
         return *this;
@@ -158,20 +158,20 @@ class inf_s_integer {
         return r1.m_first == r2.get_int() && r1.m_second == 0;
     }
 
-    friend inline bool operator<(const inf_s_integer & r1, const inf_s_integer & r2) {
-        return
+    friend inline bool operator<(const inf_s_integer & r1, const inf_s_integer & r2) { 
+        return 
             (r1.m_first < r2.m_first) ||
             (r1.m_first == r2.m_first && r1.m_second < r2.m_second);
     }
 
-    friend inline bool operator<(const s_integer & r1, const inf_s_integer & r2) {
-        return
+    friend inline bool operator<(const s_integer & r1, const inf_s_integer & r2) { 
+        return 
             (r1.get_int() < r2.m_first) ||
             (r1.get_int() == r2.m_first && r2.m_second > 0);
     }
 
-    friend inline bool operator<(const inf_s_integer & r1, const s_integer & r2) {
-        return
+    friend inline bool operator<(const inf_s_integer & r1, const s_integer & r2) { 
+        return 
             (r1.m_first < r2.get_int()) ||
             (r1.m_first == r2.get_int() && r1.m_second < 0);
     }
@@ -196,7 +196,7 @@ class inf_s_integer {
     bool is_neg() const {
         return m_first < 0 || (m_first == 0 && m_second < 0);
     }
-
+    
     bool is_pos() const {
         return m_first > 0 || (m_first == 0 && m_second > 0);
     }
@@ -262,66 +262,66 @@ class inf_s_integer {
 
 };
 
-inline bool operator!=(const inf_s_integer & r1, const inf_s_integer & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const inf_s_integer & r1, const inf_s_integer & r2) { 
+    return !operator==(r1, r2); 
 }
 
-inline bool operator!=(const s_integer & r1, const inf_s_integer & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const s_integer & r1, const inf_s_integer & r2) { 
+    return !operator==(r1, r2); 
 }
 
-inline bool operator!=(const inf_s_integer & r1, const s_integer & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const inf_s_integer & r1, const s_integer & r2) { 
+    return !operator==(r1, r2); 
 }
 
-inline bool operator>(const inf_s_integer & r1, const inf_s_integer & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const inf_s_integer & r1, const inf_s_integer & r2) { 
+    return operator<(r2, r1); 
 }
 
-inline bool operator>(const inf_s_integer & r1, const s_integer & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const inf_s_integer & r1, const s_integer & r2) { 
+    return operator<(r2, r1); 
 }
 
-inline bool operator>(const s_integer & r1, const inf_s_integer & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const s_integer & r1, const inf_s_integer & r2) { 
+    return operator<(r2, r1); 
 }
 
-inline bool operator<=(const inf_s_integer & r1, const inf_s_integer & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const inf_s_integer & r1, const inf_s_integer & r2) { 
+    return !operator>(r1, r2); 
 }
 
-inline bool operator<=(const s_integer & r1, const inf_s_integer & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const s_integer & r1, const inf_s_integer & r2) { 
+    return !operator>(r1, r2); 
 }
 
-inline bool operator<=(const inf_s_integer & r1, const s_integer & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const inf_s_integer & r1, const s_integer & r2) { 
+    return !operator>(r1, r2); 
 }
 
-inline bool operator>=(const inf_s_integer & r1, const inf_s_integer & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const inf_s_integer & r1, const inf_s_integer & r2) { 
+    return !operator<(r1, r2); 
 }
 
-inline bool operator>=(const s_integer & r1, const inf_s_integer & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const s_integer & r1, const inf_s_integer & r2) { 
+    return !operator<(r1, r2); 
 }
 
-inline bool operator>=(const inf_s_integer & r1, const s_integer & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const inf_s_integer & r1, const s_integer & r2) { 
+    return !operator<(r1, r2); 
 }
 
-inline inf_s_integer operator+(const inf_s_integer & r1, const inf_s_integer & r2) {
-    return inf_s_integer(r1) += r2;
+inline inf_s_integer operator+(const inf_s_integer & r1, const inf_s_integer & r2) { 
+    return inf_s_integer(r1) += r2; 
 }
 
-inline inf_s_integer operator-(const inf_s_integer & r1, const inf_s_integer & r2) {
-    return inf_s_integer(r1) -= r2;
+inline inf_s_integer operator-(const inf_s_integer & r1, const inf_s_integer & r2) { 
+    return inf_s_integer(r1) -= r2; 
 }
 
-inline inf_s_integer operator-(const inf_s_integer & r) {
-    inf_s_integer result(r);
-    result.neg();
-    return result;
+inline inf_s_integer operator-(const inf_s_integer & r) { 
+    inf_s_integer result(r); 
+    result.neg(); 
+    return result; 
 }
 
 inline inf_s_integer operator*(const s_integer & r1, const inf_s_integer & r2) {

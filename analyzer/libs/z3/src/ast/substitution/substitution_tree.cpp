@@ -64,7 +64,7 @@ inline void substitution_tree::erase_reg_from_todo(unsigned ridx) {
      m_registers[3] = (f (g a))
      m_registers[4] = b
      next_regs are 5 6 7
-
+     
      result:
      #3 -> (f #5); #4 -> b; #5 -> (g #6); #6 -> a
 */
@@ -106,7 +106,7 @@ void substitution_tree::linearize(svector<subst> & result) {
    If save_set_registers == true, then r_i's are stored in m_to_reset.
 */
 void substitution_tree::process_args(app * in, app * out) {
-    CTRACE("subst_tree_bug", in->get_num_args() != out->get_num_args(), tout << mk_ismt2_pp(in, m_manager) << "\n"
+    CTRACE("subst_tree_bug", in->get_num_args() != out->get_num_args(), tout << mk_ismt2_pp(in, m_manager) << "\n" 
            << mk_ismt2_pp(out, m_manager) << "\n";);
     unsigned num = out->get_num_args();
     for (unsigned i = 0; i < num; i++) {
@@ -219,7 +219,7 @@ substitution_tree::node * substitution_tree::mk_node_for(expr * new_expr) {
    \brief Mark register ridx as used.
 */
 void substitution_tree::mark_used_reg(unsigned ridx) {
-    if (ridx >= m_used_regs.size())
+    if (ridx >= m_used_regs.size()) 
         m_used_regs.resize(ridx+1);
     m_used_regs.set(ridx);
 }
@@ -275,8 +275,8 @@ void substitution_tree::insert(app * new_expr) {
 
     func_decl * d = new_expr->get_decl();
     unsigned id   = d->get_decl_id();
-
-    if (id >= m_roots.size())
+    
+    if (id >= m_roots.size()) 
         m_roots.resize(id+1, 0);
 
     if (!m_roots[id]) {
@@ -288,7 +288,7 @@ void substitution_tree::insert(app * new_expr) {
     }
 
     node * r = m_roots[id];
-
+    
     while (true) {
         m_compatible.reset();
         m_incompatible.reset();
@@ -357,7 +357,7 @@ void substitution_tree::insert(app * new_expr) {
             mark_used_regs(m_compatible);
 
             r->m_subst.swap(m_compatible);
-
+            
             node * n      = mk_node_for(new_expr);
 
             node * incomp = alloc(node, r->m_leaf);
@@ -366,9 +366,9 @@ void substitution_tree::insert(app * new_expr) {
                 incomp->m_expr = r->m_expr;
                 r->m_leaf      = false;
             }
-            else
+            else 
                 incomp->m_first_child  = r->m_first_child;
-            incomp->m_next_sibling = n;
+            incomp->m_next_sibling = n; 
 
             SASSERT(!r->m_leaf);
             r->m_first_child = incomp;
@@ -460,7 +460,7 @@ void substitution_tree::erase(app * e) {
     reset_compiler();
     set_reg_value(0, e);
     m_todo.push_back(0);
-
+    
     node * r = m_roots[id];
     node * parent = 0;
     node * prev   = 0;
@@ -502,7 +502,7 @@ void substitution_tree::erase(app * e) {
             else if (at_least_3_children(parent)) {
                 if (prev == 0)
                     parent->m_first_child = r->m_next_sibling;
-                else
+                else 
                     prev->m_next_sibling  = r->m_next_sibling;
                 delete_node(r);
             }
@@ -514,7 +514,7 @@ void substitution_tree::erase(app * e) {
                 parent->m_leaf = other_child->m_leaf;
                 if (other_child->m_leaf)
                     parent->m_expr = other_child->m_expr;
-                else
+                else 
                     parent->m_first_child = other_child->m_first_child;
                 delete_node(r);
                 dealloc(other_child); // Remark: I didn't use delete_node since its resources were sent to parent.
@@ -547,7 +547,7 @@ void substitution_tree::delete_node(node * n) {
             m_manager.dec_ref(it2->first);
             m_manager.dec_ref(it2->second);
         }
-        if (n->m_leaf)
+        if (n->m_leaf) 
             m_manager.dec_ref(n->m_expr);
         else {
             node * c = n->m_first_child;
@@ -596,14 +596,14 @@ void substitution_tree::display(std::ostream & out, svector<subst> const & sv) c
     svector<subst>::const_iterator end = sv.end();
     for (bool first = true; it != end; ++it, first = false) {
         subst const & s = *it;
-        if (!first)
+        if (!first) 
             out << "; ";
         display(out, s);
     }
 }
 
 void substitution_tree::display(std::ostream & out, node * n, unsigned delta) const {
-    for (unsigned i = 0; i < delta; i++)
+    for (unsigned i = 0; i < delta; i++) 
         out << "  ";
     display(out, n->m_subst);
     if (n->m_leaf) {
@@ -650,7 +650,7 @@ inline expr_offset substitution_tree::find(expr_offset p) {
 
 template<substitution_tree::st_visit_mode Mode>
 bool substitution_tree::bind_var(var * v, unsigned offset, expr_offset const & p) {
-    TRACE("st", tout << "bind_var: " << mk_pp(v, m_manager) << " " << offset << "\n" <<
+    TRACE("st", tout << "bind_var: " << mk_pp(v, m_manager) << " " << offset << "\n" << 
           mk_pp(p.get_expr(), m_manager) << " " << p.get_offset() << "\n";);
     if (Mode == STV_INST && offset == m_st_offset) {
         SASSERT(!is_var(p.get_expr()) || p.get_offset() != m_reg_offset);
@@ -690,7 +690,7 @@ bool substitution_tree::unify_match(expr_offset p1, expr_offset p2) {
             SASSERT(!is_quantifier(n2));
             bool v1 = is_var(n1);
             bool v2 = is_var(n2);
-            TRACE("st",
+            TRACE("st", 
                   tout << "n1: " << mk_pp(n1, m_manager) << " " << p1.get_offset() << "\n";
                   tout << "n2: " << mk_pp(n2, m_manager) << " " << p2.get_offset() << "\n";);
             if (v1 && v2) {
@@ -699,7 +699,7 @@ bool substitution_tree::unify_match(expr_offset p1, expr_offset p2) {
                 if (!bind_var<Mode>(to_var(p1.get_expr()), p1.get_offset(), p2))
                     return false;
             }
-            else if (v1) {
+            else if (v1) { 
                 if (!bind_var<Mode>(to_var(n1), p1.get_offset(), p2))
                     return false;
             }
@@ -763,10 +763,10 @@ bool substitution_tree::visit(svector<subst> const & sv) {
         subst const & s = *it;
         TRACE("st", tout << "processing subst:\n"; display(tout, s); tout << "\n";);
         var *  rin  = s.first;
-        expr * out  = s.second;
+        expr * out  = s.second; 
         expr_offset p1(rin, m_reg_offset);
         expr_offset p2(out, is_var(out) ? m_st_offset : m_reg_offset);
-        if (!unify_match<Mode>(p1, p2))
+        if (!unify_match<Mode>(p1, p2)) 
             return false;
     }
     return true;
@@ -828,7 +828,7 @@ void substitution_tree::visit(expr * e, st_visitor & st, unsigned in_offset, uns
             func_decl * d  = to_app(e)->get_decl();
             unsigned id    = d->get_decl_id();
             node * r       = m_roots.get(id, 0);
-            if (r)
+            if (r)  
                 visit<Mode>(e, st, r);
         }
         else {

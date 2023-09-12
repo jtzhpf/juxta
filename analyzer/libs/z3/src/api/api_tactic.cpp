@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
     API for creating tactics and probes
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-03-06.
@@ -163,7 +163,7 @@ extern "C" {
         RETURN_TACTIC(new_t);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_tactic Z3_API Z3_tactic_cond(Z3_context c, Z3_probe p, Z3_tactic t1, Z3_tactic t2) {
         Z3_TRY;
         LOG_Z3_tactic_cond(c, p, t1, t2);
@@ -238,7 +238,7 @@ extern "C" {
         RETURN_PROBE(new_p);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_probe Z3_API Z3_probe_lt(Z3_context c, Z3_probe p1, Z3_probe p2) {
         Z3_TRY;
         LOG_Z3_probe_lt(c, p1, p2);
@@ -387,7 +387,7 @@ extern "C" {
         return t->get_descr();
         Z3_CATCH_RETURN("");
     }
-
+    
     Z3_string Z3_API Z3_probe_get_descr(Z3_context c, Z3_string name) {
         Z3_TRY;
         LOG_Z3_probe_get_descr(c, name);
@@ -405,12 +405,12 @@ extern "C" {
         goal_ref new_goal;
         new_goal = alloc(goal, *to_goal_ref(g));
         Z3_apply_result_ref * ref = alloc(Z3_apply_result_ref, mk_c(c)->m());
-        mk_c(c)->save_object(ref);
+        mk_c(c)->save_object(ref); 
 
         unsigned timeout     = p.get_uint("timeout", UINT_MAX);
         bool     use_ctrl_c  = p.get_bool("ctrl_c", false);
         cancel_eh<tactic> eh(*to_tactic_ref(t));
-
+        
         to_tactic_ref(t)->updt_params(p);
 
         api::context::set_interruptable si(*(mk_c(c)), eh);
@@ -445,7 +445,7 @@ extern "C" {
         RETURN_Z3(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_apply_result Z3_API Z3_tactic_apply_ex(Z3_context c, Z3_tactic t, Z3_goal g, Z3_params p) {
         Z3_TRY;
         LOG_Z3_tactic_apply_ex(c, t, g, p);
@@ -457,7 +457,7 @@ extern "C" {
         RETURN_Z3(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     void Z3_API Z3_apply_result_inc_ref(Z3_context c, Z3_apply_result r) {
         Z3_TRY;
         LOG_Z3_apply_result_inc_ref(c, r);
@@ -473,7 +473,7 @@ extern "C" {
         to_apply_result(r)->dec_ref();
         Z3_CATCH;
     }
-
+    
     Z3_string Z3_API Z3_apply_result_to_string(Z3_context c, Z3_apply_result r) {
         Z3_TRY;
         LOG_Z3_apply_result_to_string(c, r);
@@ -488,7 +488,7 @@ extern "C" {
         return mk_c(c)->mk_external_string(buffer.str());
         Z3_CATCH_RETURN("");
     }
-
+    
     unsigned Z3_API Z3_apply_result_get_num_subgoals(Z3_context c, Z3_apply_result r) {
         Z3_TRY;
         LOG_Z3_apply_result_get_num_subgoals(c, r);
@@ -496,7 +496,7 @@ extern "C" {
         return to_apply_result(r)->m_subgoals.size();
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_goal Z3_API Z3_apply_result_get_subgoal(Z3_context c, Z3_apply_result r, unsigned i) {
         Z3_TRY;
         LOG_Z3_apply_result_get_subgoal(c, r, i);
@@ -512,7 +512,7 @@ extern "C" {
         RETURN_Z3(result);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_model Z3_API Z3_apply_result_convert_model(Z3_context c, Z3_apply_result r, unsigned i, Z3_model m) {
         Z3_TRY;
         LOG_Z3_apply_result_convert_model(c, r, i, m);
@@ -524,7 +524,7 @@ extern "C" {
         model_ref new_m = to_model_ref(m)->copy();
         if (to_apply_result(r)->m_mc)
             to_apply_result(r)->m_mc->operator()(new_m, i);
-        Z3_model_ref * m_ref = alloc(Z3_model_ref);
+        Z3_model_ref * m_ref = alloc(Z3_model_ref); 
         m_ref->m_model = new_m;
         mk_c(c)->save_object(m_ref);
         RETURN_Z3(of_model(m_ref));

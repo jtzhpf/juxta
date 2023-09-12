@@ -26,11 +26,11 @@ class shared_occs_mark {
     ptr_buffer<ast> m_to_unmark;
 public:
     shared_occs_mark() {}
-
+ 
     ~shared_occs_mark() {
         reset();
     }
-
+    
     bool is_marked(ast * n) { return n->is_marked_so(); }
     void reset_mark(ast * n) { n->reset_mark_so(); }
     void mark(ast * n) { if (is_marked(n)) return; n->mark_so(true); m_to_unmark.push_back(n); }
@@ -42,7 +42,7 @@ public:
         }
         m_to_unmark.reset();
     }
-    void mark(ast * n, bool flag) { if (flag) mark(n); else reset_mark(n); }
+    void mark(ast * n, bool flag) { if (flag) mark(n); else reset_mark(n); } 
 };
 
 /**

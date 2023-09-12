@@ -37,7 +37,7 @@ public:
         m_coefficient(m),
         m_coefficients(m),
         m_factors(m) {}
-
+    
     expr_ref& coefficient() { return m_coefficient; }
     expr_ref_vector& coefficients() { return m_coefficients; }
     expr_ref_vector& factors() { return m_factors; }
@@ -111,7 +111,7 @@ private:
 #if 0
             rational r;
             if (m_arith.is_mul(f) && m_arith.is_numeral(to_app(f)->get_arg(0), r)) {
-                coefficients.push_back(r);
+                coefficients.push_back(r);            
                 factors[i] = mk_mul(to_app(f)->get_num_args()-1, to_app(f)->get_args()+1);
             }
             else if (m_arith.is_numeral(f, r)) {
@@ -143,13 +143,13 @@ private:
 ///    app : expr
 ///    quantifier : expr
 ///    var : expr
-///
+/// 
 
 static expr_ref mk_mul(arith_util& arith, unsigned num_args, expr* const* args) {
     ast_manager& m = arith.get_manager();
     expr_ref result(m);
     switch (num_args) {
-    case 0:
+    case 0: 
         UNREACHABLE();
         break;
     case 1:
@@ -171,12 +171,12 @@ static void nf(expr_ref& term) {
 
     VERIFY(m.is_eq(term, e1, e2));
     term = e1;
-
+    
     rw(term);
 
     std::cout << mk_pp(term, m) << "\n";
     std::cout << arith.is_add(term) << "\n";
-
+    
     expr_ref_vector factors(m);
     vector<rational> coefficients;
     rational coefficient(0);
@@ -191,7 +191,7 @@ static void nf(expr_ref& term) {
         expr* f = factors[i].get();
         rational r;
         if (arith.is_mul(f) && arith.is_numeral(to_app(f)->get_arg(0), r)) {
-            coefficients.push_back(r);
+            coefficients.push_back(r);            
             factors[i] = mk_mul(arith, to_app(f)->get_num_args()-1, to_app(f)->get_args()+1);
         }
         else if (arith.is_numeral(f, r)) {
@@ -226,5 +226,5 @@ void tst_polynorm() {
     std::cout << mk_pp(fml, m) << "\n";
     nf(fml);
 
-
+    
 }

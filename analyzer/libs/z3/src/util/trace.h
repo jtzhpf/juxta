@@ -27,7 +27,7 @@ Revision History:
 #include<fstream>
 
 #ifdef _TRACE
-extern std::ofstream tout;
+extern std::ofstream tout; 
 #define TRACE_CODE(CODE) { CODE } ((void) 0 )
 #else
 #define TRACE_CODE(CODE) ((void) 0)

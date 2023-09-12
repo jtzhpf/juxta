@@ -110,7 +110,7 @@ extern "C" {
         CHECK_NON_NULL(m, 0);
         model * _m = to_model_ref(m);
         if (i < _m->get_num_constants()) {
-            RETURN_Z3(of_func_decl(_m->get_constant(i)));
+            RETURN_Z3(of_func_decl(_m->get_constant(i))); 
         }
         else {
             SET_ERROR_CODE(Z3_IOB);
@@ -118,7 +118,7 @@ extern "C" {
         }
         Z3_CATCH_RETURN(0);
     }
-
+    
     unsigned Z3_API Z3_model_get_num_funcs(Z3_context c, Z3_model m) {
         Z3_TRY;
         LOG_Z3_model_get_num_funcs(c, m);
@@ -137,7 +137,7 @@ extern "C" {
         }
         return of_func_decl(_m->get_function(i));
     }
-
+    
     Z3_func_decl Z3_API Z3_model_get_func_decl(Z3_context c, Z3_model m, unsigned i) {
         Z3_TRY;
         LOG_Z3_get_model_func_decl(c, m, i);
@@ -146,7 +146,7 @@ extern "C" {
         RETURN_Z3(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_bool Z3_API Z3_model_eval(Z3_context c, Z3_model m, Z3_ast t, Z3_bool model_completion, Z3_ast * v) {
         Z3_TRY;
         LOG_Z3_model_eval(c, m, t, model_completion, v);
@@ -201,7 +201,7 @@ extern "C" {
         RETURN_Z3(of_ast_vector(v));
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_bool Z3_API Z3_is_as_array(Z3_context c, Z3_ast a) {
         Z3_TRY;
         LOG_Z3_is_as_array(c, a);
@@ -209,7 +209,7 @@ extern "C" {
         return is_expr(to_ast(a)) && is_app_of(to_expr(a), mk_c(c)->get_array_fid(), OP_AS_ARRAY);
         Z3_CATCH_RETURN(Z3_FALSE);
     }
-
+    
     Z3_func_decl Z3_API Z3_get_as_array_func_decl(Z3_context c, Z3_ast a) {
         Z3_TRY;
         LOG_Z3_get_as_array_func_decl(c, a);
@@ -243,7 +243,7 @@ extern "C" {
         }
         Z3_CATCH;
     }
-
+    
     unsigned Z3_API Z3_func_interp_get_num_entries(Z3_context c, Z3_func_interp f) {
         Z3_TRY;
         LOG_Z3_func_interp_get_num_entries(c, f);
@@ -269,7 +269,7 @@ extern "C" {
         RETURN_Z3(of_func_entry(e));
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_ast Z3_API Z3_func_interp_get_else(Z3_context c, Z3_func_interp f) {
         Z3_TRY;
         LOG_Z3_func_interp_get_else(c, f);
@@ -309,7 +309,7 @@ extern "C" {
         }
         Z3_CATCH;
     }
-
+    
     Z3_ast Z3_API Z3_func_entry_get_value(Z3_context c, Z3_func_entry e) {
         Z3_TRY;
         LOG_Z3_func_entry_get_value(c, e);
@@ -327,7 +327,7 @@ extern "C" {
         return to_func_entry(e)->m_func_interp->get_arity();
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_ast Z3_API Z3_func_entry_get_arg(Z3_context c, Z3_func_entry e, unsigned i) {
         Z3_TRY;
         LOG_Z3_func_entry_get_arg(c, e, i);
@@ -340,7 +340,7 @@ extern "C" {
         RETURN_Z3(of_expr(r));
         Z3_CATCH_RETURN(0);
     }
-
+   
     // ----------------------------
     //
     // DEPRECATED API
@@ -366,7 +366,7 @@ extern "C" {
     Z3_func_decl Z3_API Z3_get_model_func_decl(Z3_context c, Z3_model m, unsigned i) {
         return Z3_model_get_func_decl(c, m, i);
     }
-
+    
     Z3_ast Z3_API Z3_get_model_func_else(Z3_context c, Z3_model m, unsigned i) {
         Z3_TRY;
         LOG_Z3_get_model_func_else(c, m, i);
@@ -374,7 +374,7 @@ extern "C" {
         CHECK_NON_NULL(m, 0);
         Z3_func_decl d = get_model_func_decl_core(c, m, i);
         if (d) {
-            model * _m = to_model_ref(m);
+            model * _m = to_model_ref(m);            
             func_interp * g = _m->get_func_interp(to_func_decl(d));
             if (g) {
                 expr * e = g->get_else();
@@ -393,7 +393,7 @@ extern "C" {
         CHECK_NON_NULL(m, 0);
         Z3_func_decl d = get_model_func_decl_core(c, m, i);
         if (d) {
-            model * _m = to_model_ref(m);
+            model * _m = to_model_ref(m);            
             func_interp * g = _m->get_func_interp(to_func_decl(d));
             if (g) {
                 return g->num_entries();
@@ -403,7 +403,7 @@ extern "C" {
         }
         return 0;
     }
-
+    
     unsigned Z3_API Z3_get_model_func_num_entries(Z3_context c, Z3_model m, unsigned i) {
         Z3_TRY;
         LOG_Z3_get_model_func_num_entries(c, m, i);
@@ -429,7 +429,7 @@ extern "C" {
         }
         return 0;
     }
-
+    
     unsigned Z3_API Z3_get_model_func_entry_num_args(Z3_context c,
                                                      Z3_model m,
                                                      unsigned i,
@@ -455,7 +455,7 @@ extern "C" {
         }
         Z3_func_decl d = get_model_func_decl_core(c, m, i);
         if (d) {
-            model * _m = to_model_ref(m);
+            model * _m = to_model_ref(m);            
             func_interp * g = _m->get_func_interp(to_func_decl(d));
             if (g && j < g->num_entries()) {
                 func_entry const * e = g->get_entry(j);
@@ -486,7 +486,7 @@ extern "C" {
         }
         Z3_func_decl d = get_model_func_decl_core(c, m, i);
         if (d) {
-            model * _m = to_model_ref(m);
+            model * _m = to_model_ref(m);            
             func_interp * g = _m->get_func_interp(to_func_decl(d));
             if (g && j < g->num_entries()) {
                 func_entry const* e = g->get_entry(j);
@@ -500,7 +500,7 @@ extern "C" {
         RETURN_Z3(0);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_bool Z3_API Z3_eval(Z3_context c,
                            Z3_model m,
                            Z3_ast t,
@@ -509,8 +509,8 @@ extern "C" {
         return Z3_model_eval(c, m, t, p.completion(), v);
     }
 
-    Z3_bool Z3_API Z3_eval_func_decl(Z3_context c,
-                                     Z3_model m,
+    Z3_bool Z3_API Z3_eval_func_decl(Z3_context c, 
+                                     Z3_model m, 
                                      Z3_func_decl decl,
                                      Z3_ast* v) {
         Z3_TRY;
@@ -527,7 +527,7 @@ extern "C" {
         }
         else {
             return Z3_FALSE;
-        }
+        }      
         Z3_CATCH_RETURN(Z3_FALSE);
     }
 
@@ -572,7 +572,7 @@ extern "C" {
     }
 
 
-    void Z3_API Z3_get_array_value(Z3_context c,
+    void Z3_API Z3_get_array_value(Z3_context c, 
                                    Z3_model _m,
                                    Z3_ast _v,
                                    unsigned num_entries,
@@ -592,7 +592,7 @@ extern "C" {
 
         //
         // note: _v is already reference counted.
-        // saving the trail for the returned values
+        // saving the trail for the returned values 
         // is redundant.
         //
         unsigned sz = 0;
@@ -606,11 +606,11 @@ extern "C" {
             }
             for (unsigned i = 0; i < sz && i < num_entries; ++i) {
                 indices[i] = of_ast(g->get_entry(i)->get_arg(0));
-                values[i] = of_ast(g->get_entry(i)->get_result());
+                values[i] = of_ast(g->get_entry(i)->get_result());                
             }
             if (else_value) {
                 *else_value = of_ast(g->get_else());
-            }
+            }                       
         }
         else {
             while (sz <= num_entries && is_app_of(v, afid, OP_STORE)) {
@@ -623,10 +623,10 @@ extern "C" {
                 expr* val = a->get_arg(2);
                 indices[sz] = of_ast(idx);
                 values[sz] = of_ast(val);
-                v = to_app(v)->get_arg(0);
+                v = to_app(v)->get_arg(0);   
                 ++sz;
             }
-
+        
             if (is_app_of(v, afid, OP_CONST_ARRAY)) {
                 if (else_value) {
                     *else_value = of_ast(to_app(v)->get_arg(0));
@@ -641,9 +641,9 @@ extern "C" {
         Z3_CATCH;
     }
 
-    Z3_bool Z3_API Z3_eval_decl(Z3_context c,
-                                Z3_model m,
-                                Z3_func_decl d,
+    Z3_bool Z3_API Z3_eval_decl(Z3_context c, 
+                                Z3_model m, 
+                                Z3_func_decl d, 
                                 unsigned num_args,
                                 Z3_ast const args[],
                                 Z3_ast* v) {

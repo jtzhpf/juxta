@@ -21,7 +21,7 @@ Abstract:
     Q_ans(x)   :- Q_query(x), A_ans(y), B_ans(z), phi1(x,y,z).
     Q_ans(x)   :- Q_query(x), C_ans(y), phi2(x,y).
     Q_query(x) :- true.
-
+    
     A_ans(x)   :- A_query(x), C_ans(y), phi2(x,y)
     A_ans(x)   :- A_query(x), A_ans(y), phi3(x,y).
     A_query(y) :- Q_query(x), phi1(x,y,z).
@@ -39,8 +39,8 @@ Abstract:
 General scheme:
     A(x) :- P1(x_1), ..., Pn(x_n), phi(x,x1,..,x_n).
 
-    P(x) :- Prefix(x,y,z), A(z) ...
-
+    P(x) :- Prefix(x,y,z), A(z) ... 
+    
     A_ans(x) :- A_query(x), P_i_ans(x_i), phi(x,..).
     A_query(z) :- P_query(x), Prefix_ans(x,y,z).
 
@@ -61,11 +61,11 @@ namespace datalog {
     mk_magic_symbolic::mk_magic_symbolic(context & ctx, unsigned priority):
         plugin(priority),
         m(ctx.get_manager()),
-        m_ctx(ctx) {
+        m_ctx(ctx) {        
     }
 
     mk_magic_symbolic::~mk_magic_symbolic() { }
-
+        
     rule_set * mk_magic_symbolic::operator()(rule_set const & source) {
         if (!m_ctx.magic()) {
             return 0;
@@ -78,7 +78,7 @@ namespace datalog {
         app_ref_vector tail(m);
         app_ref head(m);
         svector<bool> neg;
-        for (unsigned i = 0; i < sz; ++i) {
+        for (unsigned i = 0; i < sz; ++i) {            
             rule & r = *source.get_rule(i);
             unsigned utsz = r.get_uninterpreted_tail_size();
             unsigned tsz  = r.get_tail_size();
@@ -95,7 +95,7 @@ namespace datalog {
                 neg.push_back(false);
             }
             new_rule = rm.mk(mk_ans(r.get_head()), tail.size(), tail.c_ptr(), neg.c_ptr(), r.name(), true);
-            result->add_rule(new_rule);
+            result->add_rule(new_rule);                
             if (source.is_output_predicate(r.get_decl())) {
                 result->set_output_predicate(new_rule->get_decl());
                 new_rule = rm.mk(mk_query(r.get_head()), 0, 0, 0, r.name(), true);
@@ -105,8 +105,8 @@ namespace datalog {
             for (unsigned j = 0; j < utsz; ++j) {
                 new_rule = rm.mk(mk_query(r.get_tail(j)), tail.size()-utsz+j, tail.c_ptr(), neg.c_ptr(), r.name(), true);
                 result->add_rule(new_rule);
-            }
-
+            }            
+            
         }
         TRACE("dl", result->display(tout););
         return result;
@@ -129,7 +129,7 @@ namespace datalog {
         name << f->get_name() << "!ans";
         g = m.mk_func_decl(symbol(name.c_str()), f->get_arity(), f->get_domain(), f->get_range());
         m_ctx.register_predicate(g, false);
-        return app_ref(m.mk_app(g, q->get_num_args(), q->get_args()), m);
+        return app_ref(m.mk_app(g, q->get_num_args(), q->get_args()), m);        
     }
 
 };

@@ -47,13 +47,13 @@ public:
 
     void cancel();
     void reset_cancel();
-
+    
     /**
        \brief Apply tactic to goal \c in.
-
+       
        The list of resultant subgoals is stored in \c result.
        The content of \c in may be destroyed during the operation.
-
+       
        The resultant model converter \c mc can be used to convert a model for one of the returned subgoals
        into a model for \in. If mc == 0, then model construction is disabled or any model for a subgoal
        of \c in is also a model for \c in.
@@ -62,25 +62,25 @@ public:
 
        The resultant proof converter \c pc can be used to convert proofs for each subgoal in \c result
        into a proof for \c in. If pc == 0, then one of the following conditions should hold:
-         1- proof construction is disabled,
+         1- proof construction is disabled, 
          2- result contains a single subgoal, and any proof of unsatisfiability for this subgoal is a proof for \c in.
          3- result is an decided_unsat (i.e., it contains a single unsat subgoal). The actual proof can be extracted from this goal.
-
+         
        The output parameter \c core is used to accumulate the unsat core of closed subgoals.
-       It must be 0 if dependency tracking is disabled, or the result is decided unsat, or
+       It must be 0 if dependency tracking is disabled, or the result is decided unsat, or 
        no tagged assertions were used to close any subgoal.
-
+       
        Note that, this signature is not compatible with the one described in the paper:
        "The Strategy Challenge in SMT Solving".
        The approach in the paper is conceptually simpler, but (for historical reasons) it would
        require a lot of re-engineering in the Z3 code. In Z3, we keep a proof/justification for every formula
        in a goal.
-
+       
        Therefore, in most cases, pc == 0 and core == 0 for non-branching tactics.
     */
-    virtual void operator()(/* in */  goal_ref const & in,
-                            /* out */ goal_ref_buffer & result,
-                            /* out */ model_converter_ref & mc,
+    virtual void operator()(/* in */  goal_ref const & in, 
+                            /* out */ goal_ref_buffer & result, 
+                            /* out */ model_converter_ref & mc, 
                             /* out */ proof_converter_ref & pc,
                             /* out */ expr_dependency_ref & core) = 0;
 

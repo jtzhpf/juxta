@@ -74,7 +74,7 @@ scopes::range scopes::range_lub(const range &rng1, const range &rng2){
 	res.hi = tree_lca(rng1.hi,rng2.hi);
 	return res;
 }
-
+  
 scopes::range scopes::range_glb(const range &rng1, const range &rng2){
 	range res;
 	res.lo = tree_lca(rng1.lo,rng2.lo);
@@ -83,7 +83,7 @@ scopes::range scopes::range_glb(const range &rng1, const range &rng2){
 }
 
 #else
-
+  
 
   namespace std {
     template <>
@@ -97,7 +97,7 @@ scopes::range scopes::range_glb(const range &rng1, const range &rng2){
 
   template <> inline
   size_t stdext::hash_value<scopes::range_lo >(const scopes::range_lo& p)
-  {
+  {	
 	std::hash<scopes::range_lo> h;
 	return h(p);
   }
@@ -111,7 +111,7 @@ scopes::range scopes::range_glb(const range &rng1, const range &rng2){
 		   }
 	   };
   }
-
+ 
 
   struct range_op {
 	scopes::range_lo *x, *y;
@@ -133,7 +133,7 @@ scopes::range scopes::range_glb(const range &rng1, const range &rng2){
 
   template <> inline
   size_t stdext::hash_value<range_op >(const range_op& p)
-  {
+  {	
 	std::hash<range_op> h;
 	return h(p);
   }
@@ -164,7 +164,7 @@ scopes::range scopes::range_glb(const range &rng1, const range &rng2){
 		  bar.first->second = new range_lo(lo,next);
 	  return bar.first->second;
 	  //std::pair<hash_set<scopes::range_lo>::iterator,bool> bar = rt->unique.insert(foo);
-	  // const range_lo *baz = &*(bar.first);
+	  // const range_lo *baz = &*(bar.first); 
 	  // return (range_lo *)baz; // exit const hell
   }
 
@@ -186,7 +186,7 @@ scopes::range scopes::range_glb(const range &rng1, const range &rng2){
     res = find_range_lo(rng1->lo,baz);
 	return res;
   }
-
+  
 
   scopes::range_lo *scopes::range_glb_lo(range_lo *rng1, range_lo *rng2, int hi){
 	  if(!rng1) return rng1;

@@ -76,7 +76,7 @@ void ast_translation::push_frame(ast * n) {
     }
 }
 
-bool ast_translation::visit(ast * n) {
+bool ast_translation::visit(ast * n) {        
     ast * r;
     if (n->get_ref_count() > 1 && m_cache.find(n, r)) {
         m_result_stack.push_back(r);
@@ -139,7 +139,7 @@ void ast_translation::mk_func_decl(func_decl * f, frame & fr) {
     SASSERT(fr.m_cpos <= m_extra_children_stack.size());
     unsigned num_extra = m_extra_children_stack.size() - fr.m_cpos;
     sort ** new_domain = reinterpret_cast<sort**>(m_result_stack.c_ptr() + fr.m_rpos + num_extra);
-    sort *  new_range  = static_cast<sort*>(m_result_stack.back());
+    sort *  new_range  = static_cast<sort*>(m_result_stack.back());  
     func_decl * new_f;
     if (fi == 0) {
         new_f = m_to_manager.mk_func_decl(f->get_name(),
@@ -162,7 +162,7 @@ void ast_translation::mk_func_decl(func_decl * f, frame & fr) {
         new_fi.set_chainable(fi->is_chainable());
         new_fi.set_pairwise(fi->is_pairwise());
         new_fi.set_injective(fi->is_injective());
-        new_fi.set_skolem(fi->is_skolem());
+        new_fi.set_skolem(fi->is_skolem()); 
         new_fi.set_idempotent(fi->is_idempotent());
 
         new_f = m_to_manager.mk_func_decl(f->get_name(),
@@ -171,7 +171,7 @@ void ast_translation::mk_func_decl(func_decl * f, frame & fr) {
                                           new_range,
                                           new_fi);
     }
-    TRACE("ast_translation",
+    TRACE("ast_translation", 
           tout << f->get_name() << " "; if (fi) tout << *fi; tout << "\n";
           tout << "---->\n";
           tout << new_f->get_name() << " "; if (new_f->get_info()) tout << *(new_f->get_info()); tout << "\n";);
@@ -187,13 +187,13 @@ ast * ast_translation::process(ast const * _n) {
     SASSERT(m_result_stack.empty());
     SASSERT(m_frame_stack.empty());
     SASSERT(m_extra_children_stack.empty());
-
+    
     if (!visit(const_cast<ast*>(_n))) {
         while (!m_frame_stack.empty()) {
         loop:
             frame & fr = m_frame_stack.back();
             ast * n = fr.m_n;
-            ast * r;
+            ast * r;         
             TRACE("ast_translation", tout << mk_ll_pp(n, m_from_manager, false) << "\n";);
             if (fr.m_idx == 0 && n->get_ref_count() > 1 && m_cache.find(n, r)) {
                 SASSERT(m_result_stack.size() == fr.m_rpos);
@@ -245,7 +245,7 @@ ast * ast_translation::process(ast const * _n) {
                 unsigned num = num_decls + to_quantifier(n)->get_num_children();
                 while (fr.m_idx < num) {
                     ast * child;
-                    if (fr.m_idx < num_decls)
+                    if (fr.m_idx < num_decls) 
                         child = to_quantifier(n)->get_decl_sort(fr.m_idx);
                     else
                         child = to_quantifier(n)->get_child(fr.m_idx - num_decls);

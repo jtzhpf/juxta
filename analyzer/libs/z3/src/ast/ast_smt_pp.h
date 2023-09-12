@@ -41,7 +41,7 @@ public:
 
 class ast_smt_pp {
 public:
-    class is_declared {
+    class is_declared { 
     public:
         virtual bool operator()(func_decl* d) const { return false; }
         virtual bool operator()(sort* s) const { return false; }

@@ -32,13 +32,13 @@ inline char scanner::read_char() {
         m_last_char = m_buffer[m_bend-1];
     }
     ++m_pos;
-    if (m_bpos < m_bend) {
+    if (m_bpos < m_bend) {        
         return m_buffer[m_bpos++];
     } else {
         // increment m_bpos, so unread_char() will work properly
         ++m_bpos;
         return -1;
-    }
+    }    
 }
 
 inline void scanner::unread_char() {
@@ -65,7 +65,7 @@ void scanner::comment(char delimiter) {
         if (delimiter == ch || -1 == ch) {
             return;
         }
-    }
+    }        
 }
 
 scanner::token scanner::read_symbol(char ch) {
@@ -83,7 +83,7 @@ scanner::token scanner::read_symbol(char ch) {
         }
         escape = (ch == '\\');
         m_string.push_back(ch);
-        ch = read_char();
+        ch = read_char();                
     }
     if (!m_smt2)
         m_string.push_back(ch); // don't add trailing '|'
@@ -101,8 +101,8 @@ scanner::token scanner::read_id(char first_char) {
 
     bool is_arith = (m_normalized[(unsigned char) first_char] == '+');
     bool is_alpha = (m_normalized[(unsigned char) first_char] == 'a');
-
-    ch = read_char();
+    
+    ch = read_char();        
     // In SMT2 "-20" is an identifier.
     if (!m_smt2 && state_ok() && first_char == '-' && m_normalized[(unsigned char) ch] == '0') {
         return read_number(ch, false);
@@ -111,8 +111,8 @@ scanner::token scanner::read_id(char first_char) {
     if (state_ok() && first_char == '|') {
         return read_symbol(ch);
     }
-
-    while (state_ok()) {
+    
+    while (state_ok()) {                        
         switch(m_normalized[(unsigned char) ch]) {
         case '+':
             if (is_arith) {
@@ -121,7 +121,7 @@ scanner::token scanner::read_id(char first_char) {
             }
             // strings can have hyphens.
             if (!is_alpha || ch != '-') {
-                goto bail_out;
+                goto bail_out;  
             }
         case 'a':
         case ':':
@@ -132,7 +132,7 @@ scanner::token scanner::read_id(char first_char) {
             }
             m_string.push_back(ch);
             break;
-        case '[':
+        case '[':                
             m_string.push_back(0);
             m_id = m_string.begin();
             if (read_params()) {
@@ -157,17 +157,17 @@ scanner::token scanner::read_id(char first_char) {
 
 bool scanner::read_params() {
     unsigned param_num = 0;
-
+    
     while (state_ok()) {
         char ch = read_char();
         switch (m_normalized[(unsigned char) ch]) {
-        case '0':
+        case '0': 
             param_num = 10*param_num + (ch - '0');
             break;
         case ']':
             m_params.push_back(parameter(param_num));
             return true;
-        case ':':
+        case ':':               
             m_params.push_back(parameter(param_num));
             param_num = 0;
             break;
@@ -206,7 +206,7 @@ scanner::token scanner::read_number(char first_char, bool is_pos) {
     unsigned divide_by = 0;
     m_number = rational(first_char - '0');
     m_state = INT_TOKEN;
-
+    
     while (true) {
         char ch = read_char();
         if (m_normalized[(unsigned char) ch] == '0') {
@@ -224,41 +224,41 @@ scanner::token scanner::read_number(char first_char, bool is_pos) {
         }
     }
     if (!is_pos) {
-        m_number.neg();
+        m_number.neg();            
     }
     if (m_state == FLOAT_TOKEN) {
         m_number /= power(rational(10), divide_by);
     }
     return m_state;
 }
-
+    
 scanner::token scanner::read_string(char delimiter, token result) {
     m_string.reset();
     m_params.reset();
     while (true) {
         char ch = read_char();
-
+        
         if (!state_ok()) {
             return m_state;
         }
-
+        
         if (ch == '\n') {
             ++m_line;
         }
-
+        
         if (ch == delimiter || ch == EOF) {
             m_string.push_back(0);
             m_id = m_string.begin();
             return result;
         }
-
+        
         if (ch == '\\') {
             m_string.push_back('\\');
             ch = read_char();
         }
         m_string.push_back(ch);
     }
-
+    
     return m_state;
 }
 
@@ -277,7 +277,7 @@ scanner::token scanner::read_bv_literal() {
                 }
                 else if ('a' <= ch && ch <= 'f') {
                     m_number *= rational(16);
-                    m_number += rational(10 + (ch - 'a'));
+                    m_number += rational(10 + (ch - 'a')); 
                 }
                 else if ('A' <= ch && ch <= 'F') {
                     m_number *= rational(16);
@@ -317,11 +317,11 @@ scanner::token scanner::read_bv_literal() {
         // hack for the old parser
         char ch     = read_char();
         bool is_hex = false;
-
+        
         m_state = ID_TOKEN;
         m_string.reset();
         m_params.reset();
-
+        
         // convert to SMT1 format
         m_string.push_back('b');
         m_string.push_back('v');
@@ -340,7 +340,7 @@ scanner::token scanner::read_bv_literal() {
             m_state = ERROR_TOKEN;
             return m_state;
         }
-
+        
         while (true) {
             ch = read_char();
             if (ch == '0' || ch == '1' ||
@@ -356,7 +356,7 @@ scanner::token scanner::read_bv_literal() {
         }
         m_string.push_back(0);
         m_id = m_string.begin();
-
+        
         return m_state;
     }
 }
@@ -378,14 +378,14 @@ scanner::scanner(std::istream& stream, std::ostream& err, bool smt2, bool bv_tok
 
     m_is_interactive = &stream == &std::cin;
     m_buffer.resize(m_bpos);
-
+    
     for (int i = 0; i < 256; ++i) {
         m_normalized[i] = (char) i;
     }
-
+    
     m_normalized[static_cast<int>('\t')] = ' ';
     m_normalized[static_cast<int>('\r')] = ' ';
-
+    
     // assert ('a' < 'z');
     for (ch = 'b'; ch <= 'z'; ++ch) {
         m_normalized[static_cast<int>(ch)] = 'a';
@@ -449,7 +449,7 @@ scanner::scanner(std::istream& stream, std::ostream& err, bool smt2, bool bv_tok
 
 scanner::token scanner::scan() {
     while (state_ok()) {
-        char ch = read_char();
+        char ch = read_char();        
         switch (m_normalized[(unsigned char) ch]) {
         case ' ':
             break;
@@ -484,7 +484,7 @@ scanner::token scanner::scan() {
             m_state = EOF_TOKEN;
             break;
         default:
-            // TODO: use error reporting
+            // TODO: use error reporting 
             m_err << "ERROR: unexpected character: '" << ((int)ch) << " " << ch << "'.\n";
             m_state = ERROR_TOKEN;
             break;

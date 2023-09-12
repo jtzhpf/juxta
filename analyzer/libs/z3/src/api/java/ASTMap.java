@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     ASTMap.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -25,7 +25,7 @@ class ASTMap extends Z3Object
     /**
      * Checks whether the map contains the key <paramref name="k"/>. <param
      * name="k">An AST</param>
-     *
+     * 
      * @return True if <paramref name="k"/> is a key in the map, false
      *         otherwise.
      **/
@@ -40,7 +40,7 @@ class ASTMap extends Z3Object
      * Finds the value associated with the key <paramref name="k"/>. <remarks>
      * This function signs an error when <paramref name="k"/> is not a key in
      * the map. </remarks> <param name="k">An AST</param>
-     *
+     * 
      * @throws Z3Exception
      **/
     public AST find(AST k) throws Z3Exception
@@ -88,7 +88,7 @@ class ASTMap extends Z3Object
 
     /**
      * The keys stored in the map.
-     *
+     * 
      * @throws Z3Exception
      **/
     public ASTVector getKeys() throws Z3Exception

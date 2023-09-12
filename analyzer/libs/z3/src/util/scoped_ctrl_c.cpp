@@ -31,24 +31,24 @@ void scoped_ctrl_c::on_ctrl_c(int) {
         }
     }
     else {
-        signal(SIGINT, g_obj->m_old_handler);
+        signal(SIGINT, g_obj->m_old_handler); 
         raise(SIGINT);
     }
 }
 
 scoped_ctrl_c::scoped_ctrl_c(event_handler & eh, bool once, bool enabled):
-    m_cancel_eh(eh),
+    m_cancel_eh(eh), 
     m_first(true),
     m_once(once),
     m_enabled(enabled),
     m_old_scoped_ctrl_c(g_obj) {
     if (m_enabled) {
         g_obj = this;
-        m_old_handler = signal(SIGINT, on_ctrl_c);
+        m_old_handler = signal(SIGINT, on_ctrl_c); 
     }
 }
 
-scoped_ctrl_c::~scoped_ctrl_c() {
+scoped_ctrl_c::~scoped_ctrl_c() { 
     if (m_enabled) {
         g_obj = m_old_scoped_ctrl_c;
         if (m_old_handler != SIG_ERR) {

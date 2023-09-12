@@ -28,7 +28,7 @@ class rational {
     static rational                  m_minus_one;
     static vector<rational>          m_powers_of_two;
     static synch_mpq_manager *       g_mpq_manager;
-
+    
     static synch_mpq_manager & m() { return *g_mpq_manager; }
 
 public:
@@ -39,13 +39,13 @@ public:
       ADD_FINALIZER('rational::finalize();')
     */
     rational() {}
-
+    
     rational(rational const & r) { m().set(m_val, r.m_val); }
 
     explicit rational(int n) { m().set(m_val, n); }
 
     explicit rational(unsigned n) { m().set(m_val, n); }
-
+      
     rational(int n, int d) { m().set(m_val, n, d); }
 
     rational(mpq const & q) { m().set(m_val, q); }
@@ -59,13 +59,13 @@ public:
 
     struct ui64 {};
     rational(uint64 i, ui64) { m().set(m_val, i); }
-
+    
     ~rational() { m().del(m_val); }
-
+    
     mpq const & to_mpq() const { return m_val; }
 
     unsigned bitsize() const { return m().bitsize(m_val); }
-
+    
     void reset() { m().reset(m_val); }
 
     bool is_int() const { return m().is_int(m_val); }
@@ -73,19 +73,19 @@ public:
     bool is_small() const { return m().is_small(m_val); }
 
     bool is_big() const { return !is_small(); }
-
+    
     unsigned hash() const { return m().hash(m_val); }
 
     struct hash_proc {  unsigned operator()(rational const& r) const { return r.hash(); }  };
 
     struct eq_proc { bool operator()(rational const& r1, rational const& r2) const { return r1 == r2; } };
-
+    
     void swap(rational & n) { m().swap(m_val, n.m_val); }
-
+    
     std::string to_string() const { return m().to_string(m_val); }
 
     void display(std::ostream & out) const { return m().display(out, m_val); }
-
+    
     void display_decimal(std::ostream & out, unsigned prec) const { return m().display_decimal(out, m_val, prec); }
 
     bool is_uint64() const { return m().is_uint64(m_val); }
@@ -95,7 +95,7 @@ public:
     uint64 get_uint64() const { return m().get_uint64(m_val); }
 
     int64 get_int64() const { return m().get_int64(m_val); }
-
+    
     bool is_unsigned() const { return is_uint64() && (get_uint64() < (1ull << 32)); }
 
     unsigned get_unsigned() const {
@@ -104,7 +104,7 @@ public:
     }
 
     bool is_int32() const {
-        if (is_small() && is_int()) return true;
+        if (is_small() && is_int()) return true; 
         // we don't assume that if it is small, then it is int32.
         if (!is_int64()) return false;
         int64 v = get_int64();
@@ -116,40 +116,40 @@ public:
     rational const & get_rational() const { return *this; }
 
     rational const & get_infinitesimal() const { return m_zero; }
-
+    
     rational & operator=(rational const & r) {
         m().set(m_val, r.m_val);
         return *this;
     }
 
     friend inline rational numerator(rational const & r) { rational result; m().get_numerator(r.m_val, result.m_val); return result; }
-
+    
     friend inline rational denominator(rational const & r) { rational result; m().get_denominator(r.m_val, result.m_val); return result; }
-
-    rational & operator+=(rational const & r) {
+    
+    rational & operator+=(rational const & r) { 
         m().add(m_val, r.m_val, m_val);
-        return *this;
+        return *this; 
     }
 
-    rational & operator-=(rational const & r) {
+    rational & operator-=(rational const & r) { 
         m().sub(m_val, r.m_val, m_val);
-        return *this;
+        return *this; 
     }
 
     rational & operator*=(rational const & r) {
         m().mul(m_val, r.m_val, m_val);
-        return *this;
-    }
+        return *this; 
+    }    
 
     rational & operator/=(rational const & r) {
         m().div(m_val, r.m_val, m_val);
-        return *this;
-    }
-
+        return *this; 
+    }    
+    
     rational & operator%=(rational const & r) {
         m().rem(m_val, r.m_val, m_val);
-        return *this;
-    }
+        return *this; 
+    }    
 
     friend inline rational div(rational const & r1, rational const & r2) {
         rational r;
@@ -160,7 +160,7 @@ public:
     friend inline void div(rational const & r1, rational const & r2, rational & r) {
         rational::m().idiv(r1.m_val, r2.m_val, r.m_val);
     }
-
+    
     friend inline rational machine_div(rational const & r1, rational const & r2) {
         rational r;
         rational::m().machine_idiv(r1.m_val, r2.m_val, r.m_val);
@@ -201,22 +201,22 @@ public:
     }
 
     const rational operator++(int) { rational tmp(*this); ++(*this); return tmp; }
-
+    
     rational & operator--() {
         m().sub(m_val, m().mk_q(1), m_val);
         return *this;
     }
-
+    
     const rational operator--(int) { rational tmp(*this); --(*this); return tmp; }
 
     friend inline bool operator==(rational const & r1, rational const & r2) {
         return rational::m().eq(r1.m_val, r2.m_val);
     }
 
-    friend inline bool operator<(rational const & r1, rational const & r2) {
+    friend inline bool operator<(rational const & r1, rational const & r2) { 
         return rational::m().lt(r1.m_val, r2.m_val);
     }
-
+    
     void neg() {
         m().neg(m_val);
     }
@@ -236,15 +236,15 @@ public:
     bool is_neg() const {
         return m().is_neg(m_val);
     }
-
+    
     bool is_pos() const {
         return m().is_pos(m_val);
     }
-
+    
     bool is_nonneg() const {
         return m().is_nonneg(m_val);
     }
-
+    
     bool is_nonpos() const {
         return m().is_nonpos(m_val);
     }
@@ -252,7 +252,7 @@ public:
     bool is_even() const {
         return m().is_even(m_val);
     }
-
+    
     friend inline rational floor(rational const & r) {
         rational f;
         rational::m().floor(r.m_val, f.m_val);
@@ -391,42 +391,42 @@ public:
 
 };
 
-inline bool operator!=(rational const & r1, rational const & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(rational const & r1, rational const & r2) { 
+    return !operator==(r1, r2); 
 }
 
-inline bool operator>(rational const & r1, rational const & r2) {
-    return operator<(r2, r1);
+inline bool operator>(rational const & r1, rational const & r2) { 
+    return operator<(r2, r1); 
 }
 
-inline bool operator<=(rational const & r1, rational const & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(rational const & r1, rational const & r2) { 
+    return !operator>(r1, r2); 
 }
 
-inline bool operator>=(rational const & r1, rational const & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(rational const & r1, rational const & r2) { 
+    return !operator<(r1, r2); 
 }
 
-inline rational operator+(rational const & r1, rational const & r2) {
-    return rational(r1) += r2;
+inline rational operator+(rational const & r1, rational const & r2) { 
+    return rational(r1) += r2; 
 }
 
-inline rational operator-(rational const & r1, rational const & r2) {
-    return rational(r1) -= r2;
+inline rational operator-(rational const & r1, rational const & r2) { 
+    return rational(r1) -= r2; 
 }
 
-inline rational operator-(rational const & r) {
-    rational result(r);
-    result.neg();
-    return result;
+inline rational operator-(rational const & r) { 
+    rational result(r); 
+    result.neg(); 
+    return result; 
 }
 
-inline rational operator*(rational const & r1, rational const & r2) {
-    return rational(r1) *= r2;
+inline rational operator*(rational const & r1, rational const & r2) { 
+    return rational(r1) *= r2; 
 }
 
-inline rational operator/(rational const & r1, rational const & r2) {
-    return rational(r1) /= r2;
+inline rational operator/(rational const & r1, rational const & r2) { 
+    return rational(r1) /= r2; 
 }
 
 inline rational power(rational const & r, unsigned p) {

@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-22
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -104,7 +104,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Assert a constraint (or multiple) into the solver.
-        /// </summary>
+        /// </summary>        
         public void Assert(params BoolExpr[] constraints)
         {
             Contract.Requires(constraints != null);
@@ -119,23 +119,23 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Alias for Assert.
-        /// </summary>
+        /// </summary>        
         public void Add(params BoolExpr[] constraints)
         {
             Assert(constraints);
         }
 
         /// <summary>
-        /// Assert multiple constraints into the solver, and track them (in the unsat) core
-        /// using the Boolean constants in ps.
+        /// Assert multiple constraints into the solver, and track them (in the unsat) core 
+        /// using the Boolean constants in ps. 
         /// </summary>
         /// <remarks>
         /// This API is an alternative to <see cref="Check"/> with assumptions for extracting unsat cores.
         /// Both APIs can be used in the same solver. The unsat core will contain a combination
-        /// of the Boolean variables provided using <see cref="AssertAndTrack(BoolExpr[],BoolExpr[])"/>
+        /// of the Boolean variables provided using <see cref="AssertAndTrack(BoolExpr[],BoolExpr[])"/> 
         /// and the Boolean literals
         /// provided using <see cref="Check"/> with assumptions.
-        /// </remarks>
+        /// </remarks>        
         public void AssertAndTrack(BoolExpr[] constraints, BoolExpr[] ps)
         {
             Contract.Requires(constraints != null);
@@ -145,29 +145,29 @@ namespace Microsoft.Z3
             Context.CheckContextMatch(ps);
             if (constraints.Length != ps.Length)
                 throw new Z3Exception("Argument size mismatch");
-
+            
             for (int i = 0 ; i < constraints.Length; i++)
                 Native.Z3_solver_assert_and_track(Context.nCtx, NativeObject, constraints[i].NativeObject, ps[i].NativeObject);
         }
 
         /// <summary>
-        /// Assert a constraint into the solver, and track it (in the unsat) core
-        /// using the Boolean constant p.
+        /// Assert a constraint into the solver, and track it (in the unsat) core 
+        /// using the Boolean constant p. 
         /// </summary>
         /// <remarks>
         /// This API is an alternative to <see cref="Check"/> with assumptions for extracting unsat cores.
         /// Both APIs can be used in the same solver. The unsat core will contain a combination
-        /// of the Boolean variables provided using <see cref="AssertAndTrack(BoolExpr[],BoolExpr[])"/>
+        /// of the Boolean variables provided using <see cref="AssertAndTrack(BoolExpr[],BoolExpr[])"/> 
         /// and the Boolean literals
         /// provided using <see cref="Check"/> with assumptions.
-        /// </remarks>
+        /// </remarks>        
         public void AssertAndTrack(BoolExpr constraint, BoolExpr p)
         {
             Contract.Requires(constraint != null);
             Contract.Requires(p != null);
             Context.CheckContextMatch(constraint);
             Context.CheckContextMatch(p);
-
+                        
             Native.Z3_solver_assert_and_track(Context.nCtx, NativeObject, constraint.NativeObject, p.NativeObject);
         }
 
@@ -207,8 +207,8 @@ namespace Microsoft.Z3
         /// <remarks>
         /// <seealso cref="Model"/>
         /// <seealso cref="UnsatCore"/>
-        /// <seealso cref="Proof"/>
-        /// </remarks>
+        /// <seealso cref="Proof"/>    
+        /// </remarks>    
         public Status Check(params Expr[] assumptions)
         {
             Z3_lbool r;
@@ -246,7 +246,7 @@ namespace Microsoft.Z3
         /// <summary>
         /// The proof of the last <c>Check</c>.
         /// </summary>
-        /// <remarks>
+        /// <remarks>    
         /// The result is <c>null</c> if <c>Check</c> was not invoked before,
         /// if its results was not <c>UNSATISFIABLE</c>, or if proof production is disabled.
         /// </remarks>

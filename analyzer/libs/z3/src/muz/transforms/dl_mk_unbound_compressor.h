@@ -36,9 +36,9 @@ namespace datalog {
 
        A rule
        P(x,_) :- T(x).
-       is replaced by
+       is replaced by 
        P1(x) :- T(x).
-       and for each occurrence of P in a tail of a rule, a new rule is added with P1 in
+       and for each occurrence of P in a tail of a rule, a new rule is added with P1 in 
        its place.
     */
     class mk_unbound_compressor : public rule_transformer::plugin {
@@ -82,7 +82,7 @@ namespace datalog {
         void reset();
     public:
         mk_unbound_compressor(context & ctx);
-
+        
         rule_set * operator()(rule_set const & source);
     };
 

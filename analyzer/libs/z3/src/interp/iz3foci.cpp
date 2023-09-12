@@ -56,10 +56,10 @@ public:
     }
   };
 
-  typedef hash_map<symb,foci2::symb> FuncDeclToSymbol;
+  typedef hash_map<symb,foci2::symb> FuncDeclToSymbol; 
   FuncDeclToSymbol func_decl_to_symbol;     // maps Z3 func decls to symbols
 
-  typedef hash_map<foci2::symb,symb> SymbolToFuncDecl;
+  typedef hash_map<foci2::symb,symb> SymbolToFuncDecl; 
   SymbolToFuncDecl symbol_to_func_decl;     // maps symbols to Z3 func decls
 
   int from_symb(symb func){
@@ -74,7 +74,7 @@ public:
     func_decl_to_symbol[func] = f;
     return f;
   }
-
+  
   // create a symbol corresponding to a DeBruijn index of a particular type
   // the type has to be encoded into the name because the same index can
   // occur with different types
@@ -93,7 +93,7 @@ public:
     std::vector<foci2::ast> args(nargs);
     for(int i = 0; i < nargs; i++)
       args[i] = from_Z3_ast(arg(t,i));
-
+    
     switch(op(t)){
       case True:
 	res = foci->mk_true(); break;
@@ -108,7 +108,7 @@ public:
       case Iff:
 	res = foci->mk_op(foci2::Iff,args); break;
       case OP_OEQ: // bit of a mystery, this one...
-	if(args[0] == args[1]) res = foci->mk_true();
+	if(args[0] == args[1]) res = foci->mk_true(); 
 	else res = foci->mk_op(foci2::Iff,args);
 	break;
       case Ite:
@@ -135,7 +135,7 @@ public:
 	res = foci->mk_op(foci2::Plus,args); break;
       case Sub:
 	args[1] = foci->mk_op(foci2::Times,foci->mk_int("-1"),args[1]); res = foci->mk_op(foci2::Plus,args); break;
-      case Uminus:
+      case Uminus: 
 	res = foci->mk_op(foci2::Times,foci->mk_int("-1"),args[0]); break;
       case Times:
 	res = foci->mk_op(foci2::Times,args); break;
@@ -165,7 +165,7 @@ public:
 	res = foci->mk_int(s);
 	break;
       }
-      case Forall:
+      case Forall: 
       case Exists: {
 	bool is_forall = op(t) == Forall;
 	foci2::ops qop = is_forall ? foci2::Forall : foci2::Exists;
@@ -232,25 +232,25 @@ public:
     else if(foci->get_op(i,o)){
       switch(o){
       case foci2::And:
-	res = make(And,args); break;
+	res = make(And,args); break; 
       case foci2::Or:
-	res = make(Or,args); break;
+	res = make(Or,args); break; 
       case foci2::Not:
-	res = mk_not(args[0]); break;
+	res = mk_not(args[0]); break; 
       case foci2::Iff:
-	res = make(Iff,args[0],args[1]); break;
+	res = make(Iff,args[0],args[1]); break; 
       case foci2::Ite:
 	res = make(Ite,args[0],args[1],args[2]); break;
       case foci2::Equal:
-	res = make(Equal,args[0],args[1]); break;
+	res = make(Equal,args[0],args[1]); break; 
       case foci2::Plus:
-	res = make(Plus,args); break;
+	res = make(Plus,args); break; 
       case foci2::Times:
-	res = make(Times,args); break;
+	res = make(Times,args); break; 
       case foci2::Div:
 	res = make(Idiv,args[0],args[1]); break;
       case foci2::Leq:
-	res = make(Leq,args[0],args[1]); break;
+	res = make(Leq,args[0],args[1]); break; 
       case foci2::Distinct:
 	res = make(Distinct,args);
 	break;

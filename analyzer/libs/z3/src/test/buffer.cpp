@@ -27,7 +27,7 @@ static void tst1() {
     SASSERT(b.empty());
     b.push_back(alloc(point, 10, 20));
     SASSERT(!b.empty());
-    point * p1 = alloc(point, 30, 20);
+    point * p1 = alloc(point, 30, 20); 
     b.push_back(p1);
     SASSERT(b.get(1) == p1);
     b.push_back(alloc(point, 40, 20));
@@ -35,7 +35,7 @@ static void tst1() {
     b.pop_back();
     SASSERT(b.get(0) != p1);
     SASSERT(b.get(1) == p1);
-    point * p2 = alloc(point, 30, 20);
+    point * p2 = alloc(point, 30, 20); 
     SASSERT(b.get(0) != p2);
     b.set(0, p2);
     SASSERT(b.get(0) == p2);

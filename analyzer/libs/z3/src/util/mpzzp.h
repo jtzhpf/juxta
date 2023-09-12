@@ -31,10 +31,10 @@ Revision History:
 class mpzzp_manager {
     typedef unsynch_mpz_manager numeral_manager;
     numeral_manager & m_manager;
-
+    
     bool m_z;
     // instead the usual [0..p) we will keep the numbers in [lower, upper]
-    mpz  m_p, m_lower, m_upper;
+    mpz  m_p, m_lower, m_upper; 
     bool m_p_prime;
     mpz  m_inv_tmp1, m_inv_tmp2, m_inv_tmp3;
     mpz  m_div_tmp;
@@ -42,11 +42,11 @@ class mpzzp_manager {
     bool is_p_normalized_core(mpz const & x) const {
         return m().ge(x, m_lower) && m().le(x, m_upper);
     }
-
+    
     void setup_p() {
         SASSERT(m().is_pos(m_p) && !m().is_one(m_p));
         bool even = m().is_even(m_p);
-        m().div(m_p, 2, m_upper);
+        m().div(m_p, 2, m_upper); 
         m().set(m_lower, m_upper);
         m().neg(m_lower);
         if (even) {
@@ -57,7 +57,7 @@ class mpzzp_manager {
 
     void p_normalize_core(mpz & x) {
         SASSERT(!m_z);
-        m().rem(x, m_p, x);
+        m().rem(x, m_p, x); 
         if (m().gt(x, m_upper)) {
             m().sub(x, m_p, x);
         } else {
@@ -76,10 +76,10 @@ public:
     bool modular() const { return !m_z; }
 
     mpzzp_manager(numeral_manager & _m):
-        m_manager(_m),
+        m_manager(_m), 
         m_z(true) {
     }
-
+    
     mpzzp_manager(numeral_manager & _m, mpz const &  p, bool prime = true):
         m_manager(_m),
         m_z(false) {
@@ -113,9 +113,9 @@ public:
             p_normalize_core(x);
         SASSERT(is_p_normalized(x));
     }
-
+    
     numeral_manager & m() const { return m_manager; }
-
+    
     mpz const & p() const { return m_p; }
 
     void set_z() { m_z = true; }
@@ -128,7 +128,7 @@ public:
     void reset(mpz & a) { m().reset(a); }
     bool is_small(mpz const & a) { return m().is_small(a); }
     void del(mpz & a) { m().del(a); }
-    void neg(mpz & a) { m().neg(a); p_normalize(a); }
+    void neg(mpz & a) { m().neg(a); p_normalize(a); }    
     void abs(mpz & a) { m().abs(a); p_normalize(a); }
     bool is_zero(mpz const & a) { SASSERT(is_p_normalized(a)); return numeral_manager::is_zero(a); }
     bool is_one(mpz const & a) { SASSERT(is_p_normalized(a)); return numeral_manager::is_one(a); }
@@ -136,15 +136,15 @@ public:
     bool is_neg(mpz const & a) { SASSERT(is_p_normalized(a)); return numeral_manager::is_neg(a); }
     bool is_nonpos(mpz const & a) { SASSERT(is_p_normalized(a)); return numeral_manager::is_nonpos(a); }
     bool is_nonneg(mpz const & a) { SASSERT(is_p_normalized(a)); return numeral_manager::is_nonneg(a); }
-    bool is_minus_one(mpz const & a) { SASSERT(is_p_normalized(a)); return numeral_manager::is_minus_one(a); }
+    bool is_minus_one(mpz const & a) { SASSERT(is_p_normalized(a)); return numeral_manager::is_minus_one(a); }    
     bool eq(mpz const & a, mpz const & b) { SASSERT(is_p_normalized(a) && is_p_normalized(b)); return m().eq(a, b); }
     bool lt(mpz const & a, mpz const & b) { SASSERT(is_p_normalized(a) && is_p_normalized(b)); return m().lt(a, b); }
     bool le(mpz const & a, mpz const & b) { SASSERT(is_p_normalized(a) && is_p_normalized(b)); return m().le(a, b); }
     bool gt(mpz const & a, mpz const & b) { SASSERT(is_p_normalized(a) && is_p_normalized(b)); return m().gt(a, b); }
     bool ge(mpz const & a, mpz const & b) { SASSERT(is_p_normalized(a) && is_p_normalized(b)); return m().ge(a, b); }
-    std::string to_string(mpz const & a) const {
+    std::string to_string(mpz const & a) const { 
         SASSERT(is_p_normalized(a));
-        return m().to_string(a);
+        return m().to_string(a); 
     }
     void display(std::ostream & out, mpz const & a) const { m().display(out, a); }
     void add(mpz const & a, mpz const & b, mpz & c) { SASSERT(is_p_normalized(a) && is_p_normalized(b)); m().add(a, b, c); p_normalize(c); }
@@ -152,16 +152,16 @@ public:
     void inc(mpz & a) { SASSERT(is_p_normalized(a)); m().inc(a); p_normalize(a); }
     void dec(mpz & a) { SASSERT(is_p_normalized(a)); m().dec(a); p_normalize(a); }
     void mul(mpz const & a, mpz const & b, mpz & c) { SASSERT(is_p_normalized(a) && is_p_normalized(b)); m().mul(a, b, c); p_normalize(c); }
-    void addmul(mpz const & a, mpz const & b, mpz const & c, mpz & d) {
-        SASSERT(is_p_normalized(a) && is_p_normalized(b) && is_p_normalized(c)); m().addmul(a, b, c, d); p_normalize(d);
+    void addmul(mpz const & a, mpz const & b, mpz const & c, mpz & d) { 
+        SASSERT(is_p_normalized(a) && is_p_normalized(b) && is_p_normalized(c)); m().addmul(a, b, c, d); p_normalize(d); 
     }
     // d <- a - b*c
-    void submul(mpz const & a, mpz const & b, mpz const & c, mpz & d) {
+    void submul(mpz const & a, mpz const & b, mpz const & c, mpz & d) { 
         SASSERT(is_p_normalized(a));
         SASSERT(is_p_normalized(b));
-        SASSERT(is_p_normalized(c));
-        m().submul(a, b, c, d);
-        p_normalize(d);
+        SASSERT(is_p_normalized(c)); 
+        m().submul(a, b, c, d); 
+        p_normalize(d); 
     }
 
     void inv(mpz & a) {
@@ -170,20 +170,20 @@ public:
         }
         else {
             SASSERT(!is_zero(a));
-            // eulers theorem a^(p - 2), but gcd could be more efficient
+            // eulers theorem a^(p - 2), but gcd could be more efficient 
             // a*t1 + p*t2 = 1 => a*t1 = 1 (mod p) => t1 is the inverse (t3 == 1)
             TRACE("mpzp_inv_bug", tout << "a: " << m().to_string(a) << ", p: " << m().to_string(m_p) << "\n";);
             p_normalize(a);
             TRACE("mpzp_inv_bug", tout << "after normalization a: " << m().to_string(a) << "\n";);
             m().gcd(a, m_p, m_inv_tmp1, m_inv_tmp2, m_inv_tmp3);
-            TRACE("mpzp_inv_bug", tout << "tmp1: " << m().to_string(m_inv_tmp1) << "\ntmp2: " << m().to_string(m_inv_tmp2)
+            TRACE("mpzp_inv_bug", tout << "tmp1: " << m().to_string(m_inv_tmp1) << "\ntmp2: " << m().to_string(m_inv_tmp2) 
                   << "\ntmp3: " << m().to_string(m_inv_tmp3) << "\n";);
             p_normalize(m_inv_tmp1);
             m().swap(a, m_inv_tmp1);
             SASSERT(m().is_one(m_inv_tmp3)); // otherwise p is not prime and inverse is not defined
         }
     }
-
+    
     void swap(mpz & a, mpz & b) {
         SASSERT(is_p_normalized(a) && is_p_normalized(b));
         m().swap(a, b);
@@ -205,10 +205,10 @@ public:
             SASSERT(is_p_normalized(c));
         }
     }
-
+    
     static unsigned hash(mpz const & a) { return numeral_manager::hash(a); }
 
-    void gcd(mpz const & a, mpz const & b, mpz & c) {
+    void gcd(mpz const & a, mpz const & b, mpz & c) { 
         SASSERT(is_p_normalized(a) && is_p_normalized(b));
         m().gcd(a, b, c);
         SASSERT(is_p_normalized(c));
@@ -218,16 +218,16 @@ public:
         m().gcd(sz, as, g);
         SASSERT(is_p_normalized(g));
     }
-
-    void gcd(mpz const & r1, mpz const & r2, mpz & a, mpz & b, mpz & g) {
+    
+    void gcd(mpz const & r1, mpz const & r2, mpz & a, mpz & b, mpz & g) { 
         SASSERT(is_p_normalized(r1) && is_p_normalized(r2));
         m().gcd(r1, r2, a, b, g);
         p_normalize(a);
         p_normalize(b);
     }
 
-    void set(mpz & a, mpz & val) { m().set(a, val); p_normalize(a); }
-    void set(mpz & a, int val) { m().set(a, val); p_normalize(a); }
+    void set(mpz & a, mpz & val) { m().set(a, val); p_normalize(a); }    
+    void set(mpz & a, int val) { m().set(a, val); p_normalize(a); }    
     void set(mpz & a, unsigned val) { m().set(a, val); p_normalize(a); }
     void set(mpz & a, char const * val) { m().set(a, val); p_normalize(a); }
     void set(mpz & a, int64 val) { m().set(a, val); p_normalize(a); }
@@ -239,7 +239,7 @@ public:
     uint64 get_uint64(mpz & a) const { const_cast<mpzzp_manager*>(this)->p_normalize(a); return m().get_uint64(a); }
     int64 get_int64(mpz & a) const { const_cast<mpzzp_manager*>(this)->p_normalize(a); return m().get_int64(a); }
     double get_double(mpz & a) const { const_cast<mpzzp_manager*>(this)->p_normalize(a); return m().get_double(a); }
-    void power(mpz const & a, unsigned k, mpz & b) {
+    void power(mpz const & a, unsigned k, mpz & b) { 
         SASSERT(is_p_normalized(a));
         unsigned mask = 1;
         mpz power;
@@ -253,13 +253,13 @@ public:
         }
         del(power);
     }
-    bool is_perfect_square(mpz const & a, mpz & root) {
+    bool is_perfect_square(mpz const & a, mpz & root) { 
         if (m_z) {
             return m().is_perfect_square(a, root);
         }
         else {
-            NOT_IMPLEMENTED_YET();
-            return false;
+            NOT_IMPLEMENTED_YET(); 
+            return false; 
         }
     }
 

@@ -33,7 +33,7 @@ protected:
         unsigned m_timestamp;
         data():m_timestamp(0) {}
     };
-
+    
     svector<data>           m_map;
     unsigned                m_num_offsets;
     unsigned                m_num_vars;
@@ -86,7 +86,7 @@ public:
     }
 
     void insert(var * v, unsigned offset, T const & t) { insert(v->get_idx(), offset, t); }
-
+    
     bool find(unsigned v_idx, unsigned offset, T & r) const {
         SASSERT(v_idx < m_num_vars);
         SASSERT(offset < m_num_offsets);
@@ -99,7 +99,7 @@ public:
         }
         return false;
     }
-
+    
     bool find(var * v, unsigned offset, T & r) const { return find(v->get_idx(), offset, r); }
 
     void erase(unsigned v_idx, unsigned offset) {

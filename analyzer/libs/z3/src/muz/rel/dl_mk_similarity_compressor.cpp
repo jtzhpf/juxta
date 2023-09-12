@@ -34,7 +34,7 @@ namespace datalog {
         m_pinned(m_manager) {
         SASSERT(m_threshold_count>1);
     }
-
+    
     void mk_similarity_compressor::reset() {
         m_rules.reset();
         m_result_rules.reset();
@@ -68,13 +68,13 @@ namespace datalog {
             expr * a1 = t1->get_arg(i);
             expr * a2 = t2->get_arg(i);
             res = aux_compare(is_var(a1), is_var(a2));
-            if (res != 0) {
-                return res;
+            if (res != 0) { 
+                return res; 
             }
             if (is_var(a1)) {
                 res = aux_compare(to_var(a1)->get_idx(), to_var(a2)->get_idx());
-                if (res != 0) {
-                    return res;
+                if (res != 0) { 
+                    return res; 
                 }
             }
         }
@@ -129,7 +129,7 @@ namespace datalog {
             res = aux_compare(r1->get_tail(i)->get_id(), r2->get_tail(i)->get_id());
             if (res!=0) { return res; }
         }
-
+        
         return 0;
     }
 
@@ -156,7 +156,7 @@ namespace datalog {
         unsigned m_parent_index;
     public:
 
-        const_info(int tail_index, unsigned arg_index)
+        const_info(int tail_index, unsigned arg_index) 
             : m_tail_index(tail_index), m_arg_index(arg_index), m_has_parent(false) {}
 
         int tail_index() const { return m_tail_index; }
@@ -164,7 +164,7 @@ namespace datalog {
         bool has_parent() const { return m_has_parent; }
         unsigned parent_index() const { SASSERT(has_parent()); return m_parent_index; }
 
-        void set_parent_index(unsigned idx) {
+        void set_parent_index(unsigned idx) { 
             SASSERT(!m_has_parent);
             m_has_parent = true;
             m_parent_index = idx;
@@ -223,7 +223,7 @@ namespace datalog {
        \brief From the \c tail_indexes and \c arg_indexes remove elements corresponding to constants
        that are the same in rules \c *first ... \c *(after_last-1).
      */
-    static void remove_stable_constants(rule_vector::iterator first, rule_vector::iterator after_last,
+    static void remove_stable_constants(rule_vector::iterator first, rule_vector::iterator after_last, 
             info_vector & const_infos) {
         SASSERT(after_last-first>1);
         unsigned const_cnt = const_infos.size();
@@ -260,7 +260,7 @@ namespace datalog {
        first constant that is equal to it in all the rules. If there is no such, it will contain
        its own index.
      */
-    static void detect_equal_constants(rule_vector::iterator first, rule_vector::iterator after_last,
+    static void detect_equal_constants(rule_vector::iterator first, rule_vector::iterator after_last, 
             info_vector & const_infos) {
         SASSERT(first!=after_last);
         unsigned const_cnt = const_infos.size();
@@ -337,7 +337,7 @@ namespace datalog {
         }
     };
 
-    void mk_similarity_compressor::merge_class(rule_vector::iterator first,
+    void mk_similarity_compressor::merge_class(rule_vector::iterator first, 
             rule_vector::iterator after_last) {
         SASSERT(after_last-first>1);
         info_vector const_infos;
@@ -359,7 +359,7 @@ namespace datalog {
         func_decl* head_pred = r->get_decl();
         symbol const& name_prefix = head_pred->get_name();
         std::string name_suffix = "sc_" + to_string(const_cnt);
-        func_decl * aux_pred = m_context.mk_fresh_head_predicate(name_prefix, symbol(name_suffix.c_str()),
+        func_decl * aux_pred = m_context.mk_fresh_head_predicate(name_prefix, symbol(name_suffix.c_str()), 
             aux_domain.size(), aux_domain.c_ptr(), head_pred);
         m_pinned.push_back(aux_pred);
 
@@ -404,7 +404,7 @@ namespace datalog {
                 const_info & inf = const_infos[i];
                 var * mod_var;
                 if (!inf.has_parent()) {
-                    mod_var = m_manager.mk_var(new_var_idx_base+aux_column_index,
+                    mod_var = m_manager.mk_var(new_var_idx_base+aux_column_index, 
                         aux_domain[aux_column_index]);
                     aux_column_index++;
                     aux_vars.push_back(mod_var);
@@ -425,7 +425,7 @@ namespace datalog {
         new_tail.push_back(aux_tail);
         new_negs.push_back(false);
 
-        rule * new_rule = m_context.get_rule_manager().mk(new_head, new_tail.size(), new_tail.c_ptr(),
+        rule * new_rule = m_context.get_rule_manager().mk(new_head, new_tail.size(), new_tail.c_ptr(), 
             new_negs.c_ptr());
         m_result_rules.push_back(new_rule);
 
@@ -434,7 +434,7 @@ namespace datalog {
         m_modified = true;
     }
 
-    void mk_similarity_compressor::process_class(rule_set const& source, rule_vector::iterator first,
+    void mk_similarity_compressor::process_class(rule_set const& source, rule_vector::iterator first, 
             rule_vector::iterator after_last) {
         SASSERT(first!=after_last);
         //remove duplicates

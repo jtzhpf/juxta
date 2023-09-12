@@ -1,20 +1,20 @@
 /* A Bison parser, made by GNU Bison 2.4.2.  */
 
 /* Skeleton implementation for Bison's Yacc-like parsers in C
-
+   
       Copyright (C) 1984, 1989-1990, 2000-2006, 2009-2010 Free Software
    Foundation, Inc.
-
+   
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-
+   
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-
+   
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -27,7 +27,7 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-
+   
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
@@ -80,8 +80,8 @@
 #endif
 int verbose = P_VERBOSE;
 
-//----Compile with -DP_USERPROC=1 to #include p_user_proc.c. p_user_proc.c
-//----should #define P_ACT, P_BUILD, P_TOKEN, P_PRINT to different procedures
+//----Compile with -DP_USERPROC=1 to #include p_user_proc.c. p_user_proc.c 
+//----should #define P_ACT, P_BUILD, P_TOKEN, P_PRINT to different procedures 
 //----from those below, and supply code.
 #ifdef P_USERPROC
 
@@ -102,26 +102,26 @@ extern char* tptp_lval[];
 #define MAX_CHILDREN 12
 typedef struct pTreeNode * pTree;
 struct pTreeNode {
-    char* symbol;
-    int symbolIndex;
+    char* symbol; 
+    int symbolIndex; 
     pTree children[MAX_CHILDREN+1];
 };
 //-----------------------------------------------------------------------------
-int yyerror( char const *s ) {
+int yyerror( char const *s ) { 
 
-    fprintf( stderr, "%s in line %d at item \"%s\".\n", s, yylineno, yytext);
+    fprintf( stderr, "%s in line %d at item \"%s\".\n", s, yylineno, yytext); 
 	return 0;
 }
 //-----------------------------------------------------------------------------
-pTree pBuildTree(char* symbol,pTree A,pTree B,pTree C,pTree D,pTree E,pTree F,
-pTree G, pTree H, pTree I, pTree J) {
+pTree pBuildTree(char* symbol,pTree A,pTree B,pTree C,pTree D,pTree E,pTree F, 
+pTree G, pTree H, pTree I, pTree J) { 
 
     pTree ss = (pTree)calloc(1,sizeof(struct pTreeNode));
 
     ss->symbol = symbol;
     ss->symbolIndex = -1;
-    ss->children[0] = A;
-    ss->children[1] = B;
+    ss->children[0] = A; 
+    ss->children[1] = B; 
     ss->children[2] = C;
     ss->children[3] = D;
     ss->children[4] = E;
@@ -132,10 +132,10 @@ pTree G, pTree H, pTree I, pTree J) {
     ss->children[9] = J;
     ss->children[10] = NULL;
 
-    return ss;
+    return ss; 
 }
 //-----------------------------------------------------------------------------
-pTree pToken(char* token, int symbolIndex) {
+pTree pToken(char* token, int symbolIndex) { 
 
     //char pTokenBuf[8240];
     pTree ss;
@@ -148,36 +148,36 @@ pTree pToken(char* token, int symbolIndex) {
     ss = pBuildTree(safeSym,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
     ss->symbolIndex = symbolIndex;
 
-    return ss;
+    return ss; 
 }
 //-----------------------------------------------------------------------------
-void pPrintComments(int start, int depth) {
+void pPrintComments(int start, int depth) { 
 
     int d, j;
     char c1[4] = "%", c2[4] = "/*";
 
     j = start;
-    while (tptp_lval[j] != NULL && (tptp_lval[j][0]==c1[0] ||
-(tptp_lval[j][0]==c2[0] && tptp_lval[j][1]==c2[1]))) {
+    while (tptp_lval[j] != NULL && (tptp_lval[j][0]==c1[0] || 
+(tptp_lval[j][0]==c2[0] && tptp_lval[j][1]==c2[1]))) { 
         for (d=0; d<depth-1; d++) {
             printf("| ");
         }
         printf("%1d ",depth % 10);
         printf("%s\n",tptp_lval[j]);
-        j = (j+1)%tptp_store_size;
+        j = (j+1)%tptp_store_size; 
     }
-    return;
+    return; 
 }
 //-----------------------------------------------------------------------------
-void pPrintTree(pTree ss, int depth) {
+void pPrintTree(pTree ss, int depth) { 
 
-//----pPrintIdx is where to find top-level comments to print before a sentence.
+//----pPrintIdx is where to find top-level comments to print before a sentence. 
 //----yywrap() gets those after last sentence.
     static int pPrintIdx = 0;
     int i, d;
 
-    if (pPrintIdx >= 0) {
-        pPrintComments(pPrintIdx, 0);
+    if (pPrintIdx >= 0) { 
+        pPrintComments(pPrintIdx, 0); 
         pPrintIdx = -1;
     }
     if (ss == NULL) {
@@ -200,16 +200,16 @@ void pPrintTree(pTree ss, int depth) {
     }
     i = 0;
     while(ss->children[i] != NULL) {
-        pPrintTree(ss->children[i],depth+1);
+        pPrintTree(ss->children[i],depth+1); 
         i++;
     }
-    return;
+    return; 
 }
 //-----------------------------------------------------------------------------
-int yywrap(void) {
+int yywrap(void) { 
 
-    P_PRINT(NULL);
-    return 1;
+    P_PRINT(NULL); 
+    return 1; 
 }
 //-----------------------------------------------------------------------------
 
@@ -1759,7 +1759,7 @@ int yydebug;
 # define YYMAXDEPTH 10000
 #endif
 
-
+
 
 #if YYERROR_VERBOSE
 
@@ -1970,7 +1970,7 @@ yysyntax_error (char *yyresult, int yystate, int yychar)
     }
 }
 #endif /* YYERROR_VERBOSE */
-
+
 
 /*-----------------------------------------------.
 | Release the memory associated to this symbol.  |

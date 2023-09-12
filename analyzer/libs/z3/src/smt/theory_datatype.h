@@ -26,7 +26,7 @@ Revision History:
 #include"datatype_factory.h"
 
 namespace smt {
-
+    
     class theory_datatype : public theory {
         typedef trail_stack<theory_datatype> th_trail_stack;
         typedef union_find<theory_datatype>  th_union_find;
@@ -46,7 +46,7 @@ namespace smt {
             stats() { reset(); }
         };
 
-
+        
         theory_datatype_params &  m_params;
         datatype_util             m_util;
         ptr_vector<var_data>      m_var_data;
@@ -58,7 +58,7 @@ namespace smt {
         bool is_constructor(app * f) const { return m_util.is_constructor(f); }
         bool is_recognizer(app * f) const { return m_util.is_recognizer(f); }
         bool is_accessor(app * f) const { return m_util.is_accessor(f); }
-
+        
         bool is_constructor(enode * n) const { return is_constructor(n->get_owner()); }
         bool is_recognizer(enode * n) const { return is_recognizer(n->get_owner()); }
         bool is_accessor(enode * n) const { return is_accessor(n->get_owner()); }
@@ -100,7 +100,7 @@ namespace smt {
         virtual ~theory_datatype();
         virtual theory * mk_fresh(context * new_ctx) { return alloc(theory_datatype, get_manager(), m_params); }
         virtual void display(std::ostream & out) const;
-        virtual void collect_statistics(::statistics & st) const;
+        virtual void collect_statistics(::statistics & st) const;        
         virtual void init_model(model_generator & m);
         virtual model_value_proc * mk_value(enode * n, model_generator & m);
         th_trail_stack & get_trail_stack() { return m_trail_stack; }

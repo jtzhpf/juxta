@@ -46,12 +46,12 @@ namespace pdr {
     typedef obj_map<func_decl, pred_transformer*> decl2rel;
 
 
-    //
+    // 
     // Predicate transformer state.
-    // A predicate transformer corresponds to the
+    // A predicate transformer corresponds to the 
     // set of rules that have the same head predicates.
-    //
-
+    // 
+    
     class pred_transformer {
 
         struct stats {
@@ -66,8 +66,8 @@ namespace pdr {
         manager&                     pm;        // pdr-manager
         ast_manager&                 m;         // manager
         context&                     ctx;
-
-        func_decl_ref                m_head;    // predicate
+        
+        func_decl_ref                m_head;    // predicate 
         func_decl_ref_vector         m_sig;     // signature
         ptr_vector<pred_transformer> m_use;     // places where 'this' is referenced.
         ptr_vector<datalog::rule>    m_rules;   // rules used to derive transformer
@@ -75,26 +75,26 @@ namespace pdr {
         vector<expr_ref_vector>      m_levels;  // level formulas
         expr_ref_vector              m_invariants;      // properties that are invariant.
         obj_map<expr, unsigned>      m_prop2level;      // map property to level where it occurs.
-        obj_map<expr, datalog::rule const*> m_tag2rule; // map tag predicate to rule.
+        obj_map<expr, datalog::rule const*> m_tag2rule; // map tag predicate to rule. 
         rule2expr                    m_rule2tag;        // map rule to predicate tag.
         rule2inst                    m_rule2inst;       // map rules to instantiations of indices
-        rule2expr                    m_rule2transition; // map rules to transition
+        rule2expr                    m_rule2transition; // map rules to transition 
         rule2apps                    m_rule2vars;       // map rule to auxiliary variables
         expr_ref                     m_transition;      // transition relation.
         expr_ref                     m_initial_state;   // initial state.
-        reachable_cache              m_reachable;
+        reachable_cache              m_reachable; 
         ptr_vector<func_decl>        m_predicates;
         stats                        m_stats;
 
         void init_sig();
         void ensure_level(unsigned level);
         bool add_property1(expr * lemma, unsigned lvl);  // add property 'p' to state at level lvl.
-        void add_child_property(pred_transformer& child, expr* lemma, unsigned lvl);
+        void add_child_property(pred_transformer& child, expr* lemma, unsigned lvl); 
         void mk_assumptions(func_decl* head, expr* fml, expr_ref_vector& result);
 
         // Initialization
         void init_rules(decl2rel const& pts, expr_ref& init, expr_ref& transition);
-        void init_rule(decl2rel const& pts, datalog::rule const& rule, expr_ref& init,
+        void init_rule(decl2rel const& pts, datalog::rule const& rule, expr_ref& init,                                      
                        ptr_vector<datalog::rule const>& rules, expr_ref_vector& transition);
         void init_atom(decl2rel const& pts, app * atom, app_ref_vector& var_reprs, expr_ref_vector& conj, unsigned tail_idx);
 
@@ -102,7 +102,7 @@ namespace pdr {
 
         // Debugging
         bool check_filled(app_ref_vector const& v) const;
-
+        
         void add_premises(decl2rel const& pts, unsigned lvl, datalog::rule& rule, expr_ref_vector& r);
 
     public:
@@ -115,7 +115,7 @@ namespace pdr {
 
         func_decl* head() const { return m_head; }
         ptr_vector<datalog::rule> const& rules() const { return m_rules; }
-        func_decl* sig(unsigned i) { init_sig(); return m_sig[i].get(); } // signature
+        func_decl* sig(unsigned i) { init_sig(); return m_sig[i].get(); } // signature 
         func_decl* const* sig() { init_sig(); return m_sig.c_ptr(); }
         unsigned  sig_size() { init_sig(); return m_sig.size(); }
         expr*  transition() const { return m_transition; }
@@ -189,14 +189,14 @@ namespace pdr {
         expr_ref               m_state;
         model_ref              m_model;
         ptr_vector<model_node> m_children;
-        unsigned               m_level;
+        unsigned               m_level;       
         unsigned               m_orig_level;
         unsigned               m_depth;
         bool                   m_closed;
         datalog::rule const*   m_rule;
     public:
         model_node(model_node* parent, expr_ref& state, pred_transformer& pt, unsigned level):
-            m_parent(parent), m_pt(pt), m_state(state), m_model(0),
+            m_parent(parent), m_pt(pt), m_state(state), m_model(0), 
                 m_level(level), m_orig_level(level), m_depth(0), m_closed(false), m_rule(0) {
             if (m_parent) {
                 m_parent->m_children.push_back(this);
@@ -230,7 +230,7 @@ namespace pdr {
             return true;
         }
 
-        void set_closed();
+        void set_closed();     
         void reopen();
         void set_pre_closed() { m_closed = true; }
         void reset() { m_children.reset(); }
@@ -249,7 +249,7 @@ namespace pdr {
         model_node*        m_root;
         std::deque<model_node*> m_leaves;
         vector<obj_map<expr, model_nodes > > m_cache;
-
+        
         obj_map<expr, model_nodes>& cache(model_node const& n);
         void erase_children(model_node& n, bool backtrack);
         void erase_leaf(model_node& n);
@@ -268,7 +268,7 @@ namespace pdr {
 
         void set_root(model_node* n);
         model_node& get_root() const { return *m_root; }
-        std::ostream& display(std::ostream& out) const;
+        std::ostream& display(std::ostream& out) const; 
         expr_ref get_trace(context const& ctx);
         proof_ref get_proof_trace(context const& ctx);
         void backtrack_level(bool uses_level, model_node& n);
@@ -278,7 +278,7 @@ namespace pdr {
     struct inductive_exception {};
 
 
-    // 'state' is unsatisfiable at 'level' with 'core'.
+    // 'state' is unsatisfiable at 'level' with 'core'. 
     // Minimize or weaken core.
     class core_generalizer {
     protected:
@@ -306,13 +306,13 @@ namespace pdr {
             stats() { reset(); }
             void reset() { memset(this, 0, sizeof(*this)); }
         };
-
+        
         smt_params&    m_fparams;
         fixedpoint_params const&    m_params;
         ast_manager&         m;
         datalog::context*    m_context;
-        manager              m_pm;
-        decl2rel             m_rels;         // Map from relation predicate to fp-operator.
+        manager              m_pm;  
+        decl2rel             m_rels;         // Map from relation predicate to fp-operator.       
         func_decl_ref        m_query_pred;
         pred_transformer*    m_query;
         mutable model_search m_search;
@@ -324,10 +324,10 @@ namespace pdr {
         volatile bool        m_cancel;
         model_converter_ref  m_mc;
         proof_converter_ref  m_pc;
-
+        
         // Functions used by search.
         void solve_impl();
-        bool check_reachability(unsigned level);
+        bool check_reachability(unsigned level);        
         void propagate(unsigned max_prop_lvl);
         void close_node(model_node& n);
         void check_pre_closed(model_node& n);
@@ -336,7 +336,7 @@ namespace pdr {
         void create_children(model_node& n);
         expr_ref mk_sat_answer() const;
         expr_ref mk_unsat_answer() const;
-
+        
         // Generate inductive property
         void get_level_property(unsigned lvl, expr_ref_vector& res, vector<relation_info> & rs) const;
 
@@ -358,11 +358,11 @@ namespace pdr {
 
         void validate();
 
-    public:
-
+    public:       
+        
         /**
            Initial values of predicates are stored in corresponding relations in dctx.
-
+           
            We check whether there is some reachable state of the relation checked_relation.
         */
         context(
@@ -371,7 +371,7 @@ namespace pdr {
             ast_manager&       m);
 
         ~context();
-
+        
         smt_params&       get_fparams() const { return m_fparams; }
         fixedpoint_params const& get_params() const { return m_params; }
         ast_manager&      get_manager() const { return m; }
@@ -387,7 +387,7 @@ namespace pdr {
         void collect_statistics(statistics& st) const;
         void reset_statistics();
 
-        std::ostream& display(std::ostream& strm) const;
+        std::ostream& display(std::ostream& strm) const;        
 
         void display_certificate(std::ostream& strm) const;
 

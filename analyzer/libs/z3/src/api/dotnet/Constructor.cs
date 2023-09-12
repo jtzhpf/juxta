@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-22
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -34,7 +34,7 @@ namespace Microsoft.Z3
         public uint NumFields
         {
             get
-            {
+            {                
                 return n;
             }
         }
@@ -51,7 +51,7 @@ namespace Microsoft.Z3
                 IntPtr tester = IntPtr.Zero;
                 IntPtr[] accessors = new IntPtr[n];
                 Native.Z3_query_constructor(Context.nCtx, NativeObject, n, ref constructor, ref tester, accessors);
-                return new FuncDecl(Context, constructor);
+                return new FuncDecl(Context, constructor);                
             }
         }
 
@@ -67,7 +67,7 @@ namespace Microsoft.Z3
                 IntPtr tester = IntPtr.Zero;
                 IntPtr[] accessors = new IntPtr[n];
                 Native.Z3_query_constructor(Context.nCtx, NativeObject, n, ref constructor, ref tester, accessors);
-                return new FuncDecl(Context, tester);
+                return new FuncDecl(Context, tester);                
             }
         }
 
@@ -82,10 +82,10 @@ namespace Microsoft.Z3
                 IntPtr constructor = IntPtr.Zero;
                 IntPtr tester = IntPtr.Zero;
                 IntPtr[] accessors = new IntPtr[n];
-                Native.Z3_query_constructor(Context.nCtx, NativeObject, n, ref constructor, ref tester, accessors);
+                Native.Z3_query_constructor(Context.nCtx, NativeObject, n, ref constructor, ref tester, accessors);                
                 FuncDecl[] t = new FuncDecl[n];
                 for (uint i = 0; i < n; i++)
-                    t[i] = new FuncDecl(Context, accessors[i]);
+                    t[i] = new FuncDecl(Context, accessors[i]); 
                 return t;
             }
         }
@@ -96,11 +96,11 @@ namespace Microsoft.Z3
         ~Constructor()
         {
             Native.Z3_del_constructor(Context.nCtx, NativeObject);
-        }
+        }        
 
         #region Internal
         private uint n = 0;
-
+        
         internal Constructor(Context ctx, Symbol name, Symbol recognizer, Symbol[] fieldNames,
                              Sort[] sorts, uint[] sortRefs)
             : base(ctx)

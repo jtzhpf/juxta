@@ -15,13 +15,13 @@ Author:
 
 Notes:
 
---*/
+--*/    
 
 #include "expr_abstract.h"
 #include "map.h"
 
 void expr_abstractor::operator()(unsigned base, unsigned num_bound, expr* const* bound, expr* n, expr_ref& result) {
-
+    
     expr * curr = 0, *b = 0;
     SASSERT(n->get_ref_count() > 0);
 
@@ -72,16 +72,16 @@ void expr_abstractor::operator()(unsigned base, unsigned num_bound, expr* const*
             expr_ref_buffer patterns(m);
             expr_ref result1(m);
             unsigned new_base = base + q->get_num_decls();
-
+        
             for (unsigned i = 0; i < q->get_num_patterns(); ++i) {
                 expr_abstract(m, new_base, num_bound, bound, q->get_pattern(i), result1);
                 patterns.push_back(result1.get());
             }
             expr_abstract(m, new_base, num_bound, bound, q->get_expr(), result1);
             b = m.update_quantifier(q, patterns.size(), patterns.c_ptr(), result1.get());
-            m_pinned.push_back(b);
+            m_pinned.push_back(b);            
             m_map.insert(curr, b);
-            m_stack.pop_back();
+            m_stack.pop_back();            
             break;
         }
         default:
@@ -93,7 +93,7 @@ void expr_abstractor::operator()(unsigned base, unsigned num_bound, expr* const*
     m_pinned.reset();
     m_map.reset();
     m_stack.reset();
-    m_args.reset();
+    m_args.reset();   
 }
 
 void expr_abstract(ast_manager& m, unsigned base, unsigned num_bound, expr* const* bound, expr* n, expr_ref&  result) {

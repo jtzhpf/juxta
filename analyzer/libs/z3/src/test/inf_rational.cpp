@@ -74,7 +74,7 @@ void test_inc_dec(
     SASSERT(r == r_post);
     SASSERT(rational(1,2) * r == r_pre);
     SASSERT(r == r_pre / rational(1,2));
-
+       
 }
 
 void
@@ -109,12 +109,12 @@ tst_inf_rational()
     inf_rational d = denominator(r7);
 
 
-    {
+    {  
         inf_rational b_8_5  = inf_rational(8,5);
         inf_rational b_7_5  = inf_rational(7,5);
         inf_rational b_7_10 = inf_rational(7,10);
         inf_rational b_17_10  = inf_rational(17,10);
-
+       
         inf_rational r = r9;
         test_inc_dec(r, b_8_5, b_7_5, b_7_10, b_17_10);
     }
@@ -137,18 +137,18 @@ tst_inf_rational()
     SASSERT(inf_rational(rational(1,2),false) != inf_rational(rational(1,2)));
     SASSERT(inf_rational(rational(1,2),true) != inf_rational(rational(1,2)));
     SASSERT(inf_rational(rational(1,2),false) != inf_rational(rational(1,2),true));
-
+    
     inf_rational h_neg(rational(1,2),false);
     inf_rational h_pos(rational(1,2),true);
-
+    
     h_neg.neg();
     SASSERT(h_neg == -inf_rational(rational(1,2),false));
     h_neg.neg();
     SASSERT(h_neg == inf_rational(rational(1,2),false));
-
+    
     SASSERT(r1.is_zero() && !r1.is_one() && !r1.is_neg() && r1.is_nonneg() && r1.is_nonpos() && !r1.is_pos());
     SASSERT(!r3.is_zero() && r3.is_one() && !r3.is_neg() && r3.is_nonneg() && !r3.is_nonpos() && r3.is_pos());
-
+    
     SASSERT(floor(inf_rational(rational(1,2),false)) == rational());
     SASSERT(floor(inf_rational(rational(1,2))) == rational());
     SASSERT(floor(inf_rational(rational(),false)) == rational(-1));
@@ -174,7 +174,7 @@ tst_inf_rational()
     SASSERT (y == inf_rational(rational(1,2),true));
 
     SASSERT(inf_rational(1,2) == abs(-inf_rational(1,2)));
-
+    
 }
 
 

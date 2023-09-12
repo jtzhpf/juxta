@@ -4,9 +4,9 @@ quote(mli,"
 (**
   Summary: \[ [ parse_smtlib_string_x c str sort_names sorts decl_names decls ] \]
 
-  Parse the given string using the SMT-LIB parser.
+  Parse the given string using the SMT-LIB parser. 
 
-  The symbol table of the parser can be initialized using the given sorts and declarations.
+  The symbol table of the parser can be initialized using the given sorts and declarations. 
   The symbols in the arrays [sort_names] and [decl_names] don't need to match the names
   of the sorts and declarations in the arrays [sorts] and [decls]. This is an useful feature
   since we can use arbitrary names to reference sorts and declarations defined using the API.

@@ -26,7 +26,7 @@ void filter_model_converter::operator()(model_ref & old_model, unsigned goal_idx
     TRACE("filter_mc", tout << "before filter_model_converter\n"; model_v2_pp(tout, *old_model); display(tout););
     ast_fast_mark1 fs;
     unsigned num = m_decls.size();
-    for (unsigned i = 0; i < num; i++)
+    for (unsigned i = 0; i < num; i++) 
         fs.mark(m_decls.get(i));
     model * new_model = alloc(model, m());
     num = old_model->get_num_constants();

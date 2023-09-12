@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Rule transformer which removes relations which are out of the cone of
+    Rule transformer which removes relations which are out of the cone of 
     influence of output relations
 
 Author:
@@ -28,7 +28,7 @@ Revision History:
 #include"extension_model_converter.h"
 
 namespace datalog {
-
+  
     // -----------------------------------
     //
     // mk_coi_filter
@@ -60,7 +60,7 @@ namespace datalog {
                     reached.insert(r->get_decl());
                     todo.insert(r->get_decl());
                 }
-            }
+            } 
             else {
                 for (unsigned i = 0; i < r->get_uninterpreted_tail_size(); ++i) {
                     func_decl * d = r->get_tail(i)->get_decl();
@@ -82,13 +82,13 @@ namespace datalog {
                     reached.insert(*fit);
                     todo.insert(*fit);
                 }
-            }
+            }                 
         }
         // reachability computation
         while (!todo.empty()) {
             func_decl * d = todo.back();
             todo.pop_back();
-            ptr_vector<rule> * rules;
+            ptr_vector<rule> * rules; 
             if (!body2rules.find(d, rules)) continue;
             for (ptr_vector<rule>::iterator it = rules->begin(); it != rules->end(); ++it) {
                 rule * r = *it;
@@ -125,14 +125,14 @@ namespace datalog {
             res->close();
         }
 
-        // set to false each unreached predicate
+        // set to false each unreached predicate 
         if (m_context.get_model_converter()) {
             extension_model_converter* mc0 = alloc(extension_model_converter, m);
             for (func_decl_set::iterator it = all.begin(); it != all.end(); ++it) {
                 if (!reached.contains(*it)) {
                     mc0->insert(*it, m.mk_false());
                 }
-            }
+            }   
             m_context.add_model_converter(mc0);
         }
         // clean up body2rules range resources
@@ -210,13 +210,13 @@ namespace datalog {
                         if (!is_var(arg)) {
                             conj.push_back(m.mk_eq(m.mk_var(j, m.get_sort(arg)), arg));
                         }
-                    }
+                    }                    
                     fmls.push_back(m.mk_and(conj.size(), conj.c_ptr()));
                 }
                 expr_ref fml(m);
                 fml = m.mk_or(fmls.size(), fmls.c_ptr());
                 mc0->insert(*it, fml);
-            }
+            }   
             m_context.add_model_converter(mc0);
         }
         CTRACE("dl", 0 != res, res->display(tout););

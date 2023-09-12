@@ -14,7 +14,7 @@ Abstract:
     Thus, it assumes that polynomials have precise integer coefficients, and
     bounds are rationals. If a particular implementation uses floats, then
     internally the bounds are approximated.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-08-07.
@@ -62,9 +62,9 @@ namespace subpaving {
         scoped_mpq_vector m_as;
     public:
         context_mpq_wrapper(unsynch_mpq_manager & m, params_ref const & p, small_object_allocator * a):
-            context_wrapper<context_mpq>(m, p, a),
-            m_c(m),
-            m_as(m)
+            context_wrapper<context_mpq>(m, p, a), 
+            m_c(m), 
+            m_as(m) 
         {}
 
         virtual ~context_mpq_wrapper() {}
@@ -79,8 +79,8 @@ namespace subpaving {
             m_ctx.nm().set(m_c, c);
             return m_ctx.mk_sum(m_c, sz, m_as.c_ptr(), xs);
         }
-        virtual ineq * mk_ineq(var x, mpq const & k, bool lower, bool open) {
-            return reinterpret_cast<ineq*>(m_ctx.mk_ineq(x, k, lower, open));
+        virtual ineq * mk_ineq(var x, mpq const & k, bool lower, bool open) { 
+            return reinterpret_cast<ineq*>(m_ctx.mk_ineq(x, k, lower, open)); 
         }
     };
 
@@ -89,7 +89,7 @@ namespace subpaving {
         scoped_mpf                    m_c;
         scoped_mpf_vector             m_as;
         scoped_mpq                    m_q1, m_q2;
-
+        
         // Convert the mpz (integer) into a mpf, and throws an exception if the conversion is not precise.
         void int2mpf(mpz const & a, mpf & o) {
             m_qm.set(m_q1, a);
@@ -98,7 +98,7 @@ namespace subpaving {
             if (!m_qm.eq(m_q1, m_q2))
                 throw subpaving::exception();
         }
-
+        
     public:
         context_mpf_wrapper(f2n<mpf_manager> & fm, params_ref const & p, small_object_allocator * a):
             context_wrapper<context_mpf>(fm, p, a),
@@ -126,7 +126,7 @@ namespace subpaving {
                 throw subpaving::exception();
             }
         }
-        virtual ineq * mk_ineq(var x, mpq const & k, bool lower, bool open) {
+        virtual ineq * mk_ineq(var x, mpq const & k, bool lower, bool open) { 
             try {
                 f2n<mpf_manager> & m = m_ctx.nm();
                 if (lower)
@@ -146,7 +146,7 @@ namespace subpaving {
         unsynch_mpq_manager &         m_qm;
         hwf                           m_c;
         svector<hwf>                  m_as;
-
+        
         // Convert the mpz (integer) into a hwf, and throws an exception if the conversion is not precise.
         void int2hwf(mpz const & a, hwf & o) {
             if (!m_qm.is_int64(a))
@@ -159,7 +159,7 @@ namespace subpaving {
             if (static_cast<int64>(_dval) != val)
                 throw subpaving::exception();
         }
-
+        
     public:
         context_hwf_wrapper(f2n<hwf_manager> & fm, unsynch_mpq_manager & qm, params_ref const & p, small_object_allocator * a):
             context_wrapper<context_hwf>(fm, p, a),
@@ -183,7 +183,7 @@ namespace subpaving {
                 throw subpaving::exception();
             }
         }
-        virtual ineq * mk_ineq(var x, mpq const & k, bool lower, bool open) {
+        virtual ineq * mk_ineq(var x, mpq const & k, bool lower, bool open) { 
             try {
                 f2n<hwf_manager> & m = m_ctx.nm();
                 if (lower)
@@ -213,11 +213,11 @@ namespace subpaving {
             if (!m_qm.eq(m_z1, m_z2))
                 throw subpaving::exception();
         }
-
+        
     public:
         context_fpoint_wrapper(typename context_fpoint::numeral_manager & m, unsynch_mpq_manager & qm, params_ref const & p, small_object_allocator * a):
             context_wrapper<context_fpoint>(m, p, a),
-            m_qm(qm),
+            m_qm(qm), 
             m_c(m),
             m_as(m),
             m_z1(m_qm),
@@ -241,8 +241,8 @@ namespace subpaving {
                 throw subpaving::exception();
             }
         }
-
-        virtual ineq * mk_ineq(var x, mpq const & k, bool lower, bool open) {
+        
+        virtual ineq * mk_ineq(var x, mpq const & k, bool lower, bool open) { 
             try {
                 typename context_fpoint::numeral_manager & m = this->m_ctx.nm();
                 if (lower)

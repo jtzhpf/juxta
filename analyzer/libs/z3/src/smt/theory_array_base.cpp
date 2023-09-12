@@ -39,7 +39,7 @@ namespace smt {
             m_found_unsupported_op = true;
         }
     }
-
+    
     app * theory_array_base::mk_select(unsigned num_args, expr * const * args) {
         app * r = get_manager().mk_app(get_family_id(), OP_SELECT, 0, 0, num_args, args);
         TRACE("mk_var_bug", tout << "mk_select: " << r->get_id() << " num_args: " << num_args;
@@ -133,7 +133,7 @@ namespace smt {
         SASSERT(is_store(store));
         SASSERT(is_select(select));
         SASSERT(store->get_num_args() == 1 + select->get_num_args());
-
+                
         ptr_buffer<expr> sel1_args, sel2_args;
         context & ctx      = get_context();
         ast_manager & m    = get_manager();
@@ -157,7 +157,7 @@ namespace smt {
         for (unsigned i = 0; i < num_args; i++) {
             enode * idx1 = js[i];
             enode * idx2 = is[i];
-
+            
             if (idx1->get_root() == idx2->get_root()) {
                 TRACE("array_bug", tout << "indexes are equal... skipping...\n";);
                 continue;
@@ -188,25 +188,25 @@ namespace smt {
             assert_axiom(ante, conseq);
         }
     }
-
-    bool theory_array_base::assert_store_axiom2(enode * store, enode * select) {
+    
+    bool theory_array_base::assert_store_axiom2(enode * store, enode * select) { 
         unsigned num_args = select->get_num_args();
         unsigned        i = 1;
-        for (; i < num_args; i++)
+        for (; i < num_args; i++) 
             if (store->get_arg(i)->get_root() != select->get_arg(i)->get_root())
                 break;
         if (i == num_args)
             return false;
         if (get_context().add_fingerprint(store, store->get_owner_id(), select->get_num_args() - 1, select->get_args() + 1)) {
             TRACE("array", tout << "adding axiom2 to todo queue\n";);
-            m_axiom2_todo.push_back(std::make_pair(store, select));
+            m_axiom2_todo.push_back(std::make_pair(store, select)); 
             return true;
         }
         TRACE("array", tout << "axiom already instantiated: #" << store->get_owner_id() << " #" << select->get_owner_id() << "\n";);
         return false;
     }
 
-
+ 
 
 
 
@@ -214,7 +214,7 @@ namespace smt {
     func_decl_ref_vector * theory_array_base::register_sort(sort * s_array) {
         unsigned dimension = get_dimension(s_array);
         func_decl_ref_vector * ext_skolems = 0;
-        if (!m_sort2skolem.find(s_array, ext_skolems)) {
+        if (!m_sort2skolem.find(s_array, ext_skolems)) {       
             ast_manager & m = get_manager();
             ext_skolems = alloc(func_decl_ref_vector, m);
             for (unsigned i = 0; i < dimension; ++i) {
@@ -259,7 +259,7 @@ namespace smt {
         enode_vector::const_iterator it  = r1->begin_parents();
         enode_vector::const_iterator end = r1->end_parents();
         for (; it != end; ++it) {
-            enode* parent = *it;
+            enode* parent = *it;            
             if (parent->is_cgr() &&
                 ctx.is_relevant(parent) &&
                 is_select(parent->get_owner()) &&
@@ -273,12 +273,12 @@ namespace smt {
         for (; it != end; ++it) {
             enode * parent = *it;
             enode * other;
-            if (parent->is_cgr() &&
+            if (parent->is_cgr() && 
                 ctx.is_relevant(parent) &&
                 is_select(parent->get_owner()) &&
                 parent->get_arg(0)->get_root() == r2 &&
                 m_array_value.find(parent, other)) {
-
+                
                 if (ctx.is_diseq(parent, other)) {
                     TRACE("array_ext", tout << "selects are disequal\n";);
                     return true;
@@ -297,10 +297,10 @@ namespace smt {
             return false; // axiom was already instantiated
         if (already_diseq(n1, n2))
             return false;
-        m_extensionality_todo.push_back(std::make_pair(n1, n2));
+        m_extensionality_todo.push_back(std::make_pair(n1, n2));         
         return true;
     }
-
+   
     void theory_array_base::assert_extensionality_core(enode * n1, enode * n2) {
         app * e1        = n1->get_owner();
         app * e2        = n2->get_owner();
@@ -545,7 +545,7 @@ namespace smt {
             return n;
         }
         while (m_parents[n] >= 0) {
-            n = m_parents[n];
+            n = m_parents[n];        
         }
         // compress path.
         while (m_parents[n0] >= 0) {
@@ -571,7 +571,7 @@ namespace smt {
             if (m_defaults[n] == 0) {
                 m_defaults[n] = m_defaults[m];
             }
-            CTRACE("array", m_defaults[m],
+            CTRACE("array", m_defaults[m], 
                    tout << mk_pp(m_defaults[m]->get_root()->get_owner(), get_manager()) << "\n";
                    tout << mk_pp(m_defaults[n]->get_root()->get_owner(), get_manager()) << "\n";
                   );
@@ -593,9 +593,9 @@ namespace smt {
     }
 
     /**
-       \brief It is ok to use an unspecified default value for arrays, when the
+       \brief It is ok to use an unspecified default value for arrays, when the 
        logical context does not contain store, default and const terms.
-
+       
        That is, other modules (such as smt_model_finder) may set the default value to an arbitrary value.
     */
     bool theory_array_base::is_unspecified_default_ok() const {
@@ -603,17 +603,17 @@ namespace smt {
         int num_vars = get_num_vars();
         for (theory_var v = 0; v < num_vars; ++v) {
             enode * n    = get_enode(v);
-
+            
             // If n is not relevant, then it should not be used to set defaults.
             if (!ctx.is_relevant(n))
                 continue;
-
+            
             if (is_store(n) || is_const(n) || is_default(n))
                 return false;
         }
         return true;
     }
-
+        
 
     void theory_array_base::collect_defaults() {
         int num_vars = get_num_vars();
@@ -623,7 +623,7 @@ namespace smt {
         m_parents.resize(num_vars, -1);
         m_defaults.resize(num_vars, 0);
         m_else_values.resize(num_vars, 0);
-
+    
         if (m_use_unspecified_default)
             return;
 
@@ -634,11 +634,11 @@ namespace smt {
         //
         for (theory_var v = 0; v < num_vars; ++v) {
             enode * n    = get_enode(v);
-
+            
             // If n is not relevant, then it should not be used to set defaults.
             if (!ctx.is_relevant(n))
                 continue;
-
+            
             theory_var r = get_representative(v);
 
             mg_merge(v, r);
@@ -649,7 +649,7 @@ namespace smt {
                 ast_manager& m = get_manager();
 
                 mg_merge(v, get_representative(w));
-
+                                
                 TRACE("array", tout << "merge: " << mk_pp(n->get_owner(), m) << " " << v << " " << w << "\n";);
             }
             else if (is_const(n)) {
@@ -698,7 +698,7 @@ namespace smt {
         m_selects_range.reset();
 
         for (theory_var v = 0; v < num_vars; ++v) {
-            enode * r = get_enode(v)->get_root();
+            enode * r = get_enode(v)->get_root();                
             if (is_representative(v) && get_context().is_relevant(r)) {
                 enode_vector::iterator it  = r->begin_parents();
                 enode_vector::iterator end = r->end_parents();
@@ -716,7 +716,7 @@ namespace smt {
             }
         }
     }
-
+    
     void theory_array_base::propagate_select_to_store_parents(enode * r, enode * sel, svector<enode_pair> & todo) {
         SASSERT(r->get_root() == r);
         SASSERT(is_select(sel));
@@ -733,12 +733,12 @@ namespace smt {
                 // propagate upward
                 select_set * parent_sel_set = get_select_set(parent);
                 enode * parent_root = parent->get_root();
-
+                
                 if (parent_sel_set->contains(sel))
                     continue;
 
                 SASSERT(sel->get_num_args() + 1 == parent->get_num_args());
-
+                    
                 // check whether the sel idx was overwritten by the store
                 unsigned num_args = sel->get_num_args();
                 unsigned i = 1;
@@ -798,51 +798,51 @@ namespace smt {
 
     public:
         array_value_proc(family_id fid, sort * s, extra_fresh_value * v):
-            m_fid(fid),
-            m_sort(s),
-            m_num_entries(0),
-            m_dim(0),
-            m_else(0),
+            m_fid(fid), 
+            m_sort(s), 
+            m_num_entries(0), 
+            m_dim(0), 
+            m_else(0), 
             m_unspecified_else(false) {
             m_dependencies.push_back(model_value_dependency(v));
         }
 
         array_value_proc(family_id fid, sort * s, app * else_value):
-            m_fid(fid),
-            m_sort(s),
-            m_num_entries(0),
-            m_dim(0),
+            m_fid(fid), 
+            m_sort(s), 
+            m_num_entries(0), 
+            m_dim(0), 
             m_else(else_value),
             m_unspecified_else(false) {
         }
 
         array_value_proc(family_id fid, sort * s, enode * else_value):
-            m_fid(fid),
-            m_sort(s),
-            m_num_entries(0),
-            m_dim(0),
+            m_fid(fid), 
+            m_sort(s), 
+            m_num_entries(0), 
+            m_dim(0), 
             m_else(0),
             m_unspecified_else(false) {
             m_dependencies.push_back(model_value_dependency(else_value));
         }
 
         array_value_proc(family_id fid, sort * s):
-            m_fid(fid),
-            m_sort(s),
-            m_num_entries(0),
-            m_dim(0),
+            m_fid(fid), 
+            m_sort(s), 
+            m_num_entries(0), 
+            m_dim(0), 
             m_else(0),
             m_unspecified_else(true) {
         }
 
         virtual ~array_value_proc() {}
-
+     
         void add_entry(unsigned num_args, enode * const * args, enode * value) {
             SASSERT(num_args > 0);
             SASSERT(m_dim == 0 || m_dim == num_args);
             m_dim = num_args;
             m_num_entries ++;
-            for (unsigned i = 0; i < num_args; i++)
+            for (unsigned i = 0; i < num_args; i++) 
                 m_dependencies.push_back(model_value_dependency(args[i]));
             m_dependencies.push_back(model_value_dependency(value));
         }
@@ -850,9 +850,9 @@ namespace smt {
         virtual void get_dependencies(buffer<model_value_dependency> & result) {
             result.append(m_dependencies.size(), m_dependencies.c_ptr());
         }
-
+        
         virtual app * mk_value(model_generator & mg, ptr_vector<expr> & values) {
-            // values must have size = m_num_entries * (m_dim + 1) + ((m_else || m_unspecified_else) ? 0 : 1)
+            // values must have size = m_num_entries * (m_dim + 1) + ((m_else || m_unspecified_else) ? 0 : 1) 
             // an array value is a lookup table + else_value
             // each entry has m_dim indexes that map to a value.
             ast_manager & m = mg.get_manager();
@@ -872,12 +872,12 @@ namespace smt {
                 fi->set_else(to_app(values[0]));
                 idx = 1;
             }
-
+            
             ptr_buffer<expr> args;
             for (unsigned i = 0; i < m_num_entries; i++) {
                 args.reset();
                 // copy indices
-                for (unsigned j = 0; j < m_dim; j++, idx++)
+                for (unsigned j = 0; j < m_dim; j++, idx++) 
                     args.push_back(values[idx]);
                 expr * result = values[idx];
                 idx++;
@@ -885,7 +885,7 @@ namespace smt {
             }
 
             parameter p[1] = { parameter(f) };
-            return m.mk_app(m_fid, OP_AS_ARRAY, 1, p);
+            return m.mk_app(m_fid, OP_AS_ARRAY, 1, p); 
         }
     };
 
@@ -908,14 +908,14 @@ namespace smt {
             }
             else {
                 theory_var r    = mg_find(v);
-                void * else_val = m_else_values[r];
+                void * else_val = m_else_values[r];                
                 // DISABLED. It seems wrong, since different nodes can share the same
                 // else_val according to the mg class.
                 // SASSERT(else_val == 0 || get_context().is_relevant(UNTAG(app*, else_val)));
                 if (else_val == 0) {
                     sort * range = to_sort(s->get_parameter(s->get_num_parameters() - 1).get_ast());
                     // IMPORTANT:
-                    // The implementation should not assume a fresh value is created for
+                    // The implementation should not assume a fresh value is created for 
                     // the else_val if the range is finite
                     if (range->is_infinite())
                         else_val = TAG(void*, m.mk_extra_fresh_value(range), 1);

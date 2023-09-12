@@ -48,7 +48,7 @@ namespace datalog {
         stats                  m_stats;
     public:
         imp(context& ctx):
-            m_ctx(ctx),
+            m_ctx(ctx), 
             m(ctx.get_manager()),
             rm(ctx.get_rule_manager()),
             m_solver(m, m_fparams),      // TBD: can be replaced by efficient BV solver.
@@ -62,7 +62,7 @@ namespace datalog {
             m_fparams.m_soft_timeout = 1000;
         }
 
-        ~imp() {}
+        ~imp() {}        
 
         lbool query(expr* query) {
             m_ctx.ensure_opened();
@@ -84,12 +84,12 @@ namespace datalog {
             m_goals.push_back(to_app(head));
             return search(20, 0);
         }
-
+    
         void cancel() {
             m_cancel = true;
             m_solver.cancel();
         }
-
+        
         void cleanup() {
             m_cancel = false;
             m_goals.reset();
@@ -108,7 +108,7 @@ namespace datalog {
 
         void display_certificate(std::ostream& out) const {
             expr_ref ans = get_answer();
-            out << mk_pp(ans, m) << "\n";
+            out << mk_pp(ans, m) << "\n";    
 
         }
 
@@ -121,7 +121,7 @@ namespace datalog {
         void reset_ground() {
             m_ground.reset();
         }
-
+        
         void ground(expr_ref& e) {
             ptr_vector<sort> sorts;
             get_free_vars(e, sorts);
@@ -192,7 +192,7 @@ namespace datalog {
                         status = l_undef;
                         // fallthrough
                     case l_false:
-                        m_goals.resize(num_goals);
+                        m_goals.resize(num_goals);   
                         break;
                     case l_true:
                         return l_true;
@@ -206,20 +206,20 @@ namespace datalog {
             }
             return status;
         }
-
-
+    
+    
         proof_ref get_proof() const {
             return proof_ref(0, m);
         }
     };
-
+    
     clp::clp(context& ctx):
         engine_base(ctx.get_manager(), "clp"),
-        m_imp(alloc(imp, ctx)) {
+        m_imp(alloc(imp, ctx)) {        
     }
     clp::~clp() {
         dealloc(m_imp);
-    }
+    }    
     lbool clp::query(expr* query) {
         return m_imp->query(query);
     }

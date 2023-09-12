@@ -37,7 +37,7 @@ void tst_match(ast_manager & m, app * t, app * i) {
     }
 
     s.reset();
-
+    
     if (t->get_decl() == i->get_decl()) {
         // trying to match the arguments of t and i
         std::cout << "Are the arguments of " << mk_pp(i, m) << " an instance of the arguments of " << mk_pp(t, m) << "\n";
@@ -50,7 +50,7 @@ void tst_match(ast_manager & m, app * t, app * i) {
         if (j == num_args) {
             std::cout << "yes\n";
             s.display(std::cout);
-
+            
             // create some dummy term to test for applying the substitution.
             sort_ref S(          m.mk_uninterpreted_sort(symbol("S")),    m);
             sort * domain[3]   = {S, S, S};
@@ -68,7 +68,7 @@ void tst_match(ast_manager & m, app * t, app * i) {
             std::cout << "no\n";
         }
     }
-
+    
     std::cout << "\n";
 }
 

@@ -918,7 +918,7 @@ namespace sat {
         void process(literal l) {
             TRACE("blocked_clause", tout << "processing: " << l << "\n";);
             model_converter::entry * new_entry = 0;
-            if (s.is_external(l.var()) || s.was_eliminated(l.var()))
+            if (s.is_external(l.var()) || s.was_eliminated(l.var())) 
                 return;
 
             {
@@ -1343,7 +1343,7 @@ namespace sat {
         }
         TRACE("resolution", tout << "found var to eliminate, before: " << before_clauses << " after: " << after_clauses << "\n";);
 
-
+        
         // eliminate variable
         model_converter::entry & mc_entry = s.m_mc.mk(model_converter::ELIM_VAR, v);
         save_clauses(mc_entry, m_pos_cls);

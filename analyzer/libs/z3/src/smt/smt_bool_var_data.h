@@ -43,9 +43,9 @@ namespace smt {
             m_atom = m_eq || m_notify_theory != 0 || m_quantifier || m_enode;
         }
     public:
-
+        
         unsigned get_intern_level() const { return m_iscope_lvl; }
-
+        
         bool is_atom() const { return m_atom; }
 
         theory_id get_theory() const {
@@ -67,13 +67,13 @@ namespace smt {
 
         bool is_enode() const { return m_enode; }
 
-        void set_enode_flag() {
-            m_enode = true;
+        void set_enode_flag() { 
+            m_enode = true; 
             m_atom  = true;
         }
 
-        void reset_enode_flag() {
-            m_enode = false;
+        void reset_enode_flag() { 
+            m_enode = false; 
             update_atom_flag();
         }
 
@@ -83,7 +83,7 @@ namespace smt {
             m_quantifier = true;
             m_atom  = true;
         }
-
+        
         bool is_eq() const { return m_eq; }
 
         void set_eq_flag() {

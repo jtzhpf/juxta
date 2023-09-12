@@ -19,9 +19,9 @@ void bv_elim::elim(quantifier* q, quantifier_ref& r) {
 
     //
     // Traverse sequence of bound variables to eliminate
-    // bit-vecctor variables and replace them by
+    // bit-vecctor variables and replace them by 
     // Booleans.
-    //
+    // 
     unsigned var_idx = 0;
     for (unsigned i = num_decls; i > 0; ) {
         --i;
@@ -38,7 +38,7 @@ void bv_elim::elim(quantifier* q, quantifier_ref& r) {
                 new_name << nm.str();
                 new_name << "_";
                 new_name << j;
-                var* v = m_manager.mk_var(var_idx++, m_manager.mk_bool_sort());
+                var* v = m_manager.mk_var(var_idx++, m_manager.mk_bool_sort());                
                 args.push_back(v);
                 _sorts.push_back(m_manager.mk_bool_sort());
                 _names.push_back(symbol(new_name.str().c_str()));
@@ -52,9 +52,9 @@ void bv_elim::elim(quantifier* q, quantifier_ref& r) {
             _names.push_back(nm);
         }
     }
-    //
+    // 
     // reverse the vectors.
-    //
+    // 
     SASSERT(_names.size() == _sorts.size());
     for (unsigned i = _names.size(); i > 0; ) {
         --i;
@@ -72,7 +72,7 @@ void bv_elim::elim(quantifier* q, quantifier_ref& r) {
     subst(old_body, sub_size, sub, new_body);
 
     for (unsigned j = 0; j < q->get_num_patterns(); j++) {
-        expr_ref pat(m_manager);
+        expr_ref pat(m_manager);        
         subst(q->get_pattern(j), sub_size, sub, pat);
         pats.push_back(pat);
     }
@@ -82,7 +82,7 @@ void bv_elim::elim(quantifier* q, quantifier_ref& r) {
         no_pats.push_back(nopat);
     }
 
-    r = m_manager.mk_quantifier(true,
+    r = m_manager.mk_quantifier(true, 
                                 names.size(),
                                 sorts.c_ptr(),
                                 names.c_ptr(),

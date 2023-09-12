@@ -32,8 +32,8 @@ namespace datalog {
         virtual family_id get_family_id() const = 0;
 
         // reduce arguments.
-        virtual void reduce(func_decl* f, unsigned num_args, expr * const* args, expr_ref& result) = 0;
-
+        virtual void reduce(func_decl* f, unsigned num_args, expr * const* args, expr_ref& result) = 0;  
+        
         // overwrite terms passed in outs vector with values computed by function.
         virtual void reduce_assign(func_decl* f, unsigned num_args, expr * const* args, unsigned num_out, expr* const* outs) = 0;
     };
@@ -62,21 +62,21 @@ namespace datalog {
 
         virtual relation_join_fn * mk_join_fn(const relation_base & t1, const relation_base & t2,
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2);
-        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
-        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len,
+        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle);
-        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src,
+        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
-        virtual relation_union_fn * mk_widen_fn(const relation_base & tgt, const relation_base & src,
+        virtual relation_union_fn * mk_widen_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
-        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * identical_cols);
-        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value,
+        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value, 
             unsigned col);
         virtual relation_mutator_fn * mk_filter_interpreted_fn(const relation_base & t, app * condition);
-        virtual relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t,
-            const relation_base & negated_obj, unsigned joined_col_cnt,
+        virtual relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t, 
+            const relation_base & negated_obj, unsigned joined_col_cnt, 
             const unsigned * t_cols, const unsigned * negated_cols);
 
     private:
@@ -116,7 +116,7 @@ namespace datalog {
         func_decl_ref             m_store_fn;
         func_decl_ref             m_is_empty_fn;
 
-        unsigned size() const { return get_signature().size(); }
+        unsigned size() const { return get_signature().size(); } 
 
         sort*    get_sort() const { return m_rel.get_manager().get_sort(m_rel); }
 
@@ -145,7 +145,7 @@ namespace datalog {
         expr*  get_relation() const { return m_rel.get(); }
 
         virtual void to_formula(expr_ref& fml) const { fml = get_relation(); }
-
+    
     };
 
 

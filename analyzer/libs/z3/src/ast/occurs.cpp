@@ -27,8 +27,8 @@ Revision History:
 // -----------------------------------
 
 namespace occurs_namespace {
-    struct found {};
-
+    struct found {}; 
+    
     struct proc {
         expr * m_n;
 

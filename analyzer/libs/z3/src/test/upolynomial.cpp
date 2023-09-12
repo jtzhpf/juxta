@@ -36,7 +36,7 @@ static void tst1() {
 
     std::cout << "degree(q): " << um.degree(q) << "\n";
 
-    // display coefficients of q
+    // display coefficients of q 
     std::cout << "expanded q: ";
     for (unsigned i = 0; i < q.size(); i++)
         std::cout << nm.to_string(q[i]) << " ";
@@ -50,7 +50,7 @@ static void tst1() {
     // So, if we perform destructive operations on these coefficients, we must execute the "trim" operation
     // before invoking another operation of upolynomial::manager
     um.trim(q);
-
+    
     // q after adding 1 to all coefficients
     std::cout << "new q: "; um.display(std::cout, q); std::cout << "\n";
 
@@ -119,7 +119,7 @@ static void tst_isolate_roots(polynomial_ref const & p, unsigned prec, mpbq_mana
                     um.eval_sign_at(q.size(), q.c_ptr(), uppers[i]) == 0 ||
                     um.sign_variations_at(sseq, lowers[i]) - um.sign_variations_at(sseq, uppers[i]) == 1);
             // Fourier sequence may also be used to check if the interval is isolating
-            TRACE("upolynomial",
+            TRACE("upolynomial", 
                   tout << "lowers[i]: " << bqm.to_string(lowers[i]) << "\n";
                   tout << "uppers[i]: " << bqm.to_string(uppers[i]) << "\n";
                   tout << "fourier lower: " << um.sign_variations_at(fseq, lowers[i]) << "\n";
@@ -132,7 +132,7 @@ static void tst_isolate_roots(polynomial_ref const & p, unsigned prec, mpbq_mana
                     // fsv_upper - fsv_upper - num_roots is even
                     // Recall that num_roots == 1 in the interval.
                     (fsv_lower - fsv_upper >= 1 && (fsv_lower - fsv_upper - 1) % 2 == 0));
-
+            
             // Double checking using Descartes bounds for the interval
             // Must use square free component.
             unsigned dab = um.descartes_bound_a_b(q_sqf.size(), q_sqf.c_ptr(), bqm, lowers[i], uppers[i]);
@@ -195,22 +195,22 @@ static void tst_isolate_roots() {
     x = m.mk_polynomial(m.mk_var());
     // create univariate polynomial using multivariate polynomial package
     polynomial_ref p(m);
-    p = (x-1)*(x-2);
-    {
+    p = (x-1)*(x-2); 
+    { 
         rational ex[2] = { rational(1), rational(2) };
         tst_isolate_roots(p, 2, ex);
     }
     p = (x-1)*(x-1)*x*x*x;
-    {
+    { 
         rational ex[2] = { rational(1), rational(0) };
         tst_isolate_roots(p, 2, ex);
     }
     p = (x^5) - x - 1;
-    {
+    { 
         rational ex[1] = { rational(11673039, 10000000) }; // approximated root
         tst_isolate_roots(p, 1, ex);
     }
-    p = (x - 1)*(x + 1)*(x + 2)*(x + 3)*((x - 3)^2);
+    p = (x - 1)*(x + 1)*(x + 2)*(x + 3)*((x - 3)^2);    
     {
         rational ex[5] = { rational(1), rational(-1), rational(-2), rational(-3), rational(3) };
         tst_isolate_roots(p, 5, ex);
@@ -271,7 +271,7 @@ static void tst_isolate_roots() {
         };
         tst_isolate_roots(p, 3, ex, 10);
     }
-
+    
 }
 
 static void tst_remove_one_half() {
@@ -339,7 +339,7 @@ static void tst_gcd() {
 
     p = (x^8) + (x^6) - 3*(x^4) - 3*(x^3) + 8*(x^2) + 2*x - 5;
     q = 3*(x^6) + 5*(x^4) - 4*(x^2) - 9*x + 21;
-
+    
     tst_gcd(p, q, um);
 
     p = ((x - 1)^2)*(x - 3)*(x + 2)*((x - 5)^3);
@@ -367,11 +367,11 @@ static void tst_zp() {
     tst_gcd(p, q, um);
 
     // Computing GCD of p an q in Z_3[x]
-    std::cout << "GCD in Z_3[x]\n";
+    std::cout << "GCD in Z_3[x]\n"; 
     upolynomial::zp_manager um3(nm);
     um3.set_zp(3);
     tst_gcd(p, q, um3);
-}
+}    
 
 static void tst_zp2() {
     std::cout << "\n\nTesting Z_p\n";
@@ -391,11 +391,11 @@ static void tst_zp2() {
     tst_gcd(u, v, um);
 
     // Computing GCD of p an q in Z_3[x]
-    std::cout << "GCD in Z_13[x]\n";
+    std::cout << "GCD in Z_13[x]\n"; 
     upolynomial::zp_manager um13(nm);
     um13.set_zp(13);
     tst_gcd(u, v, um13);
-}
+}    
 
 static void tst_ext_gcd() {
     std::cout << "\nExtended GCD\n";
@@ -410,7 +410,7 @@ static void tst_ext_gcd() {
     b = (x^8) + (x^6) + 10*(x^4) + 10*(x^3) + 8*(x^2) + 2*x + 8;
 
     // Computing GCD of p an q in Z_3[x]
-    std::cout << "GCD in Z_13[x]\n";
+    std::cout << "GCD in Z_13[x]\n"; 
     upolynomial::zp_manager um(nm);
     um.set_zp(13);
     mpzzp_manager & z13 = um.m();
@@ -423,7 +423,7 @@ static void tst_ext_gcd() {
     std::cout << "U: "; um.display(std::cout, U); std::cout << "\n";
     std::cout << "V: "; um.display(std::cout, V); std::cout << "\n";
     std::cout << "D: "; um.display(std::cout, D); std::cout << "\n";
-}
+}    
 
 static void tst_ext_gcd_z7() {
     std::cout << "\nExtended GCD in Z_7\n";
@@ -440,7 +440,7 @@ static void tst_ext_gcd_z7() {
 
     // Computing GCD of a and b in Z_3[x]
     // expecting: D = 1, U = 3*x + 6, V = 3*x^2 + 6*x + 4
-    std::cout << "GCD in Z_7[x]\n";
+    std::cout << "GCD in Z_7[x]\n"; 
     upolynomial::zp_manager um(nm);
     um.set_zp(7);
     mpzzp_manager & z7 = um.m();
@@ -453,7 +453,7 @@ static void tst_ext_gcd_z7() {
     std::cout << "U: "; um.display(std::cout, U); std::cout << "\n";
     std::cout << "V: "; um.display(std::cout, V); std::cout << "\n";
     std::cout << "D: "; um.display(std::cout, D); std::cout << "\n";
-}
+}    
 
 static void tst_sturm() {
     std::cout << "\nSturm Seq\n";
@@ -539,7 +539,7 @@ static void tst_refinable() {
     bqm.set(a, 1);
     bqm.set(b, 3);
     tst_refinable(p, bqm, a, b);
-
+    
     bqm.del(a); bqm.del(b);
 }
 
@@ -574,7 +574,7 @@ static void tst_refine() {
     a = 1;
     b = 2;
     tst_refine(p, bqm, a, b, 20);
-
+    
     p = (x^2) - 2;
     std::cout << "p: " << p << "\n";
     a = 1;
@@ -735,7 +735,7 @@ static void tst_isolate_roots2() {
     // create univariate polynomial using multivariate polynomial package
     polynomial_ref p(m);
     p = (2*x - 1)*(x - 21)*(x + 12)*(x - 19)*(x + 11)*(x + 34)*(x - 9)*(x - 72)*(10000*x - 4999)*((x^5) - x - 1)*((x^2) - 2)*((x^2) - 3)*((x^7) - 3)*((x^101) - 3);
-    {
+    { 
         tst_isolate_roots(p, 10);
     }
 }
@@ -769,7 +769,7 @@ static void tst_isolate_roots3() {
     q = (x - x1 - x2 - x3 - x4 - x5 - x6);
     r = resultant(resultant(resultant(resultant(resultant(resultant(q, p1, 1), p2, 2), p3, 3), p4, 4), p5, 5), p6, 6);
     std::cout << "r: " << r << "\n";
-    {
+    { 
         timeit timer(true, "isolate");
         tst_isolate_roots(r, 10);
     }
@@ -794,7 +794,7 @@ static void tst_gcd2() {
     }
     um.display(std::cout, _p_sqf.size(), _p_sqf.c_ptr()); std::cout << "\n";
 }
-#endif
+#endif 
 
 static void tst_isolate_roots5() {
     polynomial::numeral_manager nm;
@@ -805,7 +805,7 @@ static void tst_isolate_roots5() {
     polynomial_ref p(m);
     p = (x^70) - 6*(x^65) - (x^60) + 60*(x^55) - 54*(x^50) - 230*(x^45) + 274*(x^40) + 542*(x^35) - 615*(x^30)
         - 1120*(x^25) + 1500*(x^20) - 160*(x^15) - 395*(x^10) + 76*(x^5) + 34;
-    {
+    { 
         tst_isolate_roots(p, 10);
     }
 }
@@ -899,7 +899,7 @@ static void tst_fact() {
     tst_fact((x0^70) - 6*(x0^65) - (x0^60) + 60*(x0^55) - 54*(x0^50) - 230*(x0^45) + 274*(x0^40) + 542*(x0^35) - 615*(x0^30) - 1120*(x0^25) + 1500*(x0^20) - 160*(x0^15) - 395*(x0^10) + 76*(x0^5) + 34, 3);
     tst_fact(((x0^4) - 8*(x0^2)), 2);
     tst_fact((x0^5) - 2*(x0^3) + x0 - 1, 1);
-    tst_fact( (x0^25) - 4*(x0^21) - 5*(x0^20) + 6*(x0^17) + 11*(x0^16) + 10*(x0^15) - 4*(x0^13) - 7*(x0^12) - 9*(x0^11) - 10*(x0^10) +
+    tst_fact( (x0^25) - 4*(x0^21) - 5*(x0^20) + 6*(x0^17) + 11*(x0^16) + 10*(x0^15) - 4*(x0^13) - 7*(x0^12) - 9*(x0^11) - 10*(x0^10) + 
                (x0^9) + (x0^8) + (x0^7) + (x0^6) + 3*(x0^5) + x0 - 1, 2);
     tst_fact( (x0^25) - 10*(x0^21) - 10*(x0^20) - 95*(x0^17) - 470*(x0^16) - 585*(x0^15) - 40*(x0^13) - 1280*(x0^12) - 4190*(x0^11) - 3830*(x0^10) + 400*(x0^9)+ 1760*(x0^8) + 760*(x0^7) - 2280*(x0^6) + 449*(x0^5) + 640*(x0^3) - 640*(x0^2) + 240*x0 - 32, 2);
     tst_fact( x0^10, 1);
@@ -919,7 +919,7 @@ static void tst_fact() {
     tst_fact( (x0^50) - 10*(x0^40) + 38*(x0^30) - 2*(x0^25) - 100*(x0^20) - 40*(x0^15) + 121*(x0^10) - 38*(x0^5) - 17, 1);
 
     tst_fact(        (((x0^5)  +  5*(x0^4) +  10*(x0^3) + 10*(x0^2) + 5*x0)^10)
-                 + 10*(((x0^5)  +  5*(x0^4) +  10*(x0^3) + 10*(x0^2) + 5*x0)^9)
+                 + 10*(((x0^5)  +  5*(x0^4) +  10*(x0^3) + 10*(x0^2) + 5*x0)^9) 
                  + 35*(((x0^5)  +  5*(x0^4) +  10*(x0^3) + 10*(x0^2) + 5*x0)^8)
                  + 40*(((x0^5)  +  5*(x0^4) +  10*(x0^3) + 10*(x0^2) + 5*x0)^7)
                  - 32*(((x0^5)  +  5*(x0^4) +  10*(x0^3) + 10*(x0^2) + 5*x0)^6)
@@ -934,37 +934,37 @@ static void tst_fact() {
     tst_fact( ((x0^5) - 15552)*
               ((x0^20)- 15708*(x0^15) + rational("138771724")*(x0^10)- rational("432104148432")*(x0^5) + rational("614198284585616")),
               2);
-    tst_fact( (x0^25) -
-              rational("3125")*(x0^21) -
-              rational("15630")*(x0^20) +
-              rational("3888750")*(x0^17) +
-              rational("38684375")*(x0^16) +
-              rational("95765635")*(x0^15) -
-              rational("2489846500")*(x0^13) -
-              rational("37650481875")*(x0^12) -
-              rational("190548065625")*(x0^11) -
-              rational("323785250010")*(x0^10) +
-              rational("750249453025")*(x0^9) +
-              rational("14962295699875")*(x0^8) +
-              rational("111775113235000")*(x0^7) +
-              rational("370399286731250")*(x0^6) +
-              rational("362903064503129")*(x0^5) -
-              rational("2387239013984400")*(x0^4) -
-              rational("23872390139844000")*(x0^3) -
-              rational("119361950699220000")*(x0^2) -
-              rational("298404876748050000")*x0 -
+    tst_fact( (x0^25) - 
+              rational("3125")*(x0^21) - 
+              rational("15630")*(x0^20) + 
+              rational("3888750")*(x0^17) + 
+              rational("38684375")*(x0^16) + 
+              rational("95765635")*(x0^15) - 
+              rational("2489846500")*(x0^13) - 
+              rational("37650481875")*(x0^12) - 
+              rational("190548065625")*(x0^11) - 
+              rational("323785250010")*(x0^10) + 
+              rational("750249453025")*(x0^9) + 
+              rational("14962295699875")*(x0^8) + 
+              rational("111775113235000")*(x0^7) + 
+              rational("370399286731250")*(x0^6) + 
+              rational("362903064503129")*(x0^5) - 
+              rational("2387239013984400")*(x0^4) - 
+              rational("23872390139844000")*(x0^3) - 
+              rational("119361950699220000")*(x0^2) - 
+              rational("298404876748050000")*x0 - 
               rational("298500366308609376"), 2);
 
     tst_fact( rational("54")*(x0^24) - (x0^27) - 324*(x0^21) + rational("17496")*(x0^18) - 34992*(x0^15)+ rational("1889568")*(x0^12)- 1259712*(x0^9) + rational("68024448")*(x0^6), 3);
 
     tst_fact( ((x0^3)- 432)*(((x0^3)+54)^2)*((x0^6)+108)*((x0^6)+6912)*((x0^6)- 324*(x0^3)+37044),
                5);
-
+    
     tst_fact( ((x0^6)- 6*(x0^4) - 864*(x0^3) + 12*(x0^2) - 5184*x0 + 186616)*
               (((x0^6) - 6*(x0^4) + 108*(x0^3) + 12*(x0^2) + 648*x0 + 2908)^2)*
               ((x0^12) - 12*(x0^10) + 60*(x0^8) + 56*(x0^6) + 6720*(x0^4) + 12768*(x0^2) + 13456)*
               ((x0^12) - 12*(x0^10) + 60*(x0^8) + 13664*(x0^6) + 414960*(x0^4) + 829248*(x0^2) + 47886400)*
-              ((x0^12) - 12*(x0^10) - 648*(x0^9)+ 60*(x0^8) + 178904*(x0^6) + 15552*(x0^5) + 1593024*(x0^4) - 24045984*(x0^3) +
+              ((x0^12) - 12*(x0^10) - 648*(x0^9)+ 60*(x0^8) + 178904*(x0^6) + 15552*(x0^5) + 1593024*(x0^4) - 24045984*(x0^3) + 
                5704800*(x0^2) - 143995968*x0 + 1372010896),
               5);
 }
@@ -1031,7 +1031,7 @@ static void tst_lower_bound() {
     tst_lower_bound(((x^17) + 5*(x^16) + 3*(x^15) + 10*(x^13) + 13*(x^10) + (x^9) + 8*(x^5) + 3*(x^2) + 7)*(((x^5) - x - 1)^2)*(((x^3) - 2)^2));
     tst_lower_bound((((x^5) - 1000000000)^3)*((3*x - 10000000)^2)*((10*x - 632)^2));
 }
-
+    
 void tst_upolynomial() {
     set_verbosity_level(1000);
     enable_trace("mpz_gcd");

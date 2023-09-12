@@ -78,7 +78,7 @@ void tst_le(ast_manager & m, unsigned sz) {
 //     mk_bits(m, "b", sz, b);
 //     bool t = true;
 //     bit_blaster blaster(m, t);
-//     blaster.mk_ule(sz, a.c_ptr(), b.c_ptr(), out);
+//     blaster.mk_ule(sz, a.c_ptr(), b.c_ptr(), out); 
 //     TRACE("bit_blaster", tout << mk_pp(out, m) << "\n";);
 //     blaster.mk_sle(sz, a.c_ptr(), b.c_ptr(), out);
 //     TRACE("bit_blaster", tout << mk_pp(out, m) << "\n";);
@@ -91,7 +91,7 @@ void tst_eqs(ast_manager & m, unsigned sz) {
 //     mk_bits(m, "a", sz, a);
 //     bool t = true;
 //     bit_blaster blaster(m, t);
-//     blaster.mk_eqs(sz, a.c_ptr(), b);
+//     blaster.mk_eqs(sz, a.c_ptr(), b); 
 //     TRACE("bit_blaster", display(tout, b, false););
 }
 

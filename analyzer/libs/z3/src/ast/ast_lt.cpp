@@ -58,7 +58,7 @@ bool lt(ast * n1, ast * n2) {
         return false;
     check_value(n1->get_kind(), n2->get_kind());
     switch(n1->get_kind()) {
-    case AST_SORT:
+    case AST_SORT: 
         check_symbol(to_sort(n1)->get_name(), to_sort(n2)->get_name());
         check_value(to_sort(n1)->get_num_parameters(), to_sort(n2)->get_num_parameters());
         num = to_sort(n1)->get_num_parameters();

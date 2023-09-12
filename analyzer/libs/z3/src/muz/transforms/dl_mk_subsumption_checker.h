@@ -38,7 +38,7 @@ namespace datalog {
         func_decl_set m_total_relations;
 
         /** Map that for each relation contains the rule which implies its totality.
-        If the totality is due to the relation containing all facts, the rule stored
+        If the totality is due to the relation containing all facts, the rule stored 
         here is zero*/
         obj_map<func_decl, rule *> m_total_relation_defining_rules;
 
@@ -48,7 +48,7 @@ namespace datalog {
         R(c1,c2,...cN).
         grouped by their predicate.
 
-        This information helps to improve the results of the
+        This information helps to improve the results of the 
         scan_for_relations_total_due_to_facts() function.
         */
         obj_map<func_decl, obj_hashtable<app> *> m_ground_unconditional_rule_heads;

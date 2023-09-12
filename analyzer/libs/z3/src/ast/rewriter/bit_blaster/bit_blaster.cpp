@@ -107,7 +107,7 @@ void bit_blaster_cfg::mk_carry(expr * l1, expr * l2, expr * l3, expr_ref & r) {
             r = l2;
         else if (m().is_complement(l2, l3))
             r = l1;
-        else
+        else 
             r = m().mk_app(m_util.get_family_id(), OP_CARRY, l1, l2, l3);
     }
     else {

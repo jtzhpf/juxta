@@ -28,9 +28,9 @@ Revision History:
 struct well_sorted_proc {
     ast_manager & m_manager;
     bool          m_error;
-
+    
     well_sorted_proc(ast_manager & m):m_manager(m), m_error(false) {}
-
+    
     void operator()(var * v) {}
 
     void operator()(quantifier * n) {
@@ -41,7 +41,7 @@ struct well_sorted_proc {
         }
     }
 
-    void operator()(app * n) {
+    void operator()(app * n) {   
         unsigned num_args  = n->get_num_args();
         func_decl * decl   = n->get_decl();
         if (num_args != decl->get_arity() && !decl->is_associative()) {

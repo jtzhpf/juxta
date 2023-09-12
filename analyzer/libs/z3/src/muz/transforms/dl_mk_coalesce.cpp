@@ -24,7 +24,7 @@ Notes:
     ----------------------------------------------
            (a(z) \/ b(z)) & q(z) -> p(z)
 
-
+ 
 --*/
 #include "dl_mk_coalesce.h"
 #include "bool_rewriter.h"
@@ -63,7 +63,7 @@ namespace datalog {
         ptr_vector<sort> sorts;
         expr_ref_vector revsub(m), conjs(m);
         rl.get_vars(m, sorts);
-        revsub.resize(sorts.size());
+        revsub.resize(sorts.size());  
         svector<bool> valid(sorts.size(), true);
         for (unsigned i = 0; i < sub.size(); ++i) {
             expr* e = sub[i];
@@ -81,7 +81,7 @@ namespace datalog {
                     else {
                         SASSERT(revsub[v].get());
                         SASSERT(m.get_sort(revsub[v].get()) == s);
-                        conjs.push_back(m.mk_eq(revsub[v].get(), w));
+                        conjs.push_back(m.mk_eq(revsub[v].get(), w));    
                     }
                 }
             }
@@ -120,12 +120,12 @@ namespace datalog {
         tgt->get_vars(m, sorts1);
         src.get_vars(m, sorts2);
 
-        mk_pred(head, src.get_head(), tgt->get_head());
+        mk_pred(head, src.get_head(), tgt->get_head()); 
         for (unsigned i = 0; i < src.get_uninterpreted_tail_size(); ++i) {
             mk_pred(pred, src.get_tail(i), tgt->get_tail(i));
             tail.push_back(pred);
             is_neg.push_back(src.is_neg_tail(i));
-        }
+        }           
         extract_conjs(m_sub1, src, fml1);
         extract_conjs(m_sub2, *tgt.get(),  fml2);
         bwr.mk_or(fml1, fml2, fml);
@@ -169,8 +169,8 @@ namespace datalog {
             }
         }
         return true;
-    }
-
+    }    
+        
     rule_set * mk_coalesce::operator()(rule_set const & source) {
         rule_set* rules = alloc(rule_set, m_ctx);
         rules->inherit_predicates(source);

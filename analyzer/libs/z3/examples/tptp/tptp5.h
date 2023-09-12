@@ -11,8 +11,8 @@ class named_formulas {
     bool m_has_conjecture;
     unsigned m_conjecture_index;
 public:
-    named_formulas(ast_manager& m) :
-        m_fmls(m),
+    named_formulas(ast_manager& m) : 
+        m_fmls(m), 
         m_has_conjecture(false),
         m_conjecture_index(0)
         {}
@@ -24,7 +24,7 @@ public:
     expr*const* c_ptr() const { return m_fmls.c_ptr(); }
     expr* operator[](unsigned i) { return m_fmls[i].get(); }
     symbol const& name(unsigned i) { return m_names[i]; }
-    void set_has_conjecture() {
+    void set_has_conjecture() { 
         m_has_conjecture = true;
         m_conjecture_index = m_fmls.size();
     }

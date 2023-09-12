@@ -31,12 +31,12 @@ static void tst_get_implied_equalities1() {
     unsigned class_ids[7] = { 0, 0, 0, 0, 0, 0, 0 };
     Z3_solver solver = Z3_mk_simple_solver(ctx);
     Z3_solver_inc_ref(ctx, solver);
-
+        
     Z3_solver_assert(ctx, solver, Z3_mk_eq(ctx, a, b));
     Z3_solver_assert(ctx, solver, Z3_mk_eq(ctx, b, d));
     Z3_solver_assert(ctx, solver, Z3_mk_le(ctx, fa, fc));
     Z3_solver_assert(ctx, solver, Z3_mk_le(ctx, fc, d));
-
+    
     Z3_get_implied_equalities(ctx, solver, num_terms, terms, class_ids);
     for (i = 0; i < num_terms; ++i) {
         printf("Class %s |-> %d\n", Z3_ast_to_string(ctx, terms[i]), class_ids[i]);
@@ -62,10 +62,10 @@ static void tst_get_implied_equalities1() {
     SASSERT(class_ids[5] == class_ids[0]);
     SASSERT(class_ids[6] == class_ids[0]);
 
-
+    
     Z3_solver_dec_ref(ctx, solver);
     /* delete logical context */
-    Z3_del_context(ctx);
+    Z3_del_context(ctx);    
 }
 
 static void tst_get_implied_equalities2() {
@@ -91,7 +91,7 @@ static void tst_get_implied_equalities2() {
     unsigned i;
     Z3_ast terms[5] = { x, y, z, u, v};
     unsigned class_ids[5] = { 0, 0, 0, 0, 0};
-
+    
     Z3_get_implied_equalities(ctx, solver, num_terms, terms, class_ids);
     for (i = 0; i < num_terms; ++i) {
         printf("Class %s |-> %d\n", Z3_ast_to_string(ctx, terms[i]), class_ids[i]);
@@ -104,15 +104,15 @@ static void tst_get_implied_equalities2() {
     SASSERT(class_ids[4] == class_ids[2]);
     SASSERT(class_ids[2] != class_ids[1]);
     SASSERT(class_ids[3] != class_ids[1]);
-    SASSERT(class_ids[4] != class_ids[1]);
+    SASSERT(class_ids[4] != class_ids[1]);  
     SASSERT(class_ids[3] != class_ids[2]);
 
     /* delete logical context */
     Z3_solver_dec_ref(ctx, solver);
-    Z3_del_context(ctx);
+    Z3_del_context(ctx);    
 }
 
 void tst_get_implied_equalities() {
     tst_get_implied_equalities1();
-    tst_get_implied_equalities2();
+    tst_get_implied_equalities2();    
 }

@@ -47,7 +47,7 @@ bool user_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * con
         if (_result == 0)
             throw default_exception("invalid reduce_app callback: result is null");
         result = _result;
-    }
+    } 
     return flag;
 }
 

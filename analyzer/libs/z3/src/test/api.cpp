@@ -17,13 +17,13 @@ void bv_invariant() {
  Z3_set_param_value(cfg,"MODEL","true");
  Z3_context ctx = Z3_mk_context(cfg);
  Z3_model _m = 0;
- enable_trace("after_internalization");
- enable_trace("final_check");
- enable_trace("bv");
- enable_trace("propagate_atoms");
- enable_trace("assign_core");
- enable_trace("bv_bug");
- enable_trace("bv_bit_prop");
+ enable_trace("after_internalization"); 
+ enable_trace("final_check"); 
+ enable_trace("bv"); 
+ enable_trace("propagate_atoms"); 
+ enable_trace("assign_core"); 
+ enable_trace("bv_bug"); 
+ enable_trace("bv_bit_prop"); 
  enable_trace("mark_as_relevant_core");
 {SET(0x03BC7FD8, Z3_mk_bv_sort(ctx,32));}
 {SET(0x03BCCD88, Z3_mk_int(ctx,0,GET(Z3_sort,0x03BC7FD8)));}
@@ -396,7 +396,7 @@ void test_apps() {
     Z3_ast fffffx = Z3_mk_app(ctx, f, 1, &ffffx);
 
     Z3_ast fml = Z3_mk_not(ctx, Z3_mk_eq(ctx, x, fffffx));
-
+    
     Z3_assert_cnstr(ctx, fml);
     Z3_lbool r = Z3_check(ctx);
     std::cout << r << "\n";
@@ -412,9 +412,9 @@ void test_bvneg() {
     {
         Z3_sort bv30 = Z3_mk_bv_sort(ctx, 30);
         Z3_ast  x30 = Z3_mk_fresh_const(ctx, "x", bv30);
-        Z3_ast fml = Z3_mk_eq(ctx, Z3_mk_int(ctx, -1, bv30),
-                              Z3_mk_bvadd(ctx, Z3_mk_int(ctx, 0, bv30),
-                                      x30));
+        Z3_ast fml = Z3_mk_eq(ctx, Z3_mk_int(ctx, -1, bv30), 
+                              Z3_mk_bvadd(ctx, Z3_mk_int(ctx, 0, bv30), 
+                                      x30));        
         Z3_assert_cnstr(ctx, fml);
         Z3_lbool r = Z3_check(ctx);
         std::cout << r << "\n";
@@ -423,9 +423,9 @@ void test_bvneg() {
     {
         Z3_sort bv31 = Z3_mk_bv_sort(ctx, 31);
         Z3_ast  x31 = Z3_mk_fresh_const(ctx, "x", bv31);
-        Z3_ast fml = Z3_mk_eq(ctx, Z3_mk_int(ctx, -1, bv31),
-                              Z3_mk_bvadd(ctx, Z3_mk_int(ctx, 0, bv31),
-                                      x31));
+        Z3_ast fml = Z3_mk_eq(ctx, Z3_mk_int(ctx, -1, bv31), 
+                              Z3_mk_bvadd(ctx, Z3_mk_int(ctx, 0, bv31), 
+                                      x31));        
         Z3_assert_cnstr(ctx, fml);
         Z3_lbool r = Z3_check(ctx);
         std::cout << r << "\n";
@@ -434,17 +434,17 @@ void test_bvneg() {
     {
         Z3_sort bv32 = Z3_mk_bv_sort(ctx, 32);
         Z3_ast  x32 = Z3_mk_fresh_const(ctx, "x", bv32);
-        Z3_ast fml = Z3_mk_eq(ctx,
-                              Z3_mk_int(ctx,-1, bv32),
-                              Z3_mk_bvadd(ctx, Z3_mk_int(ctx, 0, bv32),
-                                          x32));
+        Z3_ast fml = Z3_mk_eq(ctx, 
+                              Z3_mk_int(ctx,-1, bv32), 
+                              Z3_mk_bvadd(ctx, Z3_mk_int(ctx, 0, bv32), 
+                                          x32));        
         Z3_assert_cnstr(ctx, fml);
         Z3_lbool r = Z3_check(ctx);
         std::cout << r << "\n";
     }
 
     Z3_del_config(cfg);
-    Z3_del_context(ctx);
+    Z3_del_context(ctx);    
 }
 
 void tst_api() {

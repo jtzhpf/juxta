@@ -32,5 +32,5 @@ void tst_theory_dl() {
     ctx.assert_expr(u.mk_lt(c, a));
     std::cout << ctx.check() << "\n";
 
-
+    
 }

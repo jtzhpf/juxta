@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Tactic for QF_UFBV
+    Tactic for QF_UFBV 
 
 Author:
 

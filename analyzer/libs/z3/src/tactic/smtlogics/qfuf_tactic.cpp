@@ -37,4 +37,4 @@ tactic * mk_qfuf_tactic(ast_manager & m, params_ref const & p) {
                     mk_smt_tactic(p));
 }
 
-
+                    

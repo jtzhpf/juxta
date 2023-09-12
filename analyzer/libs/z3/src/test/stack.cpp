@@ -23,7 +23,7 @@ typedef std::pair<unsigned, unsigned> point;
 
 static void tst1() {
     stack s;
-
+    
     point * p1 = new (s) point(10, 20);
     point * p2 = new (s) point(30, 40);
     void * ptr = s.allocate(16000);

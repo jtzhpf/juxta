@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -23,13 +23,13 @@ using System.Diagnostics.Contracts;
 namespace Microsoft.Z3
 {
     /// <summary>
-    /// A Model contains interpretations (assignments) of constants and functions.
+    /// A Model contains interpretations (assignments) of constants and functions. 
     /// </summary>
     [ContractVerification(true)]
     public class Model : Z3Object
     {
         /// <summary>
-        /// Retrieves the interpretation (the assignment) of <paramref name="a"/> in the model.
+        /// Retrieves the interpretation (the assignment) of <paramref name="a"/> in the model. 
         /// </summary>
         /// <param name="a">A Constant</param>
         /// <returns>An expression if the constant has an interpretation in the model, null otherwise.</returns>
@@ -42,10 +42,10 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Retrieves the interpretation (the assignment) of <paramref name="f"/> in the model.
+        /// Retrieves the interpretation (the assignment) of <paramref name="f"/> in the model. 
         /// </summary>
         /// <param name="f">A function declaration of zero arity</param>
-        /// <returns>An expression if the function has an interpretation in the model, null otherwise.</returns>
+        /// <returns>An expression if the function has an interpretation in the model, null otherwise.</returns>    
         public Expr ConstInterp(FuncDecl f)
         {
             Contract.Requires(f != null);
@@ -63,10 +63,10 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Retrieves the interpretation (the assignment) of a non-constant <paramref name="f"/> in the model.
+        /// Retrieves the interpretation (the assignment) of a non-constant <paramref name="f"/> in the model. 
         /// </summary>
         /// <param name="f">A function declaration of non-zero arity</param>
-        /// <returns>A FunctionInterpretation if the function has an interpretation in the model, null otherwise.</returns>
+        /// <returns>A FunctionInterpretation if the function has an interpretation in the model, null otherwise.</returns> 
         public FuncInterp FuncInterp(FuncDecl f)
         {
             Contract.Requires(f != null);
@@ -172,7 +172,7 @@ namespace Microsoft.Z3
                 for (uint i = 0; i < nConsts; i++)
                     res[i] = new FuncDecl(Context, Native.Z3_model_get_const_decl(Context.nCtx, NativeObject, i));
                 for (uint i = 0; i < nFuncs; i++)
-                    res[nConsts + i] = new FuncDecl(Context, Native.Z3_model_get_func_decl(Context.nCtx, NativeObject, i));
+                    res[nConsts + i] = new FuncDecl(Context, Native.Z3_model_get_func_decl(Context.nCtx, NativeObject, i));                
                 return res;
             }
         }
@@ -192,16 +192,16 @@ namespace Microsoft.Z3
         /// Evaluates the expression <paramref name="t"/> in the current model.
         /// </summary>
         /// <remarks>
-        /// This function may fail if <paramref name="t"/> contains quantifiers,
+        /// This function may fail if <paramref name="t"/> contains quantifiers, 
         /// is partial (MODEL_PARTIAL enabled), or if <paramref name="t"/> is not well-sorted.
         /// In this case a <c>ModelEvaluationFailedException</c> is thrown.
         /// </remarks>
         /// <param name="t">An expression</param>
         /// <param name="completion">
-        /// When this flag is enabled, a model value will be assigned to any constant
+        /// When this flag is enabled, a model value will be assigned to any constant 
         /// or function that does not have an interpretation in the model.
         /// </param>
-        /// <returns>The evaluation of <paramref name="t"/> in the model.</returns>
+        /// <returns>The evaluation of <paramref name="t"/> in the model.</returns>        
         public Expr Eval(Expr t, bool completion = false)
         {
             Contract.Requires(t != null);
@@ -216,7 +216,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Alias for <c>Eval</c>.
-        /// </summary>
+        /// </summary>        
         public Expr Evaluate(Expr t, bool completion = false)
         {
             Contract.Requires(t != null);
@@ -227,11 +227,11 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// The number of uninterpreted sorts that the model has an interpretation for.
-        /// </summary>
+        /// </summary>    
         public uint NumSorts { get { return Native.Z3_model_get_num_sorts(Context.nCtx, NativeObject); } }
 
         /// <summary>
-        /// The uninterpreted sorts that the model has an interpretation for.
+        /// The uninterpreted sorts that the model has an interpretation for. 
         /// </summary>
         /// <remarks>
         /// Z3 also provides an intepretation for uninterpreted sorts used in a formula.
@@ -274,7 +274,7 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Conversion of models to strings.
+        /// Conversion of models to strings. 
         /// </summary>
         /// <returns>A string representation of the model.</returns>
         public override string ToString()
@@ -300,7 +300,7 @@ namespace Microsoft.Z3
             {
                 Native.Z3_model_dec_ref(ctx.nCtx, obj);
             }
-        };
+        };        
 
         internal override void IncRef(IntPtr o)
         {

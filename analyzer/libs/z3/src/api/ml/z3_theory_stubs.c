@@ -8,20 +8,20 @@ Module Name:
 Abstract:
 
     OCaml C bindings for callbacks between OCaml and C for
-    theory plugins.
+    theory plugins. 
     The API for theory plugins require associating a set of
-    callbacks as C function pointers.
+    callbacks as C function pointers.  
     We use the following strategy:
 
     - store in the user_ext_data blob that theory constructors allow
       a record of callback functions.
 
-    - define catch-all static callback functions that access the
+    - define catch-all static callback functions that access the 
       ML record with the callbacks. It then invokes these through user-registered
       application functions that apply the callback stored in the record to the
       actual parameters.
-      It is tempting to avoid this user-registered callback and directly access
-      the record of callback functions and apply the proper field.
+      It is tempting to avoid this user-registered callback and directly access 
+      the record of callback functions and apply the proper field. 
       However, the layout of records appears to be opaque, or at least we assume it is
       so, from the C runtime.
 
@@ -76,9 +76,9 @@ static value Val_ast_array(unsigned int sz, Z3_ast const args[]) {
 
 // ------------------
 // get_theory_callbacks
-//
+// 
 
-value get_theory_callbacks(value th)
+value get_theory_callbacks(value th) 
 {
     Z3_theory _th = *((Z3_theory*) Bp_val(th));
     return (value) Z3_theory_get_ext_data(_th);
@@ -86,11 +86,11 @@ value get_theory_callbacks(value th)
 
 // ------------------
 // delete_theory
-//
-static void delete_callback_static(Z3_theory th)
+// 
+static void delete_callback_static(Z3_theory th) 
 {
     CAMLparam0();
-    CAMLlocal1(f);
+    CAMLlocal1(f);  
     value user_data = (value) Z3_theory_get_ext_data(th);
     f = *(caml_named_value("apply_delete")) ;
     callback(f, user_data);
@@ -112,9 +112,9 @@ SET_CALLBACK(delete);
 
 // ------------------
 // mk_theory
-//
+// 
 
-value mk_theory_register(value context, value name, value user_data)
+value mk_theory_register(value context, value name, value user_data) 
 {
     CAMLparam3(context, name, user_data);
     Z3_context _context = *((Z3_context *) Bp_val(context));
@@ -164,7 +164,7 @@ SET_CALLBACK(reduce_app);
 // -------------------
 // reduce_eq_callback
 
-static Z3_bool reduce_eq_callback_static(Z3_theory th, Z3_ast a, Z3_ast b, Z3_ast * r)
+static Z3_bool reduce_eq_callback_static(Z3_theory th, Z3_ast a, Z3_ast b, Z3_ast * r) 
 {
     CAMLparam0();
     CAMLlocal5(cb, _r, _a, _b, _v);
@@ -283,7 +283,7 @@ SET_CALLBACK(restart);
 TH_CALLBACK(reset);
 SET_CALLBACK(reset);
 
-
+        
 #define FC_CALLBACK(_cb_name) \
     static Z3_bool _cb_name##_callback_static(Z3_theory th)             \
     {                                                                   \
@@ -294,7 +294,7 @@ SET_CALLBACK(reset);
     r = callback(cb, user_data);                                        \
     CAMLreturn (Bool_val(r) != 0);                                      \
     }                                                                   \
-
+    
 FC_CALLBACK(final_check);
 SET_CALLBACK(final_check);
 
@@ -310,7 +310,7 @@ SET_CALLBACK(final_check);
         callback3(cb, user_data, _a, _b);                               \
         CAMLreturn0;                                                    \
     }                                                                   \
-
+    
 AST_AST_CALLBACK(new_eq);
 SET_CALLBACK(new_eq);
 
@@ -330,7 +330,7 @@ SET_CALLBACK(new_diseq);
         CAMLreturn0;                                                    \
     }                                                                   \
 
-
+    
 AST_BOOL_CALLBACK(new_assignment);
 SET_CALLBACK(new_assignment);
 

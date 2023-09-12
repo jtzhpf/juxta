@@ -14,7 +14,7 @@ Author:
     Leonardo de Moura (leonardo) 2011-09-22
 
 Notes:
-
+    
 --*/
 #include"vector.h"
 #include"map.h"
@@ -46,7 +46,7 @@ struct z3_replayer::imp {
 
     enum value_kind { INT64, UINT64, DOUBLE, STRING, SYMBOL, OBJECT, UINT_ARRAY, SYMBOL_ARRAY, OBJECT_ARRAY };
 
-    struct value {
+    struct value { 
         value_kind m_kind;
         union {
             __int64      m_int;
@@ -118,7 +118,7 @@ struct z3_replayer::imp {
     char curr() const { return m_curr; }
     void new_line() { m_line++; }
     void next() { m_curr = m_stream.get(); }
-
+    
     void read_string_core(char delimiter) {
         if (curr() != delimiter)
             throw z3_replayer_exception("invalid string/symbol");
@@ -216,7 +216,7 @@ struct z3_replayer::imp {
     }
 
     bool is_double_char() const {
-        return curr() == '-' || curr() == '.' || ('0' <= curr() && curr() <= '9') || curr() == 'e' || curr() == 'E';
+        return curr() == '-' || curr() == '.' || ('0' <= curr() && curr() <= '9') || curr() == 'e' || curr() == 'E'; 
     }
 
     void read_double() {
@@ -305,7 +305,7 @@ struct z3_replayer::imp {
             }
         }
         else if (k == OBJECT) {
-            TRACE("z3_replayer_bug",
+            TRACE("z3_replayer_bug", 
                   tout << "args: "; display_args(tout); tout << "\n";
                   tout << "push_back, sz: " << sz << ", m_obj_arrays.size(): " << m_obj_arrays.size() << "\n";
                   for (unsigned i = asz - sz; i < asz; i++) {
@@ -346,7 +346,7 @@ struct z3_replayer::imp {
             switch (c) {
             case 'R':
                 // reset
-                next();
+                next(); 
                 TRACE("z3_replayer", tout << "[" << m_line << "] " << "R\n";);
                 reset();
                 break;
@@ -357,7 +357,7 @@ struct z3_replayer::imp {
                 if (m_ptr == 0) {
                     m_args.push_back(0);
                 }
-                else {
+                else { 
                     void * obj = 0;
                     if (!m_heap.find(m_ptr, obj))
                         throw z3_replayer_exception("invalid pointer");
@@ -616,15 +616,15 @@ struct z3_replayer::imp {
         m_sym_arrays.reset();
         m_unsigned_arrays.reset();
     }
-
-
+    
+  
 };
 
 z3_replayer::z3_replayer(std::istream & in) {
     m_imp = alloc(imp, *this, in);
     register_z3_replayer_cmds(*this);
 }
-
+    
 z3_replayer::~z3_replayer() {
     dealloc(m_imp);
 }

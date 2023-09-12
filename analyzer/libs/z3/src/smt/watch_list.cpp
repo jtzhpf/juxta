@@ -23,7 +23,7 @@ namespace smt {
 #define DEFAULT_WATCH_LIST_SIZE (sizeof(clause *) * 4)
 #ifdef _AMD64_
 // make sure data is aligned in 64 bit machines
-#define HEADER_SIZE (4 * sizeof(unsigned))
+#define HEADER_SIZE (4 * sizeof(unsigned)) 
 #else
 #define HEADER_SIZE (3 * sizeof(unsigned))
 #endif
@@ -33,7 +33,7 @@ namespace smt {
             dealloc_svect(reinterpret_cast<char*>(m_data) - HEADER_SIZE);
         }
     }
-
+    
     void watch_list::expand() {
         if (m_data == 0) {
 	    unsigned size       = DEFAULT_WATCH_LIST_SIZE + HEADER_SIZE;
@@ -47,7 +47,7 @@ namespace smt {
             ++mem;
             *mem                = DEFAULT_WATCH_LIST_SIZE;
             ++mem;
-            m_data              = reinterpret_cast<char*>(mem);
+            m_data              = reinterpret_cast<char*>(mem); 
             SASSERT( begin_lits_core() % sizeof(literal) == 0 );
         }
         else {
@@ -69,7 +69,7 @@ namespace smt {
             SASSERT(bin_bytes <= new_capacity);
             unsigned new_begin_bin  = new_capacity - bin_bytes;
             *mem                    = new_begin_bin;
-            ++mem;
+            ++mem; 
             *mem                    = new_capacity;
             ++mem;
             memcpy(mem, m_data, curr_end_cls);
@@ -79,7 +79,7 @@ namespace smt {
             SASSERT( begin_lits_core() % sizeof(literal) == 0 );
         }
     }
-
+    
     void watch_list::remove_clause(clause * c) {
         clause_iterator begin = begin_clause();
         clause_iterator end   = end_clause();
@@ -94,7 +94,7 @@ namespace smt {
         }
         end_cls_core() -= sizeof(clause *);
     }
-
+    
     void watch_list::remove_literal(literal l) {
         literal * begin = begin_literals();
         literal * end   = end_literals();
@@ -112,5 +112,5 @@ namespace smt {
         SASSERT(prev == begin);
         begin_lits_core() += sizeof(literal);
     }
-
+    
 };

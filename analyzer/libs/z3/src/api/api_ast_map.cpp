@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
     API for creating AST maps
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-03-09.
@@ -91,7 +91,7 @@ extern "C" {
             // new entry
             mng.inc_ref(to_ast(k));
             mng.inc_ref(to_ast(v));
-            entry->get_data().m_value = to_ast(v);
+            entry->get_data().m_value = to_ast(v);            
         }
         else {
             // replacing entry
@@ -124,7 +124,7 @@ extern "C" {
         }
         Z3_CATCH;
     }
-
+    
     unsigned Z3_API Z3_ast_map_size(Z3_context c, Z3_ast_map m) {
         Z3_TRY;
         LOG_Z3_ast_map_size(c, m);

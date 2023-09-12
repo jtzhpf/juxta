@@ -45,7 +45,7 @@ static void tst1() {
     unsigned i = 1000000000;
     while (true) {
         std::cout << "resize " << i << "\n";
-        try {
+        try {            
             v1.resize(i);
         }
         catch (z3_exception& e) {

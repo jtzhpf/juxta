@@ -60,9 +60,9 @@ br_status factor_rewriter::mk_eq(expr * arg1, expr * arg2, expr_ref & result) {
     expr_ref_vector eqs(m());
     for(; it != end; ++it) {
         expr* e = it->m_key;
-        eqs.push_back(m().mk_eq(e, a().mk_numeral(rational(0), m().get_sort(e))));
+        eqs.push_back(m().mk_eq(e, a().mk_numeral(rational(0), m().get_sort(e))));  
     }
-    result = m().mk_or(eqs.size(), eqs.c_ptr());
+    result = m().mk_or(eqs.size(), eqs.c_ptr());    
     return BR_DONE;
 }
 
@@ -78,16 +78,16 @@ br_status factor_rewriter::mk_le(expr * arg1, expr * arg2, expr_ref & result) {
         return BR_FAILED;
     }
 
-    // a^2 * b^3 * c <= 0 ->
+    // a^2 * b^3 * c <= 0 -> 
     // a = 0 \/ (b = 0 \/ b > 0 & c <= 0 \/ b < 0 & c >= 0)
-    //
+    // 
 
     expr_ref neg(m());
     expr_ref_vector eqs(m());
     mk_is_negative(neg, eqs);
     eqs.push_back(neg);
     result = m().mk_or(eqs.size(), eqs.c_ptr());
-    TRACE("factor_rewriter",
+    TRACE("factor_rewriter", 
           tout << mk_pp(arg1, m()) << " <= " << mk_pp(arg2, m()) << "\n";
           tout << mk_pp(result.get(), m()) << "\n";);
     return BR_DONE;
@@ -104,9 +104,9 @@ br_status factor_rewriter::mk_lt(expr * arg1, expr * arg2, expr_ref & result) {
         TRACE("factor_rewriter", tout << mk_pp(arg1, m()) << " < " << mk_pp(arg2, m()) << "\n";);
         return BR_FAILED;
     }
-    // a^2 * b^3 * c < 0 ->
+    // a^2 * b^3 * c < 0 -> 
     // a != 0 /\ (b > 0 & c < 0 \/ b < 0 & c > 0)
-    //
+    // 
 
     expr_ref neg(m());
     expr_ref_vector eqs(m());
@@ -150,7 +150,7 @@ void factor_rewriter::mk_is_negative(expr_ref& result, expr_ref_vector& eqs) {
     result = neg0;
 }
 
-// convert arg1 - arg2 into
+// convert arg1 - arg2 into 
 // sum of monomials
 // m_adds: sum of products.
 // m_muls: list of products
@@ -174,7 +174,7 @@ void factor_rewriter::mk_adds(expr* arg1, expr* arg2) {
             m_adds[i].first = e->get_arg(0);
             for (unsigned j = 1; j < e->get_num_args(); ++j) {
                 m_adds.push_back(std::make_pair(e->get_arg(j),sign));
-            }
+            }            
         }
         else if (a().is_sub(e) && e->get_num_args() > 0) {
             m_adds[i].first = e->get_arg(0);
@@ -216,7 +216,7 @@ void factor_rewriter::mk_muls() {
             --i;
         }
     }
-    TRACE("factor_rewriter",
+    TRACE("factor_rewriter", 
         for (unsigned i = 0; i < m_muls.size(); ++i) {
             for (unsigned j = 0; j < m_muls[i].size(); ++j) {
                 tout << mk_pp(m_muls[i][j], m()) << " ";
@@ -240,7 +240,7 @@ void factor_rewriter::mk_expand_muls(ptr_vector<expr>& muls) {
             for (unsigned j = 1; j < e->get_num_args(); ++j) {
                 muls.push_back(e->get_arg(j));
             }
-        }
+        }       
         else {
             ++i;
         }
@@ -304,28 +304,28 @@ bool factor_rewriter::extract_factors() {
     sort* s = m().get_sort(m_factors[0].get());
     for (unsigned i = 0; i < m_adds.size(); ++i) {
         switch(m_muls[i].size()) {
-        case 0:
+        case 0: 
             e = a().mk_numeral(rational(1), s);
             break;
-        case 1:
+        case 1: 
             e = m_muls[i][0];
             break;
-        default:
-            e = a().mk_mul(m_muls[i].size(), m_muls[i].c_ptr());
+        default: 
+            e = a().mk_mul(m_muls[i].size(), m_muls[i].c_ptr()); 
             break;
         }
         if (!m_adds[i].second) {
             e = a().mk_uminus(e);
         }
         trail.push_back(e);
-    }
+    }       
     switch(trail.size()) {
-    case 0:
+    case 0: 
         break;
-    case 1:
+    case 1: 
         m_factors.push_back(trail[0].get());
         break;
-    default:
+    default: 
         m_factors.push_back(a().mk_add(trail.size(), trail.c_ptr()));
         break;
     }

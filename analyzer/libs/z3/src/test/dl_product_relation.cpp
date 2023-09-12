@@ -29,7 +29,7 @@ namespace datalog {
         ctx.updt_params(params);
         relation_manager & rmgr(rctx.get_rmanager());
 
-        sparse_table_plugin & plugin =
+        sparse_table_plugin & plugin = 
             static_cast<sparse_table_plugin &>(*rctx.get_rmanager().get_table_plugin(symbol("sparse")));
         SASSERT(&plugin);
         table_signature sig2;
@@ -37,7 +37,7 @@ namespace datalog {
         sig2.push_back(2);
         sig2.set_functional_columns(1);
         SASSERT(plugin.can_handle_signature(sig2));
-
+        
         table_fact f00;
         f00.push_back(0);
         f00.push_back(0);
@@ -102,7 +102,7 @@ namespace datalog {
             table_aptr t0 = plugin.mk_empty(sig2);
             t0->display(std::cout<<"0:");
             SASSERT(t0->get_signature().functional_columns()==1);
-
+            
             table_fact aux_fact;
 
             aux_fact = f01;
@@ -269,7 +269,7 @@ namespace datalog {
         r31->add_fact(f779);
         r31->add_fact(f977);
         r31->add_fact(f799);
-
+        
         unsigned rem_1_rel[] = { 1 };
         unsigned rem_2_rel[] = { 1, 2 };
         unsigned rem_1_table[] = { 0 };
@@ -350,7 +350,7 @@ void tst_dl_product_relation() {
 
     params.set_sym("default_relation", symbol("tr_sparse"));
     test_finite_product_relation(fparams, params);
-
+    
 }
 #else
 void tst_dl_product_relation() {

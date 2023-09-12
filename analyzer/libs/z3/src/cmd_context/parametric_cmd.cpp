@@ -19,7 +19,7 @@ Notes:
 #include"cmd_context.h"
 #include"parametric_cmd.h"
 
-char const * parametric_cmd::get_descr(cmd_context & ctx) const {
+char const * parametric_cmd::get_descr(cmd_context & ctx) const { 
     if (m_descr == 0) {
         const_cast<parametric_cmd*>(this)->m_descr = alloc(string_buffer<>);
         m_descr->append(get_main_descr());
@@ -36,7 +36,7 @@ cmd_arg_kind parametric_cmd::next_arg_kind(cmd_context & ctx) const {
     return pdescrs(ctx).get_kind(m_last);
 }
 
-void parametric_cmd::set_next_arg(cmd_context & ctx, symbol const & s) {
+void parametric_cmd::set_next_arg(cmd_context & ctx, symbol const & s) { 
     if (m_last == symbol::null) {
         m_last = symbol(norm_param_name(s).c_str());
         if (pdescrs(ctx).get_kind(m_last.bare_str()) == CPK_INVALID)

@@ -1,11 +1,12 @@
 """
 Makefile functions.
 """
+from __future__ import print_function
 
 import parser, util
 import subprocess, os, logging, sys
 from globrelative import glob
-from cStringIO import StringIO
+from pymake import errors
 
 log = logging.getLogger('pymake.data')
 
@@ -51,7 +52,7 @@ class Function(object):
         argc = len(self._arguments)
 
         if argc < self.minargs:
-            raise data.DataError("Not enough arguments to function %s, requires %s" % (self.name, self.minargs), self.loc)
+            raise errors.DataError("Not enough arguments to function %s, requires %s" % (self.name, self.minargs), self.loc)
 
         assert self.maxargs == 0 or argc <= self.maxargs, "Parser screwed up, gave us too many args"
 
@@ -135,7 +136,7 @@ class Function(object):
         if len(self._arguments) != len(other._arguments):
             return False
 
-        for i in xrange(len(self._arguments)):
+        for i in range(len(self._arguments)):
             # According to the GNU make manual Section 8.1, whitespace around
             # arguments is *not* part of the argument's value. So, we do a
             # whitespace-agnostic comparison.
@@ -175,7 +176,7 @@ class VariableRef(Function):
     def resolve(self, makefile, variables, fd, setting):
         vname = self.vname.resolvestr(makefile, variables, setting)
         if vname in setting:
-            raise data.DataError("Setting variable '%s' recursively references itself." % (vname,), self.loc)
+            raise errors.DataError("Setting variable '%s' recursively references itself." % (vname,), self.loc)
 
         flavor, source, value = variables.get(vname)
         if value is None:
@@ -222,7 +223,7 @@ class SubstitutionRef(Function):
     def resolve(self, makefile, variables, fd, setting):
         vname = self.vname.resolvestr(makefile, variables, setting)
         if vname in setting:
-            raise data.DataError("Setting variable '%s' recursively references itself." % (vname,), self.loc)
+            raise errors.DataError("Setting variable '%s' recursively references itself." % (vname,), self.loc)
 
         substfrom = self.substfrom.resolvestr(makefile, variables, setting)
         substto = self.substto.resolvestr(makefile, variables, setting)
@@ -525,7 +526,7 @@ class JoinFunction(Function):
 
     @staticmethod
     def iterjoin(l1, l2):
-        for i in xrange(0, max(len(l1), len(l2))):
+        for i in range(0, max(len(l1), len(l2))):
             i1 = i < len(l1) and l1[i] or ''
             i2 = i < len(l2) and l2[i] or ''
             yield i1 + i2
@@ -666,11 +667,11 @@ class CallFunction(Function):
     def resolve(self, makefile, variables, fd, setting):
         vname = self._arguments[0].resolvestr(makefile, variables, setting)
         if vname in setting:
-            raise data.DataError("Recursively setting variable '%s'" % (vname,))
+            raise errors.DataError("Recursively setting variable '%s'" % (vname,))
 
         v = data.Variables(parent=variables)
         v.set('0', data.Variables.FLAVOR_SIMPLE, data.Variables.SOURCE_AUTOMATIC, vname)
-        for i in xrange(1, len(self._arguments)):
+        for i in range(1, len(self._arguments)):
             param = self._arguments[i].resolvestr(makefile, variables, setting)
             v.set(str(i), data.Variables.FLAVOR_SIMPLE, data.Variables.SOURCE_AUTOMATIC, param)
 
@@ -708,7 +709,7 @@ class EvalFunction(Function):
         if makefile.parsingfinished:
             # GNU make allows variables to be set by recursive expansion during
             # command execution. This seems really dumb to me, so I don't!
-            raise data.DataError("$(eval) not allowed via recursive expansion after parsing is finished", self.loc)
+            raise errors.DataError("$(eval) not allowed via recursive expansion after parsing is finished", self.loc)
 
         stmts = parser.parsestring(self._arguments[0].resolvestr(makefile, variables, setting),
                                    'evaluation from %s' % self.loc)
@@ -752,7 +753,7 @@ class FlavorFunction(Function):
 
     def resolve(self, makefile, variables, fd, setting):
         varname = self._arguments[0].resolvestr(makefile, variables, setting)
-
+        
         flavor, source, value = variables.get(varname)
         if flavor is None:
             r = 'undefined'
@@ -785,8 +786,8 @@ class ShellFunction(Function):
         try:
             p = subprocess.Popen(cline, executable=executable, env=makefile.env, shell=False,
                                  stdout=subprocess.PIPE, cwd=makefile.workdir)
-        except OSError, e:
-            print >>sys.stderr, "Error executing command %s" % cline[0], e
+        except OSError as e:
+            print("Error executing command %s" % cline[0], e, file=sys.stderr)
             return
         finally:
             os.environ['PATH'] = oldpath
@@ -808,7 +809,7 @@ class ErrorFunction(Function):
 
     def resolve(self, makefile, variables, fd, setting):
         v = self._arguments[0].resolvestr(makefile, variables, setting)
-        raise data.DataError(v, self.loc)
+        raise errors.DataError(v, self.loc)
 
 class WarningFunction(Function):
     name = 'warning'
@@ -830,7 +831,7 @@ class InfoFunction(Function):
 
     def resolve(self, makefile, variables, fd, setting):
         v = self._arguments[0].resolvestr(makefile, variables, setting)
-        print v
+        print(v)
 
 functionmap = {
     'subst': SubstFunction,

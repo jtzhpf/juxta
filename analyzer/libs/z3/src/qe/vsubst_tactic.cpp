@@ -24,17 +24,17 @@ Notes:
   . use the identified variables as non-linear variables.
   . give up if there are non-linear variables under uninterpreted scope.
     give up if there are no non-linear variables.
-  . call quantifier elimination with
+  . call quantifier elimination with 
       - non-linear elimination option.
       - get-first-branch option.
   . if the first branch is linear, then done.
     if the result is unsat, then done.
-    if the first branch is non-linear then,
+    if the first branch is non-linear then, 
     check candidate model,
     perhaps iterate using rewriting or just give up.
 
-  . helpful facilities:
-    . linearize_rewriter
+  . helpful facilities: 
+    . linearize_rewriter 
         a*a*b + a*b = 0 <=> (b+1) = 0 \/ a = 0 \/ b = 0
     . sign analysis:
         a*a + b*b + c < 0  => c < 0
@@ -55,7 +55,7 @@ class vsubst_tactic : public tactic {
         ptr_vector<app>& m_vars;
     public:
         get_var_proc(ast_manager & m, ptr_vector<app>& vars) : m_arith(m), m_vars(vars) {}
-
+        
         void operator()(expr* e) {
             if (is_app(e)) {
                 app* a = to_app(e);
@@ -70,7 +70,7 @@ class vsubst_tactic : public tactic {
 
     void get_vars(ast_manager & m, expr* fml, ptr_vector<app>& vars) {
         get_var_proc proc(m, vars);
-        for_each_expr(proc, fml);
+        for_each_expr(proc, fml);        
     }
 
     void main(goal & s, model_converter_ref & mc, params_ref const & p) {
@@ -81,12 +81,12 @@ class vsubst_tactic : public tactic {
             fs.push_back(s.form(i));
         }
         app_ref f(m.mk_and(fs.size(), fs.c_ptr()), m);
-        TRACE("vsubst",
+        TRACE("vsubst", 
               s.display(tout);
               tout << "goal: " << mk_ismt2_pp(f.get(), m) << "\n";);
         ptr_vector<app> vars;
         get_vars(m, f.get(), vars);
-
+        
         if (vars.empty()) {
             TRACE("vsubst", tout << "no real variables\n";);
             throw tactic_exception("there are no real variables");
@@ -115,13 +115,13 @@ class vsubst_tactic : public tactic {
                 ev->insert(defs.var(i), defs.def(i));
             }
         }
-
+        
         s.reset();
         // TBD: wasteful as we already know it is sat or unsat.
         // TBD: extract model from virtual substitution.
         s.assert_expr(g);
 
-        TRACE("qfnra_vsubst",
+        TRACE("qfnra_vsubst", 
               tout << "v-subst result:\n";
               s.display(tout););
     }
@@ -135,7 +135,7 @@ public:
     }
 
     virtual ~vsubst_tactic() {}
-
+    
     virtual void updt_params(params_ref const & p) {
         m_params = p;
     }
@@ -145,8 +145,8 @@ public:
        by using virtual substitutions.
     */
     virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         SASSERT(g->is_well_sorted());
@@ -154,9 +154,9 @@ public:
         fail_if_unsat_core_generation("vsubst", g);
         fail_if_model_generation("vsubst", g); // disable for now due to problems with infinitesimals.
         mc = 0; pc = 0; core = 0; result.reset();
-
+        
         main(*(g.get()), mc, m_params);
-
+        
         result.push_back(g.get());
         SASSERT(g->is_well_sorted());
     }

@@ -38,7 +38,7 @@ class total_order {
         uint64 m_val;
         T      m_data;
     };
-
+    
     small_object_allocator * m_allocator;
     bool                     m_own_allocator;
     Map                      m_map;
@@ -58,7 +58,7 @@ class total_order {
     uint64 vb(cell * a) const { return v(a) - v(base()); }
 
     uint64 vbn(cell * a) const { return a->m_next == base() ? UINT64_MAX : vb(a->m_next); }
-
+        
     cell * mk_cell(T const & a) {
         SASSERT(!m_map.contains(a));
         cell * c  = reinterpret_cast<cell*>(m_allocator->allocate(sizeof(cell)));
@@ -77,7 +77,7 @@ class total_order {
         m_size--;
         SASSERT(!m_map.contains(d));
     }
-
+    
     cell * to_cell(T const & a) const {
         void * r;
 #ifdef Z3DEBUG
@@ -100,11 +100,11 @@ class total_order {
             uint64 goal_gap  = ideal_gap / 32;
             cell * c         = a->m_next->m_next;
             unsigned j       = 2;
-            uint64 curr_gap  = (v(c) - v0) / j;
+            uint64 curr_gap  = (v(c) - v0) / j; 
             while (j < sz && curr_gap < goal_gap) {
                 j++;
                 c         = c->m_next;
-                curr_gap  = (v(c) - v0) / j;
+                curr_gap  = (v(c) - v0) / j; 
             }
             TRACE("total_order", tout << "j: " << j << " curr_gap: " << curr_gap << " sz: " << sz << "\n";);
             if (j == sz)
@@ -124,7 +124,7 @@ class total_order {
         uint64 vb_b = vb_a + ((vbn_a - vb_a)/2);
         SASSERT(vb_b > vb_a);
         SASSERT(vb_b < vbn_a);
-        b->m_val          = vb_b + v(base());
+        b->m_val          = vb_b + v(base()); 
         b->m_next         = a->m_next;
         a->m_next->m_prev = b;
         b->m_prev         = a;
@@ -132,11 +132,11 @@ class total_order {
         SASSERT(vb(a) < vb(b));
         CASSERT("total_order", check_invariant());
     }
-
+    
     void insert_core(cell * a) {
         _insert_after(base(), a);
     }
-
+    
     void remove_cell(cell * a) {
         SASSERT(a != base());
         cell * p = a->m_prev;
@@ -158,12 +158,12 @@ class total_order {
         remove_cell(b);
         insert_core(b);
     }
-
+    
     void erase(cell * a) {
         remove_cell(a);
         del_cell(a);
     }
-
+    
 public:
     total_order():
         m_allocator(alloc(small_object_allocator)),
@@ -194,7 +194,7 @@ public:
         m_size(0) {
         init_base();
     }
-
+    
     ~total_order() {
         cell * curr = base()->m_next;
         while (curr != base()) {
@@ -209,8 +209,8 @@ public:
     /**
        \brief Return true if \c a is in the total order.
     */
-    bool contains(T const & a) const {
-        return m_map.contains(a);
+    bool contains(T const & a) const { 
+        return m_map.contains(a); 
     }
 
     /**
@@ -218,9 +218,9 @@ public:
 
        \pre \c a must not be an element of the total order.
     */
-    void insert(T const & a) {
-        SASSERT(!contains(a));
-        insert_core(mk_cell(a));
+    void insert(T const & a) { 
+        SASSERT(!contains(a)); 
+        insert_core(mk_cell(a)); 
     }
 
     /**
@@ -229,21 +229,21 @@ public:
        \pre \c a is an element of the total order.
        \pre \c b must not be an element of the total order.
     */
-    void insert_after(T const & a, T const & b) {
-        SASSERT(contains(a));
-        SASSERT(!contains(b));
-        _insert_after(to_cell(a), mk_cell(b));
+    void insert_after(T const & a, T const & b) { 
+        SASSERT(contains(a)); 
+        SASSERT(!contains(b)); 
+        _insert_after(to_cell(a), mk_cell(b)); 
         SASSERT(lt(a, b));
-    }
+    } 
 
     /**
        \brief Move \c a to the beginning of the total order.
 
        \pre \c a is an element of the total order.
     */
-    void move_beginning(T const & a) {
-        SASSERT(contains(a));
-        move_beginning(to_cell(a));
+    void move_beginning(T const & a) { 
+        SASSERT(contains(a)); 
+        move_beginning(to_cell(a)); 
     }
 
     /**
@@ -253,46 +253,46 @@ public:
        \pre \c b is an element of the total order.
        \pre \c a must be different from \c b.
     */
-    void move_after(T const & a, T const & b) {
-        SASSERT(contains(a));
-        SASSERT(contains(b));
-        move_after(to_cell(a), to_cell(b));
+    void move_after(T const & a, T const & b) { 
+        SASSERT(contains(a)); 
+        SASSERT(contains(b)); 
+        move_after(to_cell(a), to_cell(b)); 
         SASSERT(lt(a, b));
     }
-
+    
     /**
        \brief Remove \c a from the total order.
 
        \pre \c a is an element of the total order.
     */
-    void erase(T const & a) {
-        SASSERT(contains(a));
-        erase(to_cell(a));
+    void erase(T const & a) { 
+        SASSERT(contains(a)); 
+        erase(to_cell(a)); 
     }
-
+    
     /**
        \brief Return true if \c a is less than \c b in the total order.
     */
-    bool lt(T const & a, T const & b) const {
-        SASSERT(contains(a));
-        SASSERT(contains(b));
-        return vb(to_cell(a)) < vb(to_cell(b));
+    bool lt(T const & a, T const & b) const { 
+        SASSERT(contains(a)); 
+        SASSERT(contains(b)); 
+        return vb(to_cell(a)) < vb(to_cell(b)); 
     }
 
     /**
        \brief Return true if \c a is greater than \c b in the total order.
     */
-    bool gt(T const & a, T const & b) const {
-        SASSERT(contains(a));
-        SASSERT(contains(b));
-        return vb(to_cell(a)) > vb(to_cell(b));
+    bool gt(T const & a, T const & b) const { 
+        SASSERT(contains(a)); 
+        SASSERT(contains(b)); 
+        return vb(to_cell(a)) > vb(to_cell(b)); 
     }
 
     /**
        \brief Return true if the total order is empty.
     */
-    bool empty() const {
-        return base()->m_next == base();
+    bool empty() const { 
+        return base()->m_next == base(); 
     }
 
     /**
@@ -312,50 +312,50 @@ public:
 
     /**
        \brief Return true if \c a has a successor in the total order.
-
+       
        \pre \c a is an element of the total order.
     */
-    bool has_next(T const & a) const {
+    bool has_next(T const & a) const { 
         SASSERT(contains(a));
-        return to_cell(a)->m_next != base();
+        return to_cell(a)->m_next != base(); 
     }
 
     /**
        \brief Return the successor of \c a in the total order.
-
+       
        \pre \c a is an element of the total order.
        \pre has_next(a)
     */
-    T const & next(T const & a) const {
+    T const & next(T const & a) const { 
         SASSERT(contains(a));
-        SASSERT(has_next(a));
-        return to_cell(a)->m_next->m_data;
+        SASSERT(has_next(a)); 
+        return to_cell(a)->m_next->m_data; 
     }
 
     /**
        \brief Return true if \c a has a predecessor in the total order.
-
+       
        \pre \c a is an element of the total order.
     */
-    bool has_pred(T const & a) const {
+    bool has_pred(T const & a) const { 
         SASSERT(contains(a));
-        return to_cell(a)->m_prev != base();
+        return to_cell(a)->m_prev != base(); 
     }
 
     /**
        \brief Return the predecessor of \c a in the total order.
-
+       
        \pre \c a is an element of the total order.
        \pre has_pred(a)
     */
-    T const & pred(T const & a) const {
-        SASSERT(has_pred(a));
-        return to_cell(a)->m_prev->m_data;
+    T const & pred(T const & a) const { 
+        SASSERT(has_pred(a)); 
+        return to_cell(a)->m_prev->m_data; 
     }
 
     /**
        \brief Display the elements of the total order in increasing order.
-
+       
        \remark For debugging purposes.
     */
     void display(std::ostream & out) const {

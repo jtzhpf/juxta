@@ -46,7 +46,7 @@ enum datatype_op_kind {
      TreeList = cons_t(first_t:Tree, rest_t:Tree)
               | nil_t
    End
-
+  
    The recursive occurrences of Tree and TreeList will have idx 0 and
    1 respectively.
 
@@ -59,7 +59,7 @@ public:
     type_ref():m_data(TAG(void *, static_cast<void*>(0), 1)) {}
     type_ref(int idx):m_data(BOXINT(void *, idx)) {}
     type_ref(sort * s):m_data(TAG(void *, s, 1)) {}
-
+    
     bool is_idx() const { return GET_TAG(m_data) == 0; }
     bool is_sort() const { return GET_TAG(m_data) == 1; }
     sort * get_sort() const { return UNTAG(sort *, m_data); }
@@ -94,36 +94,36 @@ public:
 
     virtual decl_plugin * mk_fresh() { return alloc(datatype_decl_plugin); }
 
-
+    
     /**
-       Contract for sort:
+       Contract for sort: 
          parameters[0]            - (int) n - number of recursive types.
          parameters[1]            - (int) i - index 0..n-1 of which type is defined.
-
+      
          for j in 0..n-1
          parameters[2 + 2*j]      - (symbol) name of the type
          parameters[2 + 2*j + 1]  - (int) o - offset where the constructors are defined.
-
+      
          for each offset o at parameters[2 + 2*j + 1] for some j in 0..n-1
          parameters[o]            - (int) m - number of constructors
          parameters[o+1]          - (int) k_1 - offset for constructor definition
          ...
          parameters[o+m]          - (int) k_m - offset ofr constructor definition
-
+      
          for each offset k_i at parameters[o+s] for some s in 0..m-1
          parameters[k_i]          - (symbol) name of the constructor
          parameters[k_i+1]        - (symbol) name of the recognizer
          parameters[k_i+2]        - (int) m' - number of accessors
          parameters[k_i+3+2*r]    - (symbol) name of the r accessor
-         parameters[k_i+3+2*r+1]  - (int or type_ast) type of the accessor. If integer, then the value must be in [0..n-1], and it
+         parameters[k_i+3+2*r+1]  - (int or type_ast) type of the accessor. If integer, then the value must be in [0..n-1], and it 
                                     represents an reference to the recursive type.
-
+       
        The idea with the additional offsets is that
        access to relevant constructors and types can be performed using
        a few address calculations.
     */
     virtual sort * mk_sort(decl_kind k, unsigned num_parameters, parameter const * parameters);
-
+    
     /**
        Contract for constructors
          parameters[0] - (ast) datatype ast.
@@ -136,9 +136,9 @@ public:
          parameters[0] - (ast) datatype ast.
          parameters[1] - (int) constructor idx.
     */
-    virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+    virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                      unsigned arity, sort * const * domain, sort * range);
-
+    
     bool mk_datatypes(unsigned num_datatypes, datatype_decl * const * datatypes, sort_ref_vector & new_sorts);
 
     virtual expr * get_some_value(sort * s);

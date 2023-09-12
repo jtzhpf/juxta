@@ -7,9 +7,9 @@ Module Name:
 
 Abstract:
 
-    Simple degree shift procedure.
+    Simple degree shift procedure. 
     Basic idea: if goal G contains a real variable x, x occurs with degrees
-    d_1, ..., d_k in G, and n = gcd(d_1, ..., d_k) > 1.
+    d_1, ..., d_k in G, and n = gcd(d_1, ..., d_k) > 1. 
     Then, replace x^n with a new fresh variable y.
 
 Author:

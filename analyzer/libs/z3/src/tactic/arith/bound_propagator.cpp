@@ -43,15 +43,15 @@ Revision History:
 // -------------------------------
 
 bound_propagator::bound::bound(numeral_manager & m,
-                               mpq const & k,
+                               mpq const & k, 
                                double approx_k,
-                               bool lower,
-                               bool strict,
-                               unsigned lvl,
-                               unsigned ts,
-                               bkind bk,
+                               bool lower, 
+                               bool strict, 
+                               unsigned lvl, 
+                               unsigned ts, 
+                               bkind bk, 
                                unsigned c_idx,
-                               assumption a,
+                               assumption a, 
                                bound * prev):
     m_approx_k(approx_k),
     m_lower(lower),
@@ -69,7 +69,7 @@ bound_propagator::bound::bound(numeral_manager & m,
 
 bound_propagator::bound_propagator(numeral_manager & _m, allocator & a, params_ref const & p):
     m(_m),
-    m_allocator(a),
+    m_allocator(a), 
     m_eq_manager(m, a) {
     m_timestamp = 0;
     m_qhead     = 0;
@@ -114,7 +114,7 @@ void bound_propagator::del_constraint(constraint & c) {
         break;
     }
 }
-
+    
 void bound_propagator::updt_params(params_ref const & p) {
     m_max_refinements = p.get_uint("bound_max_refinements", 16);
     m_threshold       = p.get_double("bound_threshold", 0.05);
@@ -289,7 +289,7 @@ bool bound_propagator::assert_lower_core(var x, mpq & k, bool strict, bkind bk, 
             return false;
         }
     }
-
+    
     if (bk == DERIVED) {
         TRACE("bound_propagator_derived", tout << "new lower x" << x << " " << m.to_string(k) << " strict: " << strict << "\n";);
         m_propagations++;
@@ -356,7 +356,7 @@ bool bound_propagator::assert_upper_core(var x, mpq & k, bool strict, bkind bk, 
     approx_k = PRECISION*ceil(approx_k*INV_PRECISION - TOLERANCE);
     TRACE("new_bound", tout << "x" << x << " upper: " << m.to_string(k) << " relaxed approx: " << approx_k << "\n";);
 #endif
-
+    
     void  * mem = m_allocator.allocate(sizeof(bound));
     bound * new_upper = new (mem) bound(m, k, approx_k, false, strict, scope_lvl(), m_timestamp, bk, c_idx, a, m_uppers[x]);
     m_timestamp++;
@@ -385,7 +385,7 @@ bool bound_propagator::relevant_bound(var x, double new_k) const {
     bound * b = LOWER ? m_lowers[x] : m_uppers[x];
     if (b == 0)
         return true; // variable did not have a bound
-
+    
     double interval_size;
     bool bounded = get_interval_size(x, interval_size);
 
@@ -393,13 +393,13 @@ bool bound_propagator::relevant_bound(var x, double new_k) const {
         // check if the improvement is significant
         double improvement;
         double abs_k = b->m_approx_k;
-        if (abs_k < 0.0)
+        if (abs_k < 0.0) 
             abs_k -= abs_k;
         if (bounded)
             improvement = m_threshold * std::max(std::min(interval_size, abs_k), 1.0);
         else
             improvement = m_threshold * std::max(abs_k, 1.0);
-
+        
         if (LOWER) {
             if (new_k <= b->m_approx_k + improvement) {
                 TRACE("bound_propagator", tout << "LOWER new: " << new_k << " old: " << b->m_approx_k << " improvement is too small\n";);
@@ -423,10 +423,10 @@ bool bound_propagator::relevant_bound(var x, double new_k) const {
                 return false; // no improvement
         }
     }
-
+    
     if (bounded && interval_size <= m_small_interval)
         return true;
-
+    
     if (LOWER)
         return m_lower_refinements[x] < m_max_refinements;
     else
@@ -469,7 +469,7 @@ void bound_propagator::propagate() {
         bool is_lower = info.is_lower();
         bound * b   = is_lower ? m_lowers[x] : m_uppers[x];
         SASSERT(b);
-        unsigned ts = b->m_timestamp;
+        unsigned ts = b->m_timestamp; 
         TRACE("bound_propagator_detail", tout << "propagating x" << x << "\n";);
         m_qhead++;
         wlist const & wl = m_watches[x];
@@ -484,7 +484,7 @@ void bound_propagator::propagate() {
             if (ts >= c.m_timestamp) {
                 if (c.m_timestamp == 0)
                     m_to_reset_ts.push_back(c_idx);
-                c.m_timestamp = m_timestamp;
+                c.m_timestamp = m_timestamp; 
                 propagate(c_idx);
             }
         }
@@ -521,8 +521,8 @@ bool bound_propagator::propagate_eq(unsigned c_idx) {
 #endif
 
     TRACE("bound_propagator_detail", tout << "propagating using eq: "; m_eq_manager.display(tout, *eq); tout << "\n";);
-    // ll = (Sum_{a_i < 0} -a_i*lower(x_i)) + (Sum_{a_i > 0} -a_i * upper(x_i))
-    // uu = (Sum_{a_i > 0} -a_i*lower(x_i)) + (Sum_{a_i < 0} -a_i * upper(x_i))
+    // ll = (Sum_{a_i < 0} -a_i*lower(x_i)) + (Sum_{a_i > 0} -a_i * upper(x_i)) 
+    // uu = (Sum_{a_i > 0} -a_i*lower(x_i)) + (Sum_{a_i < 0} -a_i * upper(x_i)) 
     unsigned ll_i = UINT_MAX; // position of the variable that couldn't contribute to ll
     unsigned uu_i = UINT_MAX; // position of the variable that coundn't contribute to uu
     bool ll_failed = false;
@@ -547,7 +547,7 @@ bool bound_propagator::propagate_eq(unsigned c_idx) {
                     ll -= a_i * l_i->m_approx_k;
                 }
             }
-
+            
             if (!uu_failed) {
                 if (u_i == 0) {
                     if (uu_i == UINT_MAX)
@@ -598,8 +598,8 @@ bool bound_propagator::propagate_eq(unsigned c_idx) {
             double a_i  = eq->approx_a(i);
             bound * l_i = m_lowers[x_i];
             bound * u_i = m_uppers[x_i];
-            // ll = (Sum_{a_i < 0} -a_i*lower(x_i)) + (Sum_{a_i > 0} -a_i * upper(x_i))
-            // uu = (Sum_{a_i > 0} -a_i*lower(x_i)) + (Sum_{a_i < 0} -a_i * upper(x_i))
+            // ll = (Sum_{a_i < 0} -a_i*lower(x_i)) + (Sum_{a_i > 0} -a_i * upper(x_i)) 
+            // uu = (Sum_{a_i > 0} -a_i*lower(x_i)) + (Sum_{a_i < 0} -a_i * upper(x_i)) 
             if (ll_i == UINT_MAX) {
                 // can propagate a lower bound for a_i*x_i
                 if (a_i > 0.0) {
@@ -664,7 +664,7 @@ bool bound_propagator::propagate_eq(unsigned c_idx) {
                 propagated = true;
         }
     }
-
+    
     return propagated;
 }
 
@@ -688,7 +688,7 @@ bool bound_propagator::propagate_lower(unsigned c_idx, unsigned i) {
         var x_j = eq->x(j);
         mpz const & a_j = eq->a(j);
         bound * b_j = (m.is_neg(a_j) == neg_a_i) ? m_uppers[x_j] : m_lowers[x_j];
-        TRACE("bound_propagator_step_detail", tout << "k: " << m.to_string(k) << " b_j->m_k: " << m.to_string(b_j->m_k) <<
+        TRACE("bound_propagator_step_detail", tout << "k: " << m.to_string(k) << " b_j->m_k: " << m.to_string(b_j->m_k) << 
               " a_j: " << m.to_string(a_j) << "\n";);
         SASSERT(b_j);
         if (b_j->m_strict)
@@ -780,7 +780,7 @@ bool bound_propagator::upper(var x, mpq & k, bool & strict, unsigned & ts) const
 
 bound_propagator::bound * bound_propagator::bound::at(unsigned timestamp) {
     bound * r = this;
-    while (r != 0 && r->m_timestamp >= timestamp)
+    while (r != 0 && r->m_timestamp >= timestamp) 
         r = r->m_prev;
     return r;
 }
@@ -858,7 +858,7 @@ void bound_propagator::explain(var x, bound * b, unsigned ts, assumption_vector 
 
 /**
    \brief Compute lower (upper) bound for the linear polynomial as[0]*xs[0] + ... + as[sz-1]*xs[sz-1]
-
+   
    Return false if the lower (upper) bound is -oo (oo)
 */
 template<bool LOWER, typename Numeral>
@@ -877,7 +877,7 @@ bool bound_propagator::get_bound(unsigned sz, Numeral const * as, var const * xs
         }
         if (b->m_strict)
             st = true;
-        m.addmul(r, a_i, b->m_k, r);
+        m.addmul(r, a_i, b->m_k, r); 
     }
     return true;
 }

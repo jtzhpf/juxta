@@ -25,30 +25,30 @@ Notes:
 #include"arith_decl_plugin.h"
 
 //
-// bv2real[d,r](n,m) has interpretation:
+// bv2real[d,r](n,m) has interpretation: 
 // sbv2int(n)/d + sbv2int(m)/d*sqrt(r)
 // where
 // sbv2int is signed bit-vector 2 integer.
-//
+// 
 class bv2real_util {
-    struct bvr_sig {
+    struct bvr_sig { 
         unsigned m_msz, m_nsz;
-        rational m_d, m_r;
+        rational m_d, m_r; 
     };
 
     struct bvr_eq {
         bool operator()(bvr_sig const& x, bvr_sig const& y) const {
-            return
-                x.m_msz == y.m_msz &&
-                x.m_nsz == y.m_nsz &&
-                x.m_d   == y.m_d &&
+            return 
+                x.m_msz == y.m_msz && 
+                x.m_nsz == y.m_nsz && 
+                x.m_d   == y.m_d && 
                 x.m_r   == y.m_r;
         }
     };
 
     struct bvr_hash {
         unsigned operator()(bvr_sig const& x) const {
-            unsigned a[3] = { x.m_msz, x.m_nsz, x.m_d.hash() };
+            unsigned a[3] = { x.m_msz, x.m_nsz, x.m_d.hash() };            
             return string_hash((char const*)a, 12, x.m_r.hash());
         }
     };
@@ -75,10 +75,10 @@ public:
     void reset() { m_side_conditions.reset(); }
 
     bool is_bv2real(func_decl* f) const;
-    bool is_bv2real(func_decl* f, unsigned num_args, expr* const* args,
+    bool is_bv2real(func_decl* f, unsigned num_args, expr* const* args, 
                     expr*& m, expr*& n, rational& d, rational& r) const;
     bool is_bv2real(expr* e, expr*& n, expr*& m, rational& d, rational& r) const;
-    bool is_bv2real(expr* e, expr*& n, expr*& m, rational& d);
+    bool is_bv2real(expr* e, expr*& n, expr*& m, rational& d);    
 
     bool contains_bv2real(expr* e) const;
 
@@ -120,7 +120,7 @@ public:
     expr*     mk_bv_mul(expr* s, expr* t);
     expr*     mk_bv_mul(rational const& n, expr* t);
     expr*     mk_extend(unsigned sz, expr* b);
-    expr*     mk_sbv(rational const& n);
+    expr*     mk_sbv(rational const& n); 
 
     void      align_sizes(expr_ref& s, expr_ref& t);
     void      align_divisors(expr_ref& s1, expr_ref& s2, expr_ref& t1, expr_ref& t2, rational& d1, rational& d2);
@@ -166,14 +166,14 @@ private:
     br_status mk_lt_pos(expr * arg1, expr * arg2, expr_ref & result);
     br_status mk_ge(expr * arg1, expr * arg2, expr_ref & result);
     br_status mk_gt(expr * arg1, expr * arg2, expr_ref & result);
-    br_status mk_add(unsigned num_args, expr * const * args, expr_ref & result);
-    br_status mk_mul(unsigned num_args, expr * const * args, expr_ref & result);
-    br_status mk_sub(unsigned num_args, expr * const * args, expr_ref & result);
+    br_status mk_add(unsigned num_args, expr * const * args, expr_ref & result);     
+    br_status mk_mul(unsigned num_args, expr * const * args, expr_ref & result); 
+    br_status mk_sub(unsigned num_args, expr * const * args, expr_ref & result); 
     br_status mk_div(expr* s, expr* t, expr_ref& result);
     br_status mk_add(expr* s, expr* t, expr_ref& result);
     br_status mk_mul(expr* s, expr* t, expr_ref& result);
     br_status mk_sub(expr* s, expr* t, expr_ref& result);
-    br_status mk_uminus(expr* e, expr_ref & result);
+    br_status mk_uminus(expr* e, expr_ref & result); 
 };
 
 struct bv2real_rewriter_cfg : public default_rewriter_cfg {

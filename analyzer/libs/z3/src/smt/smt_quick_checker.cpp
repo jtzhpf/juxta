@@ -41,7 +41,7 @@ namespace smt {
     }
 
     /**
-       \brief Returns true if there is a term (f ... n' ...) in the logical
+       \brief Returns true if there is a term (f ... n' ...) in the logical 
        context such that n' is the i-th argument of f, and n and n' are in the
        same equivalence class.
 
@@ -140,7 +140,7 @@ namespace smt {
                 v.push_back(curr);
             }
         }
-        TRACE("collector",
+        TRACE("collector", 
               tout << "candidates:\n";
               for (unsigned i = 0; i < m_num_vars; i++) {
                   tout << "var " << i << ":";
@@ -223,7 +223,7 @@ namespace smt {
             it.push_back(0);
         }
         TRACE("quick_checker_sizes", tout << mk_pp(q, m_manager) << "\n"; for (unsigned i = 0; i < szs.size(); i++) tout << szs[i] << " "; tout << "\n";);
-        TRACE("quick_checker_candidates",
+        TRACE("quick_checker_candidates", 
               tout << "candidates:\n";
               for (unsigned i = 0; i < m_num_bindings; i++) {
                   enode_vector & v           = m_candidate_vectors[i];
@@ -249,10 +249,10 @@ namespace smt {
                     is_candidate = !check_quantifier(q, true);
                 if (is_candidate) {
                     TRACE("quick_checker", tout << "found new candidate\n";);
-                    TRACE("quick_checker_sizes", tout << "found new candidate\n";
+                    TRACE("quick_checker_sizes", tout << "found new candidate\n"; 
                           for (unsigned i = 0; i < m_num_bindings; i++) tout << "#" << m_bindings[i]->get_owner_id() << " "; tout << "\n";);
                     unsigned max_generation = get_max_generation(m_num_bindings, m_bindings.c_ptr());
-                    if (m_context.add_instance(q, 0 /* no pattern was used */, m_num_bindings, m_bindings.c_ptr(), max_generation,
+                    if (m_context.add_instance(q, 0 /* no pattern was used */, m_num_bindings, m_bindings.c_ptr(), max_generation, 
                                                0,  // min_top_generation is only available for instances created by the MAM
                                                0,  // max_top_generation is only available for instances created by the MAM
                                                empty_used_enodes))
@@ -294,7 +294,7 @@ namespace smt {
             lbool val = m_context.get_assignment(n);
             if (val != l_undef && is_true == (val == l_true))
                 return true;
-            else
+            else 
                 return false;
         }
         if (!is_app(n))
@@ -317,21 +317,21 @@ namespace smt {
                     return (check(a->get_arg(0), true)  && check(a->get_arg(1), true))  || (check(a->get_arg(0), false) && check(a->get_arg(1), false));
                 else
                     return (check(a->get_arg(0), true)  && check(a->get_arg(1), false)) || (check(a->get_arg(0), false) && check(a->get_arg(1), true));
-            case OP_ITE:
+            case OP_ITE: 
                 if (check(a->get_arg(0), true))
                     return check(a->get_arg(1), is_true);
                 else if (check(a->get_arg(0), false))
                     return check(a->get_arg(2), is_true);
-                else
+                else 
                     return check(a->get_arg(1), is_true) && check(a->get_arg(2), is_true);
-            case OP_EQ:
+            case OP_EQ: 
                 if (is_true) {
                     return canonize(a->get_arg(0)) == canonize(a->get_arg(1));
                 }
                 else {
                     expr * lhs = canonize(a->get_arg(0));
                     expr * rhs = canonize(a->get_arg(1));
-                    if (m_context.e_internalized(lhs) && m_context.is_relevant(lhs) &&
+                    if (m_context.e_internalized(lhs) && m_context.is_relevant(lhs) && 
                         m_context.e_internalized(rhs) && m_context.is_relevant(rhs) &&
                         m_context.get_enode(lhs)->get_root() != m_context.get_enode(rhs)->get_root())
                         return true;

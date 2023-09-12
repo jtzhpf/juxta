@@ -28,7 +28,7 @@ namespace datalog {
         context&     m_ctx;
     public:
         mk_backwards(context & ctx, unsigned priority = 33000);
-        ~mk_backwards();
+        ~mk_backwards();        
         rule_set * operator()(rule_set const & source);
     };
 

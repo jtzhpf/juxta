@@ -18,7 +18,7 @@
     rule
       forall i in [0..n-2]:
         (forall j in [i+1..n-1]:
-           ((row[i] <> row[j]) and
+           ((row[i] <> row[j]) and 
            (i+row[i]) <> (j+row[j]) and
            (i+row[j]) <> (j+row[i])));
 

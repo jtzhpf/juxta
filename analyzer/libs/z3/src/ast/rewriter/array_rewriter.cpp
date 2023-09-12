@@ -52,7 +52,7 @@ br_status array_rewriter::mk_app_core(func_decl * f, unsigned num_args, expr * c
         return mk_set_union(num_args, args, result);
     case OP_SET_INTERSECT:
         return mk_set_intersect(num_args, args, result);
-    case OP_SET_SUBSET:
+    case OP_SET_SUBSET: 
         SASSERT(num_args == 2);
         return mk_set_subset(args[0], args[1], result);
     case OP_SET_COMPLEMENT:
@@ -85,14 +85,14 @@ br_status array_rewriter::mk_store_core(unsigned num_args, expr * const * args, 
     SASSERT(num_args >= 3);
 
     if (m_util.is_store(args[0])) {
-        lbool r = m_sort_store ?
+        lbool r = m_sort_store ? 
             compare_args<true>(num_args - 2, args + 1, to_app(args[0])->get_args() + 1) :
             compare_args<false>(num_args - 2, args + 1, to_app(args[0])->get_args() + 1);
         switch (r) {
         case l_true: {
             //
             // store(store(a,i,v),i,w) --> store(a,i,w)
-            //
+            // 
             ptr_buffer<expr> new_args;
             new_args.push_back(to_app(args[0])->get_arg(0));
             new_args.append(num_args-1, args+1);
@@ -102,10 +102,10 @@ br_status array_rewriter::mk_store_core(unsigned num_args, expr * const * args, 
         }
         case l_false:
             SASSERT(m_sort_store);
-            //
+            // 
             // store(store(a,i,v),j,w) -> store(store(a,j,w),i,v)
             // if i, j are different, lt(i,j)
-            //
+            // 
             if (lex_lt(num_args-2, args+1, to_app(args[0])->get_args() + 1)) {
                 ptr_buffer<expr> new_args;
                 new_args.push_back(to_app(args[0])->get_arg(0));
@@ -122,7 +122,7 @@ br_status array_rewriter::mk_store_core(unsigned num_args, expr * const * args, 
             break;
         }
     }
-
+        
     //
     // store(const(v),i,v) --> const(v)
     //
@@ -134,10 +134,10 @@ br_status array_rewriter::mk_store_core(unsigned num_args, expr * const * args, 
 
     expr * v = args[num_args-1];
 
-    //
+    // 
     // store(a, i, select(a, i)) --> a
     //
-    if (m_util.is_select(v) &&
+    if (m_util.is_select(v) && 
         compare_args<false>(num_args-1, args, to_app(v)->get_args())) {
         result = args[0];
         return BR_DONE;
@@ -145,7 +145,7 @@ br_status array_rewriter::mk_store_core(unsigned num_args, expr * const * args, 
 
     return BR_FAILED;
 }
-
+        
 br_status array_rewriter::mk_select_core(unsigned num_args, expr * const * args, expr_ref & result) {
     SASSERT(num_args >= 2);
     if (m_util.is_store(args[0])) {
@@ -201,7 +201,7 @@ br_status array_rewriter::mk_select_core(unsigned num_args, expr * const * args,
         result = m().mk_app(f, num_args - 1, args + 1);
         return BR_REWRITE1;
     }
-
+    
     return BR_FAILED;
 }
 
@@ -211,7 +211,7 @@ br_status array_rewriter::mk_map_core(func_decl * f, unsigned num_args, expr * c
     bool is_const0 = m_util.is_const(args[0]);
     if (num_args == 1) {
         //
-        // map_f (store a j v) = (store (map_f a) j (f v))
+        // map_f (store a j v) = (store (map_f a) j (f v)) 
         //
         if (is_store0) {
             app * store_expr = to_app(args[0]);
@@ -219,17 +219,17 @@ br_status array_rewriter::mk_map_core(func_decl * f, unsigned num_args, expr * c
             SASSERT(num_args >= 3);
             expr * a = store_expr->get_arg(0);
             expr * v = store_expr->get_arg(num_args-1);
-
+            
             ptr_buffer<expr> new_args;
-
+            
             new_args.push_back(m_util.mk_map(f, 1, &a)); // (map_f a)
             new_args.append(num_args - 2, store_expr->get_args() + 1); // j
             new_args.push_back(m().mk_app(f, v));   // (f v)
-
+            
             result = m().mk_app(get_fid(), OP_STORE, new_args.size(), new_args.c_ptr());
             return BR_REWRITE2;
         }
-
+        
         //
         // map_f (const v) = (const (f v))
         //
@@ -242,7 +242,7 @@ br_status array_rewriter::mk_map_core(func_decl * f, unsigned num_args, expr * c
     }
 
     SASSERT(num_args > 1);
-
+    
     if (is_store0) {
         unsigned num_indices = to_app(args[0])->get_num_args() - 2;
         unsigned i;
@@ -291,12 +291,12 @@ br_status array_rewriter::mk_map_core(func_decl * f, unsigned num_args, expr * c
             for (unsigned i = 0; i < num_args; i++) {
                 values.push_back(to_app(args[i])->get_arg(0));
             }
-
+            
             expr * fv = m().mk_app(f, values.size(), values.c_ptr());
             sort * in_s = get_sort(args[0]);
             ptr_vector<sort> domain;
             unsigned domain_sz = get_array_arity(in_s);
-            for (unsigned i = 0; i < domain_sz; i++)
+            for (unsigned i = 0; i < domain_sz; i++) 
                 domain.push_back(get_array_domain(in_s, i));
             sort_ref out_s(m());
             out_s = m_util.mk_array_sort(domain_sz, domain.c_ptr(), f->get_range());
@@ -314,7 +314,7 @@ void array_rewriter::mk_store(unsigned num_args, expr * const * args, expr_ref &
     if (mk_store_core(num_args, args, result) == BR_FAILED)
         result = m().mk_app(get_fid(), OP_STORE, num_args, args);
 }
-
+        
 void array_rewriter::mk_select(unsigned num_args, expr * const * args, expr_ref & result) {
     if (mk_select_core(num_args, args, result) == BR_FAILED)
         result = m().mk_app(get_fid(), OP_SELECT, num_args, args);
@@ -395,7 +395,7 @@ br_status array_rewriter::mk_eq_core(expr * lhs, expr * rhs, expr_ref & result) 
         e = to_app(e)->get_arg(0);                                      \
         args.reset();                                                   \
     }                                                \
-
+    
     e = lhs;
     MK_EQ();
     e = rhs;

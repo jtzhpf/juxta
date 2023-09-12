@@ -30,8 +30,8 @@ namespace datalog {
     // -----------------------------------
 
     sieve_relation::sieve_relation(sieve_relation_plugin & p, const relation_signature & s,
-                const bool * inner_columns, relation_base * inner)
-            : relation_base(p, s), m_inner_cols(s.size(), inner_columns), m_inner(inner) {
+                const bool * inner_columns, relation_base * inner) 
+            : relation_base(p, s), m_inner_cols(s.size(), inner_columns), m_inner(inner) { 
         unsigned n = s.size();
         for(unsigned i=0; i<n; i++) {
             if(inner_columns && inner_columns[i]) {
@@ -128,16 +128,16 @@ namespace datalog {
         return dynamic_cast<sieve_relation const*>(r);
     }
 
-    sieve_relation_plugin::sieve_relation_plugin(relation_manager & manager)
-            : relation_plugin(get_name(), manager, ST_SIEVE_RELATION),
+    sieve_relation_plugin::sieve_relation_plugin(relation_manager & manager) 
+            : relation_plugin(get_name(), manager, ST_SIEVE_RELATION), 
             m_spec_store(*this) {}
 
-    void sieve_relation_plugin::initialize(family_id fid) {
+    void sieve_relation_plugin::initialize(family_id fid) { 
         relation_plugin::initialize(fid);
         m_spec_store.add_available_kind(get_kind());
     }
 
-    family_id sieve_relation_plugin::get_relation_kind(const relation_signature & sig,
+    family_id sieve_relation_plugin::get_relation_kind(const relation_signature & sig, 
             const bool * inner_columns, family_id inner_kind) {
         rel_spec spec(sig.size(), inner_columns, inner_kind);
         return m_spec_store.get_relation_kind(sig, spec);
@@ -148,7 +148,7 @@ namespace datalog {
         return get_relation_kind(sig, inner_columns, r.get_inner().get_kind());
     }
 
-    void sieve_relation_plugin::extract_inner_columns(const relation_signature & s, relation_plugin & inner,
+    void sieve_relation_plugin::extract_inner_columns(const relation_signature & s, relation_plugin & inner, 
             svector<bool> & inner_columns) {
         SASSERT(inner_columns.size()==s.size());
         unsigned n = s.size();
@@ -158,8 +158,8 @@ namespace datalog {
             inner_sig_singleton.push_back(s[i]);
             inner_columns[i] = inner.can_handle_signature(inner_sig_singleton);
         }
-#if Z3DEBUG
-        //we assume that if a relation plugin can handle two sets of columns separetely,
+#if Z3DEBUG 
+        //we assume that if a relation plugin can handle two sets of columns separetely, 
         //it can also handle them in one relation
         relation_signature inner_sig;
         collect_inner_signature(s, inner_columns, inner_sig);
@@ -167,7 +167,7 @@ namespace datalog {
 #endif
     }
 
-    void sieve_relation_plugin::collect_inner_signature(const relation_signature & s,
+    void sieve_relation_plugin::collect_inner_signature(const relation_signature & s, 
             const svector<bool> & inner_columns, relation_signature & inner_sig) {
         SASSERT(inner_columns.size()==s.size());
         inner_sig.reset();
@@ -179,7 +179,7 @@ namespace datalog {
         }
     }
 
-    void sieve_relation_plugin::extract_inner_signature(const relation_signature & s,
+    void sieve_relation_plugin::extract_inner_signature(const relation_signature & s, 
             relation_signature & inner_sig) {
         UNREACHABLE();
 #if 0
@@ -200,7 +200,7 @@ namespace datalog {
 #endif
     }
 
-    sieve_relation * sieve_relation_plugin::mk_from_inner(const relation_signature & s, const bool * inner_columns,
+    sieve_relation * sieve_relation_plugin::mk_from_inner(const relation_signature & s, const bool * inner_columns, 
             relation_base * inner_rel) {
         SASSERT(!inner_rel->get_plugin().is_sieve_relation()); //it does not make sense to make a sieve of a sieve
         return alloc(sieve_relation, *this, s, inner_columns, inner_rel);
@@ -219,7 +219,7 @@ namespace datalog {
         m_spec_store.get_relation_spec(s, kind, spec);
         relation_signature inner_sig;
         collect_inner_signature(s, spec.m_inner_cols, inner_sig);
-        relation_base * inner = get_manager().mk_empty_relation(inner_sig, spec.m_inner_kind);
+        relation_base * inner = get_manager().mk_empty_relation(inner_sig, spec.m_inner_kind);               
         return mk_from_inner(s, spec.m_inner_cols.c_ptr(), inner);
     }
 
@@ -271,7 +271,7 @@ namespace datalog {
 
         scoped_ptr<relation_join_fn> m_inner_join_fun;
     public:
-        join_fn(sieve_relation_plugin & p, const relation_base & r1, const relation_base & r2, unsigned col_cnt,
+        join_fn(sieve_relation_plugin & p, const relation_base & r1, const relation_base & r2, unsigned col_cnt, 
                     const unsigned * cols1, const unsigned * cols2, relation_join_fn * inner_join_fun)
                 : convenient_relation_join_fn(r1.get_signature(), r2.get_signature(), col_cnt, cols1, cols2),
                 m_plugin(p),
@@ -351,7 +351,7 @@ namespace datalog {
 
         scoped_ptr<relation_transformer_fn> m_inner_fun;
     public:
-        transformer_fn(relation_transformer_fn * inner_fun, const relation_signature & result_sig,
+        transformer_fn(relation_transformer_fn * inner_fun, const relation_signature & result_sig, 
                     const bool * result_inner_cols)
                 : m_result_inner_cols(result_sig.size(), result_inner_cols), m_inner_fun(inner_fun) {
             get_result_signature() = result_sig;
@@ -368,7 +368,7 @@ namespace datalog {
         }
     };
 
-    relation_transformer_fn * sieve_relation_plugin::mk_project_fn(const relation_base & r0, unsigned col_cnt,
+    relation_transformer_fn * sieve_relation_plugin::mk_project_fn(const relation_base & r0, unsigned col_cnt, 
             const unsigned * removed_cols) {
         if(&r0.get_plugin()!=this) {
             return 0;
@@ -396,14 +396,14 @@ namespace datalog {
         else {
             inner_fun = get_manager().mk_project_fn(r.get_inner(), inner_removed_cols);
         }
-
+        
         if(!inner_fun) {
             return 0;
         }
         return alloc(transformer_fn, inner_fun, result_sig, result_inner_cols.c_ptr());
     }
 
-    relation_transformer_fn * sieve_relation_plugin::mk_rename_fn(const relation_base & r0,
+    relation_transformer_fn * sieve_relation_plugin::mk_rename_fn(const relation_base & r0, 
             unsigned cycle_len, const unsigned * permutation_cycle) {
         if(&r0.get_plugin()!=this) {
             return 0;
@@ -425,7 +425,7 @@ namespace datalog {
         relation_signature result_sig;
         relation_signature::from_rename(r.get_signature(), cycle_len, permutation_cycle, result_sig);
 
-        relation_transformer_fn * inner_fun =
+        relation_transformer_fn * inner_fun = 
             get_manager().mk_permutation_rename_fn(r.get_inner(), inner_permutation);
         if(!inner_fun) {
             return 0;
@@ -454,7 +454,7 @@ namespace datalog {
         }
     };
 
-    relation_union_fn * sieve_relation_plugin::mk_union_fn(const relation_base & tgt, const relation_base & src,
+    relation_union_fn * sieve_relation_plugin::mk_union_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta) {
         if(&tgt.get_plugin()!=this && &src.get_plugin()!=this && (delta && &delta->get_plugin()!=this)) {
             //we create the operation only if it involves this plugin
@@ -480,7 +480,7 @@ namespace datalog {
             }
         }
         else {
-            if( (stgt && !stgt->no_sieved_columns())
+            if( (stgt && !stgt->no_sieved_columns()) 
                   || (ssrc && !ssrc->no_sieved_columns())
                   || (sdelta && !sdelta->no_sieved_columns()) ) {
                 //We have an unsieved relation and then some relation with some sieved columns,
@@ -501,7 +501,7 @@ namespace datalog {
     class sieve_relation_plugin::filter_fn : public relation_mutator_fn {
         scoped_ptr<relation_mutator_fn> m_inner_fun;
     public:
-        filter_fn(relation_mutator_fn * inner_fun)
+        filter_fn(relation_mutator_fn * inner_fun) 
             : m_inner_fun(inner_fun) {}
 
         virtual void operator()(relation_base & r0) {
@@ -512,7 +512,7 @@ namespace datalog {
         }
     };
 
-    relation_mutator_fn * sieve_relation_plugin::mk_filter_identical_fn(const relation_base & r0,
+    relation_mutator_fn * sieve_relation_plugin::mk_filter_identical_fn(const relation_base & r0, 
             unsigned col_cnt, const unsigned * identical_cols) {
         if(&r0.get_plugin()!=this) {
             return 0;
@@ -539,7 +539,7 @@ namespace datalog {
         return alloc(filter_fn, inner_fun);
     }
 
-    relation_mutator_fn * sieve_relation_plugin::mk_filter_equal_fn(const relation_base & r0,
+    relation_mutator_fn * sieve_relation_plugin::mk_filter_equal_fn(const relation_base & r0, 
             const relation_element & value, unsigned col) {
         if(&r0.get_plugin()!=this) {
             return 0;
@@ -558,7 +558,7 @@ namespace datalog {
         return alloc(filter_fn, inner_fun);
     }
 
-    relation_mutator_fn * sieve_relation_plugin::mk_filter_interpreted_fn(const relation_base & rb,
+    relation_mutator_fn * sieve_relation_plugin::mk_filter_interpreted_fn(const relation_base & rb, 
             app * condition) {
         if(&rb.get_plugin()!=this) {
             return 0;
@@ -577,7 +577,7 @@ namespace datalog {
                 continue;
             }
             if(!r.is_inner_col(i)) {
-                //If the condition involves columns which do not belong to the inner relation,
+                //If the condition involves columns which do not belong to the inner relation, 
                 //we do nothing (which introduces imprecision).
                 //Maybe we might try to do some quantifier elimination...
                 return alloc(identity_relation_mutator_fn);
@@ -613,8 +613,8 @@ namespace datalog {
         }
     };
 
-    relation_intersection_filter_fn * sieve_relation_plugin::mk_filter_by_negation_fn(const relation_base & r,
-            const relation_base & neg, unsigned col_cnt, const unsigned * r_cols,
+    relation_intersection_filter_fn * sieve_relation_plugin::mk_filter_by_negation_fn(const relation_base & r, 
+            const relation_base & neg, unsigned col_cnt, const unsigned * r_cols, 
             const unsigned * neg_cols) {
         if(&r.get_plugin()!=this && &neg.get_plugin()!=this) {
             //we create just operations that involve the current plugin
@@ -643,7 +643,7 @@ namespace datalog {
             else if(!r_col_inner && neg_col_inner) {
                 //Sieved (i.e. full) column in r is matched on an inner column in neg.
                 //If we assume the column in neg is not full, no rows from the inner relation of
-                //r would be removed. So in this case we perform no operation at cost of a little
+                //r would be removed. So in this case we perform no operation at cost of a little 
                 //impresicion.
                 return alloc(identity_relation_intersection_filter_fn);
             }
@@ -654,7 +654,7 @@ namespace datalog {
             }
         }
 
-        relation_intersection_filter_fn * inner_fun =
+        relation_intersection_filter_fn * inner_fun = 
             get_manager().mk_filter_by_negation_fn(inner_r, inner_neg, ir_cols, ineg_cols);
         if(!inner_fun) {
             return 0;
@@ -662,5 +662,5 @@ namespace datalog {
         return alloc(negation_filter_fn, inner_fun);
     }
 
-
+    
 };

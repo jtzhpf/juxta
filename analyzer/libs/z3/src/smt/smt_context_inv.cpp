@@ -30,8 +30,8 @@ namespace smt {
     }
 
     bool context::check_clause(clause const * cls) const {
-        SASSERT(is_watching_clause(~cls->get_literal(0), cls));
-        SASSERT(is_watching_clause(~cls->get_literal(1), cls));
+        SASSERT(is_watching_clause(~cls->get_literal(0), cls));        
+        SASSERT(is_watching_clause(~cls->get_literal(1), cls));        
         if (lit_occs_enabled()) {
             unsigned num_lits = cls->get_num_literals();
             for (unsigned i = 0; i < num_lits; i++) {
@@ -101,8 +101,8 @@ namespace smt {
             for (; i < num; i++)
                 if (cls->get_literal(i) == l)
                     break;
-            CTRACE("lit_occs", !(i < num), tout << i << " " << num << "\n"; display_literal(tout, l); tout << "\n";
-                   display_clause(tout, cls); tout << "\n";
+            CTRACE("lit_occs", !(i < num), tout << i << " " << num << "\n"; display_literal(tout, l); tout << "\n"; 
+                   display_clause(tout, cls); tout << "\n"; 
                    tout << "l: " << l.index() << " cls: ";
                    for (unsigned j = 0; j < num; j++) {
                        tout << cls->get_literal(j).index() << " ";
@@ -127,8 +127,8 @@ namespace smt {
     bool context::check_enode(enode * n) const {
         SASSERT(n->check_invariant());
         bool is_true_eq = n->is_true_eq();
-        bool cg_inv =
-            n->get_num_args() == 0 ||
+        bool cg_inv = 
+            n->get_num_args() == 0 || 
             (!is_true_eq && (!n->is_cgc_enabled() || n->is_cgr() == (m_cg_table.contains_ptr(n)))) ||
             (is_true_eq && !m_cg_table.contains_ptr(n));
         CTRACE("check_enode", !cg_inv,
@@ -186,7 +186,7 @@ namespace smt {
         }
         return true;
     }
-
+    
     bool context::check_missing_eq_propagation() const {
         ptr_vector<enode>::const_iterator it  = m_enodes.begin();
         ptr_vector<enode>::const_iterator end = m_enodes.end();
@@ -230,7 +230,7 @@ namespace smt {
                 enode * first = n;
                 do {
                     CTRACE("missing_propagation", get_assignment(n) != l_undef,
-                           tout << mk_pp(first->get_owner(), m_manager) << "\nassignment: " << get_assignment(first) << "\n"
+                           tout << mk_pp(first->get_owner(), m_manager) << "\nassignment: " << get_assignment(first) << "\n" 
                            << mk_pp(n->get_owner(), m_manager) << "\nassignment: " << get_assignment(n) << "\n";);
                     SASSERT(get_assignment(n) == l_undef);
                     n = n->get_next();
@@ -292,7 +292,7 @@ namespace smt {
             enode * e = *it;
             if (m_manager.is_bool(e->get_owner())) {
                 enode * r = e->get_root();
-                CTRACE("eqc_bool", get_assignment(e) != get_assignment(r),
+                CTRACE("eqc_bool", get_assignment(e) != get_assignment(r), 
                        tout << "#" << e->get_owner_id() << "\n" << mk_pp(e->get_owner(), m_manager) << "\n";
                        tout << "#" << r->get_owner_id() << "\n" << mk_pp(r->get_owner(), m_manager) << "\n";
                        tout << "assignments: " << get_assignment(e) << " " << get_assignment(r) << "\n";
@@ -313,7 +313,7 @@ namespace smt {
 
     /**
        \brief Check the following property:
-
+       
        - for every equality atom (= lhs rhs) assigned to false, relevant:
             if lhs->get_root() and rhs->get_root() are attached to theory variables v1 and v2 of theory t,
             then there is an entry (t, v1', v2') in m_propagated_th_diseqs such that,
@@ -331,7 +331,7 @@ namespace smt {
                     enode * rhs = n->get_arg(1)->get_root();
                     if (rhs->is_interpreted() && lhs->is_interpreted())
                         continue;
-                    TRACE("check_th_diseq_propagation", tout << "num. theory_vars: " << lhs->get_num_th_vars() << " "
+                    TRACE("check_th_diseq_propagation", tout << "num. theory_vars: " << lhs->get_num_th_vars() << " " 
                           << mk_pp(m_manager.get_sort(lhs->get_owner()), m_manager) << "\n";);
                     theory_var_list * l = lhs->get_th_var_list();
                     while (l) {
@@ -347,7 +347,7 @@ namespace smt {
                                 if (it->m_th_id == th_id) {
                                     enode * lhs_prime = th->get_enode(it->m_lhs)->get_root();
                                     enode * rhs_prime = th->get_enode(it->m_rhs)->get_root();
-                                    TRACE("check_th_diseq_propagation",
+                                    TRACE("check_th_diseq_propagation", 
                                           tout << m_manager.get_family_name(it->m_th_id) << "\n";);
 
                                     if ((lhs == lhs_prime && rhs == rhs_prime) ||
@@ -366,7 +366,7 @@ namespace smt {
                                 std::cout << "lhs: #" << lhs->get_owner_id() << ", rhs: #" << rhs->get_owner_id() << "\n";
                                 std::cout << mk_bounded_pp(lhs->get_owner(), m_manager) << " " << mk_bounded_pp(rhs->get_owner(), m_manager) << "\n";
                             }
-
+                        
                             SASSERT(it != end);
                         }
                         l = l->get_next();
@@ -379,12 +379,12 @@ namespace smt {
 
     bool context::check_missing_diseq_conflict() const {
         svector<enode_pair>::const_iterator it  = m_diseq_vector.begin();
-        svector<enode_pair>::const_iterator end = m_diseq_vector.end();
+        svector<enode_pair>::const_iterator end = m_diseq_vector.end();        
         for (; it != end; ++it) {
             enode * n1 = it->first;
             enode * n2 = it->second;
             if (n1->get_root() == n2->get_root()) {
-                TRACE("diseq_bug",
+                TRACE("diseq_bug", 
                       tout << "n1: #" << n1->get_owner_id() << ", n2: #" << n2->get_owner_id() <<
                       ", r: #" << n1->get_root()->get_owner_id() << "\n";
                       tout << "n1 parents:\n"; display_parent_eqs(tout, n1);

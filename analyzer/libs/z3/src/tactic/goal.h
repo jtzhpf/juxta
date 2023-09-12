@@ -7,9 +7,9 @@ Module Name:
 
 Abstract:
 
-    A goal is essentially a set of formulas. Tactics are used to build
+    A goal is essentially a set of formulas. Tactics are used to build 
     proof and model finding procedures for these sets.
-
+    
     Remark: In a previous version of Z3, goals were called assertion_sets.
     Here is a summary of the main changes:
        - Goals track whether they are the result of applying over/under approximation steps.
@@ -17,7 +17,7 @@ Abstract:
        - Goals track dependencies (aka light proofs) for unsat core extraction, and building multi-tier solvers.
          This kind of dependency tracking is more powerful than the one used in the current Z3, since
          it does not prevent the use of preprocessing steps such as "Gaussian Elimination".
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2011-10-12
@@ -39,14 +39,14 @@ Revision History:
 class goal {
 public:
     enum precision {
-        PRECISE,
-        UNDER,   // goal is the product of an under-approximation
+        PRECISE,      
+        UNDER,   // goal is the product of an under-approximation 
         OVER,    // goal is the product of an over-approximation
         UNDER_OVER // goal is garbage: the produce of combined under and over approximation steps.
     };
 
     static precision mk_union(precision p1, precision p2);
-
+    
 protected:
     ast_manager &         m_manager;
     unsigned              m_ref_count;
@@ -58,7 +58,7 @@ protected:
     unsigned              m_models_enabled:1;  // model generation is enabled.
     unsigned              m_proofs_enabled:1;  // proof production is enabled. m_manager.proofs_enabled() must be true if m_proofs_enabled == true
     unsigned              m_core_enabled:1;    // unsat core extraction is enabled.
-    unsigned              m_inconsistent:1;    // true if the goal is known to be inconsistent.
+    unsigned              m_inconsistent:1;    // true if the goal is known to be inconsistent. 
     unsigned              m_precision:2;       // PRECISE, UNDER, OVER.
 
     void push_back(expr * f, proof * pr, expr_dependency * d);
@@ -71,7 +71,7 @@ protected:
     unsigned get_not_idx(expr * f) const;
     void shrink(unsigned j);
     void reset_core();
-
+    
 public:
     goal(ast_manager & m, bool models_enabled = true, bool core_enabled = false);
     goal(ast_manager & m, bool proofs_enabled, bool models_enabled, bool core_enabled);
@@ -92,7 +92,7 @@ public:
     bool unsat_core_enabled() const { return m_core_enabled; }
     bool inconsistent() const { return m_inconsistent; }
     precision prec() const { return static_cast<precision>(m_precision); }
-
+    
     void set_depth(unsigned d) { m_depth = d; }
     void inc_depth() { m_depth++; }
     void set_prec(precision d) { m_precision = d; }
@@ -103,16 +103,16 @@ public:
 
     void copy_to(goal & target) const;
     void copy_from(goal const & src) { src.copy_to(*this); }
-
+    
     void assert_expr(expr * f, proof * pr, expr_dependency * d);
     void assert_expr(expr * f, expr_dependency * d);
     void assert_expr(expr * f, expr * d) { assert_expr(f, m().mk_leaf(d)); }
     void assert_expr(expr * f) { assert_expr(f, static_cast<expr_dependency*>(0)); }
-
+    
     unsigned size() const { return m().size(m_forms); }
 
     unsigned num_exprs() const;
-
+  
     expr * form(unsigned i) const { return m().get(m_forms, i); }
     proof * pr(unsigned i) const { return proofs_enabled() ? static_cast<proof*>(m().get(m_proofs, i)) : 0; }
     expr_dependency * dep(unsigned i) const { return unsat_core_enabled() ? m().get(m_dependencies, i) : 0; }
@@ -120,7 +120,7 @@ public:
     void update(unsigned i, expr * f, proof * pr = 0, expr_dependency * dep = 0);
 
     void get_formulas(ptr_vector<expr> & result);
-
+    
     void elim_true();
     void elim_redundancies();
 

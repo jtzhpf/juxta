@@ -25,18 +25,18 @@ Revision History:
 namespace smt {
 
     /**
-       \brief Proof like object used to track dependencies of equality propagation.
+       \brief Proof like object used to track dependencies of equality propagation. 
        The idea is to reduce the cost of dependency tracking for the most common
        justifications used during equality propagation: (asserted equality & congruence).
     */
-    class eq_justification {
+    class eq_justification { 
         void * m_data;
     public:
         enum kind {
             AXIOM,           //!< no justification, it is only used when proof generation is disabled
             CONGRUENCE,
             EQUATION,        //!< asserted equation
-            JUSTIFICATION    //!< fallback
+            JUSTIFICATION    //!< fallback 
         };
 
         explicit eq_justification():
@@ -50,25 +50,25 @@ namespace smt {
         explicit eq_justification(bool commutativity):
             m_data(BOXTAGINT(void*, static_cast<unsigned>(commutativity), CONGRUENCE)) {
         }
-
+        
         explicit eq_justification(literal l):
             m_data(BOXTAGINT(void*, l.index(), EQUATION)) {
         }
-
+        
         explicit eq_justification(justification * js):
             m_data(TAG(void*, js, JUSTIFICATION)) {
         }
-
+        
         kind get_kind() const {
             return static_cast<kind>(GET_TAG(m_data));
         }
 
         literal get_literal() const { SASSERT(get_kind() == EQUATION); return to_literal(UNBOXINT(m_data)); }
-
+        
         justification * get_justification() const { SASSERT(get_kind() == JUSTIFICATION); return UNTAG(justification*, m_data); }
 
         bool used_commutativity() const { SASSERT(get_kind() == CONGRUENCE); return UNBOXINT(m_data) != 0; }
-
+    
         static eq_justification mk_axiom() {
             return eq_justification();
         }

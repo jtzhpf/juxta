@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     Leonardo (leonardo) 2008-01-08
-
+    
 --*/
 #include"poly_simplifier_plugin.h"
 #include"ast_pp.h"
@@ -22,8 +22,8 @@ Author:
 
 poly_simplifier_plugin::poly_simplifier_plugin(symbol const & fname, ast_manager & m, decl_kind add, decl_kind mul, decl_kind uminus, decl_kind sub,
                                                decl_kind num):
-    simplifier_plugin(fname, m),
-    m_ADD(add),
+    simplifier_plugin(fname, m), 
+    m_ADD(add), 
     m_MUL(mul),
     m_SUB(sub),
     m_UMINUS(uminus),
@@ -32,21 +32,21 @@ poly_simplifier_plugin::poly_simplifier_plugin(symbol const & fname, ast_manager
     m_curr_sort_zero(0) {
 }
 
-expr * poly_simplifier_plugin::mk_add(unsigned num_args, expr * const * args) {
+expr * poly_simplifier_plugin::mk_add(unsigned num_args, expr * const * args) { 
     SASSERT(num_args > 0);
 #ifdef Z3DEBUG
     // check for incorrect use of mk_add
     for (unsigned i = 0; i < num_args; i++) {
         SASSERT(!is_zero(args[i]));
     }
-#endif
+#endif    
     if (num_args == 1)
         return args[0];
     else
-        return m_manager.mk_app(m_fid, m_ADD, num_args, args);
+        return m_manager.mk_app(m_fid, m_ADD, num_args, args); 
 }
 
-expr * poly_simplifier_plugin::mk_mul(unsigned num_args, expr * const * args) {
+expr * poly_simplifier_plugin::mk_mul(unsigned num_args, expr * const * args) { 
     SASSERT(num_args > 0);
 #ifdef Z3DEBUG
     // check for incorrect use of mk_mul
@@ -58,14 +58,14 @@ expr * poly_simplifier_plugin::mk_mul(unsigned num_args, expr * const * args) {
         SASSERT(i == 0 || !is_numeral(args[i]));
     }
 #endif
-    if (num_args == 1)
+    if (num_args == 1) 
         return args[0];
     else if (num_args == 2)
         return m_manager.mk_app(m_fid, m_MUL, args[0], args[1]);
     else if (is_numeral(args[0]))
         return m_manager.mk_app(m_fid, m_MUL, args[0], m_manager.mk_app(m_fid, m_MUL, num_args - 1, args+1));
     else
-        return m_manager.mk_app(m_fid, m_MUL, num_args, args);
+        return m_manager.mk_app(m_fid, m_MUL, num_args, args); 
 }
 
 expr * poly_simplifier_plugin::mk_mul(numeral const & c, expr * body) {
@@ -83,7 +83,7 @@ expr * poly_simplifier_plugin::mk_mul(numeral const & c, expr * body) {
 }
 
 /**
-   \brief Traverse args, and copy the non-numeral exprs to result, and accumulate the
+   \brief Traverse args, and copy the non-numeral exprs to result, and accumulate the 
    value of the numerals in k.
 */
 void poly_simplifier_plugin::process_monomial(unsigned num_args, expr * const * args, numeral & k, ptr_buffer<expr> & result) {
@@ -113,7 +113,7 @@ bool poly_simplifier_plugin::wf_monomial(expr * m) const {
         if (is_mul(pp)) {
             for (unsigned i = 0; i < to_app(pp)->get_num_args(); i++) {
                 expr * arg = to_app(pp)->get_arg(i);
-                CTRACE("wf_monomial_bug", is_mul(arg),
+                CTRACE("wf_monomial_bug", is_mul(arg), 
                        tout << "m:  "  << mk_ismt2_pp(m, m_manager) << "\n";
                        tout << "pp: "  << mk_ismt2_pp(pp, m_manager) << "\n";
                        tout << "arg: " << mk_ismt2_pp(arg, m_manager) << "\n";
@@ -163,7 +163,7 @@ struct monomial_element_lt_proc {
 };
 
 /**
-   \brief Create a monomial (* args).
+   \brief Create a monomial (* args). 
 */
 void poly_simplifier_plugin::mk_monomial(unsigned num_args, expr * * args, expr_ref & result) {
     switch(num_args) {
@@ -209,7 +209,7 @@ inline bool is_essentially_var(expr * n, family_id fid) {
       - (* c1 m1) << (* c2 m2)    when  m1->get_id() < m2->get_id(), and c1 and c2 are numerals.
       - c << m                    when  c is a numeral, and m is not.
 
-   So, this method returns -1 for numerals, and the id of the body of the monomial
+   So, this method returns -1 for numerals, and the id of the body of the monomial   
 */
 int poly_simplifier_plugin::get_monomial_body_order(expr * m) {
     if (is_essentially_var(m, m_fid)) {
@@ -266,12 +266,12 @@ bool poly_simplifier_plugin::merge_monomials(bool inv, expr * n1, expr * n2, exp
     SASSERT(is_num1 == is_num2);
     if (!is_num1 && !is_num2) {
         get_monomial_coeff(n1, k1);
-        get_monomial_coeff(n2, k2);
+        get_monomial_coeff(n2, k2);        
         SASSERT(eq_monomials_modulo_k(n1, n2));
     }
     if (inv)
         k1 -= k2;
-    else
+    else 
         k1 += k2;
     if (k1.is_zero())
         return false;
@@ -316,19 +316,19 @@ void poly_simplifier_plugin::inv_monomial(expr * n, expr_ref & result) {
     }
 }
 
-/**
-    \brief Add a monomial n to result.
+/** 
+    \brief Add a monomial n to result. 
 */
 template<bool Inv>
 void poly_simplifier_plugin::add_monomial_core(expr * n, expr_ref_vector & result) {
-    if (is_zero(n))
+    if (is_zero(n)) 
         return;
     if (Inv) {
         expr_ref n_prime(m_manager);
         inv_monomial(n, n_prime);
         result.push_back(n_prime);
     }
-    else {
+    else { 
         result.push_back(n);
     }
 }
@@ -342,13 +342,13 @@ void poly_simplifier_plugin::add_monomial(bool inv, expr * n, expr_ref_vector & 
 
 /**
    \brief Copy the monomials in n to result. The monomials are inverted if inv is true.
-   Equivalent monomials are merged.
+   Equivalent monomials are merged. 
 */
 template<bool Inv>
 void poly_simplifier_plugin::process_sum_of_monomials_core(expr * n, expr_ref_vector & result) {
     SASSERT(wf_polynomial(n));
     if (is_add(n)) {
-        for (unsigned i = 0; i < to_app(n)->get_num_args(); i++)
+        for (unsigned i = 0; i < to_app(n)->get_num_args(); i++) 
             add_monomial_core<Inv>(to_app(n)->get_arg(i), result);
     }
     else {
@@ -477,7 +477,7 @@ void poly_simplifier_plugin::mk_sum_of_monomials(expr_ref_vector & monomials, ex
         ptr_buffer<expr> new_monomials;
         expr * last_body = 0;
         numeral last_coeff;
-        numeral coeff;
+        numeral coeff; 
         unsigned sz = monomials.size();
         for (unsigned i = 0; i < sz; i++) {
             expr * m    = monomials.get(i);
@@ -518,10 +518,10 @@ void poly_simplifier_plugin::mk_add_core_core(unsigned num_args, expr * const * 
     for (unsigned i = 1; i < num_args; i++) {
         process_sum_of_monomials_core<Inv>(args[i], monomials);
     }
-    TRACE("mk_add_core_bug",
-          for (unsigned i = 0; i < monomials.size(); i++) {
-              SASSERT(monomials.get(i) != 0);
-              tout << mk_ismt2_pp(monomials.get(i), m_manager) << "\n";
+    TRACE("mk_add_core_bug", 
+          for (unsigned i = 0; i < monomials.size(); i++) { 
+              SASSERT(monomials.get(i) != 0); 
+              tout << mk_ismt2_pp(monomials.get(i), m_manager) << "\n"; 
           });
     mk_sum_of_monomials(monomials, result);
 }
@@ -531,8 +531,8 @@ void poly_simplifier_plugin::mk_add_core_core(unsigned num_args, expr * const * 
    If inv is true, then all but the first argument in args are inverted.
 */
 void poly_simplifier_plugin::mk_add_core(bool inv, unsigned num_args, expr * const * args, expr_ref & result) {
-    TRACE("mk_add_core_bug",
-          for (unsigned i = 0; i < num_args; i++) {
+    TRACE("mk_add_core_bug", 
+          for (unsigned i = 0; i < num_args; i++) { 
               SASSERT(args[i] != 0);
               tout << mk_ismt2_pp(args[i], m_manager) << "\n";
           });
@@ -641,7 +641,7 @@ void poly_simplifier_plugin::mk_mul(unsigned num_args, expr * const * args, expr
         return;
     }
 
-    TRACE("mk_mul_bug",
+    TRACE("mk_mul_bug", 
           for (unsigned i = 0; i < num_args; i++) {
               tout << mk_pp(args[i], m_manager) << "\n";
           });
@@ -678,16 +678,16 @@ void poly_simplifier_plugin::mk_mul(unsigned num_args, expr * const * args, expr
         if (!k.is_zero() && !k.is_one()) {
             num = mk_numeral(k);
             m.push_back(num);
-            // bit-vectors can normalize
+            // bit-vectors can normalize 
             // to 1 during
             // internalization.
             if (is_numeral(num, k) && k.is_one()) {
                 m.pop_back();
-            }
+            }                
         }
         if (!k.is_zero()) {
             expr_ref new_monomial(m_manager);
-            TRACE("mk_mul_bug",
+            TRACE("mk_mul_bug", 
                   for (unsigned i = 0; i < m.size(); i++) {
                       tout << mk_pp(m[i], m_manager) << "\n";
                   });
@@ -772,7 +772,7 @@ bool poly_simplifier_plugin::reduce(func_decl * f, unsigned num_args, rational c
 bool poly_simplifier_plugin::is_var_plus_ground(expr * n, bool & inv, var * & v, expr_ref & t) {
     if (!is_add(n) || is_ground(n))
         return false;
-
+    
     ptr_buffer<expr> args;
     v = 0;
     expr * curr = to_app(n);

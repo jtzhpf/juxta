@@ -29,14 +29,14 @@ Revision History:
 
 
 namespace smt {
-
+        
     lbool implied_equalities(
-        ast_manager & m,
+        ast_manager & m, 
         solver & solver,
-        unsigned num_terms, expr* const* terms,
-        unsigned* class_ids);
+        unsigned num_terms, expr* const* terms, 
+        unsigned* class_ids);            
 
-
+    
 };
 
 

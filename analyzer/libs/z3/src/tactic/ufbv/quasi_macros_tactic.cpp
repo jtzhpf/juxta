@@ -36,16 +36,16 @@ class quasi_macros_tactic : public tactic {
         imp(ast_manager & m, params_ref const & p) : m_manager(m),m_cancel(false) {
             updt_params(p);
         }
-
+        
         ast_manager & m() const { return m_manager; }
-
+        
         void set_cancel(bool f) {
             m_cancel = f;
         }
-
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -54,7 +54,7 @@ class quasi_macros_tactic : public tactic {
             fail_if_unsat_core_generation("quasi-macros", g);
 
             bool produce_proofs = g->proofs_enabled();
-
+            
             simplifier simp(m_manager);
             basic_simplifier_plugin * bsimp = alloc(basic_simplifier_plugin, m_manager);
             bsimp->set_eliminate_and(true);
@@ -65,11 +65,11 @@ class quasi_macros_tactic : public tactic {
             bv_simplifier_params bv_params;
             bv_simplifier_plugin * bvsimp = alloc(bv_simplifier_plugin, m_manager, *bsimp, bv_params);
             simp.register_plugin(bvsimp);
-
+                
             macro_manager mm(m_manager, simp);
             quasi_macros qm(m_manager, mm, simp);
             bool more = true;
-
+        
             expr_ref_vector forms(m_manager), new_forms(m_manager);
             proof_ref_vector proofs(m_manager), new_proofs(m_manager);
 
@@ -78,16 +78,16 @@ class quasi_macros_tactic : public tactic {
                 forms.push_back(g->form(i));
                 proofs.push_back(g->pr(i));
             }
-
+        
             while (more) { // CMW: use repeat(...) ?
-                if (m_cancel)
+                if (m_cancel) 
                   throw tactic_exception(TACTIC_CANCELED_MSG);
 
                 new_forms.reset();
                 new_proofs.reset();
-                more = qm(forms.size(), forms.c_ptr(), proofs.c_ptr(), new_forms, new_proofs);
+                more = qm(forms.size(), forms.c_ptr(), proofs.c_ptr(), new_forms, new_proofs);            
                 forms.swap(new_forms);
-                proofs.swap(new_proofs);
+                proofs.swap(new_proofs);            
             }
 
             g->reset();
@@ -112,7 +112,7 @@ class quasi_macros_tactic : public tactic {
         void updt_params(params_ref const & p) {
         }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
 
@@ -125,7 +125,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(quasi_macros_tactic, m, m_params);
     }
-
+        
     virtual ~quasi_macros_tactic() {
         dealloc(m_imp);
     }
@@ -140,15 +140,15 @@ public:
         insert_produce_models(r);
         insert_produce_proofs(r);
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
+    
     virtual void cleanup() {
         ast_manager & m = m_imp->m();
         imp * d = alloc(imp, m, m_params);

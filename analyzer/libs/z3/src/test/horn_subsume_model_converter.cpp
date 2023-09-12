@@ -45,7 +45,7 @@ void tst_horn_subsume_model_converter() {
     head1 = m.mk_app(p, m.mk_var(0, a.mk_int()), m.mk_var(0, a.mk_int()));
     body1 = m.mk_app(q, m.mk_var(1, a.mk_int()), m.mk_var(2, a.mk_int()));
     VERIFY(mc->mk_horn(head1, body1, pred, body2));
-    mc->insert(pred, body2);
+    mc->insert(pred, body2); 
     apply(mcr, mr, 0);
     model_smt2_pp(std::cout, m, *mr.get(), 0);
 
@@ -53,7 +53,7 @@ void tst_horn_subsume_model_converter() {
     head1 = m.mk_app(p, m.mk_var(0, a.mk_int()), m.mk_var(0, a.mk_int()));
     body1 = m.mk_app(q, m.mk_var(1, a.mk_int()), m.mk_var(0, a.mk_int()));
     VERIFY(mc->mk_horn(head1, body1, pred, body2));
-    mc->insert(pred, body2);
+    mc->insert(pred, body2); 
     apply(mcr, mr, 0);
     model_smt2_pp(std::cout, m, *mr.get(), 0);
 

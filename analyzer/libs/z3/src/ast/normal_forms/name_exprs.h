@@ -32,11 +32,11 @@ public:
     virtual ~name_exprs() {}
     virtual void operator()(expr * n,                          // [IN] expression that contain the sub-expressions to be named
                             expr_ref_vector & new_defs,        // [OUT] new definitions
-                            proof_ref_vector & new_def_proofs, // [OUT] proofs of the new definitions
+                            proof_ref_vector & new_def_proofs, // [OUT] proofs of the new definitions 
                             expr_ref & r,                      // [OUT] resultant expression
                             proof_ref & p                      // [OUT] proof for (iff n p)
                             ) = 0;
-
+    
     virtual void set_cancel(bool f) = 0;
     void cancel() { set_cancel(true); }
     void reset_cancel() { set_cancel(false); }
@@ -55,7 +55,7 @@ name_exprs * mk_expr_namer(ast_manager & m, defined_names & n, expr_predicate & 
 name_exprs * mk_quantifier_label_namer(ast_manager & m, defined_names & n);
 
 /**
-   \brief Create an expression "namer" that will replace all nested formulas and term if-then-elses with
+   \brief Create an expression "namer" that will replace all nested formulas and term if-then-elses with 
    fresh declarations.
 */
 name_exprs * mk_nested_formula_namer(ast_manager & m, defined_names & n);

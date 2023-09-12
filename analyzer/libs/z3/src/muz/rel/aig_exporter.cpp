@@ -218,7 +218,7 @@ namespace datalog {
         for (unsigned i = 0; i < m_input_vars.size(); ++i) {
             out << m_input_vars[i] << '\n';
         }
-
+        
         // 3) print latches
         for (unsigned i = 0; i < m_latch_vars.size(); ++i) {
             out << get_var(m_latch_vars.get(i)) << ' ' << latch_varp_ids[i] << '\n';
@@ -268,7 +268,7 @@ namespace datalog {
         default:
             UNREACHABLE();
         }
-
+        
         UNREACHABLE();
         return 0;
     }
@@ -310,7 +310,7 @@ namespace datalog {
         m_aig_expr_id_map.insert(e, id);
         return id;
     }
-
+    
     unsigned aig_exporter::mk_input_var(const expr *e) {
         SASSERT(!m_aig_expr_id_map.contains(e));
         unsigned id = mk_expr_id();

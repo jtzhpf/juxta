@@ -22,7 +22,7 @@ Revision History:
 class progress_callback {
 public:
     virtual ~progress_callback() {}
-
+    
     // Called on every check for resource limit exceeded (much more frequent).
     virtual void fast_progress_sample() {}
 

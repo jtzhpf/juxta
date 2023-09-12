@@ -35,10 +35,10 @@ class hwf {
       return n;
     }
 
-public:
+public:    
     hwf() {}
     hwf(hwf const & other) { this->value = other.value; }
-    ~hwf() {}
+    ~hwf() {}   
     void swap(hwf & other) { double t = value; value = other.value; other.value = t; }
 };
 
@@ -62,7 +62,7 @@ public:
     void set(hwf & o, mpf_rounding_mode rm, mpq const & significand, mpz const & exponent);
     void set(hwf & o, bool sign, uint64 significand, int exponent);
     void set(hwf & o, hwf const & x);
-
+    
     // auxiliary methods to make the interface compatible with mpf
     void reset(hwf & o, unsigned ebits, unsigned sbits) { set(o, 0); }
     void set(hwf & o, unsigned ebits, unsigned sbits, mpf_rounding_mode rm, mpq const & value) { set(o, rm, value); }
@@ -70,7 +70,7 @@ public:
     void set(hwf & o, unsigned ebits, unsigned sbits, mpf_rounding_mode rm, int n, int d) { set(o, rm, n, d); }
     void set(hwf & o, unsigned ebits, unsigned sbits, float value) { set(o, value); }
     void set(hwf & o, unsigned ebits, unsigned sbits, double value) { set(o, value); }
-
+    
 
     void del(hwf & x) {}
 
@@ -88,7 +88,7 @@ public:
     bool is_pzero(hwf const & x);
 
     bool is_one(hwf const & x);
-
+    
     // structural eq
     bool eq_core(hwf const & x, hwf const & y);
 
@@ -103,7 +103,7 @@ public:
     void add(mpf_rounding_mode rm, hwf const & x, hwf const & y, hwf & o);
     void sub(mpf_rounding_mode rm, hwf const & x, hwf const & y, hwf & o);
     void mul(mpf_rounding_mode rm, hwf const & x, hwf const & y, hwf & o);
-    void div(mpf_rounding_mode rm, hwf const & x, hwf const & y, hwf & o);
+    void div(mpf_rounding_mode rm, hwf const & x, hwf const & y, hwf & o);    
 
     void fused_mul_add(mpf_rounding_mode rm, hwf const & x, hwf const & y, hwf const &z, hwf & o);
 
@@ -120,22 +120,22 @@ public:
     std::string to_rational_string(hwf const & a);
     void display_decimal(std::ostream & out, hwf const & a, unsigned k);
     void display_smt2(std::ostream & out, hwf const & a, bool decimal);
-
+    
     double to_double(hwf const & x) { return x.value; }
     float to_float(hwf const & x) { return (float) x.value; }
     void to_rational(hwf const & x, unsynch_mpq_manager & qm, mpq & o);
     void to_rational(hwf const & x, scoped_mpq & o) { to_rational(x, o.m(), o); }
-
-
-    bool sgn(hwf const & x) const {
-        return (x.get_raw() & 0x8000000000000000ull) != 0;
+    
+    
+    bool sgn(hwf const & x) const { 
+        return (x.get_raw() & 0x8000000000000000ull) != 0; 
     }
 
-    const uint64 sig(hwf const & x) const {
+    const uint64 sig(hwf const & x) const { 
         return x.get_raw() & 0x000FFFFFFFFFFFFFull;
     }
 
-    const int exp(hwf const & x) const {
+    const int exp(hwf const & x) const {         
         return ((x.get_raw() & 0x7FF0000000000000ull) >> 52) - 1023;
     }
 
@@ -155,14 +155,14 @@ public:
     void mk_inf(bool sign, hwf & o);
     void mk_pinf(hwf & o);
     void mk_ninf(hwf & o);
-
+    
     unsigned hash(hwf const & a) { return hash_ull(a.get_raw()); }
 
     inline void set_rounding_mode(mpf_rounding_mode rm);
 
     /**
        \brief Return the biggest k s.t. 2^k <= a.
-
+       
        \remark Return 0 if a is not positive.
     */
     unsigned prev_power_of_two(hwf const & a);

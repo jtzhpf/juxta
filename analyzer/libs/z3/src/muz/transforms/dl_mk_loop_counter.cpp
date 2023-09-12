@@ -27,7 +27,7 @@ namespace datalog {
         m(ctx.get_manager()),
         m_ctx(ctx),
         a(m),
-        m_refs(m) {
+        m_refs(m) {        
     }
 
     mk_loop_counter::~mk_loop_counter() { }
@@ -37,7 +37,7 @@ namespace datalog {
         func_decl* new_fn, *old_fn = fn->get_decl();
         args.append(fn->get_num_args(), fn->get_args());
         args.push_back(m.mk_var(idx, a.mk_int()));
-
+        
         if (!m_old2new.find(old_fn, new_fn)) {
             ptr_vector<sort> domain;
             domain.append(fn->get_num_args(), old_fn->get_domain());
@@ -54,7 +54,7 @@ namespace datalog {
         return app_ref(m.mk_app(new_fn, args.size(), args.c_ptr()), m);
     }
 
-    app_ref mk_loop_counter::del_arg(app* fn) {
+    app_ref mk_loop_counter::del_arg(app* fn) {        
         expr_ref_vector args(m);
         func_decl* old_fn, *new_fn = fn->get_decl();
         SASSERT(fn->get_num_args() > 0);
@@ -62,7 +62,7 @@ namespace datalog {
         VERIFY (m_new2old.find(new_fn, old_fn));
         return app_ref(m.mk_app(old_fn, args.size(), args.c_ptr()), m);
     }
-
+        
     rule_set * mk_loop_counter::operator()(rule_set const & source) {
         m_refs.reset();
         m_old2new.reset();
@@ -75,7 +75,7 @@ namespace datalog {
         app_ref head(m);
         svector<bool> neg;
         rule_counter& vc = rm.get_counter();
-        for (unsigned i = 0; i < sz; ++i) {
+        for (unsigned i = 0; i < sz; ++i) {            
             tail.reset();
             neg.reset();
             rule & r = *source.get_rule(i);
@@ -83,7 +83,7 @@ namespace datalog {
             unsigned utsz = r.get_uninterpreted_tail_size();
             unsigned tsz = r.get_tail_size();
             for (unsigned j = 0; j < utsz; ++j, ++cnt) {
-                tail.push_back(add_arg(source, *result, r.get_tail(j), cnt));
+                tail.push_back(add_arg(source, *result, r.get_tail(j), cnt));                
                 neg.push_back(r.is_neg_tail(j));
             }
             for (unsigned j = utsz; j < tsz; ++j) {
@@ -91,12 +91,12 @@ namespace datalog {
                 neg.push_back(false);
             }
             head = add_arg(source, *result, r.get_head(), cnt);
-            // set the loop counter to be an increment of the previous
+            // set the loop counter to be an increment of the previous 
             bool found = false;
             unsigned last = head->get_num_args()-1;
             for (unsigned j = 0; !found && j < utsz; ++j) {
                 if (head->get_decl() == tail[j]->get_decl()) {
-                    tail.push_back(m.mk_eq(head->get_arg(last),
+                    tail.push_back(m.mk_eq(head->get_arg(last), 
                                            a.mk_add(tail[j]->get_arg(last),
                                                     a.mk_numeral(rational(1), true))));
                     neg.push_back(false);
@@ -109,7 +109,7 @@ namespace datalog {
                 args.append(head->get_num_args(), head->get_args());
                 args[last] = a.mk_numeral(rational(0), true);
                 head = m.mk_app(head->get_decl(), args.size(), args.c_ptr());
-            }
+            }            
 
             new_rule = rm.mk(head, tail.size(), tail.c_ptr(), neg.c_ptr(), r.name(), true);
             result->add_rule(new_rule);
@@ -130,7 +130,7 @@ namespace datalog {
         app_ref_vector tail(m);
         app_ref head(m);
         svector<bool> neg;
-        for (unsigned i = 0; i < sz; ++i) {
+        for (unsigned i = 0; i < sz; ++i) {            
             tail.reset();
             neg.reset();
             rule & r = *source.get_rule(i);
@@ -146,7 +146,7 @@ namespace datalog {
             }
             head = del_arg(r.get_head());
             new_rule = rm.mk(head, tail.size(), tail.c_ptr(), neg.c_ptr(), r.name(), true);
-            result->add_rule(new_rule);
+            result->add_rule(new_rule);            
         }
 
         // model converter: ...

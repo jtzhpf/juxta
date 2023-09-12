@@ -37,16 +37,16 @@ Notes:
 
 static void show_interpolant_and_maybe_check(cmd_context & ctx,
 					     ptr_vector<ast> &cnsts,
-					     expr *t,
+					     expr *t, 
 					     ptr_vector<ast> &interps,
 					     params_ref &m_params,
 					     bool check)
 {
-
+  
   if (m_params.get_bool("som", false))
     m_params.set_bool("flat", true);
   th_rewriter s(ctx.m(), m_params);
-
+  
   for(unsigned i = 0; i < interps.size(); i++){
 
     expr_ref r(ctx.m());
@@ -77,7 +77,7 @@ static void show_interpolant_and_maybe_check(cmd_context & ctx,
 
     if(iz3check(_m,sp.get(),err,cnsts,t,interps))
       ctx.regular_stream() << "correct\n";
-    else
+    else 
       ctx.regular_stream() << "incorrect: " << err.str().c_str() << "\n";
   }
 
@@ -118,11 +118,11 @@ static void get_interpolant_and_maybe_check(cmd_context & ctx, expr * t, params_
   ptr_vector<ast> cnsts((unsigned)(end - it));
   for (int i = 0; it != end; ++it, ++i)
   cnsts[i] = *it;
-
+    
   // compute an interpolant
-
+  
   ptr_vector<ast> interps;
-
+ 
   try {
     iz3interpolate(ctx.m(),pr.get(),cnsts,t,interps,0);
   }
@@ -147,7 +147,7 @@ static void get_and_check_interpolant(cmd_context & ctx, params_ref &m_params, e
 #endif
 
 static void compute_interpolant_and_maybe_check(cmd_context & ctx, expr * t, params_ref &m_params, bool check){
-
+    
   // create a fresh solver suitable for interpolation
   bool proofs_enabled, models_enabled, unsat_core_enabled;
   params_ref p;
@@ -162,9 +162,9 @@ static void compute_interpolant_and_maybe_check(cmd_context & ctx, expr * t, par
   ptr_vector<ast> cnsts;
   ptr_vector<ast> interps;
   model_ref m;
-
+  
   // compute an interpolant
-
+  
   lbool res;
   try {
     res = iz3interpolate(_m, *sp.get(), t, cnsts, interps, m, 0);
@@ -188,7 +188,7 @@ static void compute_interpolant_and_maybe_check(cmd_context & ctx, expr * t, par
     ctx.regular_stream() << "unknown\n";
     // TODO: how to return the model to the context, if it exists?
     break;
-  }
+  }    
 
   for(unsigned i = 0; i < cnsts.size(); i++)
     ctx.m().dec_ref(cnsts[i]);
@@ -201,7 +201,7 @@ static expr *make_tree(cmd_context & ctx, const ptr_vector<expr> &exprs){
   expr *foo = exprs[0];
   for(unsigned i = 1; i < exprs.size(); i++){
     foo = ctx.m().mk_and(ctx.m().mk_interp(foo),exprs[i]);
-  }
+  }    
   return foo;
 }
 
@@ -232,14 +232,14 @@ public:
 
     virtual char const * get_usage() const { return "<fmla>+"; }
 
-    virtual char const * get_main_descr() const {
+    virtual char const * get_main_descr() const { 
         return "get interpolant for formulas";
     }
-
+    
     virtual void init_pdescrs(cmd_context & ctx, param_descrs & p) {
     }
-
-    virtual void prepare(cmd_context & ctx) {
+    
+    virtual void prepare(cmd_context & ctx) { 
         parametric_cmd::prepare(ctx);
         m_targets.resize(0);
     }
@@ -247,11 +247,11 @@ public:
     virtual cmd_arg_kind next_arg_kind(cmd_context & ctx) const {
         return CPK_EXPR;
     }
-
+    
     virtual void set_next_arg(cmd_context & ctx, expr * arg) {
       m_targets.push_back(arg);
     }
-
+    
     virtual void execute(cmd_context & ctx) {
       get_interpolant(ctx,m_targets,m_params);
     }
@@ -261,7 +261,7 @@ class compute_interpolant_cmd : public get_interpolant_cmd {
 public:
     compute_interpolant_cmd(char const * name = "compute-interpolant"):get_interpolant_cmd(name) {}
 
-    virtual void execute(cmd_context & ctx) {
+    virtual void execute(cmd_context & ctx) {      
       compute_interpolant(ctx,m_targets,m_params);
     }
 

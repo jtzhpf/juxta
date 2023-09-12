@@ -49,7 +49,7 @@ Revision History:
     else { \
         TEST_OVERFLOW; \
     } \
-    } while (0)
+    } while (0) 
 
 #define TEST_NO_UNDERFLOW TEST(test_udfl, Z3_L_TRUE, Z3_L_FALSE)
 #define TEST_UNDERFLOW    TEST(test_udfl, Z3_L_FALSE, Z3_L_TRUE)
@@ -62,7 +62,7 @@ Revision History:
     else { \
         TEST_UNDERFLOW; \
     } \
-    } while (0)
+    } while (0) 
 
 #define TEST_ANY(TEST_NAME) \
     do { \
@@ -141,7 +141,7 @@ void test_add(unsigned bvsize, bool is_signed) {
     Z3_pop(ctx, 1);
 
     if (is_signed) {
-        Z3_push(ctx);
+        Z3_push(ctx); 
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, Z3_mk_numeral(ctx, "-1", bv)));
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
         TEST_NO_OVERFLOW;
@@ -149,7 +149,7 @@ void test_add(unsigned bvsize, bool is_signed) {
         Z3_pop(ctx, 1);
     }
 
-    Z3_push(ctx);
+    Z3_push(ctx); 
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
     TEST_NO_OVERFLOW;
@@ -237,14 +237,14 @@ void test_sub(unsigned bvsize, bool is_signed) {
     Z3_pop(ctx, 1);
 
     if (is_signed) {
-        Z3_push(ctx);
+        Z3_push(ctx); 
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, Z3_mk_numeral(ctx, "-1", bv)));
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
         TEST_NO_OVERFLOW;
         TEST_NO_UNDERFLOW;
         Z3_pop(ctx, 1);
-
-        Z3_push(ctx);
+        
+        Z3_push(ctx); 
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, Z3_mk_numeral(ctx, "-1", bv)));
         TEST_NO_OVERFLOW;
@@ -252,7 +252,7 @@ void test_sub(unsigned bvsize, bool is_signed) {
         Z3_pop(ctx, 1);
     }
 
-    Z3_push(ctx);
+    Z3_push(ctx); 
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
     TEST_NO_OVERFLOW;
@@ -262,8 +262,8 @@ void test_sub(unsigned bvsize, bool is_signed) {
     Z3_push(ctx);
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, max));
-    TEST_NO_OVERFLOW;
-    TEST_NO_UNDERFLOW_IFF(bvsize == 1 && is_signed);
+    TEST_NO_OVERFLOW; 
+    TEST_NO_UNDERFLOW_IFF(bvsize == 1 && is_signed); 
     Z3_pop(ctx, 1);
 
     Z3_push(ctx);
@@ -376,7 +376,7 @@ void test_mul(unsigned bvsize, bool is_signed) {
     TEST_NO_OVERFLOW;
     TEST_NO_UNDERFLOW;
     Z3_pop(ctx, 1);
-
+    
     Z3_push(ctx);
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, Z3_mk_numeral(ctx, "1", bv)));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
@@ -385,21 +385,21 @@ void test_mul(unsigned bvsize, bool is_signed) {
     Z3_pop(ctx, 1);
 
     if (is_signed) {
-        Z3_push(ctx);
+        Z3_push(ctx); 
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, Z3_mk_numeral(ctx, "-1", bv)));
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
         TEST_OVERFLOW;
         TEST_NO_UNDERFLOW;
         Z3_pop(ctx, 1);
-
-        Z3_push(ctx);
+        
+        Z3_push(ctx); 
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, Z3_mk_numeral(ctx, "-1", bv)));
         TEST_OVERFLOW;
         TEST_NO_UNDERFLOW;
         Z3_pop(ctx, 1);
-
-        Z3_push(ctx);
+        
+        Z3_push(ctx); 
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, Z3_mk_numeral(ctx, "-1", bv)));
         Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, max));
         TEST_NO_OVERFLOW;
@@ -407,7 +407,7 @@ void test_mul(unsigned bvsize, bool is_signed) {
         Z3_pop(ctx, 1);
     }
 
-    Z3_push(ctx);
+    Z3_push(ctx); 
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
     TEST_NO_OVERFLOW_IFF(! is_signed);
@@ -486,25 +486,25 @@ void test_div(unsigned bvsize) {
     TEST_ANY_OVERFLOW;
     Z3_pop(ctx, 1);
 
-    Z3_push(ctx);
+    Z3_push(ctx); 
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, Z3_mk_numeral(ctx, "-1", bv)));
     TEST_OVERFLOW;
     Z3_pop(ctx, 1);
-
-    Z3_push(ctx);
+    
+    Z3_push(ctx); 
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, Z3_mk_numeral(ctx, "1", bv)));
     TEST_NO_OVERFLOW_IFF(bvsize != 1);
     Z3_pop(ctx, 1);
 
-    Z3_push(ctx);
+    Z3_push(ctx); 
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, min));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
     TEST_NO_OVERFLOW_IFF(bvsize != 1);
     Z3_pop(ctx, 1);
 
-    Z3_push(ctx);
+    Z3_push(ctx); 
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, max));
     Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, min));
     TEST_NO_OVERFLOW;
@@ -594,7 +594,7 @@ void test_equiv(Equivalence_params params, unsigned bvsize, bool is_signed) {
         check = (params.type == UDFL_FUNC) ? Z3_mk_bvsle(ctx, min, r) : Z3_mk_bvsle(ctx, r, max);
     }
     else {
-        if (params.sign_compar)
+        if (params.sign_compar) 
         {
             // check with signed comparison for subtraction of unsigned
             check = (params.type == UDFL_FUNC) ? Z3_mk_bvsle(ctx, min, r) : Z3_mk_bvsle(ctx, r, max);
@@ -604,7 +604,7 @@ void test_equiv(Equivalence_params params, unsigned bvsize, bool is_signed) {
             check = (params.type == UDFL_FUNC) ? Z3_mk_bvule(ctx, min, r) : Z3_mk_bvule(ctx, r, max);
         }
     }
-
+    
     Z3_push(ctx);
     Z3_ast equiv = Z3_mk_iff(ctx, real_test, check);
     if (cond != NULL)
@@ -637,7 +637,7 @@ void test_equiv(Equivalence_params params, unsigned bvsize, bool is_signed) {
 //    t1 = Z3_mk_const(ctx, Z3_mk_string_symbol(ctx,"x"), bv);
 //    t2 = Z3_mk_const(ctx, Z3_mk_string_symbol(ctx,"y"), bv);
 //    test_udfl = Z3_mk_bvmul_no_underflow(ctx, t1, t2);
-//
+//    
 //    Z3_push(ctx);
 //    Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t1, Z3_mk_numeral(ctx, "1", bv)));
 //    Z3_assert_cnstr(ctx, Z3_mk_eq(ctx, t2, Z3_mk_numeral(ctx, "1", bv)));
@@ -671,7 +671,7 @@ void tst_no_overflow() {
         test_neg(bvsizes[i]);
         test_div(bvsizes[i]);
     }
-
+    
     unsigned equiv_bvsizes[EQUIV_BVSIZES] = { 1, 2, 7, 16 };
     // before performing the bound test, arguments are extended by a few bits to prevent overflow:
     // * 1 is the default

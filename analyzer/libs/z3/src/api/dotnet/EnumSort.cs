@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-11-23
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -40,7 +40,7 @@ namespace Microsoft.Z3
                 FuncDecl[] t = new FuncDecl[n];
                 for (uint i = 0; i < n; i++)
                     t[i] = new FuncDecl(Context, Native.Z3_get_datatype_sort_constructor(Context.nCtx, NativeObject, i));
-                return t;
+                return t;                
             }
         }
 

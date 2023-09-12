@@ -36,9 +36,9 @@ namespace smt {
     /**
        \brief Auxiliary class used to convert (dis) equalities
        propagated from the core into arith equalities/inequalities
-       atoms. This class is used by the arithmetic theories to
+       atoms. This class is used by the arithmetic theories to 
        handle the (dis) equalities propagated from the logical context.
-
+      
        - config 1:
          recreate axioms at restart
 
@@ -59,8 +59,8 @@ namespace smt {
         };
 
     public:
-        typedef obj_pair_map<enode, enode, data> already_processed;
-
+        typedef obj_pair_map<enode, enode, data> already_processed; 
+        
     private:
         theory &                         m_owner;
         theory_arith_params &            m_params;
@@ -85,7 +85,7 @@ namespace smt {
         void init_search_eh();
         void restart_eh();
         /**
-           \brief Add the eq axioms for n1 and n2.
+           \brief Add the eq axioms for n1 and n2. 
         */
         void mk_axioms(enode * n1, enode * n2);
         void collect_statistics(::statistics & st) const;

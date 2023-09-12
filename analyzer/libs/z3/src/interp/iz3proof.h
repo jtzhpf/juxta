@@ -91,9 +91,9 @@ class iz3proof {
   node make_lemma(const std::vector<ast> &conclusion, const std::vector<ast> &interpolation);
 
   /** Make a Reflexivity node. This rule produces |- x = x */
-
+  
   node make_reflexivity(ast con);
-
+  
   /** Make a Symmetry node. This takes a derivation of |- x = y and
       produces | y = x */
 
@@ -103,17 +103,17 @@ class iz3proof {
       and |- y = z produces | x = z */
 
   node make_transitivity(ast con, node prem1, node prem2);
-
+  
   /** Make a congruence node. This takes derivations of |- x_i = y_i
       and produces |- f(x_1,...,x_n) = f(y_1,...,y_n) */
-
+  
   node make_congruence(ast con, const std::vector<node> &prems);
 
   /** Make an equality contradicition node. This takes |- x = y
       and |- !(x = y) and produces false. */
-
+  
   node make_eqcontra(node prem1, node prem2);
-
+  
   /** Get the rule of a node in a proof. */
   rule get_rule(node n){
     return nodes[n].rl;
@@ -183,7 +183,7 @@ class iz3proof {
     nodes.swap(other.nodes);
     interps.swap(other.interps);
   }
-
+    
   /** Compute an interpolant for a proof, where the "A" side is defined by
       the given range of frames. Parameter "weak", when true, uses different
       interpolation system that resutls in generally weaker interpolants.
@@ -194,7 +194,7 @@ class iz3proof {
 
 #endif
                                     );
-
+  
   /** print proof node to a stream */
 
   void print(std::ostream &s, node n);
@@ -212,7 +212,7 @@ class iz3proof {
 
 
  protected:
-
+    
   struct node_struct {
     rule rl;
     ast aux;
@@ -248,7 +248,7 @@ class iz3proof {
     return n.conclusion;
   }
 
-  prover::range rng;
+  prover::range rng;  
   bool weak;
   stl_ext::hash_set<ast> b_lits;
   ast my_or(ast x, ast y);

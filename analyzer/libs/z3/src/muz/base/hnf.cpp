@@ -15,33 +15,33 @@ Author:
 
 Notes:
 
-   Convert formula
+   Convert formula 
 
-       (forall x f(x))
+       (forall x f(x)) 
 
-   into conjunction
-
+   into conjunction 
+ 
        (f1 xy) (f2 xy) (f3 xy)
 
-   such that
+   such that 
 
        (forall x f(x)) ~ /\ (forall xy (f_i xy))
 
    modulo definitions that are introduced.
+    
 
-
-   Convert proof with
+   Convert proof with 
        asserted (forall xy (f' xy))
 
-   To:
+   To:      
        (forall xy (f' xy))             by mp~ 1, 2
-    1. asserted/def-intro (forall xy (f xy))
+    1. asserted/def-intro (forall xy (f xy)) 
     2. (forall xy (f xy))  ~ (forall xy (f' xy)) by trans, 3, 4
     3. (forall xy (f xy))  ~ (forall xy (f1 xy)) by pull quantifiers (rewrite)
     4. (forall xy (f1 xy)) ~ (forall xy (f' xy)) by oeq_quant_intro 5
     5. f1 xy ~ f' xy                             by sub-proof.
-
-
+     
+                
 --*/
 #include"hnf.h"
 #include"warning.h"
@@ -82,7 +82,7 @@ public:
         m_cancel(false),
         m_todo(m),
         m_proofs(m),
-        m_refs(m),
+        m_refs(m), 
         m_name("P"),
         m_qh(m),
         m_fresh_predicates(m),
@@ -90,9 +90,9 @@ public:
         m_defs(m) {
     }
 
-    void operator()(expr * n,
+    void operator()(expr * n, 
                     proof* p,
-                    expr_ref_vector& result,
+                    expr_ref_vector& result, 
                     proof_ref_vector& ps) {
         expr_ref fml(m);
         proof_ref pr(m);
@@ -222,10 +222,10 @@ private:
         //
         // Case:
         // A \/ B -> C
-        // =>
+        // => 
         // A -> C
         // B -> C
-        //
+        // 
         if (m_body.size() == 1 && m.is_or(m_body[0].get()) && contains_predicate(m_body[0].get())) {
             app* _or = to_app(m_body[0].get());
             unsigned sz = _or->get_num_args();
@@ -233,20 +233,20 @@ private:
             for (unsigned i = 0; i < sz; ++i) {
                 m_todo.push_back(bind_variables(m.mk_implies(args[i], head)));
                 m_proofs.push_back(0);
-            }
+            } 
 
             if (premise) {
                 expr_ref f1 = bind_variables(mk_implies(m_body, head));
                 expr* f2 = m.mk_and(sz, m_todo.c_ptr()+m_todo.size()-sz);
                 proof_ref p2(m), p3(m);
                 p2 = m.mk_def_axiom(m.mk_iff(f1, f2));
-                p3 = mk_quant_intro(fml, f1, p);
+                p3 = mk_quant_intro(fml, f1, p);                    
                 p2 = mk_transitivity(p3, p2);
                 p2 = mk_modus_ponens(premise, p2);
                 for (unsigned i = 0; i < sz; ++i) {
                     m_proofs[m_proofs.size()-sz+i] = m.mk_and_elim(p2, i);
                 }
-            }
+            }                
             fml = 0;
             return;
         }
@@ -256,7 +256,7 @@ private:
         p = mk_congruence(p, m_body, head, m_defs);
 
         eliminate_quantifier_body(m_body, m_defs);
-        p = mk_congruence(p, m_body, head, m_defs);
+        p = mk_congruence(p, m_body, head, m_defs);          
 
         fml2 = mk_implies(m_body, head);
 
@@ -264,7 +264,7 @@ private:
 
         if (premise) {
             SASSERT(p);
-            p = mk_quant_intro(fml1, fml, p);
+            p = mk_quant_intro(fml1, fml, p);     
             premise = mk_modus_ponens(premise, p);
         }
     }
@@ -287,7 +287,7 @@ private:
 
 
     void eliminate_disjunctions(expr_ref_vector::element_ref& body, proof_ref_vector& proofs) {
-        expr* b = body.get();
+        expr* b = body.get(); 
         expr* e1;
         bool negate_args = false;
         bool is_disj = false;
@@ -398,13 +398,13 @@ private:
 
     app_ref mk_implies(expr_ref_vector const& body, expr* head) {
         switch (body.size()) {
-        case 0:
+        case 0: 
             return app_ref(to_app(head), m);
-        case 1:
+        case 1: 
             return app_ref(m.mk_implies(body[0], head), m);
         default:
             return app_ref(m.mk_implies(m.mk_and(body.size(), body.c_ptr()), head), m);
-        }
+        }        
     }
 
 
@@ -472,10 +472,10 @@ hnf::hnf(ast_manager & m) {
 hnf::~hnf() {
     dealloc(m_imp);
 }
-
+    
 void hnf::operator()(expr * n, proof* p, expr_ref_vector & rs, proof_ref_vector& ps) {
-    m_imp->operator()(n, p, rs, ps);
-    TRACE("hnf",
+    m_imp->operator()(n, p, rs, ps);    
+    TRACE("hnf", 
           ast_manager& m = rs.get_manager();
           tout << mk_ismt2_pp(n, m) << "\nHNF result:\n";
           for (unsigned i = 0; i < rs.size(); ++i) {

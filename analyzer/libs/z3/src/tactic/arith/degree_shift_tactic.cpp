@@ -7,9 +7,9 @@ Module Name:
 
 Abstract:
 
-    Simple degree shift procedure.
+    Simple degree shift procedure. 
     Basic idea: if goal G contains a real variable x, x occurs with degrees
-    d_1, ..., d_k in G, and n = gcd(d_1, ..., d_k) > 1.
+    d_1, ..., d_k in G, and n = gcd(d_1, ..., d_k) > 1. 
     Then, replace x^n with a new fresh variable y.
 
 Author:
@@ -52,7 +52,7 @@ class degree_shift_tactic : public tactic {
         struct rw_cfg : public default_rewriter_cfg {
             imp & o;
             rw_cfg(imp & _o):o(_o) {}
-
+            
             br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) {
                 arith_util & u = o.m_autil;
                 if (!is_decl_of(f, u.get_family_id(), OP_POWER) || !is_app(args[0]))
@@ -187,7 +187,7 @@ class degree_shift_tactic : public tactic {
             for (unsigned i = 0; i < sz; i++) {
                 collect(g.form(i), visited);
             }
-
+            
             TRACE("degree_shift", display_candidates(tout););
         }
 
@@ -204,7 +204,7 @@ class degree_shift_tactic : public tactic {
             }
             ptr_vector<app>::iterator it2  = to_delete.begin();
             ptr_vector<app>::iterator end2 = to_delete.end();
-            for (; it2 != end2; ++it2)
+            for (; it2 != end2; ++it2) 
                 m_var2degree.erase(*it2);
         }
 
@@ -240,9 +240,9 @@ class degree_shift_tactic : public tactic {
             }
         }
 
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -255,7 +255,7 @@ class degree_shift_tactic : public tactic {
             if (!m_var2degree.empty()) {
                 prepare_substitution(mc);
                 m_rw = alloc(rw, *this);
-
+                
                 // substitute
                 expr_ref  new_curr(m);
                 proof_ref new_pr(m);
@@ -295,7 +295,7 @@ class degree_shift_tactic : public tactic {
             SASSERT(g->is_well_sorted());
         }
     };
-
+    
     imp *      m_imp;
 public:
     degree_shift_tactic(ast_manager & m) {
@@ -305,19 +305,19 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(degree_shift_tactic, m);
     }
-
+        
     virtual ~degree_shift_tactic() {
         dealloc(m_imp);
     }
 
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
+    
     virtual void cleanup() {
         imp * d = alloc(imp, m_imp->m);
         #pragma omp critical (tactic_cancel)
@@ -326,7 +326,7 @@ public:
         }
         dealloc(d);
     }
-
+    
 protected:
     virtual void set_cancel(bool f) {
         if (m_imp)

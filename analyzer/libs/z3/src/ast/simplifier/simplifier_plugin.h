@@ -38,16 +38,16 @@ protected:
 
 public:
     simplifier_plugin(symbol const & fname, ast_manager & m):m_manager(m), m_fid(m.mk_family_id(fname)), m_presimp(false), m_reduce_invoked(false) {}
-
+    
     bool reduce_invoked() const { return m_reduce_invoked; }
 
     virtual ~simplifier_plugin() {}
-
+    
     virtual simplifier_plugin * mk_fresh() {
         UNREACHABLE();
         return 0;
     }
-
+    
     /**
        \brief Return in \c result an expression \c e equivalent to <tt>(f args[0] ... args[num_args - 1])</tt>.
 
@@ -69,16 +69,16 @@ public:
        Return true if succeeded.
     */
     virtual bool reduce_eq(expr * lhs, expr * rhs, expr_ref & result) { set_reduce_invoked(); return false; }
-
+    
     /**
        \brief Return in \c result an expression \c e equivalent to <tt>(distinct args[0] ... args[num_args-1])</tt>.
 
        Return true if succeeded.
     */
     virtual bool reduce_distinct(unsigned num_args, expr * const * args, expr_ref & result) { set_reduce_invoked(); return false; }
-
+    
     family_id get_family_id() const { return m_fid; }
-
+   
     /**
        \brief Simplifiers may maintain local caches. These caches must be flushed when this method is invoked.
     */

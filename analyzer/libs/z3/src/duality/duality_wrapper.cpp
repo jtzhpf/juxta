@@ -41,8 +41,8 @@ namespace Duality {
     params_ref p;
     p.set_bool("proof", true); // this is currently useless
     if(models)
-      p.set_bool("model", true);
-    p.set_bool("unsat_core", true);
+      p.set_bool("model", true); 
+    p.set_bool("unsat_core", true); 
     bool mbqi = c.get_config().get().get_bool("mbqi",true);
     p.set_bool("mbqi",mbqi); // just to test
     p.set_str("mbqi.id","itp"); // use mbqi for quantifiers in interpolants
@@ -57,7 +57,7 @@ namespace Duality {
     m_mode = m().proof_mode();
   }
 
-expr context::constant(const std::string &name, const sort &ty){
+expr context::constant(const std::string &name, const sort &ty){ 
   symbol s = str_symbol(name.c_str());
   return cook(m().mk_const(m().mk_const_decl(s, ty)));
 }
@@ -111,7 +111,7 @@ expr context::make(decl_kind op, int n, ::expr **args){
 }
 
   expr context::mki(family_id fid, ::decl_kind dk, int n, ::expr **args){
-    return cook(m().mk_app(fid, dk, 0, 0, n, (::expr **)args));
+    return cook(m().mk_app(fid, dk, 0, 0, n, (::expr **)args));        
 }
 
 expr context::make(decl_kind op, const std::vector<expr> &args){
@@ -168,9 +168,9 @@ expr context::make_quant(decl_kind op, const std::vector<expr> &bvs, const expr 
   expr_abstract(m(), 0, num_bound, &bound_asts[0], to_expr(body.raw()), abs_body);
   expr_ref result(m());
   result = m().mk_quantifier(
-			     op == Forall,
-			     names.size(), &types[0], &names[0], abs_body.get(),
-			     0,
+			     op == Forall, 
+			     names.size(), &types[0], &names[0], abs_body.get(),            
+			     0, 
 			     ::symbol(),
 			     ::symbol(),
 			     0, 0,
@@ -194,9 +194,9 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
   }
   expr_ref result(m());
   result = m().mk_quantifier(
-			     op == Forall,
-			     names.size(), &types[0], &names[0], to_expr(body.raw()),
-			     0,
+			     op == Forall, 
+			     names.size(), &types[0], &names[0], to_expr(body.raw()),            
+			     0, 
 			     ::symbol(),
 			     ::symbol(),
 			     0, 0,
@@ -273,7 +273,7 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
 	return OtherArray;
       }
     }
-
+    
     return Other;
   }
 
@@ -340,7 +340,7 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
     params p;
     return simplify(p);
   }
-
+  
   expr context::make_var(int idx, const sort &s){
     ::sort * a = to_sort(s.raw());
     return cook(m().mk_var(idx,a));
@@ -412,16 +412,16 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
     std::vector < ::sort * > _domain(domain.size());
     for(unsigned i = 0; i < domain.size(); i++)
       _domain[i] = to_sort(domain[i].raw());
-    ::func_decl* d = m().mk_fresh_func_decl(prefix,
-					     _domain.size(),
+    ::func_decl* d = m().mk_fresh_func_decl(prefix, 
+					     _domain.size(), 
 					     &_domain[0],
 					     to_sort(range.raw()));
     return func_decl(*this,d);
   }
 
   func_decl context::fresh_func_decl(char const * prefix, sort const & range){
-    ::func_decl* d = m().mk_fresh_func_decl(prefix,
-					    0,
+    ::func_decl* d = m().mk_fresh_func_decl(prefix, 
+					    0, 
 					    0,
 					    to_sort(range.raw()));
     return func_decl(*this,d);
@@ -463,30 +463,30 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
 			_theory.size(),
 			&_theory[0]
 			);
-
+    
     if(lb == Z3_L_FALSE){
       interpolants.resize(_interpolants.size());
       for (unsigned i = 0; i < _interpolants.size(); ++i) {
 	interpolants[i] = expr(ctx(),_interpolants[i]);
       }
-    }
-
+    }      
+    
     if (_model) {
       model = iz3wrapper::model(ctx(), _model);
     }
-
+    
     if(_labels){
       labels = _labels;
     }
-
+    
     return lb;
   }
 
 #endif
-
+  
   static int linearize_assumptions(int num,
 				   TermTree *assumptions,
-				   std::vector<std::vector <expr> > &linear_assumptions,
+				   std::vector<std::vector <expr> > &linear_assumptions, 
 				   std::vector<int> &parents){
     for(unsigned i = 0; i < assumptions->getChildren().size(); i++)
       num = linearize_assumptions(num, assumptions->getChildren()[i], linear_assumptions, parents);
@@ -502,7 +502,7 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
   }
 
   static int unlinearize_interpolants(int num,
-				      TermTree* assumptions,
+				      TermTree* assumptions, 
 				      const std::vector<expr> &interpolant,
 				      TermTree * &tree_interpolant)
   {
@@ -523,7 +523,7 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
 						literals &labels,
 						bool incremental
 						)
-
+  
   {
     int size = assumptions->number(0);
     std::vector<std::vector<expr> > linear_assumptions(size);
@@ -541,29 +541,29 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
     ptr_vector< ::ast> _theory(theory.size());
     for(unsigned i = 0; i < theory.size(); i++)
       _theory[i] = theory[i];
-
-
+    
+    
     if(!incremental){
       push();
       for(unsigned i = 0; i < linear_assumptions.size(); i++)
 	for(unsigned j = 0; j < linear_assumptions[i].size(); j++)
 	  add(linear_assumptions[i][j]);
     }
-
+    
     check_result res = unsat;
 
     if(!m_solver->get_proof())
       res = check();
-
+    
     if(res == unsat){
 
       interpolation_options_struct opts;
       if(weak_mode)
-	opts.set("weak","1");
-
+	opts.set("weak","1"); 
+      
       ::ast *proof = m_solver->get_proof();
       iz3interpolate(m(),proof,_assumptions,_parents,_interpolants,_theory,&opts);
-
+      
       std::vector<expr> linearized_interpolants(_interpolants.size());
       for(unsigned i = 0; i < _interpolants.size(); i++)
 	linearized_interpolants[i] = expr(ctx(),_interpolants[i]);
@@ -579,13 +579,13 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
     model_ref _m;
     m_solver->get_model(_m);
     model = Duality::model(ctx(),_m.get());
-
+    
 #if 0
     if(_labels){
       labels = _labels;
     }
 #endif
-
+    
     if(!incremental)
       pop();
 
@@ -597,7 +597,7 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
   void interpolating_solver::SetWeakInterpolants(bool weak){
     weak_mode = weak;
   }
-
+  
 
   void interpolating_solver::SetPrintToFile(const std::string &filename){
     print_filename = filename;
@@ -612,14 +612,14 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
   void interpolating_solver::RemoveInterpolationAxiom(const expr & t){
     // theory.remove(t);
   }
-
+  
 
   const char *interpolating_solver::profile(){
     // return Z3_interpolation_profile(ctx());
     return "";
   }
 
-
+  
   static void get_assumptions_rec(stl_ext::hash_set<ast> &memo, const proof &pf, std::vector<expr> &assumps){
     if(memo.find(pf) != memo.end())return;
     memo.insert(pf);
@@ -651,7 +651,7 @@ expr context::make_quant(decl_kind op, const std::vector<sort> &_sorts, const st
     model_smt2_pp(std::cout, m(), *m_model, 0);
     std::cout << std::endl;
   }
-
+  
   void model::show_hash() const {
     std::ostringstream ss;
     model_smt2_pp(ss, m(), *m_model, 0);

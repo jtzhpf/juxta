@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     RelationSort.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -32,7 +32,7 @@ public class RelationSort extends Sort
 
     /**
      * The sorts of the columns of the relation sort.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public Sort[] getColumnSorts() throws Z3Exception
     {

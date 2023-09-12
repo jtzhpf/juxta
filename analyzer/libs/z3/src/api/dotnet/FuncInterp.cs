@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -24,7 +24,7 @@ namespace Microsoft.Z3
 {
     /// <summary>
     ///  A function interpretation is represented as a finite map and an 'else' value.
-    ///  Each entry in the finite map represents the value of a function given a set of arguments.
+    ///  Each entry in the finite map represents the value of a function given a set of arguments.  
     /// </summary>
     [ContractVerification(true)]
     public class FuncInterp : Z3Object
@@ -165,7 +165,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// A string representation of the function interpretation.
-        /// </summary>
+        /// </summary>    
         public override string ToString()
         {
             string res = "";

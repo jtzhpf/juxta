@@ -29,7 +29,7 @@ namespace datalog {
         m_context(ctx),
         m(ctx.get_manager()),
         rm(ctx.get_rule_manager()),
-        m_pinned(m),
+        m_pinned(m), 
         m_goal(goal, m) {
     }
 
@@ -61,7 +61,7 @@ namespace datalog {
         }
         return res;
     }
-
+    
     unsigned get_bound_arg_count(app * lit, const var_idx_set & bound_vars) {
         unsigned res = 0;
         unsigned n = lit->get_num_args();
@@ -134,7 +134,7 @@ namespace datalog {
         if (new_pred==0) {
             std::string suffix = "ad_"+adn.m_adornment.to_string();
             new_pred = m_context.mk_fresh_head_predicate(
-                old_pred->get_name(), symbol(suffix.c_str()),
+                old_pred->get_name(), symbol(suffix.c_str()), 
                 old_pred->get_arity(), old_pred->get_domain(), old_pred);
             m_pinned.push_back(new_pred);
             e->get_data().m_value = new_pred;
@@ -145,7 +145,7 @@ namespace datalog {
         m_pinned.push_back(res);
         return res;
     }
-
+    
     app * mk_magic_sets::create_magic_literal(app * l) {
         func_decl * l_pred = l->get_decl();
         SASSERT(m.is_bool(l_pred->get_range()));
@@ -173,7 +173,7 @@ namespace datalog {
                 }
             }
 
-            mag_pred = m_context.mk_fresh_head_predicate(l_pred->get_name(), symbol("ms"),
+            mag_pred = m_context.mk_fresh_head_predicate(l_pred->get_name(), symbol("ms"), 
                 mag_arity, mag_domain.c_ptr(), l_pred);
             m_pinned.push_back(mag_pred);
             e->get_data().m_value = mag_pred;
@@ -284,7 +284,7 @@ namespace datalog {
         result.add_rule(nr);
         nr->set_accounting_parent_object(m_context, r);
     }
-
+    
     void mk_magic_sets::create_transfer_rule(const adornment_desc & d, rule_set& result) {
         func_decl * adn_pred = m_adorned_preds.find(d);
         unsigned arity = adn_pred->get_arity();

@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     Nikolaj Bjorner (nbjorner) 2006-10-4.
-    Leonardo de Moura (leonardo)
+    Leonardo de Moura (leonardo) 
 
 Revision History:
 --*/
@@ -64,8 +64,8 @@ public:
 
     ~proto_region() { reset(); }
 
-    rational* allocate(rational const & n) {
-        rational* r = alloc(rational, n);
+    rational* allocate(rational const & n) { 
+        rational* r = alloc(rational, n); 
         m_rationals.push_back(r);
         return r;
     }
@@ -129,7 +129,7 @@ private:
 
 public:
 
-    symbol string() {
+    symbol string() { 
         if (m_kind == INT || m_kind == FLOAT) {
             std::string s = m_number->to_string();
             return symbol(s.c_str());
@@ -138,17 +138,17 @@ public:
             return symbol("");
         }
         SASSERT(m_kind == STRING || m_kind == COMMENT || m_kind == ID || m_kind == ANNOTATION);
-        return m_id_info->string();
+        return m_id_info->string(); 
     }
 
-    rational const& number() {
+    rational const& number() { 
         SASSERT(m_kind == INT || m_kind == FLOAT);
-        return *m_number;
+        return *m_number; 
     }
 
-    proto_expr* const* children() const {
+    proto_expr* const* children() const { 
         if (m_kind == CONS) {
-            return m_children;
+            return m_children; 
         }
         else {
             return 0;
@@ -159,17 +159,17 @@ public:
     int pos() { return m_pos; }
     kind_t kind() { return static_cast<kind_t>(m_kind); }
 
-    unsigned num_params() const {
-        SASSERT(m_kind == ID);
+    unsigned num_params() const { 
+        SASSERT(m_kind == ID); 
         return m_id_info->num_params();
     }
-
-    parameter *  params() {
-        SASSERT(m_kind == ID);
+    
+    parameter *  params() { 
+        SASSERT(m_kind == ID); 
         return m_id_info->params();
     }
 
-    proto_expr(proto_region & region, kind_t kind, symbol const & s, vector<parameter> const & params, int line, int pos):
+    proto_expr(proto_region & region, kind_t kind, symbol const & s, vector<parameter> const & params, int line, int pos): 
         m_kind(kind),
         m_line(line),
         m_pos(pos),
@@ -179,14 +179,14 @@ public:
         SASSERT(kind != FLOAT);
     }
 
-    proto_expr(proto_region& region, bool is_int, rational const & n, int line, int pos):
+    proto_expr(proto_region& region, bool is_int, rational const & n, int line, int pos): 
         m_kind(is_int?INT:FLOAT),
         m_line(line),
         m_pos(pos),
         m_number(region.allocate(n))
     {}
 
-    proto_expr(proto_region& region, ptr_vector<proto_expr>& proto_exprs, int line, int pos):
+    proto_expr(proto_region& region, ptr_vector<proto_expr>& proto_exprs, int line, int pos): 
         m_kind(CONS),
         m_line(line),
         m_pos(pos) {
@@ -202,7 +202,7 @@ public:
     }
 
     ~proto_expr() {}
-
+   
 
     static proto_expr* copy(proto_region& r, proto_expr* e) {
         switch(e->kind()) {
@@ -222,29 +222,29 @@ public:
             return new (r) proto_expr(r, false, e->number(), e->line(), e->pos());
         }
         case proto_expr::ID: {
-            vector<parameter> params;
+            vector<parameter> params; 
             for (unsigned i = 0; i < e->num_params(); ++i) {
                 params.push_back(e->params()[i]);
             }
             return new (r) proto_expr(r, e->kind(), e->string(), params, e->line(), e->pos());
         }
         default: {
-            vector<parameter> params;
+            vector<parameter> params; 
             return new (r) proto_expr(r, e->kind(), e->string(), params, e->line(), e->pos());
         }
         }
     }
-
+ 
 private:
 
-    proto_expr(proto_expr const & other);
-    proto_expr& operator=(proto_expr const & other);
+    proto_expr(proto_expr const & other); 
+    proto_expr& operator=(proto_expr const & other);    
 };
 
 
 //
 // build up proto_expr tree from token stream.
-//
+// 
 
 class proto_expr_parser {
     proto_region&  m_region;
@@ -255,7 +255,7 @@ public:
     proto_expr_parser(proto_region& region, scanner& scanner, std::ostream& err):
         m_region(region),
         m_scanner(scanner),
-        m_err(err),
+        m_err(err), 
         m_at_eof(false) {
     }
 
@@ -265,7 +265,7 @@ public:
         scanner::token   token;
         vector<frame>    stack;
         proto_expr* result = 0;
-
+        
         stack.push_back(frame(PROTO_EXPRS_PRE));
 
         token = m_scanner.scan();
@@ -274,7 +274,7 @@ public:
             proto_exprs.reset();
             return true;
         }
-
+        
         while (!stack.empty()) {
 
             if (token == scanner::EOF_TOKEN) {
@@ -300,7 +300,7 @@ public:
                 }
                 break;
 
-            case ATOM:
+            case ATOM: 
                 SASSERT(!result);
                 switch(token) {
                 case scanner::ID_TOKEN:
@@ -308,15 +308,15 @@ public:
                                                        m_scanner.get_line(), m_scanner.get_pos());
                     break;
                 case scanner::INT_TOKEN:
-                    result = new (m_region) proto_expr(m_region, true, m_scanner.get_number(), m_scanner.get_line(),
+                    result = new (m_region) proto_expr(m_region, true, m_scanner.get_number(), m_scanner.get_line(), 
                                                        m_scanner.get_pos());
                     break;
                 case scanner::FLOAT_TOKEN:
-                    result = new (m_region) proto_expr(m_region, false, m_scanner.get_number(), m_scanner.get_line(),
+                    result = new (m_region) proto_expr(m_region, false, m_scanner.get_number(), m_scanner.get_line(), 
                                                        m_scanner.get_pos());
                     break;
                 case scanner::STRING_TOKEN:
-                    result = new (m_region) proto_expr(m_region, proto_expr::STRING, m_scanner.get_id(), m_scanner.get_params(),
+                    result = new (m_region) proto_expr(m_region, proto_expr::STRING, m_scanner.get_id(), m_scanner.get_params(), 
                                                        m_scanner.get_line(), m_scanner.get_pos());
                     break;
                 case scanner::COMMENT_TOKEN:
@@ -326,7 +326,7 @@ public:
                 case scanner::COLON:
                     token = m_scanner.scan();
                     if (token == scanner::ID_TOKEN) {
-                        result = new (m_region) proto_expr(m_region, proto_expr::ANNOTATION, m_scanner.get_id(),
+                        result = new (m_region) proto_expr(m_region, proto_expr::ANNOTATION, m_scanner.get_id(), 
                                                            m_scanner.get_params(), m_scanner.get_line(), m_scanner.get_pos());
                     }
                     else {
@@ -347,17 +347,17 @@ public:
                 if (parse_single_expr && stack.size() == 1) {
                     goto done;
                 }
-                token = m_scanner.scan();
+                token = m_scanner.scan();               
                 break;
 
             case PROTO_EXPRS_PRE:
                 SASSERT(!result);
                 switch(token) {
                 case scanner::RIGHT_PAREN:
-                    result = new (m_region) proto_expr(m_region, stack.back().m_proto_exprs, m_scanner.get_line(),
+                    result = new (m_region) proto_expr(m_region, stack.back().m_proto_exprs, m_scanner.get_line(), 
                                                        m_scanner.get_pos());
                     stack.pop_back();
-
+                    
                     if (stack.empty()) {
                         print_error("unexpected right parenthesis");
                         token = scanner::ERROR_TOKEN;
@@ -376,7 +376,7 @@ public:
                     m_at_eof = true;
                     break;
 
-                case scanner::ERROR_TOKEN:
+                case scanner::ERROR_TOKEN:                    
                     print_error("could not parse expression");
                     goto done;
 
@@ -403,14 +403,14 @@ public:
         }
 
         if (stack.size() == 2) {
-            proto_exprs.push_back(new (m_region) proto_expr(m_region, stack.back().m_proto_exprs, m_scanner.get_line(),
+            proto_exprs.push_back(new (m_region) proto_expr(m_region, stack.back().m_proto_exprs, m_scanner.get_line(), 
                                                             m_scanner.get_pos()));
             return true;
         }
-
+        
         print_error("unexpected nesting of parenthesis: ", stack.size());
         return false;
-    }
+    }    
 
     int get_line() {
         return m_scanner.get_line();
@@ -424,8 +424,8 @@ private:
 
     template<typename T>
     void print_error(char const* msg1, T msg2) {
-        m_err << "ERROR: line " << m_scanner.get_line()
-              << " column " << m_scanner.get_pos() << ": "
+        m_err << "ERROR: line " << m_scanner.get_line() 
+              << " column " << m_scanner.get_pos() << ": " 
               << msg1 << msg2 << "\n";
     }
 
@@ -445,8 +445,8 @@ private:
     public:
         frame_state m_state;
         ptr_vector<proto_expr> m_proto_exprs;
-        frame(frame_state state):
-            m_state(state){
+        frame(frame_state state): 
+            m_state(state){            
         }
         frame(frame const & other):
             m_state(other.m_state),
@@ -471,47 +471,47 @@ class builtin_sort_builder : public sort_builder {
     family_id    m_fid;
     decl_kind    m_kind;
 public:
-    builtin_sort_builder(ast_manager& m, family_id fid, decl_kind k) :
+    builtin_sort_builder(ast_manager& m, family_id fid, decl_kind k) : 
         m_manager(m), m_fid(fid), m_kind(k) {}
 
     virtual bool apply(unsigned num_params, parameter const* params, sort_ref & result) {
         result = m_manager.mk_sort(m_fid, m_kind, num_params, params);
         return result.get() != 0;
-    }
+    }   
 };
 
 class array_sort : public builtin_sort_builder {
 public:
-    array_sort(ast_manager& m) :
+    array_sort(ast_manager& m) : 
         builtin_sort_builder(m, m.mk_family_id("array"), ARRAY_SORT) {}
 };
 
 class bv_sort : public builtin_sort_builder {
 public:
-    bv_sort(ast_manager& m) :
+    bv_sort(ast_manager& m) : 
         builtin_sort_builder(m, m.mk_family_id("bv"), BV_SORT) {}
 };
 
-class user_sort : public sort_builder {
+class user_sort : public sort_builder {    
     user_sort_plugin *  m_plugin;
     decl_kind           m_kind;
     symbol              m_name;
     unsigned            m_num_args;
     std::string         m_error_message;
 public:
-    user_sort(ast_manager& m, unsigned num_args, symbol name):
+    user_sort(ast_manager& m, unsigned num_args, symbol name): 
         m_name(name),
         m_num_args(num_args) {
         m_plugin = m.get_user_sort_plugin();
         m_kind = m_plugin->register_name(name);
     }
-
+    
     ~user_sort() {}
-
+    
     virtual bool apply(unsigned num_params, parameter const* params, sort_ref & result) {
         if (num_params != m_num_args) {
             std::ostringstream strm;
-            strm << "wrong number of arguments passed to " << m_name << " "
+            strm << "wrong number of arguments passed to " << m_name << " " 
                  << m_num_args << " expected, but " << num_params << " given";
             m_error_message = strm.str();
             return false;
@@ -543,11 +543,11 @@ class smtparser : public parser {
                     m.register_plugin(fid, MK);                 \
                 }                                                       \
             } ((void) 0)
-
+            
             REGISTER_PLUGIN("arith",      alloc(arith_decl_plugin));
             REGISTER_PLUGIN("bv",         alloc(bv_decl_plugin));
             REGISTER_PLUGIN("array",      alloc(array_decl_plugin));
-
+            
         };
     };
 
@@ -600,7 +600,7 @@ public:
         m_anum_util(m),
         m_bvnum_util(m),
         m_pattern_validator(m),
-        m_ignore_user_patterns(ignore_user_patterns),
+        m_ignore_user_patterns(ignore_user_patterns), 
         m_binding_level(0),
         m_benchmark(m_manager, symbol("")),
         m_let("let"),
@@ -622,7 +622,7 @@ public:
         m_underscore("_"),
         m_err(0),
         m_display_error_for_vs(false)
-    {
+    {        
         family_id bfid = m_manager.get_basic_family_id();
 
         add_builtin_type("bool", bfid, BOOL_SORT);
@@ -645,7 +645,7 @@ public:
     bool parse_stream(std::istream& stream) {
         proto_region region;
         scanner     scanner(stream, get_err(), false);
-        proto_expr_parser parser(region, scanner, get_err());
+        proto_expr_parser parser(region, scanner, get_err());        
         return parse(parser);
     }
 
@@ -692,10 +692,10 @@ public:
         m_real_sort = m_manager.mk_sort(m_arith_fid, REAL_SORT);
 
         add_builtins(afid);
-
+        
         symbol bv("bv");
         family_id bfid = m_manager.mk_family_id(bv);
-        m_bv_fid = bfid;
+        m_bv_fid = bfid;        
 
         add_builtins(bfid);
 
@@ -744,7 +744,7 @@ public:
         table->insert(symbol("select"), sel2);
 
         m_benchmark.declare_sort(symbol("U"));
-
+        
         sort * bool_sort = m_manager.mk_bool_sort();
         m_sk_hack = m_manager.mk_func_decl(symbol("sk_hack"), 1, &bool_sort, bool_sort);
         table->insert(symbol("sk_hack"), m_sk_hack);
@@ -782,7 +782,7 @@ private:
 
             proto_expr = proto_exprs[i];
 
-            if (match_cons(proto_expr, benchmark, name, rest)) {
+            if (match_cons(proto_expr, benchmark, name, rest)) {        
                 result = make_benchmark(name, rest);
             }
             else if (proto_expr && proto_expr->kind() != proto_expr::COMMENT) {
@@ -799,7 +799,7 @@ private:
         if (m_display_error_for_vs) {
             if (e) {
                 get_err() << "Z3(" << e->line() << "," << e->pos() << "): ERROR: ";
-            }
+            }            
         }
         else {
             get_err() << "ERROR: ";
@@ -808,7 +808,7 @@ private:
             }
         }
     }
-
+    
     void set_error(char const * str, proto_expr* e) {
         error_prefix(e);
         if (e->kind() == proto_expr::ID) {
@@ -832,9 +832,9 @@ private:
     }
 
     bool match_cons(proto_expr * e, symbol const & sym, symbol & name, proto_expr* const*& proto_exprs) {
-        if (e &&
-            e->kind() == proto_expr::CONS &&
-            e->children() &&
+        if (e && 
+            e->kind() == proto_expr::CONS && 
+            e->children() && 
             e->children()[0] &&
             e->children()[0]->string() == sym &&
             e->children()[1]) {
@@ -864,9 +864,9 @@ private:
         symbol difficulty("difficulty");
         symbol category("category");
         bool   success = true;
-
+        
         push_benchmark(name);
-
+        
         while (proto_exprs && *proto_exprs) {
             proto_expr* e = *proto_exprs;
             ++proto_exprs;
@@ -876,7 +876,7 @@ private:
                 name = e1->string();
                 m_benchmark.set_logic(name);
 
-                set_default_num_sort(name);
+                set_default_num_sort(name);               
 
                 if (name == symbol("QF_AX")) {
                     // Hack for supporting new QF_AX theory...
@@ -903,7 +903,7 @@ private:
             if (assumption == e->string() && e1) {
                 expr_ref t(m_manager);
                 if (!make_expression(e1, t) ||
-                    !push_assumption(t.get())) {
+                    !push_assumption(t.get())) {                    
                     return false;
                 }
                 ++proto_exprs;
@@ -922,7 +922,7 @@ private:
             if (define_sorts_sym == e->string() && e1) {
                 if (!define_sorts(e1)) {
                     return false;
-                }
+                }                
                 ++proto_exprs;
                 continue;
             }
@@ -988,13 +988,13 @@ private:
             if (m_notes == e->string() && e1) {
                 ++proto_exprs;
                 continue;
-            }
+            }            
 
             if ((source == e->string() || difficulty == e->string() || category == e->string()) && e1) {
                 ++proto_exprs;
                 continue;
             }
-
+            
             if (e->string() != empty) {
                 set_error("ignoring unknown attribute '", e->string().bare_str(), "'", e);
                 if (e1) {
@@ -1007,24 +1007,24 @@ private:
 
             TRACE("smtparser",
                   tout  << "skipping: " << e->string() << " " <<
-                  e->line() << " " <<
+                  e->line() << " " << 
                   e->pos() << ".\n";);
-            continue;
-        }
+            continue;            
+        }    
         return success;
     }
 
     bool is_id_token(proto_expr* expr) {
-        return
-            expr &&
-            (expr->kind() == proto_expr::ID ||
+        return 
+            expr && 
+            (expr->kind() == proto_expr::ID || 
              expr->kind() == proto_expr::STRING ||
              expr->kind() == proto_expr::ANNOTATION);
     }
-
+                
     bool check_id(proto_expr* e) {
         return is_id_token(e);
-    }
+    }    
 
     bool make_expression(proto_expr * e, expr_ref & result) {
         m_binding_level = 0;
@@ -1056,7 +1056,7 @@ private:
 
     bool make_bool_expressions(symbol_table<idbuilder*>& local_scope, proto_expr * const* chs, expr_ref_vector & exprs) {
         while (chs && *chs) {
-            expr_ref result(m_manager);
+            expr_ref result(m_manager);            
             m_binding_level = 0;
             if (!make_bool_expression(local_scope, *chs, result)) {
                 return false;
@@ -1068,9 +1068,9 @@ private:
     }
 
     bool make_expression(symbol_table<idbuilder*>& local_scope, proto_expr * e, expr_ref & result) {
-        //
-        // Walk proto_expr by using the zipper.
-        // That is, maintain a stack of what's
+        // 
+        // Walk proto_expr by using the zipper. 
+        // That is, maintain a stack of what's 
         // . left  - already processed.
         // . right - to be processed.
         // . up    - above the processed node.
@@ -1084,7 +1084,7 @@ private:
         proto_expr*             current = e;
         bool                    success = false;
         idbuilder*              builder = 0;
-
+        
         while (true) {
 
             if (!current && right && *right) {
@@ -1112,23 +1112,23 @@ private:
                 success = true;
                 goto cleanup;
             }
-
+            
             if (!current && !up.empty()) {
                 //
                 // There is nothing more to process at this level.
                 //
-                // Apply the operator on the stack to the
-                // current 'left' vector.
-                // Adjust the stack by popping the left and right
+                // Apply the operator on the stack to the 
+                // current 'left' vector. 
+                // Adjust the stack by popping the left and right 
                 // work-lists.
-                //
+                // 
                 expr_ref term(m_manager);
                 parse_frame* above = up.back();
                 // symbol sym = above->get_proto_expr()->string();
 
                 if (above->make_term()) {
                     if (!above->make_term()->apply(*left, term)) {
-                        set_error("Could not create application",
+                        set_error("Could not create application", 
                                   above->get_proto_expr());
                         success = false;
                         goto cleanup;
@@ -1143,14 +1143,14 @@ private:
                 left->push_back(term.get());
                 right = above->right();
                 m_binding_level = above->binding_level();
-                up.pop_back();
+                up.pop_back();                
                 continue;
             }
 
-            while (current &&
-                   current->kind() == proto_expr::CONS &&
-                   current->children() &&
-                   current->children()[0] &&
+            while (current && 
+                   current->kind() == proto_expr::CONS && 
+                   current->children() && 
+                   current->children()[0] && 
                    !current->children()[1]) {
                 current = current->children()[0];
             }
@@ -1162,7 +1162,7 @@ private:
                 current = 0;
                 break;
 
-            case proto_expr::ID: {
+            case proto_expr::ID: {                
                 symbol const& id = current->string();
                 expr_ref term(m_manager);
                 expr * const_term = 0;
@@ -1189,22 +1189,22 @@ private:
                 else {
                     set_error("could not locate id ", id, current);
                     goto cleanup;
-                }
+                } 
 
                 left->push_back(term.get());
                 current = 0;
                 break;
-            }
+            }                                
 
             case proto_expr::STRING:
-                //
+                // 
                 // Ignore strings.
                 //
                 current = 0;
                 break;
 
             case proto_expr::COMMENT:
-                //
+                // 
                 // Ignore comments.
                 //
                 current = 0;
@@ -1224,7 +1224,7 @@ private:
             case proto_expr::CONS:
 
                 if (!current->children() ||
-                    !current->children()[0]) {
+                    !current->children()[0]) {                    
                     set_error("cons does not have children", current);
                     current = 0;
                     goto cleanup;
@@ -1239,7 +1239,7 @@ private:
                 symbol const& head_symbol = current->children()[0]->string();
 
                 if (head_symbol == m_underscore) {
-
+                    
                     expr_ref term(m_manager);
 
                     proto_expr * const* chs = current->children() + 1;
@@ -1262,7 +1262,7 @@ private:
                     }
                     left->push_back(term.get());
                     current = 0;
-                    break;
+                    break;                    
                 }
 
                 if ((head_symbol == m_let) ||
@@ -1275,12 +1275,12 @@ private:
                     }
 
                     proto_expr * let_binding = current->children()[1];
-                    proto_expr * const* let_body = current->children()+2;
+                    proto_expr * const* let_body = current->children()+2;                    
 
                     //
                     // Collect bound variables and definitions for the bound variables
                     // into vectors 'vars' and 'bound'.
-                    //
+                    // 
                     svector<symbol>         vars;
                     ptr_vector<proto_expr> bound_vec;
                     if (is_binary_let_binding(let_binding)) {
@@ -1320,14 +1320,14 @@ private:
                     //
                     //  =
                     //
-                    //     walk (up::(pop_let(),left,right)::(bind(v1,v2),[],[z])) [] [x1;x2]
+                    //     walk (up::(pop_let(),left,right)::(bind(v1,v2),[],[z])) [] [x1;x2] 
                     //
                     //  =  (* assume x1 -> y1, x2 -> y2 *)
                     //
                     //     walk (up::(pop_let(),left,right)::(bind(v1,v2),[],[z])) [y1;y2] []
                     //
                     //  =  (* apply binding *)
-                    //
+                    // 
                     //     walk (up::(pop_let(),left,right)) [] [z]
                     //
                     //  =  (* assume z -> u *)
@@ -1343,10 +1343,10 @@ private:
                     up.push_back(new (region) parse_frame(let_binding, popl, left, right, m_binding_level));
 
 
-                    push_let_and * pushl = new (region) push_let_and(this, region, local_scope, pinned, vars.size(), vars.c_ptr());
+                    push_let_and * pushl = new (region) push_let_and(this, region, local_scope, pinned, vars.size(), vars.c_ptr());                    
                     expr_ref_vector * tmp = alloc(expr_ref_vector, m_manager);
                     up.push_back(new (region) parse_frame(let_binding, pushl, tmp, let_body, m_binding_level));
-
+                    
 
                     left  = alloc(expr_ref_vector, m_manager);
                     right = bound;
@@ -1357,22 +1357,22 @@ private:
                 if (head_symbol == m_lblneg ||
                     head_symbol == m_lblpos) {
                     if (!current->children()[1] ||
-                        !current->children()[2]) {
+                        !current->children()[2]) {                        
                         set_error("labels require two arguments", current);
                         goto cleanup;
                     }
-
+                    
                     bool is_pos = head_symbol == m_lblpos;
                     idbuilder* lbl = new (region) build_label(this, is_pos, current->children()[1]);
-
+                                                           
                     up.push_back(new (region) parse_frame(current, lbl, left, right, m_binding_level));
 
                     //
                     // process the body.
-                    //
+                    // 
                     left  = alloc(expr_ref_vector, m_manager);
                     right   = 0;
-                    current = current->children()[2];
+                    current = current->children()[2];                    
                     break;
                 }
 
@@ -1384,7 +1384,7 @@ private:
 
                     children += 2;
 
-                    while (children[0] &&
+                    while (children[0] && 
                            children[0]->kind() == proto_expr::ANNOTATION &&
                            children[1]) {
                         symbol id = children[0]->string();
@@ -1407,14 +1407,14 @@ private:
 
                     //
                     // process the body.
-                    //
+                    // 
                     current = body;
                     break;
                 }
-
+                
                 if ((head_symbol == m_forall) ||
                     (head_symbol == m_exists)) {
-
+                    
                     expr_ref_buffer     patterns(m_manager);
                     expr_ref_buffer     no_patterns(m_manager);
                     sort_ref_buffer     sorts(m_manager);
@@ -1425,7 +1425,7 @@ private:
                     proto_expr*  body = 0;
 
                     ++children;
-
+                    
                     if (!children[0] || !children[1]) {
                         set_error("quantifier should have at least two arguments", current);
                         goto cleanup;
@@ -1439,11 +1439,11 @@ private:
 
                     //
                     // declare the bound variables.
-                    //
+                    // 
 
                     local_scope.begin_scope();
 
-                    while (children[0] && children[1] &&
+                    while (children[0] && children[1] && 
                            (children[1]->kind() != proto_expr::ANNOTATION)) {
 
                         if (!parse_bound(local_scope, region, *children, vars, sorts)) {
@@ -1451,12 +1451,12 @@ private:
                         }
                         ++children;
                     }
-
+                    
                     body = children[0];
 
                     if (is_annotated_cons(body)) {
                         children = body->children()+1;
-                        body = body->children()[1];
+                        body = body->children()[1];                        
                     }
 
                     ++children;
@@ -1468,7 +1468,7 @@ private:
 
                     //
                     // push a parse_frame to undo the scope of the quantifier.
-                    //
+                    //                     
 
                     SASSERT(sorts.size() > 0);
 
@@ -1479,7 +1479,7 @@ private:
 
                     //
                     // process the body.
-                    //
+                    // 
                     right   = 0;
                     current = body;
                     break;
@@ -1490,7 +1490,7 @@ private:
                 }
                 else if (local_scope.find(head_symbol, builder)) {
                     up.push_back(new (region) parse_frame(current, builder, left, right, m_binding_level));
-                }
+                }   
                 else {
                     up.push_back(new (region) parse_frame(current->children()[0], left, right, m_binding_level));
                 }
@@ -1498,7 +1498,7 @@ private:
                 right = current->children() + 1;
                 current = 0;
                 break;
-            }
+            }            
         }
 
     cleanup:
@@ -1513,22 +1513,22 @@ private:
             dealloc(up.back()->detach_left());
             up.pop_back();
         }
-        return success;
+        return success;        
     }
 
-    bool read_patterns(unsigned num_bindings, symbol_table<idbuilder*> & local_scope, proto_expr * const * & children,
+    bool read_patterns(unsigned num_bindings, symbol_table<idbuilder*> & local_scope, proto_expr * const * & children, 
                        expr_ref_buffer & patterns, expr_ref_buffer & no_patterns, int& weight, symbol& qid, symbol& skid) {
         proto_region region;
-        while (children[0] &&
+        while (children[0] && 
                children[0]->kind() == proto_expr::ANNOTATION &&
                children[1]) {
 
-            if (children[0]->string() == symbol("qid") ||
+            if (children[0]->string() == symbol("qid") || 
                 children[0]->string() == symbol("named")) {
                 qid = children[1]->string();
                 children += 2;
                 continue;
-            }
+            }               
 
             if (children[0]->string() == symbol("skolemid")) {
                 skid = children[1]->string();
@@ -1543,14 +1543,14 @@ private:
                 std::istringstream stream(s);
                 scanner scanner(stream, get_err(), false);
                 proto_expr_parser parser(region, scanner, get_err());
-
+            
                 if (!parser.parse(proto_exprs)) {
                     set_error("could not parse expression", children[1]);
                     return false;
-                }
+                }                        
             } else if (children[1]->kind() == proto_expr::CONS) {
                 for (proto_expr* const* pexpr = children[1]->children(); *pexpr; pexpr++)
-                    proto_exprs.push_back(*pexpr);
+                    proto_exprs.push_back(*pexpr);                
             } else {
                 proto_exprs.push_back(children[1]);
             }
@@ -1565,7 +1565,7 @@ private:
             }
 
             if (children[0]->string() == symbol("pat") ||
-                children[0]->string() == symbol("pats") ||
+                children[0]->string() == symbol("pats") || 
                 children[0]->string() == symbol("pattern")) {
                 for (unsigned i = 0; i < ts.size(); ++i) {
                     if (!is_app(ts[i])) {
@@ -1594,19 +1594,19 @@ private:
                      && ts.size() == 1) {
                 no_patterns.push_back(ts[0]);
             }
-            else if (children[0]->string() == symbol("weight") && ts.size() == 1 &&
+            else if (children[0]->string() == symbol("weight") && ts.size() == 1 && 
                      proto_exprs[0]->kind() == proto_expr::INT &&
                      proto_exprs[0]->number().is_unsigned()) {
                 weight = proto_exprs[0]->number().get_unsigned();
             }
             else {
                 // TODO: this should be a warning, perferably once per unknown kind of annotation
-                set_error("could not understand annotation '",
+                set_error("could not understand annotation '", 
                           children[0]->string().bare_str(), "'", children[0]);
             }
-
-            children += 2;
-        }
+                        
+            children += 2;                       
+        }        
         return true;
     }
 
@@ -1625,7 +1625,7 @@ private:
     bool get_sort(theory* th, char const * s, sort_ref& sort) {
         return make_sort(symbol(s), 0, 0, sort);
     }
-
+        
 
     bool make_sort(symbol const & id, unsigned num_params, parameter const* params, sort_ref& s) {
         builtin_op info;
@@ -1654,7 +1654,7 @@ private:
             s = m_manager.mk_sort(m_array_fid, ARRAY_SORT, 2, params);
             return true;
         }
-
+        
         sort* srt = 0;
         if (m_benchmark.get_sort(id, srt)) {
             s = srt;
@@ -1724,7 +1724,7 @@ private:
                 else {
                     params.push_back(parameter(num));
                 }
-            }
+            }           
             else {
                 sort_ref s1(m_manager);
                 if (!make_sort(*chs, s1)) {
@@ -1739,12 +1739,12 @@ private:
     }
 
     bool parse_bound(
-        symbol_table<idbuilder*>& local_scope,
-        region& region,
-        proto_expr* bound,
-        svector<symbol>& vars,
+        symbol_table<idbuilder*>& local_scope, 
+        region& region, 
+        proto_expr* bound, 
+        svector<symbol>& vars, 
         sort_ref_buffer& sorts
-        )
+        ) 
     {
         if (is_cons_list(bound)) {
             proto_expr *const* children = bound->children();
@@ -1759,23 +1759,23 @@ private:
         if (!can_be_sorted_var(bound)) {
             set_error("bound variable should contain a list of pairs", bound);
             return false;
-        }
+        }        
         proto_expr* var = bound->children()[0];
         proto_expr* sort_proto_expr = bound->children()[1];
-
+        
         sort_ref sort(m_manager);
         if (!make_sort(sort_proto_expr, sort)) {
             return false;
         }
         sorts.push_back(sort);
         vars.push_back(var->string());
-
+        
         local_scope.insert(
-            var->string(),
+            var->string(), 
             new (region) bound_var(this, sort)
             );
-
-        ++m_binding_level;
+        
+        ++m_binding_level; 
 
         return true;
     }
@@ -1787,11 +1787,11 @@ private:
         if (is_underscore(e)) {
             return true;
         }
-
-        if (e &&
-            e->kind() == proto_expr::CONS &&
-            e->children() &&
-            e->children()[0] &&
+            
+        if (e && 
+            e->kind() == proto_expr::CONS && 
+            e->children() && 
+            e->children()[0] && 
             e->children()[1]) {
             proto_expr* const* ch = e->children();
             while(*ch) {
@@ -1802,7 +1802,7 @@ private:
             }
             return true;
         }
-        return false;
+        return false;        
     }
 
     bool declare_sorts(proto_expr* e) {
@@ -1822,15 +1822,15 @@ private:
                 // consists of an identifier together with
                 // a number indicating the arity of the
                 // constructor.
-                //
-                if (ch->children() &&
+                // 
+                if (ch->children() && 
                     ch->children()[0] &&
                     ch->children()[0]->kind() == proto_expr::ID &&
-                    ch->children()[1] &&
+                    ch->children()[1] && 
                     ch->children()[1]->kind() == proto_expr::INT) {
-
+                    
                     // unsigned num = (unsigned) ch->children()[1]->number().get_uint64();
-                    m_benchmark.declare_sort(ch->children()[0]->string());
+                    m_benchmark.declare_sort(ch->children()[0]->string());                    
                 }
                 break;
 
@@ -1866,7 +1866,7 @@ private:
         // First element in list must be an identifier.
         // there should be just two elements.
         //
-        if (!children ||
+        if (!children || 
             !children[0] ||
             !(children[0]->kind() == proto_expr::ID) ||
             !children[1] ||
@@ -1874,14 +1874,14 @@ private:
             set_error("unexpected arguments to function declaration", e);
             return false;
         }
-        symbol name = children[0]->string();
+        symbol name = children[0]->string();        
         sort_ref s(m_manager);
         if (!can_be_sort(children[1]) ||
             !make_sort(children[1], s)) {
             set_error("unexpected arguments to function declaration", e);
             return false;
         }
-
+        
         m_benchmark.get_symtable()->insert(name, s);
 
         return true;
@@ -1901,28 +1901,28 @@ private:
     class define_sort_cls : public sort_builder {
         smtparser&      m_parser;
         proto_region    m_region;
-        proto_expr*     m_expr;
+        proto_expr*     m_expr; 
         svector<symbol> m_params;
         symbol          m_name;
         std::string     m_error_message;
 
     public:
-        define_sort_cls(smtparser& p, symbol const& name, proto_expr* e, unsigned num_params, symbol* params) :
+        define_sort_cls(smtparser& p, symbol const& name, proto_expr* e, unsigned num_params, symbol* params) : 
             m_parser(p),
             m_name(name) {
             for (unsigned i = 0; i < num_params; ++i) {
                 m_params.push_back(params[i]);
             }
             m_expr = proto_expr::copy(m_region, e);
-        }
-
+        }        
+        
         virtual bool apply(unsigned num_params, parameter const* params, sort_ref & result) {
             smtlib::symtable * symtable = m_parser.m_benchmark.get_symtable();
             if (m_params.size() != num_params) {
                 std::ostringstream strm;
-                strm << "wrong number of arguments passed to " << m_name << " "
+                strm << "wrong number of arguments passed to " << m_name << " " 
                      << m_params.size() << " expected, but " << num_params << " given";
-                m_error_message = strm.str();
+                m_error_message = strm.str();                
                 return false;
             }
             for (unsigned i = 0; i < num_params; ++i) {
@@ -1966,10 +1966,10 @@ private:
                 return false;
             }
             names.push_back(id->string());
-            ++children;
-        }
+            ++children;                        
+        }        
 
-        m_benchmark.get_symtable()->insert(name, alloc(define_sort_cls, *this, name, srt, names.size(), names.c_ptr()));
+        m_benchmark.get_symtable()->insert(name, alloc(define_sort_cls, *this, name, srt, names.size(), names.c_ptr())); 
         return true;
     }
 
@@ -1977,7 +1977,7 @@ private:
         proto_expr* const * children = sorts?sorts->children():0;
         sort_ref_buffer  domain(m_manager);
         symbol name = id->string();
-
+        
         if (sorts && !children) {
             set_error("Function declaration expects a list of sorts", id);
             return false;
@@ -1991,7 +1991,7 @@ private:
                 return false;
             }
             domain.push_back(s);
-            ++children;
+            ++children;                        
         }
 
         sort_ref range(m_manager);
@@ -2010,8 +2010,8 @@ private:
         sort_ref_buffer  domain(m_manager);
         //
         // Skip declaration of numbers.
-        //
-        if (children &&
+        // 
+        if (children && 
             children[0] &&
             children[0]->kind() == proto_expr::INT) {
             return true;
@@ -2020,7 +2020,7 @@ private:
         //
         // First element in list must be an identifier.
         //
-        if (!children ||
+        if (!children || 
             !children[0] ||
             !(children[0]->kind() == proto_expr::ID)) {
             set_error("unexpected arguments to function declaration", e);
@@ -2031,12 +2031,12 @@ private:
 
         ++children;
 
-
+        
         if (!can_be_sort(children[0])) {
             set_error("unexpected arguments to function declaration", e);
             return false;
         }
-
+        
         //
         // parse domain.
         //
@@ -2046,7 +2046,7 @@ private:
                 return false;
             }
             domain.push_back(s);
-            ++children;
+            ++children;                        
         }
 
         //
@@ -2066,7 +2066,7 @@ private:
         bool is_associative = false;
         bool is_commutative = false;
         bool is_injective   = false;
-
+        
         while(children[0] && children[0]->kind() == proto_expr::ANNOTATION) {
 
             if (m_associative == children[0]->string()) {
@@ -2115,7 +2115,7 @@ private:
             sort_ref s(m_manager);
             if (!make_sort(children[0], s)) {
                 return false;
-            }
+            }            
             domain.push_back(s);
             ++children;
         }
@@ -2126,7 +2126,7 @@ private:
     }
 
     bool can_be_sorted_var(proto_expr* e) {
-        return
+        return 
             e &&
             (e->kind() == proto_expr::CONS) &&
             e->children() &&
@@ -2136,17 +2136,17 @@ private:
     }
 
     bool is_cons_list(proto_expr* e) {
-        return
-            e &&
-            (e->kind() == proto_expr::CONS) &&
-            e->children() &&
+        return 
+            e && 
+            (e->kind() == proto_expr::CONS) && 
+            e->children() && 
             e->children()[0] &&
             e->children()[0]->kind() == proto_expr::CONS;
     }
 
     bool is_prefixed(proto_expr* e, symbol const& s) {
-        return
-            e &&
+        return 
+            e && 
             (e->kind() == proto_expr::CONS) &&
             e->children() &&
             e->children()[0] &&
@@ -2156,7 +2156,7 @@ private:
     }
 
     bool is_underscore(proto_expr* e) {
-        return
+        return 
             is_prefixed(e, m_underscore) &&
             e->children()[1]->kind() == proto_expr::ID;
     }
@@ -2243,7 +2243,7 @@ private:
         builtin_op info;
         if (m_builtin_ops.find(name, info)) {
             unsigned num_params = proto_expr->num_params();
-            parameter * params = proto_expr->params();
+            parameter * params = proto_expr->params();     
             fix_parameters(num_params, params);
             d = m_manager.mk_func_decl(info.m_family_id, info.m_kind, num_params, params, args.size(), args.c_ptr());
             if (d) {
@@ -2255,8 +2255,8 @@ private:
         rational arg2_value;
         bool     arg2_is_int;
 
-        if (name == symbol("store") &&
-            args.size() == 3 &&
+        if (name == symbol("store") && 
+            args.size() == 3 && 
             m_anum_util.is_numeral(args.get(2), arg2_value, arg2_is_int) &&
             arg2_is_int) {
             expr_ref_vector new_args(m_manager);
@@ -2272,16 +2272,16 @@ private:
                 return true;
             }
         }
-
+        
         error_prefix(proto_expr);
         get_err() << "could not find overload for '" << name << "' ";
         for (unsigned i = 0; i < sorts.size(); ++i) {
-            get_err() << "Argument: "
+            get_err() << "Argument: " 
                       << mk_pp(args.get(i), m_manager)
-                      << " has type "
+                      << " has type " 
                       << mk_pp(sorts[i], m_manager)
                       << ".\n";
-        }
+        }            
         return false;
     }
 
@@ -2305,7 +2305,7 @@ private:
     public:
         identity() {}
 
-        virtual bool apply(expr_ref_vector const & args, expr_ref & result) {
+        virtual bool apply(expr_ref_vector const & args, expr_ref & result) { 
             if (args.size() == 1) {
                 result = args.back();
                 return true;
@@ -2319,7 +2319,7 @@ private:
     class parse_frame {
     public:
 
-        parse_frame(proto_expr * e, idbuilder * make, expr_ref_vector * left, proto_expr * const* right, unsigned binding_level):
+        parse_frame(proto_expr * e, idbuilder * make, expr_ref_vector * left, proto_expr * const* right, unsigned binding_level): 
             m_proto_expr(e),
             m_make_term(make),
             m_left(left),
@@ -2327,7 +2327,7 @@ private:
             m_binding_level(binding_level) {
         }
 
-        parse_frame(proto_expr * e, expr_ref_vector * left, proto_expr * const* right, unsigned binding_level):
+        parse_frame(proto_expr * e, expr_ref_vector * left, proto_expr * const* right, unsigned binding_level): 
             m_proto_expr(e),
             m_make_term(0),
             m_left(left),
@@ -2335,7 +2335,7 @@ private:
             m_binding_level(binding_level) {
         }
 
-        expr_ref_vector * detach_left() {
+        expr_ref_vector * detach_left() { 
             expr_ref_vector * result = m_left;
             SASSERT(m_left);
             m_left = 0;
@@ -2385,7 +2385,7 @@ private:
                 break;
             }
         }
-
+        
         virtual bool apply(expr_ref_vector const & args, expr_ref & result) {
             if (args.size() >= 1) {
                 result = m_smt->m_manager.mk_label(m_pos, m_sym, args.get(0));
@@ -2399,13 +2399,13 @@ private:
 
     class pop_let : public idbuilder {
     public:
-        pop_let(symbol_table<idbuilder*> & local_scope, expr_ref_vector* pinned = 0):
+        pop_let(symbol_table<idbuilder*> & local_scope, expr_ref_vector* pinned = 0): 
             m_local_scope(local_scope),
             m_pinned(pinned) {
         }
 
         virtual ~pop_let() {}
-
+        
         virtual bool apply(expr_ref_vector const & args, expr_ref & result) {
             dealloc(m_pinned);
             if (args.size() == 2) {
@@ -2426,10 +2426,10 @@ private:
         smtparser*                 m_parser;
         region &                   m_region;
         symbol_table<idbuilder*> & m_local_scope;
-        symbol                     m_let_var;
+        symbol                     m_let_var;    
 
     public:
-        push_let(smtparser* p, region & region, symbol_table<idbuilder*> & local_scope, symbol const & let_var):
+        push_let(smtparser* p, region & region, symbol_table<idbuilder*> & local_scope, symbol const & let_var): 
             m_parser(p),
             m_region(region),
             m_local_scope(local_scope),
@@ -2437,12 +2437,12 @@ private:
         }
 
         virtual bool apply(expr_ref_vector const & args, expr_ref & result) {
-            //
-            // . push a scope,
+            // 
+            // . push a scope, 
             // . create a nullary function using the variable/term association.
             // . return the (first) argument.
-            //
-            //
+            // 
+            // 
             if (args.size() == 1) {
                 m_local_scope.begin_scope();
                 m_local_scope.insert(m_let_var, new (m_region) nullary(args.back(), m_parser));
@@ -2465,7 +2465,7 @@ private:
         expr_ref_vector*           m_pinned;
 
     public:
-        push_let_and(smtparser* p, region & region, symbol_table<idbuilder*> & local_scope, expr_ref_vector* pinned, unsigned num_vars, symbol const* vars):
+        push_let_and(smtparser* p, region & region, symbol_table<idbuilder*> & local_scope, expr_ref_vector* pinned, unsigned num_vars, symbol const* vars): 
             m_parser(p),
             m_region(region),
             m_local_scope(local_scope),
@@ -2482,11 +2482,11 @@ private:
                 return false;
             }
 
-            //
-            // . push a scope,
+            //             
+            // . push a scope, 
             // . create a nullary function using the variable/term association.
             // . return the last argument (arbitrary).
-            //
+            // 
 
             m_local_scope.begin_scope();
             for (unsigned i = 0; i < m_num_vars; ++i) {
@@ -2500,7 +2500,7 @@ private:
 
     class bound_var : public idbuilder {
     public:
-        bound_var(smtparser * smt, sort * sort):
+        bound_var(smtparser * smt, sort * sort): 
             m_smt(smt),
             m_decl_level(smt->m_binding_level),
             m_sort(sort) {
@@ -2521,7 +2521,7 @@ private:
 
     class pop_quantifier : public idbuilder {
     public:
-        pop_quantifier(smtparser * smt, bool is_forall, int weight, symbol const& qid, symbol const& skid, expr_ref_buffer & patterns, expr_ref_buffer & no_patterns, sort_ref_buffer & sorts,
+        pop_quantifier(smtparser * smt, bool is_forall, int weight, symbol const& qid, symbol const& skid, expr_ref_buffer & patterns, expr_ref_buffer & no_patterns, sort_ref_buffer & sorts, 
                        svector<symbol>& vars, symbol_table<idbuilder*> & local_scope):
             m_smt(smt),
             m_is_forall(is_forall),
@@ -2548,15 +2548,15 @@ private:
             m_local_scope.end_scope();
 
             expr * body = args.back();
-
+            
             if (m_smt->ignore_user_patterns()) {
                 TRACE("pat_bug", tout << "ignoring user patterns...: " << m_patterns.size() << "\n";);
-                result = m_smt->m_manager.mk_quantifier(m_is_forall,
+                result = m_smt->m_manager.mk_quantifier(m_is_forall, 
                                                         m_sorts.size(),   // num_decls
                                                         m_sorts.c_ptr(),  // decl_sorts
                                                         m_vars.begin(),   // decl_names
                                                         body,
-                                                        m_weight,
+                                                        m_weight, 
                                                         m_qid,
                                                         m_skid,
                                                         0,
@@ -2568,12 +2568,12 @@ private:
                 if (!m_no_patterns.empty()) {
                     m_smt->set_error("patterns were provided, ignoring :nopat attribute.", ((proto_expr*)0));
                 }
-                result = m_smt->m_manager.mk_quantifier(m_is_forall,
+                result = m_smt->m_manager.mk_quantifier(m_is_forall, 
                                                         m_sorts.size(),   // num_decls
                                                         m_sorts.c_ptr(),  // decl_sorts
                                                         m_vars.begin(),   // decl_names
                                                         body,
-                                                        m_weight,
+                                                        m_weight, 
                                                         m_qid,
                                                         m_skid,
                                                         m_patterns.size(),
@@ -2582,12 +2582,12 @@ private:
                                                         0);
             }
             else {
-                result = m_smt->m_manager.mk_quantifier(m_is_forall,
+                result = m_smt->m_manager.mk_quantifier(m_is_forall, 
                                                         m_sorts.size(),   // num_decls
                                                         m_sorts.c_ptr(),  // decl_sorts
                                                         m_vars.begin(),   // decl_names
                                                         body,
-                                                        m_weight,
+                                                        m_weight, 
                                                         m_qid,
                                                         m_skid,
                                                         0,
@@ -2610,7 +2610,7 @@ private:
     private:
         smtparser*                 m_smt;
         bool                       m_is_forall;
-        int                        m_weight;
+        int                        m_weight;  
         symbol                     m_qid;
         symbol                     m_skid;
         expr_ref_buffer            m_patterns;
@@ -2625,7 +2625,7 @@ private:
         family_id  m_fid;
         decl_kind  m_kind;
         vector<parameter> m_params;
-
+        
     public:
         builtin_builder(smtparser* smt, family_id fid, decl_kind k,vector<parameter> const& p):
             m_smt(smt),
@@ -2650,13 +2650,13 @@ private:
         m_benchmark.set_status( status);
         return true;
     }
-
+   
     expr * mk_number(rational const & r, bool is_int){
         if (m_int_sort == m_real_sort)  // integer constants should be mapped to real
-            is_int = false;
+            is_int = false; 
         return m_anum_util.mk_numeral(r, is_int);
     }
-
+    
     void push_benchmark(symbol const & name) {
         m_benchmark.set_name(name);
     }
@@ -2672,7 +2672,7 @@ private:
     }
 
     bool is_binary_let_binding(proto_expr* let_binding) {
-        return
+        return 
             let_binding &&
             let_binding->children() &&
             let_binding->children()[0] &&
@@ -2743,11 +2743,11 @@ private:
         else {
             return false;
         }
-
+        
         term = m_bvnum_util.mk_numeral(n, sz);
 
         return true;
-    }
+    }    
 };
 
 

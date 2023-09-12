@@ -41,7 +41,7 @@ namespace datalog {
         rule_manager &   m_rule_manager;
         bool             m_dirty;
         svector<plugin*> m_plugins;
-
+        
         void ensure_ordered();
     public:
 
@@ -54,7 +54,7 @@ namespace datalog {
         void reset();
 
         void cancel();
-
+        
         /**
            \brief Add a plugin for rule transformation.
 
@@ -63,12 +63,12 @@ namespace datalog {
         void register_plugin(plugin * p);
 
         /**
-           \brief Transform the rule set using the registered transformation plugins. If the rule
+           \brief Transform the rule set using the registered transformation plugins. If the rule 
            set has changed, return true; otherwise return false.
         */
         bool operator()(rule_set & rules);
     };
-
+    
     class rule_transformer::plugin {
         friend class rule_transformer;
 
@@ -86,7 +86,7 @@ namespace datalog {
            The priority argument determines in what order will rules be applied to the rules
            (higher priority plugins will be applied first).
         */
-        plugin(unsigned priority, bool can_destratify_negation = false) : m_priority(priority),
+        plugin(unsigned priority, bool can_destratify_negation = false) : m_priority(priority), 
             m_can_destratify_negation(can_destratify_negation), m_transformer(0) {}
 
     public:

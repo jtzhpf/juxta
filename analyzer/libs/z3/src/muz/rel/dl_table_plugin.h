@@ -83,24 +83,24 @@ namespace datalog {
                 NOT_IMPLEMENTED_YET();
             }
 
-            virtual transformer_fn * mk_project_fn(const base_object & t, unsigned col_cnt,
+            virtual transformer_fn * mk_project_fn(const base_object & t, unsigned col_cnt, 
                 const unsigned * removed_cols) = 0
 
-            virtual transformer_fn * mk_rename_fn(const base_object & t, unsigned permutation_cycle_len,
+            virtual transformer_fn * mk_rename_fn(const base_object & t, unsigned permutation_cycle_len, 
                 const unsigned * permutation_cycle) = 0;
 
             virtual union_fn * mk_union_fn(base_object & tgt, const base_object & src, base_object * delta) = 0;
 
-            virtual mutator_fn * mk_filter_identical_fn(base_object & t, unsigned col_cnt,
+            virtual mutator_fn * mk_filter_identical_fn(base_object & t, unsigned col_cnt, 
                 const unsigned * identical_cols) = 0;
 
-            virtual mutator_fn * mk_filter_equal_fn(base_object & t, const element & value,
+            virtual mutator_fn * mk_filter_equal_fn(base_object & t, const element & value, 
                 unsigned col) = 0;
 
             virtual mutator_fn * mk_filter_interpreted_fn(base_object & t, app * condition) = 0;
 
-            virtual negation_filter_fn * mk_filter_interpreted_fn(base_object & t,
-                const base_object & negated_obj, unsigned joined_col_cnt,
+            virtual negation_filter_fn * mk_filter_interpreted_fn(base_object & t, 
+                const base_object & negated_obj, unsigned joined_col_cnt, 
                 const unsigned * t_cols, const unsigned * negated_cols) = 0;
 
         };
@@ -111,7 +111,7 @@ namespace datalog {
             relation_manager & m_manager;
             signature m_signature;
 
-            base_ancestor(kind k, relation_manager & m, const signature & s)
+            base_ancestor(kind k, relation_manager & m, const signature & s) 
                 : m_kind(k), m_manager(m), m_signature(s) {}
         public:
             virtual ~base_ancestor() {}
@@ -168,7 +168,7 @@ namespace datalog {
     // table_base
     //
     // -----------------------------------
-
+    
     class table_base1;
 
     struct table_traits {

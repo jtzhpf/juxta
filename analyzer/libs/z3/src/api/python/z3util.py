@@ -1,5 +1,5 @@
 """
-Usage:
+Usage:  
 import common_z3 as CM_Z3
 """
 
@@ -17,23 +17,23 @@ def get_z3_version(as_str=False):
         return "{}.{}.{}.{}".format(*rs)
     else:
         return rs
-
-
+        
+    
 
 
 
 def ehash(v):
     """
     Returns a 'stronger' hash value than the default hash() method.
-    The result from hash() is not enough to distinguish between 2
+    The result from hash() is not enough to distinguish between 2 
     z3 expressions in some cases.
-
+    
     >>> x1 = Bool('x'); x2 = Bool('x'); x3 = Int('x')
     >>> print x1.hash(),x2.hash(),x3.hash() #BAD: all same hash values
     783810685 783810685 783810685
     >>> print ehash(x1), ehash(x2), ehash(x3)
     x_783810685_1 x_783810685_1 x_783810685_2
-
+    
     """
     if __debug__:
         assert is_expr(v)
@@ -42,7 +42,7 @@ def ehash(v):
 
 
 """
-In Z3, variables are caleld *uninterpreted* consts and
+In Z3, variables are caleld *uninterpreted* consts and 
 variables are *interpreted* consts.
 """
 
@@ -94,7 +94,7 @@ def is_expr_val(v):
     False
     >>> is_expr_val(SafetyInjection)
     False
-    """
+    """        
     return is_const(v) and v.decl().kind()!=Z3_OP_UNINTERPRETED
 
 
@@ -162,11 +162,11 @@ def prove(claim,assume=None,verbose=0):
     AssertionError: Assumption is alway False!
 
     >>> r,m = prove(Implies(x,x),assume=y,verbose=2); r,model_str(m,as_str=False)
-    assume:
+    assume: 
     y
-    claim:
+    claim: 
     Implies(x, x)
-    to_prove:
+    to_prove: 
     Implies(y, Implies(x, x))
     (True, None)
 
@@ -224,7 +224,7 @@ def prove(claim,assume=None,verbose=0):
         print 'E: cannot solve !'
         return None, None
     elif models == False: #unsat
-        return True,None
+        return True,None   
     else: #sat
         if __debug__:
             assert isinstance(models,list)
@@ -233,7 +233,7 @@ def prove(claim,assume=None,verbose=0):
             return False, models[0] #the first counterexample
         else:
             return False, []  #infinite counterexample,models
-
+        
 
 def get_models(f,k):
     """
@@ -242,7 +242,7 @@ def get_models(f,k):
     If f cannot be solved, returns None
     If f is satisfiable, returns the first k models
     Note that if f is a tautology, e.g.\ True, then the result is []
-
+    
     Based on http://stackoverflow.com/questions/11867611/z3py-checking-all-solutions-for-equation
 
     EXAMPLES:
@@ -275,7 +275,7 @@ def get_models(f,k):
     if __debug__:
         assert is_expr(f)
         assert k>=1
-
+    
 
 
     s = Solver()
@@ -298,7 +298,7 @@ def get_models(f,k):
         block = Not(And([v() == m[v] for v in m]))
         s.add(block)
 
-
+    
     if s.check() == unknown:
         return None
     elif s.check() == unsat and i==0:
@@ -329,19 +329,19 @@ def is_contradiction(claim,verbose=0):
     >>> x,y=Bools('x y')
     >>> is_contradiction(BoolVal(False))
     True
-
+    
     >>> is_contradiction(BoolVal(True))
     False
-
+    
     >>> is_contradiction(x)
     False
-
+    
     >>> is_contradiction(Implies(x,y))
     False
-
+    
     >>> is_contradiction(Implies(x,x))
     False
-
+    
     >>> is_contradiction(And(x,Not(x)))
     True
     """
@@ -352,7 +352,7 @@ def is_contradiction(claim,verbose=0):
 def exact_one_model(f):
     """
     return True if f has exactly 1 model, False otherwise.
-
+    
     EXAMPLES:
 
     >>> x, y = Ints('x y')
@@ -374,25 +374,25 @@ def exact_one_model(f):
         return len(models)==1
     else:
         return False
-
-
+        
+    
 
 def myBinOp(op,*L):
     """
     >>> myAnd(*[Bool('x'),Bool('y')])
     And(x, y)
-
+    
     >>> myAnd(*[Bool('x'),None])
     x
-
+    
     >>> myAnd(*[Bool('x')])
     x
-
+    
     >>> myAnd(*[])
-
+    
     >>> myAnd(Bool('x'),Bool('y'))
     And(x, y)
-
+    
     >>> myAnd(*[Bool('x'),Bool('y')])
     And(x, y)
 
@@ -401,7 +401,7 @@ def myBinOp(op,*L):
 
     >>> myAnd((Bool('x'),Bool('y')))
     And(x, y)
-
+    
     >>> myAnd(*[Bool('x'),Bool('y'),True])
     Traceback (most recent call last):
     ...
@@ -410,7 +410,7 @@ def myBinOp(op,*L):
 
     if __debug__:
         assert op == Z3_OP_OR or op == Z3_OP_AND or op == Z3_OP_IMPLIES
-
+    
     if len(L)==1 and (isinstance(L[0],list) or isinstance(L[0],tuple)):
         L = L[0]
 
@@ -435,7 +435,7 @@ def myBinOp(op,*L):
 def myAnd(*L): return myBinOp(Z3_OP_AND,*L)
 def myOr(*L): return myBinOp(Z3_OP_OR,*L)
 def myImplies(a,b):return myBinOp(Z3_OP_IMPLIES,[a,b])
-
+    
 
 
 Iff = lambda f,g: And(Implies(f,g),Implies(g,f))
@@ -445,12 +445,12 @@ Iff = lambda f,g: And(Implies(f,g),Implies(g,f))
 def model_str(m,as_str=True):
     """
     Returned a 'sorted' model (so that it's easier to see)
-    The model is sorted by its key,
-    e.g. if the model is y = 3 , x = 10, then the result is
+    The model is sorted by its key, 
+    e.g. if the model is y = 3 , x = 10, then the result is 
     x = 10, y = 3
 
     EXAMPLES:
-    see doctest exampels from function prove()
+    see doctest exampels from function prove() 
 
     """
     if __debug__:
@@ -458,7 +458,7 @@ def model_str(m,as_str=True):
 
     if m :
         vs = [(v,m[v]) for v in m]
-        vs = sorted(vs,key=lambda (a,_): str(a))
+        vs = sorted(vs,key=lambda (a,_): str(a)) 
         if as_str:
             return '\n'.join(['{} = {}'.format(k,v) for (k,v) in vs])
         else:

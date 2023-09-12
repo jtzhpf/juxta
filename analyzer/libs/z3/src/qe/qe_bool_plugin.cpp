@@ -38,7 +38,7 @@ namespace qe {
             qe_solver_plugin(m, m.get_basic_family_id(), ctx),
             m_replace(m)
         {}
-
+        
         virtual void assign(contains_app& x, expr* fml, rational const& vl) {
             SASSERT(vl.is_zero() || vl.is_one());
         }
@@ -70,7 +70,7 @@ namespace qe {
         }
 
         virtual unsigned get_weight(contains_app& contains_x, expr* fml) {
-            app* x = contains_x.x();
+            app* x = contains_x.x();            
             bool p = m_ctx.pos_atoms().contains(x);
             bool n = m_ctx.neg_atoms().contains(x);
             if (p && n) {
@@ -80,11 +80,11 @@ namespace qe {
         }
 
         virtual bool solve(conj_enum& conjs,expr* fml) {
-            return
+            return 
                 solve_units(conjs, fml) ||
                 solve_polarized(fml);
         }
-
+        
         virtual bool is_uninterpreted(app* a) {
             return false;
         }
@@ -108,9 +108,9 @@ namespace qe {
                     return true;
                 }
                 else if (m.is_not(e, e1) && m_ctx.is_var(e1, idx)) {
-                    m_replace.apply_substitution(to_app(e1), m.mk_false(), fml);
+                    m_replace.apply_substitution(to_app(e1), m.mk_false(), fml);         
                     m_ctx.elim_var(idx, fml, m.mk_false());
-                    return true;
+                    return true;           
                 }
             }
             return false;
@@ -130,7 +130,7 @@ namespace qe {
         }
 
         bool solve_polarized( contains_app& contains_x, expr_ref& fml, expr_ref& def) {
-            app* x = contains_x.x();
+            app* x = contains_x.x();            
             bool p = m_ctx.pos_atoms().contains(x);
             bool n = m_ctx.neg_atoms().contains(x);
             TRACE("quant_elim", tout << mk_pp(x, m) << " " << mk_pp(fml, m) << "\n";);
@@ -162,7 +162,7 @@ namespace qe {
                 }
                 def = m.mk_false();
                 m_replace.apply_substitution(x, def, fml);
-                return true;
+                return true;            
             }
             else if (contains_x(fml)) {
                 return false;
@@ -173,7 +173,7 @@ namespace qe {
             }
         }
     };
-
+    
     qe_solver_plugin* mk_bool_plugin(i_solver_context& ctx) {
         return alloc(bool_plugin, ctx, ctx.get_manager());
     }

@@ -10,7 +10,7 @@ Abstract:
     "Compile" a goal into the SAT engine.
     Atoms are "abstracted" into boolean variables.
     The mapping between boolean variables and atoms
-    can be used to convert back the state of the
+    can be used to convert back the state of the 
     SAT engine into a goal.
 
     The idea is to support scenarios such as:
@@ -56,7 +56,7 @@ struct goal2sat::imp {
     bool                        m_ite_extra;
     unsigned long long          m_max_memory;
     volatile bool               m_cancel;
-
+    
     imp(ast_manager & _m, params_ref const & p, sat::solver & s, atom2bool_var & map):
         m(_m),
         m_solver(s),
@@ -65,7 +65,7 @@ struct goal2sat::imp {
         m_cancel = false;
         m_true = sat::null_bool_var;
     }
-
+        
     void updt_params(params_ref const & p) {
         m_ite_extra       = p.get_bool("ite_extra", true);
         m_max_memory      = megabytes_to_bytes(p.get_uint("max_memory", UINT_MAX));
@@ -74,7 +74,7 @@ struct goal2sat::imp {
     void throw_op_not_handled() {
         throw tactic_exception("operator not supported, apply simplifier before invoking translator");
     }
-
+    
     void mk_clause(sat::literal l) {
         TRACE("goal2sat", tout << "mk_clause: " << l << "\n";);
         m_solver.mk_clause(1, &l);
@@ -103,7 +103,7 @@ struct goal2sat::imp {
         }
         return m_true;
     }
-
+    
     void convert_atom(expr * t, bool root, bool sign) {
         SASSERT(m.is_bool(t));
         sat::literal  l;
@@ -312,7 +312,7 @@ struct goal2sat::imp {
             UNREACHABLE();
         }
     }
-
+    
     void process(expr * n) {
         TRACE("goal2sat", tout << "converting: " << mk_ismt2_pp(n, m) << "\n";);
         if (visit(n, true, false)) {
@@ -364,7 +364,7 @@ struct goal2sat::imp {
     void operator()(goal const & g) {
         m_interface_vars.reset();
         collect_boolean_interface(g, m_interface_vars);
-
+        
         unsigned size = g.size();
         for (unsigned idx = 0; idx < size; idx++) {
             expr * f = g.form(idx);
@@ -375,7 +375,7 @@ struct goal2sat::imp {
     void operator()(unsigned sz, expr * const * fs) {
         m_interface_vars.reset();
         collect_boolean_interface(m, sz, fs, m_interface_vars);
-
+        
         for (unsigned i = 0; i < sz; i++)
             process(fs[i]);
     }
@@ -389,7 +389,7 @@ struct unsupported_bool_proc {
     unsupported_bool_proc(ast_manager & _m):m(_m) {}
     void operator()(var *) {}
     void operator()(quantifier *) {}
-    void operator()(app * n) {
+    void operator()(app * n) { 
         if (n->get_family_id() == m.get_basic_family_id()) {
             switch (n->get_decl_kind()) {
             case OP_AND:
@@ -424,7 +424,7 @@ void goal2sat::collect_param_descrs(param_descrs & r) {
 }
 
 struct goal2sat::scoped_set_imp {
-    goal2sat * m_owner;
+    goal2sat * m_owner; 
     scoped_set_imp(goal2sat * o, goal2sat::imp * i):m_owner(o) {
         #pragma omp critical (goal2sat)
         {
@@ -464,19 +464,19 @@ struct sat2goal::imp {
         // The mapping is only created during the model conversion.
         expr_ref_vector             m_var2expr;
         ref<filter_model_converter> m_fmc; // filter for eliminating fresh variables introduced in the assertion-set --> sat conversion
-
+        
         sat_model_converter(ast_manager & m):
             m_var2expr(m) {
         }
-
+        
     public:
         sat_model_converter(ast_manager & m, sat::solver const & s):m_var2expr(m) {
             m_mc.copy(s.get_model_converter());
             m_fmc = alloc(filter_model_converter, m);
         }
-
+        
         ast_manager & m() { return m_var2expr.get_manager(); }
-
+        
         void insert(expr * atom, bool aux) {
             m_var2expr.push_back(atom);
             if (aux) {
@@ -485,7 +485,7 @@ struct sat2goal::imp {
                 m_fmc->insert(to_app(atom)->get_decl());
             }
         }
-
+        
         virtual void operator()(model_ref & md, unsigned goal_idx) {
             SASSERT(goal_idx == 0);
             TRACE("sat_mc", tout << "before sat_mc\n"; model_v2_pp(tout, *md); display(tout););
@@ -496,10 +496,10 @@ struct sat2goal::imp {
             //
             // Possible solution:
             //   model_converters reject any variable elimination that depends on a quantified expression.
-
+            
             model_evaluator ev(*md);
             ev.set_model_completion(false);
-
+            
             // create a SAT model using md
             sat::model sat_md;
             unsigned sz = m_var2expr.size();
@@ -507,17 +507,17 @@ struct sat2goal::imp {
             for (sat::bool_var v = 0; v < sz; v++) {
                 expr * atom = m_var2expr.get(v);
                 ev(atom, val);
-                if (m().is_true(val))
+                if (m().is_true(val)) 
                     sat_md.push_back(l_true);
                 else if (m().is_false(val))
                     sat_md.push_back(l_false);
-                else
+                else 
                     sat_md.push_back(l_undef);
             }
-
+            
             // apply SAT model converter
             m_mc(sat_md);
-
+            
             // register value of non-auxiliary boolean variables back into md
             sz = m_var2expr.size();
             for (sat::bool_var v = 0; v < sz; v++) {
@@ -531,21 +531,21 @@ struct sat2goal::imp {
                         md->register_decl(d, m().mk_false());
                 }
             }
-
+            
             // apply filter model converter
             (*m_fmc)(md);
             TRACE("sat_mc", tout << "after sat_mc\n"; model_v2_pp(tout, *md););
         }
-
+        
         virtual model_converter * translate(ast_translation & translator) {
             sat_model_converter * res = alloc(sat_model_converter, translator.to());
             res->m_fmc = static_cast<filter_model_converter*>(m_fmc->translate(translator));
             unsigned sz = m_var2expr.size();
-            for (unsigned i = 0; i < sz; i++)
+            for (unsigned i = 0; i < sz; i++) 
                 res->m_var2expr.push_back(translator(m_var2expr.get(i)));
             return res;
         }
-
+        
         void display(std::ostream & out) {
             out << "(sat-model-converter\n";
             m_mc.display(out);
@@ -569,7 +569,7 @@ struct sat2goal::imp {
     unsigned long long      m_max_memory;
     bool                    m_learned;
     volatile bool           m_cancel;
-
+    
     imp(ast_manager & _m, params_ref const & p):m(_m), m_lit2expr(m), m_cancel(false) {
         updt_params(p);
     }
@@ -680,7 +680,7 @@ void sat2goal::collect_param_descrs(param_descrs & r) {
 }
 
 struct sat2goal::scoped_set_imp {
-    sat2goal * m_owner;
+    sat2goal * m_owner; 
     scoped_set_imp(sat2goal * o, sat2goal::imp * i):m_owner(o) {
         #pragma omp critical (sat2goal)
         {
@@ -695,7 +695,7 @@ struct sat2goal::scoped_set_imp {
     }
 };
 
-void sat2goal::operator()(sat::solver const & t, atom2bool_var const & m, params_ref const & p,
+void sat2goal::operator()(sat::solver const & t, atom2bool_var const & m, params_ref const & p, 
                           goal & g, model_converter_ref & mc) {
     imp proc(g.m(), p);
     scoped_set_imp set(this, &proc);

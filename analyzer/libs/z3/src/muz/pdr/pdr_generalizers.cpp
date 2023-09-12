@@ -35,7 +35,7 @@ namespace pdr {
 
     // main propositional induction generalizer.
     // drop literals one by one from the core and check if the core is still inductive.
-    //
+    //    
     void core_bool_inductive_generalizer::operator()(model_node& n, expr_ref_vector& core, bool& uses_level) {
         if (core.size() <= 1) {
             return;
@@ -48,7 +48,7 @@ namespace pdr {
         while (i < core.size() && 1 < core.size() && (!m_failure_limit || num_failures <= m_failure_limit)) {
             expr_ref lit(m);
             lit = core[i].get();
-            core[i] = m.mk_true();
+            core[i] = m.mk_true();            
             if (n.pt().check_inductive(n.level(), core, uses_level)) {
                 num_failures = 0;
                 for (i = 0; i < core.size() && processed.contains(core[i].get()); ++i);
@@ -83,7 +83,7 @@ namespace pdr {
         obj_hashtable<expr> core_exprs, core1_exprs;
         datalog::set_union(core_exprs, core0);
         for (unsigned i = 0; i < old_core.size(); ++i) {
-            expr* lit = old_core[i].get();
+            expr* lit = old_core[i].get();             
             if (core_exprs.contains(lit)) {
                 expr_ref_vector core1(old_core);
                 core1[i] = core1.back();
@@ -102,18 +102,18 @@ namespace pdr {
     }
 
     // ------------------------
-    // core_farkas_generalizer
+    // core_farkas_generalizer 
 
-    //
+    // 
     // for each disjunct of core:
     //     weaken predecessor.
-    //
+    //    
 
     core_farkas_generalizer::core_farkas_generalizer(context& ctx, ast_manager& m, smt_params& p):
-        core_generalizer(ctx),
-        m_farkas_learner(p, m)
+        core_generalizer(ctx), 
+        m_farkas_learner(p, m) 
     {}
-
+    
     void core_farkas_generalizer::operator()(model_node& n, expr_ref_vector& core, bool& uses_level) {
         ast_manager& m  = n.pt().get_manager();
         if (core.empty()) return;
@@ -127,9 +127,9 @@ namespace pdr {
             expr_ref_vector lemmas(m);
             C = Bs[i].get();
             if (m_farkas_learner.get_lemma_guesses(A, B, lemmas)) {
-                TRACE("pdr",
+                TRACE("pdr", 
                       tout << "Old core:\n" << mk_pp(B, m) << "\n";
-                      tout << "New core:\n" << mk_pp(qe::mk_and(lemmas), m) << "\n";);
+                      tout << "New core:\n" << mk_pp(qe::mk_and(lemmas), m) << "\n";);            
                 Bs[i] = qe::mk_and(lemmas);
                 change = true;
             }
@@ -138,9 +138,9 @@ namespace pdr {
             C = qe::mk_or(Bs);
             TRACE("pdr", tout << "prop:\n" << mk_pp(A,m) << "\ngen:" << mk_pp(B, m) << "\nto: " << mk_pp(C, m) << "\n";);
             core.reset();
-            qe::flatten_and(C, core);
+            qe::flatten_and(C, core);    
             uses_level = true;
-        }
+        }    
     }
 
     void core_farkas_generalizer::collect_statistics(statistics& st) const {
@@ -164,7 +164,7 @@ namespace pdr {
     }
 
     // use the entire region as starting point for generalization.
-    //
+    // 
     //                           Constraints:
     // add_variables:            y = y1 + y2
     // core: Ay <= b -> conv1:   A*y1 <= b*sigma1
@@ -172,21 +172,21 @@ namespace pdr {
     //                           sigma2 > 0
     //                           1 = sigma1 + sigma2
     // A'y <= b'     -> conv2:   A'*y2 <= b'*sigma2
-    //
-    // If Constraints & Transition(y0, y) is unsat, then
+    // 
+    // If Constraints & Transition(y0, y) is unsat, then 
     // update with new core.
-    //
-    void core_convex_hull_generalizer::method1(model_node& n, expr_ref_vector const& core, bool uses_level, cores& new_cores) {
+    // 
+    void core_convex_hull_generalizer::method1(model_node& n, expr_ref_vector const& core, bool uses_level, cores& new_cores) {    
         expr_ref_vector conv2(m), fmls(m), fml1_2(m);
         bool change = false;
 
         if (core.empty()) {
             new_cores.push_back(std::make_pair(core, uses_level));
             return;
-        }
+        }        
         closure cl(n.pt(), m_is_closure);
 
-        expr_ref fml1 = qe::mk_and(core);
+        expr_ref fml1 = qe::mk_and(core);        
         expr_ref fml2 = n.pt().get_formulas(n.level(), false);
         fml1_2.push_back(fml1);
         fml1_2.push_back(0);
@@ -195,7 +195,7 @@ namespace pdr {
             fml2 = m.mk_not(fmls[i].get());
             fml1_2[1] = fml2;
             expr_ref state = cl(fml1_2);
-            TRACE("pdr",
+            TRACE("pdr", 
                   tout << "Check states:\n" << mk_pp(state, m) << "\n";
                   tout << "Old states:\n"   << mk_pp(fml2, m) << "\n";
                   );
@@ -206,13 +206,13 @@ namespace pdr {
                 new_cores.push_back(std::make_pair(conv2, uses_level1));
                 change = true;
                 expr_ref state1 = qe::mk_and(conv2);
-                TRACE("pdr",
+                TRACE("pdr", 
                       tout << mk_pp(state, m) << "\n";
                       tout << "Generalized to:\n" << mk_pp(state1, m) << "\n";);
                 IF_VERBOSE(0,
                            verbose_stream() << mk_pp(state, m) << "\n";
                            verbose_stream() << "Generalized to:\n" << mk_pp(state1, m) << "\n";);
-            }
+            }            
         }
         if (!m_is_closure || !change) {
             new_cores.push_back(std::make_pair(core, uses_level));
@@ -223,7 +223,7 @@ namespace pdr {
       Extract the lemmas from the transition relation that were used to establish unsatisfiability.
       Take convex closures of conbinations of these lemmas.
      */
-    void core_convex_hull_generalizer::method3(model_node& n, expr_ref_vector const& core, bool uses_level, cores& new_cores) {
+    void core_convex_hull_generalizer::method3(model_node& n, expr_ref_vector const& core, bool uses_level, cores& new_cores) {    
         TRACE("dl", tout << "method: generalize consequences of F(R)\n";
               for (unsigned i = 0; i < core.size(); ++i) {
                   tout << "B:" << mk_pp(core[i], m) << "\n";
@@ -235,7 +235,7 @@ namespace pdr {
         {
             n.pt().get_solver().set_consequences(&consequences);
             pred_transformer::scoped_farkas sf (n.pt(), true);
-            VERIFY(l_false == n.pt().is_reachable(n, &core1, uses_level1));
+            VERIFY(l_false == n.pt().is_reachable(n, &core1, uses_level1));        
             n.pt().get_solver().set_consequences(0);
         }
         IF_VERBOSE(0,
@@ -258,8 +258,8 @@ namespace pdr {
             }
             tmp = m.mk_and(cstate.size(), cstate.c_ptr());
             model_node nd(0, tmp, n.pt(), n.level());
-            pred_transformer::scoped_farkas sf (n.pt(), false);
-            VERIFY(l_false == n.pt().is_reachable(nd, &core1, uses_level1));
+            pred_transformer::scoped_farkas sf (n.pt(), false);            
+            VERIFY(l_false == n.pt().is_reachable(nd, &core1, uses_level1));            
         }
 
         // Create disjunction.
@@ -294,7 +294,7 @@ namespace pdr {
                 tmp = As[i].get();
                 As[i] = A;
                 unsat = is_unsat(As, B);
-                As[i] = tmp;
+                As[i] = tmp;                
                 if (unsat) {
                     IF_VERBOSE(0, verbose_stream() << "New convex: " << mk_pp(convA, m) << "\n";);
                     convA = A;
@@ -326,14 +326,14 @@ namespace pdr {
 
 
     // ---------------------------------
-    // core_arith_inductive_generalizer
+    // core_arith_inductive_generalizer 
     // NB. this is trying out some ideas for generalization in
     // an ad hoc specialized way. arith_inductive_generalizer should
     // not be used by default. It is a place-holder for a general purpose
     // extrapolator of a lattice basis.
 
     core_arith_inductive_generalizer::core_arith_inductive_generalizer(context& ctx):
-        core_generalizer(ctx),
+        core_generalizer(ctx), 
         m(ctx.get_manager()),
         a(m),
         m_refs(m) {}
@@ -345,7 +345,7 @@ namespace pdr {
         reset();
         expr_ref e(m), t1(m), t2(m), t3(m);
         rational r;
-
+        
         TRACE("pdr", for (unsigned i = 0; i < core.size(); ++i) { tout << mk_pp(core[i].get(), m) << "\n"; });
 
         svector<eq> eqs;
@@ -366,7 +366,7 @@ namespace pdr {
 
             new_core[l] = m.mk_true();
             new_core[k] = m.mk_true();
-
+            
             for (unsigned i = 0; i < new_core.size(); ++i) {
                 if (substitute_alias(r, x, new_core[i].get(), e)) {
                     new_core[i] = e;
@@ -380,22 +380,22 @@ namespace pdr {
 
         bool inductive = n.pt().check_inductive(n.level(), new_core, uses_level);
 
-        IF_VERBOSE(1,
+        IF_VERBOSE(1, 
                    verbose_stream() << (inductive?"":"non") << "inductive\n";
                    verbose_stream() << "old\n";
-                   for (unsigned j = 0; j < core.size(); ++j) {
-                       verbose_stream() << mk_pp(core[j].get(), m) << "\n";
+                   for (unsigned j = 0; j < core.size(); ++j) { 
+                       verbose_stream() << mk_pp(core[j].get(), m) << "\n"; 
                    }
                    verbose_stream() << "new\n";
-                   for (unsigned j = 0; j < new_core.size(); ++j) {
-                       verbose_stream() << mk_pp(new_core[j].get(), m) << "\n";
+                   for (unsigned j = 0; j < new_core.size(); ++j) { 
+                       verbose_stream() << mk_pp(new_core[j].get(), m) << "\n"; 
                    });
-
+        
         if (inductive) {
             core.reset();
             core.append(new_core);
         }
-    }
+    }    
 
     void core_arith_inductive_generalizer::insert_bound(bool is_lower, expr* x, rational const& r, unsigned i) {
         if (r.is_neg()) {
@@ -465,7 +465,7 @@ namespace pdr {
                             rw(e);
                             if (m.is_true(e)) {
                                 eqs.push_back(eq(t1, r, terms1[i].second, terms2[j].second));
-                                done = true;
+                                done = true;                                
                             }
                         }
                     }
@@ -494,7 +494,7 @@ namespace pdr {
                 result = a.mk_le(y, a.mk_sub(x, a.mk_numeral(rational(1), a.is_int(x))));
                 return true;
             }
-
+            
         }
         if (a.is_ge(e, y, z) && a.is_numeral(z, r2)) {
             if (r == r2) {
@@ -514,16 +514,16 @@ namespace pdr {
     }
 
 
-    //
-    //     < F, phi, i + 1>
+    // 
+    //     < F, phi, i + 1> 
     //             |
     //      < G, psi, i >
-    //
+    // 
     // where:
     //
     //  p(x) <- F(x,y,p,q)
     //  q(x) <- G(x,y)
-    //
+    // 
     // Hyp:
     //  Q_k(x) => phi(x)           j <= k <= i
     //  Q_k(x) => R_k(x)           j <= k <= i + 1
@@ -538,7 +538,7 @@ namespace pdr {
 
         //
         //  Create predicate Q_level
-        //
+        // 
         func_decl_ref mk_pred(unsigned level, func_decl* f) {
             func_decl_ref result(m);
             std::ostringstream name;
@@ -548,27 +548,27 @@ namespace pdr {
             return result;
         }
 
-        //
+        // 
         // Create formula exists y . z . F[Q_{level-1}, x, y, z]
         //
         expr_ref mk_transition_rule(
-            expr_ref_vector const& reps,
-            unsigned level,
-            datalog::rule const& rule)
+            expr_ref_vector const& reps, 
+            unsigned level, 
+            datalog::rule const& rule) 
         {
             expr_ref_vector conj(m), sub(m);
             expr_ref result(m);
             ptr_vector<sort> sorts;
             svector<symbol> names;
             unsigned ut_size = rule.get_uninterpreted_tail_size();
-            unsigned t_size = rule.get_tail_size();
+            unsigned t_size = rule.get_tail_size();              
             if (0 == level && 0 < ut_size) {
                 result = m.mk_false();
                 return result;
             }
             app* atom = rule.get_head();
             SASSERT(atom->get_num_args() == reps.size());
-
+            
             for (unsigned i = 0; i < reps.size(); ++i) {
                 expr* arg = atom->get_arg(i);
                 if (is_var(arg)) {
@@ -590,16 +590,16 @@ namespace pdr {
                 func_decl* head = atom->get_decl();
                 func_decl_ref fn = mk_pred(level-1, head);
                 conj.push_back(m.mk_app(fn, atom->get_num_args(), atom->get_args()));
-            }
+            }                        
             for (unsigned i = ut_size; i < t_size; i++) {
                 conj.push_back(rule.get_tail(i));
-            }
+            }         
             result = qe::mk_and(conj);
             if (!sub.empty()) {
                 expr_ref tmp = result;
                 var_subst(m, false)(tmp, sub.size(), sub.c_ptr(), result);
             }
-            get_free_vars(result, sorts);
+            get_free_vars(result, sorts);         
             for (unsigned i = 0; i < sorts.size(); ++i) {
                 if (!sorts[i]) {
                     sorts[i] = m.mk_bool_sort();
@@ -608,8 +608,8 @@ namespace pdr {
             }
             if (!sorts.empty()) {
                 sorts.reverse();
-                result = m.mk_exists(sorts.size(), sorts.c_ptr(), names.c_ptr(), result);
-            }
+                result = m.mk_exists(sorts.size(), sorts.c_ptr(), names.c_ptr(), result); 
+            }            
             return result;
         }
 
@@ -641,7 +641,7 @@ namespace pdr {
 
         //
         // extract transition axiom:
-        //
+        // 
         //  forall x . p_lvl(x) <=> exists y z . F[p_{lvl-1}(y), q_{lvl-1}(z), x]
         //
         expr_ref mk_transition_axiom(pred_transformer& pt, unsigned level) {
@@ -658,9 +658,9 @@ namespace pdr {
             return fml;
         }
 
-        //
+        // 
         // Create implication:
-        //  Q_level(x) => phi(x)
+        //  Q_level(x) => phi(x)    
         //
         expr_ref mk_predicate_property(unsigned level, pred_transformer& pt, expr* phi) {
             expr_ref_vector reps = mk_reps(pt);
@@ -668,7 +668,7 @@ namespace pdr {
             expr_ref fml(m);
             fml = m.mk_implies(m.mk_app(fn, reps.size(), reps.c_ptr()), phi);
             fml = bind_head(reps, fml);
-            return fml;
+            return fml;            
         }
 
 
@@ -676,16 +676,16 @@ namespace pdr {
     public:
         imp(context& ctx): m_ctx(ctx), pm(ctx.get_pdr_manager()), m(ctx.get_manager()) {}
 
-        //
+        // 
         // not exists y . F(x,y)
-        //
+        // 
         expr_ref mk_blocked_transition(pred_transformer& pt, unsigned level) {
             SASSERT(level > 0);
             expr_ref fml(m.mk_true(), m);
             expr_ref_vector reps = mk_reps(pt), fmls(m);
             ptr_vector<datalog::rule> const& rules = pt.rules();
             for (unsigned i = 0; i < rules.size(); ++i) {
-                fmls.push_back(m.mk_not(mk_transition_rule(reps, level, *rules[i])));
+                fmls.push_back(m.mk_not(mk_transition_rule(reps, level, *rules[i])));           
             }
             fml = qe::mk_and(fmls);
             TRACE("pdr", tout << mk_pp(fml, m) << "\n";);
@@ -702,7 +702,7 @@ namespace pdr {
             conjs.push_back(m.mk_not(mk_predicate_property(level, pt, phi)));
             pts.push_back(&pt);
             levels.push_back(level);
-            // Add I.H.
+            // Add I.H. 
             for (unsigned lvl = level-depth; lvl < level; ++lvl) {
                 if (lvl > 0) {
                     expr_ref psi = mk_blocked_transition(pt, lvl);
@@ -719,7 +719,7 @@ namespace pdr {
                 // Add transition definition and properties at level.
                 conjs.push_back(mk_transition_axiom(qt, lvl));
                 conjs.push_back(mk_predicate_property(lvl, qt, qt.get_formulas(lvl, true)));
-
+                
                 // Enqueue additional hypotheses
                 ptr_vector<datalog::rule> const& rules = qt.rules();
                 if (lvl + depth < level || lvl == 0) {
@@ -740,7 +740,7 @@ namespace pdr {
                             pts.push_back(rt);
                         }
                     }
-                }
+                }                
             }
 
             expr_ref result = qe::mk_and(conjs);
@@ -751,7 +751,7 @@ namespace pdr {
 
     //
     // Instantiate Peano induction schema.
-    //
+    // 
     void core_induction_generalizer::operator()(model_node& n, expr_ref_vector& core, bool& uses_level) {
         model_node* p = n.parent();
         if (p == 0) {

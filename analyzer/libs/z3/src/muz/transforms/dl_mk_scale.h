@@ -9,7 +9,7 @@ Abstract:
 
     Add scale factor to linear (Real) arithemetic Horn clauses.
     The transformation replaces occurrences of isolated constants by
-    a scale multiplied to each constant.
+    a scale multiplied to each constant. 
 
 Author:
 
@@ -43,7 +43,7 @@ namespace datalog {
         app_ref mk_constraint(unsigned num_vars, app* q);
     public:
         mk_scale(context & ctx, unsigned priority = 33039);
-        virtual ~mk_scale();
+        virtual ~mk_scale();        
         rule_set * operator()(rule_set const & source);
     };
 

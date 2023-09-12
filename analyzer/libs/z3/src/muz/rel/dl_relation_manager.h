@@ -67,9 +67,9 @@ namespace datalog {
 
         typedef u_map<relation_plugin *> kind2plugin_map;
 
-        typedef map<const table_plugin *, table_relation_plugin *, ptr_hash<const table_plugin>,
+        typedef map<const table_plugin *, table_relation_plugin *, ptr_hash<const table_plugin>, 
             ptr_eq<const table_plugin> > tp2trp_map;
-        typedef map<const relation_plugin *, finite_product_relation_plugin *, ptr_hash<const relation_plugin>,
+        typedef map<const relation_plugin *, finite_product_relation_plugin *, ptr_hash<const relation_plugin>, 
             ptr_eq<const relation_plugin> > rp2fprp_map;
 
         typedef map<func_decl *, relation_base *, ptr_hash<func_decl>, ptr_eq<func_decl> > relation_map;
@@ -106,8 +106,8 @@ namespace datalog {
         relation_manager(const relation_manager &); //private and undefined copy constructor
         relation_manager & operator=(const relation_manager &); //private and undefined operator=
     public:
-        relation_manager(context & ctx) :
-          m_context(ctx),
+        relation_manager(context & ctx) : 
+          m_context(ctx), 
           m_favourite_table_plugin(0),
           m_favourite_relation_plugin(0),
           m_next_table_fid(0),
@@ -134,7 +134,7 @@ namespace datalog {
         */
         void set_predicate_kind(func_decl * pred, family_id kind);
         /**
-           Return the relation kind that was requested to represent the predicate \c pred by
+           Return the relation kind that was requested to represent the predicate \c pred by 
            \c set_predicate_kind. If there was no such request, return \c null_family_id.
         */
         family_id get_requested_predicate_kind(func_decl * pred);
@@ -148,7 +148,7 @@ namespace datalog {
 
         bool is_saturated(func_decl * pred) const { return m_saturated_rels.contains(pred); }
         void mark_saturated(func_decl * pred) { m_saturated_rels.insert(pred); }
-        void reset_saturated_marks() {
+        void reset_saturated_marks() { 
             if(!m_saturated_rels.empty()) {
                 m_saturated_rels.reset();
             }
@@ -176,7 +176,7 @@ namespace datalog {
         relation_plugin * get_relation_plugin(symbol const& s);
         relation_plugin & get_relation_plugin(family_id kind);
         table_relation_plugin & get_table_relation_plugin(table_plugin & tp);
-        bool try_get_finite_product_relation_plugin(const relation_plugin & inner,
+        bool try_get_finite_product_relation_plugin(const relation_plugin & inner, 
             finite_product_relation_plugin * & res);
 
         table_base * mk_empty_table(const table_signature & s);
@@ -202,9 +202,9 @@ namespace datalog {
         void relation_to_table(const relation_sort & sort, const relation_element & from, table_element & to);
 
         void table_to_relation(const relation_sort & sort, const table_element & from, relation_element & to);
-        void table_to_relation(const relation_sort & sort, const table_element & from,
+        void table_to_relation(const relation_sort & sort, const table_element & from, 
             const relation_fact::el_proxy & to);
-        void table_to_relation(const relation_sort & sort, const table_element & from,
+        void table_to_relation(const relation_sort & sort, const table_element & from, 
             relation_element_ref & to);
 
         bool relation_sort_to_table(const relation_sort & from, table_sort & to);
@@ -217,9 +217,9 @@ namespace datalog {
         */
         bool relation_signature_to_table(const relation_signature & from, table_signature & to);
 
-        void relation_fact_to_table(const relation_signature & s, const relation_fact & from,
+        void relation_fact_to_table(const relation_signature & s, const relation_fact & from, 
                 table_fact & to);
-        void table_fact_to_relation(const relation_signature & s, const table_fact & from,
+        void table_fact_to_relation(const relation_signature & s, const table_fact & from, 
             relation_fact & to);
 
 
@@ -232,19 +232,19 @@ namespace datalog {
         //
         // -----------------------------------
 
-        //TODO: If multiple operation implementations are available, we may want to do something to
+        //TODO: If multiple operation implementations are available, we may want to do something to 
         //select the best one here.
 
         /**
-           If \c allow_product_relation is true, we will create a join that builds a product relation,
-           if there is no other way to do the join. If \c allow_product_relation is false, we will return
+           If \c allow_product_relation is true, we will create a join that builds a product relation, 
+           if there is no other way to do the join. If \c allow_product_relation is false, we will return 
            zero in that case.
         */
         relation_join_fn * mk_join_fn(const relation_base & t1, const relation_base & t2,
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, bool allow_product_relation=true);
 
         relation_join_fn * mk_join_fn(const relation_base & t1, const relation_base & t2,
-                const unsigned_vector & cols1, const unsigned_vector & cols2, bool allow_product_relation=true) {
+                const unsigned_vector & cols1, const unsigned_vector & cols2, bool allow_product_relation=true) { 
             SASSERT(cols1.size()==cols2.size());
             return mk_join_fn(t1, t2, cols1.size(), cols1.c_ptr(), cols2.c_ptr(), allow_product_relation);
         }
@@ -255,30 +255,30 @@ namespace datalog {
 
             The \c removed_cols cotains columns of table \c t in strictly ascending order.
             */
-        relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt,
+        relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
 
-        relation_transformer_fn * mk_project_fn(const relation_base & t, const unsigned_vector & removed_cols) {
-            return mk_project_fn(t, removed_cols.size(), removed_cols.c_ptr());
+        relation_transformer_fn * mk_project_fn(const relation_base & t, const unsigned_vector & removed_cols) { 
+            return mk_project_fn(t, removed_cols.size(), removed_cols.c_ptr()); 
         }
 
         /**
             \brief Return an operation that is a composition of a join an a project operation.
         */
         relation_join_fn * mk_join_project_fn(const relation_base & t1, const relation_base & t2,
-                unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2,
+                unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2, 
                 unsigned removed_col_cnt, const unsigned * removed_cols, bool allow_product_relation_join=true);
 
         relation_join_fn * mk_join_project_fn(const relation_base & t1, const relation_base & t2,
-                const unsigned_vector & cols1, const unsigned_vector & cols2,
+                const unsigned_vector & cols1, const unsigned_vector & cols2, 
                 const unsigned_vector & removed_cols, bool allow_product_relation_join=true) {
-            return mk_join_project_fn(t1, t2, cols1.size(), cols1.c_ptr(), cols2.c_ptr(), removed_cols.size(),
+            return mk_join_project_fn(t1, t2, cols1.size(), cols1.c_ptr(), cols2.c_ptr(), removed_cols.size(), 
                 removed_cols.c_ptr(), allow_product_relation_join);
         }
 
-        relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len,
+        relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle);
-        relation_transformer_fn * mk_rename_fn(const relation_base & t, const unsigned_vector & permutation_cycle) {
+        relation_transformer_fn * mk_rename_fn(const relation_base & t, const unsigned_vector & permutation_cycle) { 
             return mk_rename_fn(t, permutation_cycle.size(), permutation_cycle.c_ptr());
         }
 
@@ -286,9 +286,9 @@ namespace datalog {
            Like \c mk_rename_fn, only the permutation is not specified by cycle, but by a permutated array
            of column number.
         */
-        relation_transformer_fn * mk_permutation_rename_fn(const relation_base & t,
+        relation_transformer_fn * mk_permutation_rename_fn(const relation_base & t, 
             const unsigned * permutation);
-        relation_transformer_fn * mk_permutation_rename_fn(const relation_base & t,
+        relation_transformer_fn * mk_permutation_rename_fn(const relation_base & t, 
                 const unsigned_vector permutation) {
             SASSERT(t.get_signature().size()==permutation.size());
             return mk_permutation_rename_fn(t, permutation.c_ptr());
@@ -321,33 +321,33 @@ namespace datalog {
                 }
             }
 
-            If rules are compiled with all_or_nothing_deltas parameter set to true, a sufficient
+            If rules are compiled with all_or_nothing_deltas parameter set to true, a sufficient 
             post-condition is
             Union(tgt, src, delta):
                 tgt_1==tgt_0 \union src
                 (tgt_1==tgt_0 ||  delta_0 is non-empty) <=> delta_1 is non-empty
             */
-        relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src,
+        relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
 
-        relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src) {
+        relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src) { 
             return mk_union_fn(tgt, src, static_cast<relation_base *>(0));
         }
 
         /**
-            Similar to union, but this one should be used inside loops to allow for abstract
+            Similar to union, but this one should be used inside loops to allow for abstract 
             domain convergence.
         */
-        relation_union_fn * mk_widen_fn(const relation_base & tgt, const relation_base & src,
-            const relation_base * delta);
+        relation_union_fn * mk_widen_fn(const relation_base & tgt, const relation_base & src, 
+            const relation_base * delta); 
 
-        relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt,
+        relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * identical_cols);
         relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, const unsigned_vector identical_cols) {
             return mk_filter_identical_fn(t, identical_cols.size(), identical_cols.c_ptr());
         }
 
-        relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value,
+        relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value, 
             unsigned col);
 
         relation_mutator_fn * mk_filter_interpreted_fn(const relation_base & t, app * condition);
@@ -359,37 +359,37 @@ namespace datalog {
             \brief Operations that returns all rows of \c t for which is column \c col equal to \c value
             with the column \c col removed.
 
-            This operation can often be efficiently implemented and is useful for evaluating rules
+            This operation can often be efficiently implemented and is useful for evaluating rules 
             of the form
 
             F(x):-P("c",x).
             */
-        relation_transformer_fn * mk_select_equal_and_project_fn(const relation_base & t,
+        relation_transformer_fn * mk_select_equal_and_project_fn(const relation_base & t, 
                 const relation_element & value, unsigned col);
 
 
-        relation_intersection_filter_fn * mk_filter_by_intersection_fn(const relation_base & tgt,
-            const relation_base & src, unsigned joined_col_cnt,
+        relation_intersection_filter_fn * mk_filter_by_intersection_fn(const relation_base & tgt, 
+            const relation_base & src, unsigned joined_col_cnt, 
             const unsigned * tgt_cols, const unsigned * src_cols);
-        relation_intersection_filter_fn * mk_filter_by_intersection_fn(const relation_base & tgt,
-                const relation_base & src, const unsigned_vector & tgt_cols, const unsigned_vector & src_cols) {
+        relation_intersection_filter_fn * mk_filter_by_intersection_fn(const relation_base & tgt, 
+                const relation_base & src, const unsigned_vector & tgt_cols, const unsigned_vector & src_cols) { 
             SASSERT(tgt_cols.size()==src_cols.size());
             return mk_filter_by_intersection_fn(tgt, src, tgt_cols.size(), tgt_cols.c_ptr(), src_cols.c_ptr());
         }
-        relation_intersection_filter_fn * mk_filter_by_intersection_fn(const relation_base & tgt,
+        relation_intersection_filter_fn * mk_filter_by_intersection_fn(const relation_base & tgt, 
                 const relation_base & src);
 
         /**
             The filter_by_negation postcondition:
-            filter_by_negation(tgt, neg, columns in tgt: c1,...,cN,
+            filter_by_negation(tgt, neg, columns in tgt: c1,...,cN, 
                                             corresponding columns in neg: d1,...,dN):
             tgt_1:={x: x\in tgt_0 && ! \exists y: ( y \in neg & pi_c1(x)= pi_d1(y) & ... & pi_cN(x)= pi_dN(y) ) }
             */
-        relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t,
-            const relation_base & negated_obj, unsigned joined_col_cnt,
+        relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t, 
+            const relation_base & negated_obj, unsigned joined_col_cnt, 
             const unsigned * t_cols, const unsigned * negated_cols);
-        relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t,
-                const relation_base & negated_obj, const unsigned_vector & t_cols,
+        relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t, 
+                const relation_base & negated_obj, const unsigned_vector & t_cols, 
                 const unsigned_vector & negated_cols) {
             SASSERT(t_cols.size()==negated_cols.size());
             return mk_filter_by_negation_fn(t, negated_obj, t_cols.size(), t_cols.c_ptr(), negated_cols.c_ptr());
@@ -407,7 +407,7 @@ namespace datalog {
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2);
 
         table_join_fn * mk_join_fn(const table_base & t1, const table_base & t2,
-                const unsigned_vector & cols1, const unsigned_vector & cols2) {
+                const unsigned_vector & cols1, const unsigned_vector & cols2) { 
             SASSERT(cols1.size()==cols2.size());
             return mk_join_fn(t1, t2, cols1.size(), cols1.c_ptr(), cols2.c_ptr());
         }
@@ -418,44 +418,44 @@ namespace datalog {
 
             The \c removed_cols cotains columns of table \c t in strictly ascending order.
 
-            If a project operation removes a non-functional column, all functional columns become
+            If a project operation removes a non-functional column, all functional columns become 
             non-functional (so that none of the values in functional columns are lost)
             */
-        table_transformer_fn * mk_project_fn(const table_base & t, unsigned col_cnt,
+        table_transformer_fn * mk_project_fn(const table_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
 
-        table_transformer_fn * mk_project_fn(const table_base & t, const unsigned_vector & removed_cols) {
-            return mk_project_fn(t, removed_cols.size(), removed_cols.c_ptr());
+        table_transformer_fn * mk_project_fn(const table_base & t, const unsigned_vector & removed_cols) { 
+            return mk_project_fn(t, removed_cols.size(), removed_cols.c_ptr()); 
         }
 
         /**
             \brief Return an operation that is a composition of a join an a project operation.
 
-            This operation is equivalent to the two operations performed separately, unless functional
+            This operation is equivalent to the two operations performed separately, unless functional 
             columns are involved.
-
-            The ordinary project would make all of the functional columns into non-functional if any
-            non-functional column was removed. In function, however, we group columns into equivalence
-            classes (according to the equalities in \c cols1 and \c cols2) and make everything non-functional
-            only if some equivalence class of non-functional columns would have no non-functional columns
-            remain after the removal.
-
+               
+            The ordinary project would make all of the functional columns into non-functional if any 
+            non-functional column was removed. In function, however, we group columns into equivalence 
+            classes (according to the equalities in \c cols1 and \c cols2) and make everything non-functional 
+            only if some equivalence class of non-functional columns would have no non-functional columns 
+            remain after the removal. 
+            
             This behavior is implemented in the \c table_signature::from_join_project function.
         */
         table_join_fn * mk_join_project_fn(const table_base & t1, const table_base & t2,
-                unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2,
+                unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2, 
                 unsigned removed_col_cnt, const unsigned * removed_cols);
 
         table_join_fn * mk_join_project_fn(const table_base & t1, const table_base & t2,
-                const unsigned_vector & cols1, const unsigned_vector & cols2,
+                const unsigned_vector & cols1, const unsigned_vector & cols2, 
                 const unsigned_vector & removed_cols) {
-            return mk_join_project_fn(t1, t2, cols1.size(), cols1.c_ptr(), cols2.c_ptr(), removed_cols.size(),
+            return mk_join_project_fn(t1, t2, cols1.size(), cols1.c_ptr(), cols2.c_ptr(), removed_cols.size(), 
                 removed_cols.c_ptr());
         }
 
-        table_transformer_fn * mk_rename_fn(const table_base & t, unsigned permutation_cycle_len,
+        table_transformer_fn * mk_rename_fn(const table_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle);
-        table_transformer_fn * mk_rename_fn(const table_base & t, const unsigned_vector & permutation_cycle) {
+        table_transformer_fn * mk_rename_fn(const table_base & t, const unsigned_vector & permutation_cycle) { 
             return mk_rename_fn(t, permutation_cycle.size(), permutation_cycle.c_ptr());
         }
 
@@ -496,33 +496,33 @@ namespace datalog {
                 }
             }
 
-            If rules are compiled with all_or_nothing_deltas parameter set to true, a sufficient
+            If rules are compiled with all_or_nothing_deltas parameter set to true, a sufficient 
             post-condition is
             Union(tgt, src, delta):
                 tgt_1==tgt_0 \union src
                 (tgt_1==tgt_0 ||  delta_0 is non-empty) <=> delta_1 is non-empty
             */
-        table_union_fn * mk_union_fn(const table_base & tgt, const table_base & src,
+        table_union_fn * mk_union_fn(const table_base & tgt, const table_base & src, 
             const table_base * delta);
 
-        table_union_fn * mk_union_fn(const table_base & tgt, const table_base & src) {
+        table_union_fn * mk_union_fn(const table_base & tgt, const table_base & src) { 
             return mk_union_fn(tgt, src, static_cast<table_base *>(0));
         }
 
         /**
-            Similar to union, but this one should be used inside loops to allow for abstract
+            Similar to union, but this one should be used inside loops to allow for abstract 
             domain convergence.
         */
-        table_union_fn * mk_widen_fn(const table_base & tgt, const table_base & src,
-            const table_base * delta);
+        table_union_fn * mk_widen_fn(const table_base & tgt, const table_base & src, 
+            const table_base * delta); 
 
-        table_mutator_fn * mk_filter_identical_fn(const table_base & t, unsigned col_cnt,
+        table_mutator_fn * mk_filter_identical_fn(const table_base & t, unsigned col_cnt, 
             const unsigned * identical_cols);
         table_mutator_fn * mk_filter_identical_fn(const table_base & t, const unsigned_vector identical_cols) {
             return mk_filter_identical_fn(t, identical_cols.size(), identical_cols.c_ptr());
         }
 
-        table_mutator_fn * mk_filter_equal_fn(const table_base & t, const table_element & value,
+        table_mutator_fn * mk_filter_equal_fn(const table_base & t, const table_element & value, 
             unsigned col);
 
         table_mutator_fn * mk_filter_interpreted_fn(const table_base & t, app * condition);
@@ -534,31 +534,31 @@ namespace datalog {
             \brief Operations that returns all rows of \c t for which is column \c col equal to \c value
             with the column \c col removed.
 
-            This operation can often be efficiently implemented and is useful for evaluating rules
+            This operation can often be efficiently implemented and is useful for evaluating rules 
             of the form
 
             F(x):-P("c",x).
             */
-        table_transformer_fn * mk_select_equal_and_project_fn(const table_base & t,
+        table_transformer_fn * mk_select_equal_and_project_fn(const table_base & t, 
                 const table_element & value, unsigned col);
 
-        table_intersection_filter_fn * mk_filter_by_intersection_fn(const table_base & t,
+        table_intersection_filter_fn * mk_filter_by_intersection_fn(const table_base & t, 
             const table_base & src, unsigned joined_col_cnt, const unsigned * t_cols, const unsigned * src_cols);
-        table_intersection_filter_fn * mk_filter_by_intersection_fn(const table_base & t,
-                const table_base & src, const unsigned_vector & t_cols, const unsigned_vector & src_cols) {
+        table_intersection_filter_fn * mk_filter_by_intersection_fn(const table_base & t, 
+                const table_base & src, const unsigned_vector & t_cols, const unsigned_vector & src_cols) { 
             SASSERT(t_cols.size()==src_cols.size());
             return mk_filter_by_intersection_fn(t, src, t_cols.size(), t_cols.c_ptr(), src_cols.c_ptr());
         }
 
         /**
             The filter_by_negation postcondition:
-            filter_by_negation(tgt, neg, columns in tgt: c1,...,cN,
+            filter_by_negation(tgt, neg, columns in tgt: c1,...,cN, 
                                             corresponding columns in neg: d1,...,dN):
             tgt_1:={x: x\in tgt_0 && ! \exists y: ( y \in neg & pi_c1(x)= pi_d1(y) & ... & pi_cN(x)= pi_dN(y) ) }
             */
-        table_intersection_filter_fn * mk_filter_by_negation_fn(const table_base & t, const table_base & negated_obj,
+        table_intersection_filter_fn * mk_filter_by_negation_fn(const table_base & t, const table_base & negated_obj, 
             unsigned joined_col_cnt, const unsigned * t_cols, const unsigned * negated_cols);
-        table_intersection_filter_fn * mk_filter_by_negation_fn(const table_base & t, const table_base & negated_obj,
+        table_intersection_filter_fn * mk_filter_by_negation_fn(const table_base & t, const table_base & negated_obj, 
                 const unsigned_vector & t_cols, const unsigned_vector & negated_cols) {
             SASSERT(t_cols.size()==negated_cols.size());
             return mk_filter_by_negation_fn(t, negated_obj, t_cols.size(), t_cols.c_ptr(), negated_cols.c_ptr());
@@ -568,9 +568,9 @@ namespace datalog {
            combined filter by negation with a join.
          */
         table_intersection_join_filter_fn* mk_filter_by_negated_join_fn(
-            const table_base & t,
-            const table_base & src1,
-            const table_base & src2,
+            const table_base & t, 
+            const table_base & src1, 
+            const table_base & src2, 
             unsigned_vector const& t_cols,
             unsigned_vector const& src_cols,
             unsigned_vector const& src1_cols,
@@ -589,7 +589,7 @@ namespace datalog {
 
             Created object takes ownership of the \c mapper object.
         */
-        virtual table_transformer_fn * mk_project_with_reduce_fn(const table_base & t, unsigned col_cnt,
+        virtual table_transformer_fn * mk_project_with_reduce_fn(const table_base & t, unsigned col_cnt, 
             const unsigned * removed_cols, table_row_pair_reduce_fn * reducer);
 
 
@@ -604,7 +604,7 @@ namespace datalog {
 
         std::string to_nice_string(const relation_element & el) const;
         /**
-           This one may give a nicer representation of \c el than the
+           This one may give a nicer representation of \c el than the 
            \c to_nice_string(const relation_element & el) function, by unsing the information about the sort
            of the element.
         */
@@ -617,8 +617,8 @@ namespace datalog {
         void display_output_tables(rule_set const& rules, std::ostream & out) const;
 
     private:
-        relation_intersection_filter_fn * try_mk_default_filter_by_intersection_fn(const relation_base & t,
-            const relation_base & src, unsigned joined_col_cnt,
+        relation_intersection_filter_fn * try_mk_default_filter_by_intersection_fn(const relation_base & t, 
+            const relation_base & src, unsigned joined_col_cnt, 
             const unsigned * t_cols, const unsigned * src_cols);
 
     };
@@ -672,7 +672,7 @@ namespace datalog {
                 m_kind_specs.insert(sig, alloc(family_id2spec));
             }
             family_id_idx_store & ids = *e->get_data().m_value;
-
+            
             unsigned res_idx;
             if(!ids.find(spec, res_idx)) {
                 res_idx = ids.size();

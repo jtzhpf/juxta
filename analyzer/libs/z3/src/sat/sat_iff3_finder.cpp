@@ -13,9 +13,9 @@ Abstract:
       ~x \/ ~l1 \/ l2
        x \/ l1  \/ l2
        x \/ ~l1 \/ ~l2
-
+       
     The basic idea is to sort the watch lists.
-
+    
     This information can be used to propagate equivalences
     during probing (and search).
 
@@ -78,7 +78,7 @@ namespace sat {
             return wlist.contains(k);
         iff3_lt lt;
         int low  = 0;
-        int high = wlist.size();
+        int high = wlist.size(); 
         while (true) {
             int mid = low + ((high - low) / 2);
             watched const & m = wlist[mid];
@@ -117,7 +117,7 @@ namespace sat {
     void iff3_finder::operator()() {
         TRACE("iff3_finder", tout << "starting iff3_finder\n";);
         sort_watches();
-
+        
         unsigned counter = 0;
 
         svector<bool>   found;
@@ -132,8 +132,8 @@ namespace sat {
             literal neg_x(x, true);
             watch_list & pos_wlist = s.get_wlist(neg_x);
             watch_list & neg_wlist = s.get_wlist(pos_x);
-            //
-            TRACE("iff3_finder",
+            // 
+            TRACE("iff3_finder", 
                   tout << "visiting: " << x << "\n";
                   tout << "pos:\n";
                   display(tout, s.m_cls_allocator, pos_wlist);
@@ -210,5 +210,5 @@ namespace sat {
             }
         }
     }
-
+    
 };

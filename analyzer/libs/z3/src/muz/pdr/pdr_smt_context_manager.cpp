@@ -36,7 +36,7 @@ namespace pdr {
     bool smt_context::is_aux_predicate(func_decl* p) {
         return m_parent.is_aux_predicate(p);
     }
-
+    
     smt_context::scoped::scoped(smt_context& ctx): m_ctx(ctx) {
         SASSERT(!m_ctx.m_in_delay_scope);
         SASSERT(!m_ctx.m_pushed);
@@ -46,10 +46,10 @@ namespace pdr {
     smt_context::scoped::~scoped() {
         SASSERT(m_ctx.m_in_delay_scope);
         if (m_ctx.m_pushed) {
-            m_ctx.pop();
+            m_ctx.pop(); 
             m_ctx.m_pushed = false;
         }
-        m_ctx.m_in_delay_scope = false;
+        m_ctx.m_in_delay_scope = false;        
     }
 
 
@@ -79,7 +79,7 @@ namespace pdr {
         if (!m.is_true(m_pred)) {
             assumptions.push_back(m_pred);
         }
-        TRACE("pdr_check",
+        TRACE("pdr_check", 
               {
                   ast_smt_pp pp(m);
                   for (unsigned i = 0; i < m_context.size(); ++i) {
@@ -114,20 +114,20 @@ namespace pdr {
     }
 
     smt_context_manager::smt_context_manager(smt_params& fp, unsigned max_num_contexts, ast_manager& m):
-        m_fparams(fp),
-        m(m),
+        m_fparams(fp), 
+        m(m), 
         m_max_num_contexts(max_num_contexts),
-        m_num_contexts(0),
+        m_num_contexts(0), 
         m_predicate_list(m) {
     }
-
-
+    
+    
     smt_context_manager::~smt_context_manager() {
         TRACE("pdr",tout << "\n";);
         std::for_each(m_contexts.begin(), m_contexts.end(), delete_proc<smt::kernel>());
     }
 
-    smt_context* smt_context_manager::mk_fresh() {
+    smt_context* smt_context_manager::mk_fresh() {        
         ++m_num_contexts;
         app_ref pred(m);
         smt::kernel * ctx = 0;
@@ -142,12 +142,12 @@ namespace pdr {
             }
             std::stringstream name;
             name << "#context" << m_num_contexts;
-            pred = m.mk_const(symbol(name.str().c_str()), m.mk_bool_sort());
+            pred = m.mk_const(symbol(name.str().c_str()), m.mk_bool_sort());    
             m_predicate_list.push_back(pred);
             m_predicate_set.insert(pred->get_decl());
             ctx = m_contexts[(m_num_contexts-1)%m_max_num_contexts];
-        }
-        return  alloc(_smt_context, *ctx, *this, pred);
+        }        
+        return  alloc(_smt_context, *ctx, *this, pred);   
     }
 
     void smt_context_manager::collect_statistics(statistics& st) const {

@@ -52,10 +52,10 @@ bool horn_subsume_model_converter::mk_horn(
 
     pred = head->get_decl();
     unsigned arity = head->get_num_args();
-
+    
     get_free_vars(head, sorts);
     get_free_vars(body, sorts);
-
+    
     if (arity == 0 && sorts.empty()) {
         body_res = body;
         return true;
@@ -65,7 +65,7 @@ bool horn_subsume_model_converter::mk_horn(
     for (unsigned i = 0; i < sorts.size(); ++i) {
         if (!sorts[i]) {
             sorts[i] = m.mk_bool_sort();
-        }
+        }            
         names.push_back(symbol(i));
     }
     names.reverse();
@@ -75,7 +75,7 @@ bool horn_subsume_model_converter::mk_horn(
         expr* arg = head->get_arg(i);
         var_ref v(m);
         v = m.mk_var(sorts.size()+i, m.get_sort(arg));
-
+        
         if (is_var(arg)) {
             unsigned w = to_var(arg)->get_idx();
             if (w >= subst.size()) {
@@ -99,16 +99,16 @@ bool horn_subsume_model_converter::mk_horn(
     if (!subst.empty()) {
         expr_ref tmp(body_expr);
         vs(tmp, subst.size(), subst.c_ptr(), body_expr);
-    }
+    }    
 
     if (sorts.empty()) {
         SASSERT(subst.empty());
         body_res = body_expr;
-    }
+    }   
     else {
-        body_res  = m.mk_exists(sorts.size(), sorts.c_ptr(), names.c_ptr(), body_expr.get());
+        body_res  = m.mk_exists(sorts.size(), sorts.c_ptr(), names.c_ptr(), body_expr.get()); 
         m_rewrite(body_res);
-
+        
     }
     TRACE("mc",
           tout << mk_pp(head, m) << " :- " << mk_pp(body, m) << "\n";
@@ -124,13 +124,13 @@ bool horn_subsume_model_converter::mk_horn(
 
     // formula is closed.
     DEBUG_CODE(get_free_vars(clause, sorts); SASSERT(sorts.empty()););
-
+        
     while (is_quantifier(clause) && to_quantifier(clause)->is_forall()) {
         quantifier* q = to_quantifier(clause);
         clause = q->get_expr();
     }
     expr* e1, *e2;
-    if (m.is_implies(clause, e1, e2)) {
+    if (m.is_implies(clause, e1, e2)) {        
         if (!is_uninterp(e2)) {
             return false;
         }
@@ -138,7 +138,7 @@ bool horn_subsume_model_converter::mk_horn(
     }
     else if (m.is_or(clause)) {
         // todo?
-        return false;
+        return false;        
     }
     else {
         return false;
@@ -148,20 +148,20 @@ bool horn_subsume_model_converter::mk_horn(
 void horn_subsume_model_converter::add_default_proc::operator()(app* n) {
 
     //
-    // predicates that have not been assigned values
+    // predicates that have not been assigned values 
     // in the Horn model are assumed false.
     //
-    if (m.is_bool(n) &&
+    if (m.is_bool(n) && 
         !m_md->has_interpretation(n->get_decl()) &&
         (n->get_family_id() == null_family_id)) {
         TRACE("mc", tout << "adding: " << n->get_decl()->get_name() << "\n";);
         if (n->get_decl()->get_arity() == 0) {
             m_md->register_decl(n->get_decl(), m.mk_false());
         }
-        else {
+        else { 
             func_interp* fi = alloc(func_interp, m, n->get_decl()->get_arity());
             fi->set_else(m.mk_false());
-            m_md->register_decl(n->get_decl(), fi);
+            m_md->register_decl(n->get_decl(), fi);            
         }
     }
 }
@@ -191,13 +191,13 @@ void horn_subsume_model_converter::operator()(model_ref& mr) {
         unsigned arity = h->get_arity();
         add_default_false_interpretation(body, mr);
         SASSERT(m.is_bool(body));
-
+                
         TRACE("mc", tout << "eval: " << h->get_name() << "\n" << mk_pp(body, m) << "\n";);
         expr_ref tmp(body);
         mr->eval(tmp, body);
-
+        
         TRACE("mc", tout << "to:\n" << mk_pp(body, m) << "\n";);
-
+                
         if (arity == 0) {
             expr* e = mr->get_const_interp(h);
             if (e) {

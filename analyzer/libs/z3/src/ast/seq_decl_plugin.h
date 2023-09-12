@@ -60,12 +60,12 @@ enum seq_op_kind {
     OP_RE_OF_SEQ,
     OP_RE_OF_PRED,
     OP_RE_MEMBER,
-
+    
     LAST_SEQ_OP
 };
 
 
-
+    
 class seq_decl_plugin : public decl_plugin {
     struct psig {
         symbol          m_name;
@@ -100,23 +100,23 @@ public:
 
     virtual ~seq_decl_plugin() {}
     virtual void finalize();
-
+    
     virtual decl_plugin * mk_fresh() { return alloc(seq_decl_plugin); }
-
+    
     virtual sort * mk_sort(decl_kind k, unsigned num_parameters, parameter const * parameters);
-
-    virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+    
+    virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                      unsigned arity, sort * const * domain, sort * range);
-
+    
     virtual void get_op_names(svector<builtin_name> & op_names, symbol const & logic);
-
+    
     virtual void get_sort_names(svector<builtin_name> & sort_names, symbol const & logic);
-
+    
     virtual bool is_value(app * e) const;
 
     virtual bool is_unique_value(app * e) const { return is_value(e); }
 
-
+    
 };
 
 #endif /* _SEQ_DECL_PLUGIN_H_ */

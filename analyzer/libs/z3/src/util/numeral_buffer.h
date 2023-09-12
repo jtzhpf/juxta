@@ -35,18 +35,18 @@ public:
     ~numeral_buffer() {
         reset();
     }
-
+    
     NumeralManager & m() const { return m_manager; }
 
     unsigned size() const { return m_buffer.size(); }
-
+    
     bool empty() const { return m_buffer.empty(); }
 
     void push_back(Numeral const & num) {
         m_buffer.push_back(Numeral());
         m().set(m_buffer.back(), num);
     }
-
+    
     void pop_back() {
         m().del(m_buffer.back());
         m_buffer.pop_back();
@@ -59,7 +59,7 @@ public:
     Numeral const & back() const {
         return m_buffer.back();
     }
-
+    
     Numeral const & operator[](unsigned idx) const {
         return m_buffer[idx];
     }

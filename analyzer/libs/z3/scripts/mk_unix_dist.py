@@ -1,7 +1,7 @@
 ############################################
 # Copyright (c) 2013 Microsoft Corporation
-#
-# Scripts for automatically generating
+# 
+# Scripts for automatically generating 
 # Linux/OSX/BSD distribution zip files.
 #
 # Author: Leonardo de Moura (leonardo)
@@ -58,7 +58,7 @@ def display_help():
 def parse_options():
     global FORCE_MK, JAVA_ENABLED, GIT_HASH
     path = BUILD_DIR
-    options, remainder = getopt.gnu_getopt(sys.argv[1:], 'b:hsf', ['build=',
+    options, remainder = getopt.gnu_getopt(sys.argv[1:], 'b:hsf', ['build=', 
                                                                    'help',
                                                                    'silent',
                                                                    'force',
@@ -98,7 +98,7 @@ def mk_build_dir(path):
             opts.append('--githash=%s' % mk_util.git_hash())
         if subprocess.call(opts) != 0:
             raise MKException("Failed to generate build directory at '%s'" % path)
-
+    
 # Create build directories
 def mk_build_dirs():
     mk_build_dir(BUILD_DIR)

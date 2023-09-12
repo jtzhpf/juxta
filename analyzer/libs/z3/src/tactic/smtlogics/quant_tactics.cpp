@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Tactics for benchmarks containing quantifiers.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-02-21.
@@ -31,7 +31,7 @@ static tactic * mk_quant_preprocessor(ast_manager & m, bool disable_gaussian = f
     pull_ite_p.set_bool("pull_cheap_ite", true);
     pull_ite_p.set_bool("local_ctx", true);
     pull_ite_p.set_uint("local_ctx_limit", 10000000);
-
+    
     params_ref ctx_simp_p;
     ctx_simp_p.set_uint("max_depth", 30);
     ctx_simp_p.set_uint("max_steps", 5000000);
@@ -41,15 +41,15 @@ static tactic * mk_quant_preprocessor(ast_manager & m, bool disable_gaussian = f
         solve_eqs = mk_skip_tactic();
     else
         solve_eqs = when(mk_not(mk_has_pattern_probe()), mk_solve_eqs_tactic(m));
-
+ 
     // remark: investigate if gaussian elimination is useful when patterns are not provided.
-    return and_then(mk_simplify_tactic(m),
+    return and_then(mk_simplify_tactic(m), 
                     mk_propagate_values_tactic(m),
                     using_params(mk_ctx_simplify_tactic(m), ctx_simp_p),
                     using_params(mk_simplify_tactic(m), pull_ite_p),
                     solve_eqs,
                     mk_elim_uncnstr_tactic(m),
-                    mk_simplify_tactic(m));
+                    mk_simplify_tactic(m));    
 }
 
 static tactic * mk_no_solve_eq_preprocessor(ast_manager & m) {
@@ -99,8 +99,8 @@ tactic * mk_aufnira_tactic(ast_manager & m, params_ref const & p) {
 
 tactic * mk_lra_tactic(ast_manager & m, params_ref const & p) {
     tactic * st = and_then(mk_quant_preprocessor(m),
-                           or_else(try_for(mk_smt_tactic(), 100),
-                                   try_for(qe::mk_sat_tactic(m), 1000),
+                           or_else(try_for(mk_smt_tactic(), 100), 
+                                   try_for(qe::mk_sat_tactic(m), 1000), 
                                    try_for(mk_smt_tactic(), 1000),
                                    and_then(mk_qe_tactic(m), mk_smt_tactic())));
 

@@ -39,7 +39,7 @@ public:
         m_dack_eq(false),
         m_dack_factor(0.1),
         m_dack_threshold(10),
-        m_dack_gc(2000),
+        m_dack_gc(2000), 
         m_dack_gc_inv_decay(0.8) {
     }
 

@@ -35,7 +35,7 @@ void tst_model2expr() {
     args[1] = n1;
     fip->insert_entry(args.c_ptr(), n2);
     fiq->insert_entry(args.c_ptr(), n2);
-
+   
     fip->set_else(n0);
 
     md->register_decl(x, a.mk_numeral(rational(0), true));
@@ -44,7 +44,7 @@ void tst_model2expr() {
 
     expr_ref result(m);
     model2expr(md, result);
-
+    
     model_smt2_pp(std::cout, m, *md,  0);
     std::cout << mk_pp(result, m) << "\n";
 }

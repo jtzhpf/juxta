@@ -28,7 +28,7 @@ namespace datalog {
         impl* m_impl;
     public:
         mk_bit_blast(context & ctx, unsigned priority = 35000);
-        ~mk_bit_blast();
+        ~mk_bit_blast();        
         rule_set * operator()(rule_set const & source);
     };
 

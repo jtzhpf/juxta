@@ -34,7 +34,7 @@ void extended_gcd(const numeral & in_a, const numeral & in_b, numeral & gcd, num
         quotient  = div(a, b);
         b         = mod(a, b);
         a         = tmp;
-
+        
         tmp       = x;
         x         = lastx - (quotient * x);
         lastx     = tmp;

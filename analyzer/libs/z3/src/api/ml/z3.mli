@@ -258,16 +258,16 @@ and goal_prec =
 
 
 (**
-
+   
 
 *)
 (**
    {2 {L Types}}
+   
+   
+    Most of the types in the API are abstract. 
 
-
-    Most of the types in the API are abstract.
-
-
+   
    - [context]: manager of all other Z3 objects, global configuration options, etc.
    - [symbol]: Lisp-like symbol used to name types, constants, and functions.  A symbol can be created using string or integers.
    - [ast]: abstract syntax tree node. That is, the data-structure used in Z3 to represent terms, formulas and types.
@@ -275,7 +275,7 @@ and goal_prec =
    - [func_decl]: kind of AST used to represent function symbols.
    - [app]: kind of AST used to represent function applications.
    - [pattern]: kind of AST used to represent pattern and multi-patterns used to guide quantifier instantiation.
-
+   
    - [params]: parameter set used to configure many components such as: simplifiers, tactics, solvers, etc.
    - [model]: model for the constraints asserted into the logical context.
    - [func_interp]: interpretation of a function in a model.
@@ -291,11 +291,11 @@ and goal_prec =
    - [stats]: statistical data for a solver.
 *)
 (**
-    {!lbool}
+    {!lbool}  
    Lifted Boolean type: [false], [undefined], [true].
 *)
 (**
-    {!symbol_kind}
+    {!symbol_kind}  
    The different kinds of symbol.
    In Z3, a symbol can be represented using integers and strings (See {!get_symbol_kind}).
 
@@ -303,7 +303,7 @@ and goal_prec =
    - {b See also}: {!mk_string_symbol}
 *)
 (**
-    {!parameter_kind}
+    {!parameter_kind}  
    The different kinds of parameters that can be associated with function symbols.
    - {b See also}: {!get_decl_num_parameters}
    - {b See also}: {!get_decl_parameter_kind}
@@ -317,11 +317,11 @@ and goal_prec =
    - PARAMETER_FUNC_DECL is used for function declaration parameters.
 *)
 (**
-    {!sort_kind}
+    {!sort_kind}  
    The different kinds of Z3 types (See {!get_sort_kind}).
 *)
 (**
-    {!ast_kind}
+    {!ast_kind}  
    The different kinds of Z3 AST (abstract syntax trees). That is, terms, formulas and types.
 
    - APP_AST:            constant and applications
@@ -333,7 +333,7 @@ and goal_prec =
    - UNKNOWN_AST:        internal
 *)
 (**
-    {!decl_kind}
+    {!decl_kind}  
    The different kinds of interpreted function kinds.
 
    - OP_TRUE The constant true.
@@ -398,9 +398,9 @@ and goal_prec =
    - OP_POWER Power operator x^y.
 
    - OP_STORE Array store. It satisfies select(store(a,i,v),j) = if i = j then v else select(a,j).
-        Array store takes at least 3 arguments.
+        Array store takes at least 3 arguments. 
 
-   - OP_SELECT Array select.
+   - OP_SELECT Array select. 
 
    - OP_CONST_ARRAY The constant array. For example, select(const(v),i) = v holds for every v and i. The function is unary.
 
@@ -435,7 +435,7 @@ and goal_prec =
    - OP_BSUB Binary subtraction.
 
    - OP_BMUL Binary multiplication.
-
+    
    - OP_BSDIV Binary signed division.
 
    - OP_BUDIV Binary unsigned int division.
@@ -455,7 +455,7 @@ and goal_prec =
    - OP_BUREM0 Unary function. burem(x,0) is congruent to burem0(x).
 
    - OP_BSMOD0 Unary function. bsmod(x,0) is congruent to bsmod0(x).
-
+    
    - OP_ULEQ Unsigned bit-vector <= - Binary relation.
 
    - OP_SLEQ Signed bit-vector  <= - Binary relation.
@@ -524,7 +524,7 @@ and goal_prec =
        is not supported by the decision procedures. Only the most
        rudimentary simplification rules are applied to this function.
 
-   - OP_CARRY Compute the carry bit in a full-adder.
+   - OP_CARRY Compute the carry bit in a full-adder. 
        The meaning is given by the equivalence
        (carry l1 l2 l3) <=> (or (and l1 l2) (and l1 l3) (and l2 l3)))
 
@@ -537,7 +537,7 @@ and goal_prec =
    - OP_PR_TRUE: Proof for the expression 'true'.
 
    - OP_PR_ASSERTED: Proof for a fact asserted by the user.
-
+   
    - OP_PR_GOAL: Proof for a fact (tagged as goal) asserted by the user.
 
    - OP_PR_MODUS_PONENS: Given a proof for p and a proof for (implies p q), produces a proof for q.
@@ -549,7 +549,7 @@ and goal_prec =
           The second antecedents may also be a proof for (iff p q).
 
    - OP_PR_REFLEXIVITY: A proof for (R t t), where R is a reflexive relation. This proof object has no antecedents.
-        The only reflexive relations that are used are
+        The only reflexive relations that are used are 
         equivalence modulo namings, equality and equivalence.
         That is, R is either '~', '=' or 'iff'.
 
@@ -569,7 +569,7 @@ and goal_prec =
        }
 
    - OP_PR_TRANSITIVITY_STAR: Condensed transitivity proof. This proof object is only used if the parameter PROOF_MODE is 1.
-     It combines several symmetry and transitivity proofs.
+     It combines several symmetry and transitivity proofs. 
 
           Example:
           {e
@@ -582,7 +582,7 @@ and goal_prec =
 
           Assuming that this proof object is a proof for (R s t), then
           a proof checker must check if it is possible to prove (R s t)
-          using the antecedents, symmetry and transitivity.  That is,
+          using the antecedents, symmetry and transitivity.  That is, 
           if there is a path from s to t, if we view every
           antecedent (R a b) as an edge between a and b.
 
@@ -600,8 +600,8 @@ and goal_prec =
 
        T1: (~ p q)
        [quant-intro T1]: (~ (forall (x) p) (forall (x) q))
-
-   - OP_PR_DISTRIBUTIVITY: Distributivity proof object.
+   
+   - OP_PR_DISTRIBUTIVITY: Distributivity proof object. 
           Given that f (= or) distributes over g (= and), produces a proof for
 
           (= (f a (g c d))
@@ -615,11 +615,11 @@ and goal_prec =
           where each f and g can have arbitrary number of arguments.
 
           This proof object has no antecedents.
-          Remark. This rule is used by the CNF conversion pass and
+          Remark. This rule is used by the CNF conversion pass and 
           instantiated by f = or, and g = and.
-
+    
    - OP_PR_AND_ELIM: Given a proof for (and l_1 ... l_n), produces a proof for l_i
-
+        
        {e
        T1: (and l_1 ... l_n)
        [and-elim T1]: l_i
@@ -635,10 +635,10 @@ and goal_prec =
           The head function symbol of t is interpreted.
 
           This proof object has no antecedents.
-          The conclusion of a rewrite rule is either an equality (= t s),
+          The conclusion of a rewrite rule is either an equality (= t s), 
           an equivalence (iff t s), or equi-satisfiability (~ t s).
           Remark: if f is bool, then = is iff.
-
+          
 
           Examples:
           {e
@@ -660,22 +660,22 @@ and goal_prec =
    - OP_PR_PULL_QUANT: A proof for (iff (f (forall (x) q(x)) r) (forall (x) (f (q x) r))). This proof object has no antecedents.
 
    - OP_PR_PULL_QUANT_STAR: A proof for (iff P Q) where Q is in prenex normal form.
-       This proof object is only used if the parameter PROOF_MODE is 1.
+       This proof object is only used if the parameter PROOF_MODE is 1.       
        This proof object has no antecedents.
-
+  
    - OP_PR_PUSH_QUANT: A proof for:
 
        {e
           (iff (forall (x_1 ... x_m) (and p_1[x_1 ... x_m] ... p_n[x_1 ... x_m]))
                (and (forall (x_1 ... x_m) p_1[x_1 ... x_m])
-                 ...
+                 ... 
                (forall (x_1 ... x_m) p_n[x_1 ... x_m])))
                }
          This proof object has no antecedents.
 
-   - OP_PR_ELIM_UNUSED_VARS:
+   - OP_PR_ELIM_UNUSED_VARS:  
           A proof for (iff (forall (x_1 ... x_n y_1 ... y_m) p[x_1 ... x_n])
-                           (forall (x_1 ... x_n) p[x_1 ... x_n]))
+                           (forall (x_1 ... x_n) p[x_1 ... x_n])) 
 
           It is used to justify the elimination of unused variables.
           This proof object has no antecedents.
@@ -685,14 +685,14 @@ and goal_prec =
           if x does not occur in t.
 
           This proof object has no antecedents.
-
+          
           Several variables can be eliminated simultaneously.
 
    - OP_PR_QUANT_INST: A proof of (or (not (forall (x) (P x))) (P a))
 
    - OP_PR_HYPOTHESIS: Mark a hypothesis in a natural deduction style proof.
 
-   - OP_PR_LEMMA:
+   - OP_PR_LEMMA: 
 
        {e
           T1: false
@@ -702,7 +702,7 @@ and goal_prec =
           It converts the proof in a proof for (or (not l_1) ... (not l_n)),
           when T1 contains the hypotheses: l_1, ..., l_n.
 
-   - OP_PR_UNIT_RESOLUTION:
+   - OP_PR_UNIT_RESOLUTION: 
        {e
           T1:      (or l_1 ... l_n l_1' ... l_m')
           T2:      (not l_1)
@@ -711,7 +711,7 @@ and goal_prec =
           [unit-resolution T1 ... T(n+1)]: (or l_1' ... l_m')
           }
 
-   - OP_PR_IFF_TRUE:
+   - OP_PR_IFF_TRUE: 
       {e
        T1: p
        [iff-true T1]: (iff p true)
@@ -726,14 +726,14 @@ and goal_prec =
    - OP_PR_COMMUTATIVITY:
 
           [comm]: (= (f a b) (f b a))
-
+          
           f is a commutative operator.
 
           This proof object has no antecedents.
           Remark: if f is bool, then = is iff.
-
+   
    - OP_PR_DEF_AXIOM: Proof object used to justify Tseitin's like axioms:
-
+       
           {e
           (or (not (and p q)) p)
           (or (not (and p q)) q)
@@ -762,7 +762,7 @@ and goal_prec =
           You can recover the propositional tautologies by
           unfolding the Boolean connectives in the axioms a small
           bounded number of steps (=3).
-
+    
    - OP_PR_DEF_INTRO: Introduces a name for a formula/term.
        Suppose e is an expression with free variables x, and def-intro
        introduces the name n(x). The possible cases are:
@@ -778,17 +778,17 @@ and goal_prec =
        [def-intro]: (and (or (not cond) (= n th)) (or cond (= n el)))
 
        Otherwise:
-       [def-intro]: (= n e)
+       [def-intro]: (= n e)       
 
-   - OP_PR_APPLY_DEF:
+   - OP_PR_APPLY_DEF: 
        [apply-def T1]: F ~ n
        F is 'equivalent' to n, given that T1 is a proof that
        n is a name for F.
-
+   
    - OP_PR_IFF_OEQ:
        T1: (iff p q)
        [iff~ T1]: (~ p q)
-
+ 
    - OP_PR_NNF_POS: Proof for a (positive) NNF step. Example:
        {e
           T1: (not s_1) ~ r_1
@@ -803,7 +803,7 @@ and goal_prec =
         The quantifier is retained (unless the bound variables are eliminated).
         Example
         {e
-           T1: q ~ q_new
+           T1: q ~ q_new 
            [nnf-pos T1]: (~ (forall (x T) q) (forall (x T) q_new))
         }
        (b) When recursively creating NNF over Boolean formulas, where the top-level
@@ -812,7 +812,7 @@ and goal_prec =
        NNF_NEG furthermore handles the case where negation is pushed
        over Boolean connectives 'and' and 'or'.
 
-
+    
    - OP_PR_NFF_NEG: Proof for a (negative) NNF step. Examples:
           {e
           T1: (not s_1) ~ r_1
@@ -833,24 +833,24 @@ and goal_prec =
                                    (and (or r_1 r_2) (or r_1' r_2')))
        }
    - OP_PR_NNF_STAR: A proof for (~ P Q) where Q is in negation normal form.
-
-       This proof object is only used if the parameter PROOF_MODE is 1.
-
+       
+       This proof object is only used if the parameter PROOF_MODE is 1.       
+              
        This proof object may have n antecedents. Each antecedent is a PR_DEF_INTRO.
 
    - OP_PR_CNF_STAR: A proof for (~ P Q) where Q is in conjunctive normal form.
-       This proof object is only used if the parameter PROOF_MODE is 1.
-       This proof object may have n antecedents. Each antecedent is a PR_DEF_INTRO.
+       This proof object is only used if the parameter PROOF_MODE is 1.       
+       This proof object may have n antecedents. Each antecedent is a PR_DEF_INTRO.          
 
-   - OP_PR_SKOLEMIZE: Proof for:
-
+   - OP_PR_SKOLEMIZE: Proof for:  
+       
           {e
           [sk]: (~ (not (forall x (p x y))) (not (p (sk y) y)))
           [sk]: (~ (exists x (p x y)) (p (sk y) y))
           }
 
           This proof object has no antecedents.
-
+   
    - OP_PR_MODUS_PONENS_OEQ: Modus ponens style rule for equi-satisfiability.
        {e
           T1: p
@@ -863,9 +863,9 @@ and goal_prec =
          The theory lemma function comes with one or more parameters.
          The first parameter indicates the name of the theory.
          For the theory of arithmetic, additional parameters provide hints for
-         checking the theory lemma.
+         checking the theory lemma. 
          The hints for arithmetic are:
-
+         
          - farkas - followed by rational coefficients. Multiply the coefficients to the
            inequalities in the lemma, add the (negated) inequalities and obtain a contradiction.
 
@@ -896,7 +896,7 @@ and goal_prec =
         {e
              (=> (and ln+1 ln+2 .. ln+m) (or l0 l1 .. ln-1))
         }
-        In other words we use the following (Prolog style) convention for Horn
+        In other words we use the following (Prolog style) convention for Horn 
         implications:
         The head of a Horn implication is position 0,
         the first conjunct in the body of an implication is position 1
@@ -919,16 +919,16 @@ and goal_prec =
 
 
       - OP_RA_STORE: Insert a record into a relation.
-        The function takes [n+1] arguments, where the first argument is the relation and the remaining [n] elements
+        The function takes [n+1] arguments, where the first argument is the relation and the remaining [n] elements 
         correspond to the [n] columns of the relation.
 
-      - OP_RA_EMPTY: Creates the empty relation.
-
+      - OP_RA_EMPTY: Creates the empty relation. 
+        
       - OP_RA_IS_EMPTY: Tests if the relation is empty.
 
       - OP_RA_JOIN: Create the relational join.
 
-      - OP_RA_UNION: Create the union or convex hull of two relations.
+      - OP_RA_UNION: Create the union or convex hull of two relations. 
         The function takes two arguments.
 
       - OP_RA_WIDEN: Widen two relations.
@@ -938,7 +938,7 @@ and goal_prec =
         The function takes one argument.
 
       - OP_RA_FILTER: Filter (restrict) a relation with respect to a predicate.
-        The first argument is a relation.
+        The first argument is a relation. 
         The second argument is a predicate with free de-Brujin indices
         corresponding to the columns of the relation.
         So the first column in the relation has index 0.
@@ -953,23 +953,23 @@ and goal_prec =
         target are elements in x in pos, such that there is no y in neg that agrees with
         x on the columns c1, d1, .., cN, dN.
 
-
-      - OP_RA_RENAME: rename columns in the relation.
+    
+      - OP_RA_RENAME: rename columns in the relation. 
         The function takes one argument.
         The parameters contain the renaming as a cycle.
-
+         
       - OP_RA_COMPLEMENT: Complement the relation.
 
       - OP_RA_SELECT: Check if a record is an element of the relation.
         The function takes [n+1] arguments, where the first argument is a relation,
         and the remaining [n] arguments correspond to a record.
 
-      - OP_RA_CLONE: Create a fresh copy (clone) of a relation.
+      - OP_RA_CLONE: Create a fresh copy (clone) of a relation. 
         The function is logically the identity, but
         in the context of a register machine allows
-        for  [OP_RA_UNION]
+        for  [OP_RA_UNION]  
         to perform destructive updates to the first argument.
-
+        
 
       - OP_FD_LT: A less than predicate over the finite domain FINITE_DOMAIN_SORT.
 
@@ -989,10 +989,10 @@ and goal_prec =
       - OP_UNINTERPRETED: kind used for uninterpreted symbols.
 *)
 (**
-    {!param_kind}
+    {!param_kind}  
 
    The different kinds of parameters that can be associated with parameter sets.
-   (see {!mk_params}).
+   (see {!mk_params}). 
 
     - PK_UINT integer parameters.
     - PK_BOOL boolean parameters.
@@ -1025,7 +1025,7 @@ and goal_prec =
    - INVALID_USAGE:   API call is invalid in the current state.
    - INTERNAL_FATAL: An error internal to Z3 occurred.
    - DEC_REF_ERROR: Trying to decrement the reference counter of an AST that was deleted or the reference counter was not initialized.
-   - EXCEPTION:     Internal Z3 exception. Additional details can be retrieved using  {!get_error_msg}.
+   - EXCEPTION:     Internal Z3 exception. Additional details can be retrieved using  {!get_error_msg}.  
 *)
 (**
   Definitions for update_api.py
@@ -1065,9 +1065,9 @@ and goal_prec =
 exception Error of context * error_code
 
 (**
-    {!goal_prec}
+    {!goal_prec}  
    A Goal is essentially a set of formulas. Z3 provide APIs for building strategies/tactics for solving and transforming Goals. Some of these transformations apply under/over approximations.
-
+   
    - GOAL_PRECISE:    Approximations/Relaxations were not applied on the goal (sat and unsat answers were preserved).
    - GOAL_UNDER:      Goal is the product of a under-approximation (sat answers are preserved).
    - GOAL_OVER:       Goal is the product of an over-approximation (unsat answers are preserved).
@@ -1077,15 +1077,15 @@ exception Error of context * error_code
        {2 {L Create context}}
 *)
 (**
-       Summary: Create a context using the given configuration.
-
+       Summary: Create a context using the given configuration. 
+    
        After a context is created, the configuration cannot be changed,
        although some parameters can be changed using {!update_param_value}.
        All main interaction with Z3 happens in the context of a [context].
 
+       
 
-
-
+       
 
        def_API('mk_context', CONTEXT, (_in(CONFIG),))
 *)
@@ -1096,14 +1096,14 @@ external mk_context: (string * string) list -> context = "caml_z3_mk_context"
 
        The list of all configuration parameters can be obtained using the Z3 executable:
 
-       {v
+       {v 
        z3.exe -ini?
         v}
 
        Only a few configuration parameters are mutable once the context is created.
        The error handler is invoked when trying to modify an immutable parameter.
 
-
+       
         - {b See also}: {!mk_context }
 
        def_API('update_param_value', VOID, (_in(CONTEXT), _in(STRING), _in(STRING)))
@@ -1113,12 +1113,12 @@ external update_param_value : context -> string -> string -> unit
 
 (**
        Summary: Get a configuration parameter.
-
-       Returns  [None]
+      
+       Returns  [None]  
        if the parameter value does not exist.
 
-
-
+       
+       
         - {b See also}: {!mk_context }
 
        def_API('get_param_value', BOOL, (_in(CONTEXT), _in(STRING), _out(STRING)))
@@ -1143,8 +1143,8 @@ external interrupt : context -> unit
        Starting at Z3 4.0, parameter sets are used to configure many components such as:
        simplifiers, tactics, solvers, etc.
 
-
-
+       
+       
 
        def_API('mk_params', PARAMS, (_in(CONTEXT),))
 *)
@@ -1161,7 +1161,7 @@ external params_set_bool : context -> params -> symbol -> bool -> unit
 
 (**
        Summary: Add a unsigned int parameter [k] with value [v] to the parameter set [p].
-
+       
        def_API('params_set_uint', VOID, (_in(CONTEXT), _in(PARAMS), _in(SYMBOL), _in(UINT)))
 *)
 external params_set_uint : context -> params -> symbol -> int -> unit
@@ -1215,7 +1215,7 @@ external param_descrs_get_kind : context -> param_descrs -> symbol -> param_kind
 
 (**
        Summary: Return the number of parameters in the given parameter description set.
-
+       
        def_API('param_descrs_size', UINT, (_in(CONTEXT), _in(PARAM_DESCRS)))
 *)
 external param_descrs_size : context -> param_descrs -> int
@@ -1223,7 +1223,7 @@ external param_descrs_size : context -> param_descrs -> int
 
 (**
        Summary: Return the number of parameters in the given parameter description set.
-
+       
        - {b Precondition}: i < param_descrs_size c p
 
        def_API('param_descrs_get_name', SYMBOL, (_in(CONTEXT), _in(PARAM_DESCRS), _in(UINT)))
@@ -1263,7 +1263,7 @@ type symbol_refined =
 val mk_symbol: context -> symbol_refined -> symbol
 
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
        Summary: Create a Z3 symbol using an integer.
@@ -1362,11 +1362,11 @@ val mk_sort: context -> sort_refined -> sort
 val mk_datatypes: context -> (sort array -> (datatype_desc array) option) -> datatype array
 
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
        Summary: Create a free (uninterpreted) type using the given name (symbol).
-
+       
        Two free types are considered the same iff the have the same name.
 
        def_API('mk_uninterpreted_sort', SORT, (_in(CONTEXT), _in(SYMBOL)))
@@ -1375,7 +1375,7 @@ external mk_uninterpreted_sort : context -> symbol -> sort
 	= "camlidl_z3_Z3_mk_uninterpreted_sort"
 
 (**
-       Summary: Create the Boolean type.
+       Summary: Create the Boolean type. 
 
        This type is used to create propositional variables and predicates.
 
@@ -1399,7 +1399,7 @@ external mk_int_sort : context -> sort
 	= "camlidl_z3_Z3_mk_int_sort"
 
 (**
-       Summary: Create the real type.
+       Summary: Create the real type. 
 
        This type is not a floating point number.
        Z3 does not have support for floating point numbers yet.
@@ -1411,7 +1411,7 @@ external mk_real_sort : context -> sort
 
 (**
        Summary: Create a bit-vector type of the given size.
-
+    
        This type can also be seen as a machine integer.
 
        - {b Remarks}: The size of the bitvector type must be greater than zero.
@@ -1424,7 +1424,7 @@ external mk_bv_sort : context -> int -> sort
 (**
        Summary: Create a named finite domain sort.
 
-       To create constants that belong to the finite domain,
+       To create constants that belong to the finite domain, 
        use the APIs for creating numerals and pass a numeric
        constant together with the sort returned by this call.
 
@@ -1436,8 +1436,8 @@ external mk_finite_domain_sort : context -> symbol -> int64 -> sort
 	= "camlidl_z3_Z3_mk_finite_domain_sort"
 
 (**
-       Summary: Create an array type.
-
+       Summary: Create an array type. 
+       
        We usually represent the array type as: {e [domain -> range] }.
        Arrays are usually used to model the heap/memory in software verification.
 
@@ -1451,13 +1451,13 @@ external mk_array_sort : context -> sort -> sort -> sort
 
 (**
        Summary: Create a tuple type.
-
+       
         [mk_tuple_sort c name field_names field_sorts] creates a tuple with a constructor named [name],
        a [n] fields, where [n] is the size of the arrays [field_names] and [field_sorts].
+       
 
-
-
-
+       
+       
 
        @param c logical context
        @param mk_tuple_name name of the constructor function associated with the tuple type.
@@ -1474,15 +1474,15 @@ external mk_tuple_sort : context -> symbol -> symbol array -> sort array -> sort
 
 (**
        Summary: Create a enumeration sort.
-
-        [mk_enumeration_sort c enums] creates an enumeration sort with enumeration names [enums],
+       
+        [mk_enumeration_sort c enums] creates an enumeration sort with enumeration names [enums], 
                it also returns [n] predicates, where [n] is the number of [enums] corresponding
                to testing whether an element is one of the enumerants.
+       
 
-
-
-
-
+       
+       
+       
        @param c logical context
        @param name name of the enumeration sort.
        @param n number of elemenets in enumeration sort.
@@ -1490,8 +1490,8 @@ external mk_tuple_sort : context -> symbol -> symbol array -> sort array -> sort
        @param enum_consts constants corresponding to the enumerated elements.
        @param enum_testers predicates testing if terms of the enumeration sort correspond to an enumeration.
 
-       For example, if this function is called with three symbols A, B, C and the name S, then
-       [s] is a sort whose name is S, and the function returns three terms corresponding to A, B, C in
+       For example, if this function is called with three symbols A, B, C and the name S, then 
+       [s] is a sort whose name is S, and the function returns three terms corresponding to A, B, C in 
        [enum_consts]. The array [enum_testers] has three predicates of type {e (s -> Bool) }.
        The first predicate (corresponding to A) is true when applied to A, and false otherwise.
        Similarly for the other predicates.
@@ -1503,12 +1503,12 @@ external mk_enumeration_sort : context -> symbol -> symbol array -> sort * func_
 
 (**
        Summary: Create a list sort
-
+       
         [mk_list_sort c name elem_sort] creates a list sort of [name], over elements of sort [elem_sort].
+       
 
-
-
-
+       
+       
 
        @param c logical context
        @param name name of the list sort.
@@ -1528,18 +1528,18 @@ external mk_list_sort : context -> symbol -> sort -> sort * func_decl * func_dec
 (*
 (**
        Summary: Create a constructor.
-
+       
        @param c logical context.
        @param name constructor name.
        @param recognizer name of recognizer function.
        @param num_fields number of fields in constructor.
        @param field_names names of the constructor fields.
-       @param sorts field sorts,  [None]
+       @param sorts field sorts,  [None]  
                     if the field sort refers to a recursive sort.
        @param sort_refs reference to datatype sort that is an argument to the constructor; if the corresponding
-                        sort reference is  [None],
-                        then the value in sort_refs should be an index referring to
-                        one of the recursive datatypes that is declared.
+                        sort reference is  [None],  
+                        then the value in sort_refs should be an index referring to 
+                        one of the recursive datatypes that is declared.                        
 
        def_API('mk_constructor', CONSTRUCTOR, (_in(CONTEXT), _in(SYMBOL), _in(SYMBOL), _in(UINT), _in_array(3, SYMBOL), _in_array(3, SORT), _in_array(3, UINT)))
 *)
@@ -1558,7 +1558,7 @@ external del_constructor : context -> constructor -> unit
 	= "camlidl_z3_Z3_del_constructor"
 
 (**
-       Summary: Create datatype, such as lists, trees, records, enumerations or unions of records.
+       Summary: Create datatype, such as lists, trees, records, enumerations or unions of records. 
        The datatype may be recursive. Return the datatype sort.
 
        @param c logical context.
@@ -1611,8 +1611,8 @@ external mk_datatypes : context -> symbol array -> constructor_list array -> sor
 	= "camlidl_z3_Z3_mk_datatypes"
 
 (**
-       Summary: Query constructor for declared functions.
-
+       Summary: Query constructor for declared functions. 
+      
        @param c logical context.
        @param constr constructor container. The container must have been passed in to a {!mk_datatype} call.
        @param num_fields number of accessor fields in the constructor.
@@ -1633,7 +1633,7 @@ external query_constructor : context -> constructor -> int -> func_decl * func_d
        Summary: Declare a constant or function.
 
         [mk_func_decl c n d r] creates a function with name [n], domain [d], and range [r].
-       The arity of the function is the size of the array [d].
+       The arity of the function is the size of the array [d]. 
 
        @param c logical context.
        @param s name of the constant or function.
@@ -1664,14 +1664,14 @@ external mk_app : context -> func_decl -> ast array -> ast
 
 (**
        Summary: Declare and create a constant.
-
-
-
-
-
-
-
-        [mk_const c s t] is a shorthand for [mk_app c (mk_func_decl c s [||] t) [||]]
+       
+       
+       
+       
+       
+       
+       
+        [mk_const c s t] is a shorthand for [mk_app c (mk_func_decl c s [||] t) [||]] 
 
        - {b See also}: {!mk_func_decl}
        - {b See also}: {!mk_app}
@@ -1685,9 +1685,9 @@ external mk_const : context -> symbol -> sort -> ast
        Summary: Declare a fresh constant or function.
 
        Z3 will generate an unique name for this function declaration.
-
-
-
+       
+       
+       
 
        - {b See also}: {!mk_func_decl}
 
@@ -1698,17 +1698,17 @@ external mk_fresh_func_decl : context -> string -> sort array -> sort -> func_de
 
 (**
        Summary: Declare and create a fresh constant.
+       
+       
+       
 
+        [mk_fresh_const c p t] is a shorthand for [mk_app c (mk_fresh_func_decl c p [||] t) [||]]. 
 
-
-
-        [mk_fresh_const c p t] is a shorthand for [mk_app c (mk_fresh_func_decl c p [||] t) [||]].
-
-
-
+       
+       
        - {b See also}: {!mk_func_decl}
        - {b See also}: {!mk_app}
-
+       
        def_API('mk_fresh_const', AST, (_in(CONTEXT), _in(STRING), _in(SORT)))
 *)
 external mk_fresh_const : context -> string -> sort -> ast
@@ -1719,7 +1719,7 @@ external mk_fresh_const : context -> string -> sort -> ast
 *)
 (**
         Summary: Create an AST node representing [true].
-
+        
         def_API('mk_true', AST, (_in(CONTEXT), ))
 *)
 external mk_true : context -> ast
@@ -1736,8 +1736,8 @@ external mk_false : context -> ast
 (**
         Summary: \[ [ mk_eq c l r ] \]
         Create an AST node representing {e l = r }.
-
-        The nodes [l] and [r] must have the same type.
+        
+        The nodes [l] and [r] must have the same type. 
 
         def_API('mk_eq', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
@@ -1745,14 +1745,14 @@ external mk_eq : context -> ast -> ast -> ast
 	= "camlidl_z3_Z3_mk_eq"
 
 (**
-
+       
         Summary: \[ [mk_distinct c [| t_1; ...; t_n |]] \] Create an AST
        node represeting a distinct construct. It is used for declaring
-       the arguments t_i pairwise distinct.
+       the arguments t_i pairwise distinct. 
 
        The [distinct] construct is used for declaring the arguments pairwise distinct.
        That is, {e Forall 0 <= i < j < num_args. not args[i] = args[j] }.
-
+       
        All arguments must have the same sort.
 
        - {b Remarks}: The number of arguments of a distinct construct must be greater than one.
@@ -1763,9 +1763,9 @@ external mk_distinct : context -> ast array -> ast
 	= "camlidl_z3_Z3_mk_distinct"
 
 (**
-        Summary: \[ [ mk_not c a ] \]
+        Summary: \[ [ mk_not c a ] \] 
         Create an AST node representing {e not(a) }.
-
+        
         The node [a] must have Boolean sort.
 
         def_API('mk_not', AST, (_in(CONTEXT), _in(AST)))
@@ -1774,7 +1774,7 @@ external mk_not : context -> ast -> ast
 	= "camlidl_z3_Z3_mk_not"
 
 (**
-       Summary: \[ [ mk_ite c t1 t2 t2 ] \]
+       Summary: \[ [ mk_ite c t1 t2 t2 ] \] 
        Create an AST node representing an if-then-else: {e ite(t1, t2,
        t3) }.
 
@@ -1820,12 +1820,12 @@ external mk_xor : context -> ast -> ast -> ast
 	= "camlidl_z3_Z3_mk_xor"
 
 (**
+       
+        Summary: \[ [mk_and c [| t_1; ...; t_n |]] \] Create the conjunction: {e t_1 and ... and t_n}. 
 
-        Summary: \[ [mk_and c [| t_1; ...; t_n |]] \] Create the conjunction: {e t_1 and ... and t_n}.
-
-
+       
        All arguments must have Boolean sort.
-
+       
        - {b Remarks}: The number of arguments must be greater than zero.
 
        def_API('mk_and', AST, (_in(CONTEXT), _in(UINT), _in_array(1, AST)))
@@ -1834,10 +1834,10 @@ external mk_and : context -> ast array -> ast
 	= "camlidl_z3_Z3_mk_and"
 
 (**
+       
+        Summary: \[ [mk_or c [| t_1; ...; t_n |]] \] Create the disjunction: {e t_1 or ... or t_n}. 
 
-        Summary: \[ [mk_or c [| t_1; ...; t_n |]] \] Create the disjunction: {e t_1 or ... or t_n}.
-
-
+       
        All arguments must have Boolean sort.
 
        - {b Remarks}: The number of arguments must be greater than zero.
@@ -1851,10 +1851,10 @@ external mk_or : context -> ast array -> ast
        {2 {L Arithmetic: Integers and Reals}}
 *)
 (**
+       
+        Summary: \[ [mk_add c [| t_1; ...; t_n |]] \] Create the term: {e t_1 + ... + t_n}. 
 
-        Summary: \[ [mk_add c [| t_1; ...; t_n |]] \] Create the term: {e t_1 + ... + t_n}.
-
-
+       
        All arguments must have int or real sort.
 
        - {b Remarks}: The number of arguments must be greater than zero.
@@ -1865,12 +1865,12 @@ external mk_add : context -> ast array -> ast
 	= "camlidl_z3_Z3_mk_add"
 
 (**
+       
+        Summary: \[ [mk_mul c [| t_1; ...; t_n |]] \] Create the term: {e t_1 * ... * t_n}. 
 
-        Summary: \[ [mk_mul c [| t_1; ...; t_n |]] \] Create the term: {e t_1 * ... * t_n}.
-
-
+       
        All arguments must have int or real sort.
-
+       
        - {b Remarks}: Z3 has limited support for non-linear arithmetic.
        - {b Remarks}: The number of arguments must be greater than zero.
 
@@ -1880,22 +1880,22 @@ external mk_mul : context -> ast array -> ast
 	= "camlidl_z3_Z3_mk_mul"
 
 (**
+       
+        Summary: \[ [mk_sub c [| t_1; ...; t_n |]] \] Create the term: {e t_1 - ... - t_n}. 
 
-        Summary: \[ [mk_sub c [| t_1; ...; t_n |]] \] Create the term: {e t_1 - ... - t_n}.
-
-
+       
        All arguments must have int or real sort.
 
        - {b Remarks}: The number of arguments must be greater than zero.
-
+       
        def_API('mk_sub', AST, (_in(CONTEXT), _in(UINT), _in_array(1, AST)))
 *)
 external mk_sub : context -> ast array -> ast
 	= "camlidl_z3_Z3_mk_sub"
 
 (**
-
-        Summary: \[ [mk_unary_minus c arg] \] Create the term: {e - arg}.
+       
+        Summary: \[ [mk_unary_minus c arg] \] Create the term: {e - arg}. 
 
        The arguments must have int or real type.
 
@@ -1905,8 +1905,8 @@ external mk_unary_minus : context -> ast -> ast
 	= "camlidl_z3_Z3_mk_unary_minus"
 
 (**
-
-        Summary: \[ [mk_div c t_1 t_2] \] Create the term: {e t_1 div t_2}.
+       
+        Summary: \[ [mk_div c t_1 t_2] \] Create the term: {e t_1 div t_2}. 
 
        The arguments must either both have int type or both have real type.
        If the arguments have int type, then the result type is an int type, otherwise the
@@ -1918,8 +1918,8 @@ external mk_div : context -> ast -> ast -> ast
 	= "camlidl_z3_Z3_mk_div"
 
 (**
-
-        Summary: \[ [mk_mod c t_1 t_2] \] Create the term: {e t_1 mod t_2}.
+       
+        Summary: \[ [mk_mod c t_1 t_2] \] Create the term: {e t_1 mod t_2}. 
 
        The arguments must have int type.
 
@@ -1929,8 +1929,8 @@ external mk_mod : context -> ast -> ast -> ast
 	= "camlidl_z3_Z3_mk_mod"
 
 (**
-
-        Summary: \[ [mk_rem c t_1 t_2] \] Create the term: {e t_1 rem t_2}.
+       
+        Summary: \[ [mk_rem c t_1 t_2] \] Create the term: {e t_1 rem t_2}. 
 
        The arguments must have int type.
 
@@ -1940,7 +1940,7 @@ external mk_rem : context -> ast -> ast -> ast
 	= "camlidl_z3_Z3_mk_rem"
 
 (**
-
+       
 
        The arguments must have int or real type.
 
@@ -1950,7 +1950,7 @@ external mk_power : context -> ast -> ast -> ast
 	= "camlidl_z3_Z3_mk_power"
 
 (**
-        Summary: \[ [ mk_lt c t1 t2 ] \]
+        Summary: \[ [ mk_lt c t1 t2 ] \] 
         Create less than.
 
         The nodes [t1] and [t2] must have the same sort, and must be int or real.
@@ -1963,7 +1963,7 @@ external mk_lt : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_le c t1 t2 ] \]
         Create less than or equal to.
-
+        
         The nodes [t1] and [t2] must have the same sort, and must be int or real.
 
         def_API('mk_le', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -1974,7 +1974,7 @@ external mk_le : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_gt c t1 t2 ] \]
         Create greater than.
-
+        
         The nodes [t1] and [t2] must have the same sort, and must be int or real.
 
         def_API('mk_gt', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -1985,7 +1985,7 @@ external mk_gt : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_ge c t1 t2 ] \]
         Create greater than or equal to.
-
+        
         The nodes [t1] and [t2] must have the same sort, and must be int or real.
 
         def_API('mk_ge', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2000,10 +2000,10 @@ external mk_ge : context -> ast -> ast -> ast
         There is also a converse operation exposed.
         It follows the semantics prescribed by the SMT-LIB standard.
 
-        You can take the floor of a real by
+        You can take the floor of a real by 
         creating an auxiliary integer constant [k] and
         and asserting {e  mk_int2real(k) <= t1 < mk_int2real(k)+1 }.
-
+        
         The node [t1] must have sort integer.
 
         - {b See also}: {!mk_real2int}
@@ -2023,7 +2023,7 @@ external mk_int2real : context -> ast -> ast
 
         - {b See also}: {!mk_int2real}
         - {b See also}: {!mk_is_int}
-
+        
         def_API('mk_real2int', AST, (_in(CONTEXT), _in(AST)))
 *)
 external mk_real2int : context -> ast -> ast
@@ -2035,7 +2035,7 @@ external mk_real2int : context -> ast -> ast
 
         - {b See also}: {!mk_int2real}
         - {b See also}: {!mk_real2int}
-
+        
         def_API('mk_is_int', AST, (_in(CONTEXT), _in(AST)))
 *)
 external mk_is_int : context -> ast -> ast
@@ -2071,7 +2071,7 @@ external mk_bvredand : context -> ast -> ast
        Take disjunction of bits in vector, return vector of length 1.
 
        The node [t1] must have a bit-vector sort.
-
+       
        def_API('mk_bvredor', AST, (_in(CONTEXT), _in(AST)))
 *)
 external mk_bvredor : context -> ast -> ast
@@ -2082,7 +2082,7 @@ external mk_bvredor : context -> ast -> ast
        Bitwise and.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvand', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvand : context -> ast -> ast -> ast
@@ -2104,7 +2104,7 @@ external mk_bvor : context -> ast -> ast -> ast
        Bitwise exclusive-or.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvxor', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvxor : context -> ast -> ast -> ast
@@ -2112,7 +2112,7 @@ external mk_bvxor : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvnand c t1 t2 ] \]
-       Bitwise nand.
+       Bitwise nand. 
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
@@ -2123,10 +2123,10 @@ external mk_bvnand : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvnor c t1 t2 ] \]
-       Bitwise nor.
+       Bitwise nor. 
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvnor', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvnor : context -> ast -> ast -> ast
@@ -2134,8 +2134,8 @@ external mk_bvnor : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvxnor c t1 t2 ] \]
-       Bitwise xnor.
-
+       Bitwise xnor. 
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvxnor', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2145,7 +2145,7 @@ external mk_bvxnor : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvneg c t1 ] \]
-       Standard two's complement unary minus.
+       Standard two's complement unary minus. 
 
        The node [t1] must have bit-vector sort.
 
@@ -2157,7 +2157,7 @@ external mk_bvneg : context -> ast -> ast
 (**
         Summary: \[ [ mk_bvadd c t1 t2 ] \]
         Standard two's complement addition.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
 
         def_API('mk_bvadd', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2168,7 +2168,7 @@ external mk_bvadd : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_bvsub c t1 t2 ] \]
         Standard two's complement subtraction.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
 
         def_API('mk_bvsub', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2179,7 +2179,7 @@ external mk_bvsub : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_bvmul c t1 t2 ] \]
         Standard two's complement multiplication.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
 
         def_API('mk_bvmul', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2189,14 +2189,14 @@ external mk_bvmul : context -> ast -> ast -> ast
 
 (**
         Summary: \[ [ mk_bvudiv c t1 t2 ] \]
-        Unsigned division.
+        Unsigned division. 
 
         It is defined as the [floor] of {e t1/t2 } if [t2] is
         different from zero. If {e t2 } is zero, then the result
         is undefined.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
-
+        
         def_API('mk_bvudiv', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvudiv : context -> ast -> ast -> ast
@@ -2204,18 +2204,18 @@ external mk_bvudiv : context -> ast -> ast -> ast
 
 (**
         Summary: \[ [ mk_bvsdiv c t1 t2 ] \]
-        Two's complement signed division.
+        Two's complement signed division. 
 
         It is defined in the following way:
 
         - The [floor] of {e t1/t2 } if [t2] is different from zero, and {e t1*t2 >= 0 }.
 
         - The [ceiling] of {e t1/t2 } if [t2] is different from zero, and {e t1*t2 < 0 }.
-
+        
         If {e t2 } is zero, then the result is undefined.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
         def_API('mk_bvsdiv', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsdiv : context -> ast -> ast -> ast
@@ -2226,9 +2226,9 @@ external mk_bvsdiv : context -> ast -> ast -> ast
        Unsigned remainder.
 
        It is defined as {e t1 - (t1 /u t2) * t2 }, where {e /u } represents unsigned int division.
-
+       
        If {e t2 } is zero, then the result is undefined.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvurem', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2244,7 +2244,7 @@ external mk_bvurem : context -> ast -> ast -> ast
        The most significant bit (sign) of the result is equal to the most significant bit of [t1].
 
        If {e t2 } is zero, then the result is undefined.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        - {b See also}: {!mk_bvsmod}
@@ -2257,9 +2257,9 @@ external mk_bvsrem : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_bvsmod c t1 t2 ] \]
        Two's complement signed remainder (sign follows divisor).
-
+       
        If {e t2 } is zero, then the result is undefined.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        - {b See also}: {!mk_bvsrem}
@@ -2274,7 +2274,7 @@ external mk_bvsmod : context -> ast -> ast -> ast
        Unsigned less than.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvult', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvult : context -> ast -> ast -> ast
@@ -2283,9 +2283,9 @@ external mk_bvult : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_bvslt c t1 t2 ] \]
        Two's complement signed less than.
-
+       
        It abbreviates:
-       {v
+       {v 
       (or (and (= (extract[|m-1|:|m-1|] t1) bit1)
                (= (extract[|m-1|:|m-1|] t2) bit0))
           (and (= (extract[|m-1|:|m-1|] t1) (extract[|m-1|:|m-1|] t2))
@@ -2315,7 +2315,7 @@ external mk_bvule : context -> ast -> ast -> ast
        Two's complement signed less than or equal to.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvsle', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsle : context -> ast -> ast -> ast
@@ -2326,7 +2326,7 @@ external mk_bvsle : context -> ast -> ast -> ast
        Unsigned greater than or equal to.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvuge', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvuge : context -> ast -> ast -> ast
@@ -2337,7 +2337,7 @@ external mk_bvuge : context -> ast -> ast -> ast
        Two's complement signed greater than or equal to.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvsge', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsge : context -> ast -> ast -> ast
@@ -2359,7 +2359,7 @@ external mk_bvugt : context -> ast -> ast -> ast
        Two's complement signed greater than.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvsgt', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsgt : context -> ast -> ast -> ast
@@ -2368,7 +2368,7 @@ external mk_bvsgt : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_concat c t1 t2 ] \]
        Concatenate the given bit-vectors.
-
+       
        The nodes [t1] and [t2] must have (possibly different) bit-vector sorts
 
        The result is a bit-vector of size {e n1+n2 }, where [n1] ([n2)] is the size
@@ -2399,7 +2399,7 @@ external mk_extract : context -> int -> int -> ast -> ast
        bit-vector.
 
        The node [t1] must have a bit-vector sort.
-
+       
        def_API('mk_sign_ext', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
 external mk_sign_ext : context -> int -> ast -> ast
@@ -2410,8 +2410,8 @@ external mk_sign_ext : context -> int -> ast -> ast
        Extend the given bit-vector with zeros to the (unsigned int) equivalent
        bitvector of size {e m+i }, where [m] is the size of the
        given bit-vector.
-
-       The node [t1] must have a bit-vector sort.
+       
+       The node [t1] must have a bit-vector sort. 
 
        def_API('mk_zero_ext', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
@@ -2421,9 +2421,9 @@ external mk_zero_ext : context -> int -> ast -> ast
 (**
        Summary: \[ [ mk_repeat c i t1 ] \]
        Repeat the given bit-vector up length {e i }.
-
-       The node [t1] must have a bit-vector sort.
-
+       
+       The node [t1] must have a bit-vector sort. 
+    
        def_API('mk_repeat', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
 external mk_repeat : context -> int -> ast -> ast
@@ -2436,8 +2436,8 @@ external mk_repeat : context -> int -> ast -> ast
        It is equivalent to multiplication by {e 2^x } where [x] is the value of the
        third argument.
 
-       NB. The semantics of shift operations varies between environments. This
-       definition does not necessarily capture directly the semantics of the
+       NB. The semantics of shift operations varies between environments. This 
+       definition does not necessarily capture directly the semantics of the 
        programming language or assembly architecture you are modeling.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
@@ -2454,8 +2454,8 @@ external mk_bvshl : context -> ast -> ast -> ast
        It is equivalent to unsigned int division by {e 2^x } where [x] is the
        value of the third argument.
 
-       NB. The semantics of shift operations varies between environments. This
-       definition does not necessarily capture directly the semantics of the
+       NB. The semantics of shift operations varies between environments. This 
+       definition does not necessarily capture directly the semantics of the 
        programming language or assembly architecture you are modeling.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
@@ -2468,15 +2468,15 @@ external mk_bvlshr : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_bvashr c t1 t2 ] \]
        Arithmetic shift right.
-
+       
        It is like logical shift right except that the most significant
        bits of the result always copy the most significant bit of the
        second argument.
 
-       The semantics of shift operations varies between environments. This
-       definition does not necessarily capture directly the semantics of the
+       The semantics of shift operations varies between environments. This 
+       definition does not necessarily capture directly the semantics of the 
        programming language or assembly architecture you are modeling.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvashr', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2487,8 +2487,8 @@ external mk_bvashr : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_rotate_left c i t1 ] \]
        Rotate bits of [t1] to the left [i] times.
-
-       The node [t1] must have a bit-vector sort.
+       
+       The node [t1] must have a bit-vector sort. 
 
        def_API('mk_rotate_left', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
@@ -2498,9 +2498,9 @@ external mk_rotate_left : context -> int -> ast -> ast
 (**
        Summary: \[ [ mk_rotate_right c i t1 ] \]
        Rotate bits of [t1] to the right [i] times.
-
-       The node [t1] must have a bit-vector sort.
-
+       
+       The node [t1] must have a bit-vector sort. 
+       
        def_API('mk_rotate_right', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
 external mk_rotate_right : context -> int -> ast -> ast
@@ -2509,7 +2509,7 @@ external mk_rotate_right : context -> int -> ast -> ast
 (**
        Summary: \[ [ mk_ext_rotate_left c t1 t2 ] \]
        Rotate bits of [t1] to the left [t2] times.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_ext_rotate_left', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2520,9 +2520,9 @@ external mk_ext_rotate_left : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_ext_rotate_right c t1 t2 ] \]
        Rotate bits of [t1] to the right [t2] times.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_ext_rotate_right', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_ext_rotate_right : context -> ast -> ast -> ast
@@ -2532,12 +2532,12 @@ external mk_ext_rotate_right : context -> ast -> ast -> ast
        Summary: \[ [ mk_int2bv c n t1 ] \]
        Create an [n] bit bit-vector from the integer argument [t1].
 
-       NB. This function is essentially treated as uninterpreted.
+       NB. This function is essentially treated as uninterpreted. 
        So you cannot expect Z3 to precisely reflect the semantics of this function
        when solving constraints with this function.
-
-       The node [t1] must have integer sort.
-
+       
+       The node [t1] must have integer sort. 
+       
        def_API('mk_int2bv', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
 external mk_int2bv : context -> int -> ast -> ast
@@ -2546,16 +2546,16 @@ external mk_int2bv : context -> int -> ast -> ast
 (**
        Summary: \[ [ mk_bv2int c t1 is_signed ] \]
        Create an integer from the bit-vector argument [t1].
-       If [is_signed] is false, then the bit-vector [t1] is treated as unsigned int.
+       If [is_signed] is false, then the bit-vector [t1] is treated as unsigned int. 
        So the result is non-negative
        and in the range {e [0..2^N-1] }, where N are the number of bits in [t1].
        If [is_signed] is true, [t1] is treated as a signed bit-vector.
 
-       This function is essentially treated as uninterpreted.
+       This function is essentially treated as uninterpreted. 
        So you cannot expect Z3 to precisely reflect the semantics of this function
        when solving constraints with this function.
 
-       The node [t1] must have a bit-vector sort.
+       The node [t1] must have a bit-vector sort. 
 
        def_API('mk_bv2int', AST, (_in(CONTEXT), _in(AST), _in(BOOL)))
 *)
@@ -2566,7 +2566,7 @@ external mk_bv2int : context -> ast -> bool -> ast
        Summary: \[ [ mk_bvadd_no_overflow c t1 t2 is_signed ] \]
        Create a predicate that checks that the bit-wise addition
        of [t1] and [t2] does not overflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvadd_no_overflow', AST, (_in(CONTEXT), _in(AST), _in(AST), _in(BOOL)))
@@ -2578,9 +2578,9 @@ external mk_bvadd_no_overflow : context -> ast -> ast -> bool -> ast
        Summary: \[ [ mk_bvadd_no_underflow c t1 t2 ] \]
        Create a predicate that checks that the bit-wise signed addition
        of [t1] and [t2] does not underflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvadd_no_underflow', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvadd_no_underflow : context -> ast -> ast -> ast
@@ -2590,9 +2590,9 @@ external mk_bvadd_no_underflow : context -> ast -> ast -> ast
        Summary: \[ [ mk_bvsub_no_overflow c t1 t2 ] \]
        Create a predicate that checks that the bit-wise signed subtraction
        of [t1] and [t2] does not overflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvsub_no_overflow', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsub_no_overflow : context -> ast -> ast -> ast
@@ -2602,7 +2602,7 @@ external mk_bvsub_no_overflow : context -> ast -> ast -> ast
        Summary: \[ [ mk_bvsub_no_underflow c t1 t2 is_signed ] \]
        Create a predicate that checks that the bit-wise subtraction
        of [t1] and [t2] does not underflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvsub_no_underflow', AST, (_in(CONTEXT), _in(AST), _in(AST), _in(BOOL)))
@@ -2612,11 +2612,11 @@ external mk_bvsub_no_underflow : context -> ast -> ast -> bool -> ast
 
 (**
        Summary: \[ [ mk_bvsdiv_no_overflow c t1 t2 ] \]
-       Create a predicate that checks that the bit-wise signed division
+       Create a predicate that checks that the bit-wise signed division 
        of [t1] and [t2] does not overflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvsdiv_no_overflow', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsdiv_no_overflow : context -> ast -> ast -> ast
@@ -2624,9 +2624,9 @@ external mk_bvsdiv_no_overflow : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvneg_no_overflow c t1 ] \]
-       Check that bit-wise negation does not overflow when
+       Check that bit-wise negation does not overflow when 
        [t1] is interpreted as a signed bit-vector.
-
+       
        The node [t1] must have bit-vector sort.
 
        def_API('mk_bvneg_no_overflow', AST, (_in(CONTEXT), _in(AST)))
@@ -2638,9 +2638,9 @@ external mk_bvneg_no_overflow : context -> ast -> ast
        Summary: \[ [ mk_bvmul_no_overflow c t1 t2 is_signed ] \]
        Create a predicate that checks that the bit-wise multiplication
        of [t1] and [t2] does not overflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvmul_no_overflow', AST, (_in(CONTEXT), _in(AST), _in(AST), _in(BOOL)))
 *)
 external mk_bvmul_no_overflow : context -> ast -> ast -> bool -> ast
@@ -2650,7 +2650,7 @@ external mk_bvmul_no_overflow : context -> ast -> ast -> bool -> ast
        Summary: \[ [ mk_bvmul_no_underflow c t1 t2 ] \]
        Create a predicate that checks that the bit-wise signed multiplication
        of [t1] and [t2] does not underflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvmul_no_underflow', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2664,9 +2664,9 @@ external mk_bvmul_no_underflow : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_select c a i ] \]
        Array read.
-       The argument [a] is the array and [i] is the index of the array that gets read.
-
-       The node [a] must have an array sort {e [domain -> range] },
+       The argument [a] is the array and [i] is the index of the array that gets read.      
+ 
+       The node [a] must have an array sort {e [domain -> range] }, 
        and [i] must have the sort [domain].
        The sort of the result is [range].
 
@@ -2681,15 +2681,15 @@ external mk_select : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_store c a i v ] \]
        Array update.
-
+       
        The node [a] must have an array sort {e [domain -> range] }, [i] must have sort [domain],
        [v] must have sort range. The sort of the result is {e [domain -> range] }.
        The semantics of this function is given by the theory of arrays described in the SMT-LIB
        standard. See http:
        The result of this function is an array that is equal to [a] (with respect to [select)]
-       on all indices except for [i], where it maps to [v] (and the [select] of [a] with
+       on all indices except for [i], where it maps to [v] (and the [select] of [a] with 
        respect to [i] may be a different value).
-
+       
        - {b See also}: {!mk_array_sort}
        - {b See also}: {!mk_select}
 
@@ -2700,8 +2700,8 @@ external mk_store : context -> ast -> ast -> ast -> ast
 
 (**
         Summary: Create the constant array.
-
-        The resulting term is an array, such that a [select] on an arbitrary index
+         
+        The resulting term is an array, such that a [select] on an arbitrary index 
         produces the value [v].
 
         @param c logical context.
@@ -2716,11 +2716,11 @@ external mk_const_array : context -> sort -> ast -> ast
 (**
        Summary: \[ [ mk_map f n args ] \]
        map f on the the argument arrays.
-
+       
        The [n] nodes [args] must be of array sorts {e [domain_i -> range_i] }.
        The function declaration [f] must have type {e  range_1 .. range_n -> range }.
        [v] must have sort range. The sort of the result is {e [domain_i -> range] }.
-
+       
        - {b See also}: {!mk_array_sort}
        - {b See also}: {!mk_store}
        - {b See also}: {!mk_select}
@@ -2732,7 +2732,7 @@ external mk_map : context -> func_decl -> int -> ast -> ast
 
 (**
         Summary: Access the array default value.
-        Produces the default range value, for arrays that can be represented as
+        Produces the default range value, for arrays that can be represented as 
         finite maps with a default range value.
 
         @param c logical context.
@@ -2772,7 +2772,7 @@ external mk_full_set : context -> sort -> ast
 
 (**
        Summary: Add an element to a set.
-
+       
        The first argument must be a set, the second an element.
 
        def_API('mk_set_add', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2782,7 +2782,7 @@ external mk_set_add : context -> ast -> ast -> ast
 
 (**
        Summary: Remove an element to a set.
-
+       
        The first argument must be a set, the second an element.
 
        def_API('mk_set_del', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2824,7 +2824,7 @@ external mk_set_complement : context -> ast -> ast
 
 (**
        Summary: Check for set membership.
-
+       
        The first argument should be an element type of the set.
 
        def_API('mk_set_member', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -2862,17 +2862,17 @@ type numeral_refined =
 val embed_numeral: context -> numeral_refined -> ast
 
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
-       Summary: Create a numeral of a given sort.
+       Summary: Create a numeral of a given sort. 
 
        @param c logical context.
        @param numeral A string representing the numeral value in decimal notation. If the given sort is a real, then the numeral can be a rational, that is, a string of the form {e [num]* / [num]* }.
-       @param ty The sort of the numeral. In the current implementation, the given sort can be an int, real, finite-domain, or bit-vectors of arbitrary size.
-
+       @param ty The sort of the numeral. In the current implementation, the given sort can be an int, real, finite-domain, or bit-vectors of arbitrary size. 
+       
        - {b See also}: {!mk_int}
-
+       
 
        def_API('mk_numeral', AST, (_in(CONTEXT), _in(STRING), _in(SORT)))
 *)
@@ -2890,7 +2890,7 @@ external mk_numeral : context -> string -> sort -> ast
 
        - {b See also}: {!mk_numeral}
        - {b See also}: {!mk_int}
-
+       
 
        def_API('mk_real', AST, (_in(CONTEXT), _in(INT), _in(INT)))
 *)
@@ -2898,8 +2898,8 @@ external mk_real : context -> int -> int -> ast
 	= "camlidl_z3_Z3_mk_real"
 
 (**
-       Summary: Create a numeral of an int, bit-vector, or finite-domain sort.
-
+       Summary: Create a numeral of an int, bit-vector, or finite-domain sort. 
+       
        This function can be use to create numerals that fit in a machine integer.
        It is slightly faster than {!mk_numeral} since it is not necessary to parse a string.
 
@@ -2911,8 +2911,8 @@ external mk_int : context -> int -> sort -> ast
 	= "camlidl_z3_Z3_mk_int"
 
 (**
-       Summary: Create a numeral of a int, bit-vector, or finite-domain sort.
-
+       Summary: Create a numeral of a int, bit-vector, or finite-domain sort. 
+       
        This function can be use to create numerals that fit in a machine long long integer.
        It is slightly faster than {!mk_numeral} since it is not necessary to parse a string.
 
@@ -2937,7 +2937,7 @@ external mk_int64 : context -> int64 -> sort -> ast
        Patterns comprise a list of terms. The list should be
        non-empty.  If the list comprises of more than one term, it is
        a called a multi-pattern.
-
+       
        In general, one can pass in a list of (multi-)patterns in the
        quantifier constructor.
 
@@ -2956,7 +2956,7 @@ external mk_pattern : context -> ast array -> pattern
        the meaning of de-Bruijn indices by indicating the compilation process from
        non-de-Bruijn formulas to de-Bruijn format.
 
-       {v
+       {v  
        abs(forall (x1) phi) = forall (x1) abs1(phi, x1, 0)
        abs(forall (x1, x2) phi) = abs(forall (x1) abs(forall (x2) phi))
        abs1(x, x, n) = b_n
@@ -2968,7 +2968,7 @@ external mk_pattern : context -> ast array -> pattern
        The last line is significant: the index of a bound variable is different depending
        on the scope in which it appears. The deeper x appears, the higher is its
        index.
-
+       
        @param c logical context
        @param index de-Bruijn index
        @param ty sort of the bound variable
@@ -2984,11 +2984,11 @@ external mk_bound : context -> int -> sort -> ast
 (**
        Summary: Create a forall formula. It takes an expression [body] that contains bound variables
        of the same sorts as the sorts listed in the array [sorts]. The bound variables are de-Bruijn indices created
-       using {!mk_bound}. The array [decl_names] contains the names that the quantified formula uses for the
+       using {!mk_bound}. The array [decl_names] contains the names that the quantified formula uses for the 
        bound variables. Z3 applies the convention that the last element in the [decl_names] and [sorts] array
        refers to the variable with index 0, the second to last element of [decl_names] and [sorts] refers
        to the variable with index 1, etc.
-
+       
 
         [mk_forall c w p t n b] creates a forall formula, where
        [w] is the weight, [p] is an array of patterns, [t] is an array
@@ -2996,9 +2996,9 @@ external mk_bound : context -> int -> sort -> ast
        'names' of the bound variables, and [b] is the body of the
        quantifier. Quantifiers are associated with weights indicating
        the importance of using the quantifier during
-       instantiation.
-
-
+       instantiation. 
+       
+       
        @param c logical context.
        @param weight quantifiers are associated with weights indicating the importance of using the quantifier during instantiation. By default, pass the weight 0.
        @param num_patterns number of patterns.
@@ -3007,7 +3007,7 @@ external mk_bound : context -> int -> sort -> ast
        @param sorts the sorts of the bound variables.
        @param decl_names names of the bound variables
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_bound}
        - {b See also}: {!mk_exists}
@@ -3019,7 +3019,7 @@ external mk_forall : context -> int -> pattern array -> sort array -> symbol arr
 
 (**
        Summary: Create an exists formula. Similar to {!mk_forall}.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_bound}
        - {b See also}: {!mk_forall}
@@ -3031,9 +3031,9 @@ external mk_exists : context -> int -> pattern array -> sort array -> symbol arr
 	= "camlidl_z3_Z3_mk_exists_bytecode" "camlidl_z3_Z3_mk_exists"
 
 (**
-       Summary: Create a quantifier - universal or existential, with pattern hints.
+       Summary: Create a quantifier - universal or existential, with pattern hints. 
        See the documentation for {!mk_forall} for an explanation of the parameters.
-
+       
        @param c logical context.
        @param is_forall flag to indicate if this is a universal or existential quantifier.
        @param weight quantifiers are associated with weights indicating the importance of using the quantifier during instantiation. By default, pass the weight 0.
@@ -3043,7 +3043,7 @@ external mk_exists : context -> int -> pattern array -> sort array -> symbol arr
        @param sorts array of sorts of the bound variables.
        @param decl_names names of the bound variables.
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_bound}
        - {b See also}: {!mk_forall}
@@ -3056,7 +3056,7 @@ external mk_quantifier : context -> bool -> int -> pattern array -> sort array -
 
 (**
        Summary: Create a quantifier - universal or existential, with pattern hints, no patterns, and attributes
-
+       
        @param c logical context.
        @param is_forall flag to indicate if this is a universal or existential quantifier.
        @param quantifier_id identifier to identify quantifier
@@ -3070,7 +3070,7 @@ external mk_quantifier : context -> bool -> int -> pattern array -> sort array -
        @param sorts array of sorts of the bound variables.
        @param decl_names names of the bound variables.
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_bound}
        - {b See also}: {!mk_forall}
@@ -3086,14 +3086,14 @@ external mk_quantifier_ex : context -> bool -> int -> symbol -> symbol -> patter
        will form the set of bound variables.
 
        @param c logical context.
-       @param weight quantifiers are associated with weights indicating the importance of using
+       @param weight quantifiers are associated with weights indicating the importance of using 
               the quantifier during instantiation. By default, pass the weight 0.
        @param num_bound number of constants to be abstracted into bound variables.
        @param bound array of constants to be abstracted into bound variables.
        @param num_patterns number of patterns.
        @param patterns array containing the patterns created using {!mk_pattern}.
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_exists_const}
 
@@ -3109,14 +3109,14 @@ external mk_forall_const : context -> int -> app array -> pattern array -> ast -
        will form the set of bound variables.
 
        @param c logical context.
-       @param weight quantifiers are associated with weights indicating the importance of using
+       @param weight quantifiers are associated with weights indicating the importance of using 
               the quantifier during instantiation. By default, pass the weight 0.
        @param num_bound number of constants to be abstracted into bound variables.
        @param bound array of constants to be abstracted into bound variables.
        @param num_patterns number of patterns.
        @param patterns array containing the patterns created using {!mk_pattern}.
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_forall_const}
 
@@ -3126,7 +3126,7 @@ external mk_exists_const : context -> int -> app array -> pattern array -> ast -
 	= "camlidl_z3_Z3_mk_exists_const"
 
 (**
-       Summary: Create a universal or existential
+       Summary: Create a universal or existential 
        quantifier using a list of constants that
        will form the set of bound variables.
 
@@ -3136,7 +3136,7 @@ external mk_quantifier_const : context -> bool -> int -> app array -> pattern ar
 	= "camlidl_z3_Z3_mk_quantifier_const_bytecode" "camlidl_z3_Z3_mk_quantifier_const"
 
 (**
-       Summary: Create a universal or existential
+       Summary: Create a universal or existential 
        quantifier using a list of constants that
        will form the set of bound variables.
 
@@ -3149,7 +3149,7 @@ external mk_quantifier_const_ex : context -> bool -> int -> symbol -> symbol -> 
        {2 {L Accessors}}
 *)
 (**
-        {3 {L Symbols}}
+        {3 {L Symbols}} 
 *)
 
 (**
@@ -3158,7 +3158,7 @@ external mk_quantifier_const_ex : context -> bool -> int -> symbol -> symbol -> 
 val symbol_refine: context -> symbol -> symbol_refined
 
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
        Summary: Return [INT_SYMBOL] if the symbol was constructed
@@ -3172,8 +3172,8 @@ external get_symbol_kind : context -> symbol -> symbol_kind
 
 (**
        Summary: \[ [ get_symbol_int c s ] \]
-       Return the symbol int value.
-
+       Return the symbol int value. 
+       
        - {b Precondition}: get_symbol_kind s == INT_SYMBOL
 
        - {b See also}: {!mk_int_symbol}
@@ -3185,23 +3185,23 @@ external get_symbol_int : context -> symbol -> int
 
 (**
        Summary: \[ [ get_symbol_string c s ] \]
-       Return the symbol name.
+       Return the symbol name. 
 
        - {b Precondition}: get_symbol_string s == STRING_SYMBOL
 
-
-
-
+       
+       
+       
 
        - {b See also}: {!mk_string_symbol}
-
+    
        def_API('get_symbol_string', STRING, (_in(CONTEXT), _in(SYMBOL)))
 *)
 external get_symbol_string : context -> symbol -> string
 	= "camlidl_z3_Z3_get_symbol_string"
 
 (**
-        {3 {L Sorts}}
+        {3 {L Sorts}} 
 *)
 
 (**
@@ -3210,7 +3210,7 @@ external get_symbol_string : context -> symbol -> string
 val sort_refine: context -> sort -> sort_refined
 
 (**
-       Summary: Return the sort name as a symbol.
+       Summary: Return the sort name as a symbol. 
 
        def_API('get_sort_name', SYMBOL, (_in(CONTEXT), _in(SORT)))
 *)
@@ -3219,7 +3219,7 @@ external get_sort_name : context -> sort -> symbol
 
 (**
         Summary: Return a unique identifier for [s].
-         - {b Remarks}: Implicitly used by [Pervasives.( = )] and [Pervasives.compare].
+         - {b Remarks}: Implicitly used by [Pervasives.( = )] and [Pervasives.compare]. 
 
         def_API('get_sort_id', UINT, (_in(CONTEXT), _in(SORT)))
 *)
@@ -3227,11 +3227,11 @@ external get_sort_id : context -> sort -> int
 	= "camlidl_z3_Z3_get_sort_id"
 
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
-       Summary: Convert a [sort] into [ast].
-        - {b Remarks}: [sort_to_ast c s] can be replaced by [(s :> ast)].
+       Summary: Convert a [sort] into [ast]. 
+        - {b Remarks}: [sort_to_ast c s] can be replaced by [(s :> ast)]. 
 
        def_API('sort_to_ast', AST, (_in(CONTEXT), _in(SORT)))
 *)
@@ -3240,7 +3240,7 @@ external sort_to_ast : context -> sort -> ast
 
 (**
        Summary: compare sorts.
-        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used.
+        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used. 
 
        def_API('is_eq_sort', BOOL, (_in(CONTEXT), _in(SORT), _in(SORT)))
 *)
@@ -3259,7 +3259,7 @@ external get_sort_kind : context -> sort -> sort_kind
 
 (**
        Summary: \[ [ get_bv_sort_size c t ] \]
-       Return the size of the given bit-vector sort.
+       Return the size of the given bit-vector sort. 
 
        - {b Precondition}: get_sort_kind c t == BV_SORT
 
@@ -3272,8 +3272,8 @@ external get_bv_sort_size : context -> sort -> int
 	= "camlidl_z3_Z3_get_bv_sort_size"
 
 (**
-
-         Summary: Return the size of the sort in [r].  Return [None] if the call failed.
+        
+         Summary: Return the size of the sort in [r].  Return [None] if the call failed. 
         That is, get_sort_kind(s) == FINITE_DOMAIN_SORT
 
         def_API('get_finite_domain_sort_size', BOOL, (_in(CONTEXT), _in(SORT), _out(UINT64)))
@@ -3284,7 +3284,7 @@ external get_finite_domain_sort_size : context -> sort -> int64 option
 (**
        Summary: \[ [ get_array_sort_domain c t ] \]
        Return the domain of the given array sort.
-
+       
        - {b Precondition}: get_sort_kind c t == ARRAY_SORT
 
        - {b See also}: {!mk_array_sort}
@@ -3296,8 +3296,8 @@ external get_array_sort_domain : context -> sort -> sort
 	= "camlidl_z3_Z3_get_array_sort_domain"
 
 (**
-       Summary: \[ [ get_array_sort_range c t ] \]
-       Return the range of the given array sort.
+       Summary: \[ [ get_array_sort_range c t ] \] 
+       Return the range of the given array sort. 
 
        - {b Precondition}: get_sort_kind c t == ARRAY_SORT
 
@@ -3312,13 +3312,13 @@ external get_array_sort_range : context -> sort -> sort
 (**
        Summary: \[ [ get_tuple_sort_mk_decl c t ] \]
        Return the constructor declaration of the given tuple
-       sort.
+       sort. 
 
        - {b Precondition}: get_sort_kind c t == DATATYPE_SORT
 
        - {b See also}: {!mk_tuple_sort}
        - {b See also}: {!get_sort_kind}
-
+       
        def_API('get_tuple_sort_mk_decl', FUNC_DECL, (_in(CONTEXT), _in(SORT)))
 *)
 external get_tuple_sort_mk_decl : context -> sort -> func_decl
@@ -3326,7 +3326,7 @@ external get_tuple_sort_mk_decl : context -> sort -> func_decl
 
 (**
        Summary: \[ [ get_tuple_sort_num_fields c t ] \]
-       Return the number of fields of the given tuple sort.
+       Return the number of fields of the given tuple sort. 
 
        - {b Precondition}: get_sort_kind c t == DATATYPE_SORT
 
@@ -3341,14 +3341,14 @@ external get_tuple_sort_num_fields : context -> sort -> int
 (**
        Summary: \[ [ get_tuple_sort_field_decl c t i ] \]
        Return the i-th field declaration (i.e., projection function declaration)
-       of the given tuple sort.
+       of the given tuple sort. 
 
        - {b Precondition}: get_sort_kind t == DATATYPE_SORT
        - {b Precondition}: i < get_tuple_sort_num_fields c t
-
+       
        - {b See also}: {!mk_tuple_sort}
        - {b See also}: {!get_sort_kind}
-
+       
        def_API('get_tuple_sort_field_decl', FUNC_DECL, (_in(CONTEXT), _in(SORT), _in(UINT)))
 *)
 external get_tuple_sort_field_decl : context -> sort -> int -> func_decl
@@ -3433,18 +3433,18 @@ external get_relation_arity : context -> sort -> int
         - {b Precondition}: col < get_relation_arity c s
 
         - {b See also}: {!get_relation_arity}
-
+        
         def_API('get_relation_column', SORT, (_in(CONTEXT), _in(SORT), _in(UINT)))
 *)
 external get_relation_column : context -> sort -> int -> sort
 	= "camlidl_z3_Z3_get_relation_column"
 
 (**
-        {3 {L Function Declarations}}
+        {3 {L Function Declarations}} 
 *)
 (**
-       Summary: Convert a [func_decl] into [ast].
-        - {b Remarks}: [func_decl_to_ast c f]  can be replaced by [(f :> ast)].
+       Summary: Convert a [func_decl] into [ast]. 
+        - {b Remarks}: [func_decl_to_ast c f]  can be replaced by [(f :> ast)]. 
 
        def_API('func_decl_to_ast', AST, (_in(CONTEXT), _in(FUNC_DECL)))
 *)
@@ -3453,7 +3453,7 @@ external func_decl_to_ast : context -> func_decl -> ast
 
 (**
        Summary: compare terms.
-        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used.
+        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used. 
 
        def_API('is_eq_func_decl', BOOL, (_in(CONTEXT), _in(FUNC_DECL), _in(FUNC_DECL)))
 *)
@@ -3462,16 +3462,16 @@ external is_eq_func_decl : context -> func_decl -> func_decl -> bool
 
 (**
         Summary: Return a unique identifier for [f].
-         - {b Remarks}: Implicitly used by [Pervasives.( = )] and [Pervasives.compare].
-
+         - {b Remarks}: Implicitly used by [Pervasives.( = )] and [Pervasives.compare]. 
+    
         def_API('get_func_decl_id', UINT, (_in(CONTEXT), _in(FUNC_DECL)))
 *)
 external get_func_decl_id : context -> func_decl -> int
 	= "camlidl_z3_Z3_get_func_decl_id"
 
 (**
-       Summary: Return the constant declaration name as a symbol.
-
+       Summary: Return the constant declaration name as a symbol. 
+    
        def_API('get_decl_name', SYMBOL, (_in(CONTEXT), _in(FUNC_DECL)))
 *)
 external get_decl_name : context -> func_decl -> symbol
@@ -3508,11 +3508,11 @@ external get_arity : context -> func_decl -> int
 (**
        Summary: \[ [ get_domain c d i ] \]
        Return the sort of the i-th parameter of the given function declaration.
-
+       
        - {b Precondition}: i < get_domain_size d
 
        - {b See also}: {!get_domain_size}
-
+       
        def_API('get_domain', SORT, (_in(CONTEXT), _in(FUNC_DECL), _in(UINT)))
 *)
 external get_domain : context -> func_decl -> int -> sort
@@ -3529,7 +3529,7 @@ val get_domains: context -> func_decl -> sort array
 
 (**
        Summary: \[ [ get_range c d ] \]
-       Return the range of the given declaration.
+       Return the range of the given declaration. 
 
        If [d] is a constant (i.e., has zero arguments), then this
        function returns the sort of the constant.
@@ -3549,11 +3549,11 @@ external get_decl_num_parameters : context -> func_decl -> int
 
 (**
        Summary: Return the parameter type associated with a declaration.
-
+       
        @param c the context
        @param d the function declaration
        @param idx is the index of the named parameter it should be between 0 and the number of parameters.
-
+    
        def_API('get_decl_parameter_kind', UINT, (_in(CONTEXT), _in(FUNC_DECL), _in(UINT)))
 *)
 external get_decl_parameter_kind : context -> func_decl -> int -> parameter_kind
@@ -3630,12 +3630,12 @@ external get_decl_rational_parameter : context -> func_decl -> int -> string
 	= "camlidl_z3_Z3_get_decl_rational_parameter"
 
 (**
-        {3 {L Applications}}
+        {3 {L Applications}} 
 *)
 (**
-       Summary: Convert a [app] into [ast].
-        - {b Remarks}: [app_to_ast c a] can be replaced by [(a :> ast)].
-
+       Summary: Convert a [app] into [ast]. 
+        - {b Remarks}: [app_to_ast c a] can be replaced by [(a :> ast)]. 
+       
        def_API('app_to_ast', AST, (_in(CONTEXT), _in(APP)))
 *)
 external app_to_ast : context -> app -> ast
@@ -3662,7 +3662,7 @@ external get_app_num_args : context -> app -> int
 (**
        Summary: \[ [ get_app_arg c a i ] \]
        Return the i-th argument of the given application.
-
+       
        - {b Precondition}: i < get_num_args c a
 
        def_API('get_app_arg', AST, (_in(CONTEXT), _in(APP), _in(UINT)))
@@ -3680,7 +3680,7 @@ external get_app_arg : context -> app -> int -> ast
 val get_app_args: context -> app -> ast array
 
 (**
-        {3 {L Terms}}
+        {3 {L Terms}} 
 *)
 
 (**
@@ -3718,7 +3718,7 @@ val term_refine : context -> ast -> term_refined
 
 (**
        Summary: compare terms.
-        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used.
+        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used. 
 
        def_API('is_eq_ast', BOOL, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
@@ -3727,7 +3727,7 @@ external is_eq_ast : context -> ast -> ast -> bool
 
 (**
         Summary: Return a unique identifier for [t].
-         - {b Remarks}: Implicitly used by [Pervasives.compare] for values of type [ast], [app], [sort], [func_decl], and [pattern].
+         - {b Remarks}: Implicitly used by [Pervasives.compare] for values of type [ast], [app], [sort], [func_decl], and [pattern]. 
 
         def_API('get_ast_id', UINT, (_in(CONTEXT), _in(AST)))
 *)
@@ -3736,7 +3736,7 @@ external get_ast_id : context -> ast -> int
 
 (**
        Summary: Return a hash code for the given AST.
-        - {b Remarks}: Implicitly used by [Hashtbl.hash] for values of type [ast], [app], [sort], [func_decl], and [pattern].
+        - {b Remarks}: Implicitly used by [Hashtbl.hash] for values of type [ast], [app], [sort], [func_decl], and [pattern]. 
 
        def_API('get_ast_hash', UINT, (_in(CONTEXT), _in(AST)))
 *)
@@ -3745,9 +3745,9 @@ external get_ast_hash : context -> ast -> int
 
 (**
        Summary: Return the sort of an AST node.
-
+       
        The AST node must be a constant, application, numeral, bound variable, or quantifier.
-
+       
        def_API('get_sort', SORT, (_in(CONTEXT), _in(AST)))
 *)
 external get_sort : context -> ast -> sort
@@ -3755,7 +3755,7 @@ external get_sort : context -> ast -> sort
 
 (**
        Summary: Return true if the given expression [t] is well sorted.
-
+       
        def_API('is_well_sorted', BOOL, (_in(CONTEXT), _in(AST)))
 *)
 external is_well_sorted : context -> ast -> bool
@@ -3778,7 +3778,7 @@ external get_ast_kind : context -> ast -> ast_kind
 	= "camlidl_z3_Z3_get_ast_kind"
 
 (**
-      def_API('is_app', BOOL, (_in(CONTEXT), _in(AST)))
+      def_API('is_app', BOOL, (_in(CONTEXT), _in(AST)))      
 *)
 external is_app : context -> ast -> bool
 	= "camlidl_z3_Z3_is_app"
@@ -3791,15 +3791,15 @@ external is_numeral_ast : context -> ast -> bool
 
 (**
        Summary: Return true if the give AST is a real algebraic number.
-
+    
        def_API('is_algebraic_number', BOOL, (_in(CONTEXT), _in(AST)))
 *)
 external is_algebraic_number : context -> ast -> bool
 	= "camlidl_z3_Z3_is_algebraic_number"
 
 (**
-       Summary: Convert an [ast] into an [APP_AST].
-
+       Summary: Convert an [ast] into an [APP_AST]. 
+       
        - {b Precondition}: {v  get_ast_kind c a == [APP_AST]  v}
 
        def_API('to_app', APP, (_in(CONTEXT), _in(AST)))
@@ -3809,7 +3809,7 @@ external to_app : context -> ast -> app
 
 (**
        Summary: Convert an AST into a FUNC_DECL_AST. This is just type casting.
-
+       
        - {b Precondition}: {v  get_ast_kind c a == FUNC_DECL_AST  v}
 
        def_API('to_func_decl', FUNC_DECL, (_in(CONTEXT), _in(AST)))
@@ -3818,7 +3818,7 @@ external to_func_decl : context -> ast -> func_decl
 	= "camlidl_z3_Z3_to_func_decl"
 
 (**
-        {4 {L Numerals}}
+        {4 {L Numerals}} 
 *)
 
 (**
@@ -3829,7 +3829,7 @@ external to_func_decl : context -> ast -> func_decl
 val numeral_refine : context -> ast -> numeral_refined
 
 (**
-        {5 {L Low-level API}}
+        {5 {L Low-level API}} 
 *)
 (**
        Summary: Return numeral value, as a string of a numeric constant term
@@ -3846,8 +3846,8 @@ external get_numeral_string : context -> ast -> string
        The result has at most [precision] decimal places.
 
        - {b Precondition}: get_ast_kind c a == NUMERAL_AST || is_algebraic_number c a
-
-       def_API('get_numeral_decimal_string', STRING, (_in(CONTEXT), _in(AST), _in(UINT)))
+    
+       def_API('get_numeral_decimal_string', STRING, (_in(CONTEXT), _in(AST), _in(UINT)))       
 *)
 external get_numeral_decimal_string : context -> ast -> int -> string
 	= "camlidl_z3_Z3_get_numeral_decimal_string"
@@ -3879,7 +3879,7 @@ external get_denominator : context -> ast -> ast
        @param a term.
        @param num numerator.
        @param den denominator.
-
+       
        Return [TRUE] if the numeral value fits in 64 bit numerals, [FALSE] otherwise.
 
        - {b Precondition}: get_ast_kind a == NUMERAL_AST
@@ -3895,7 +3895,7 @@ external get_numeral_small : context -> ast -> bool * int64 * int64
        the value can fit in a machine int. Return TRUE if the call succeeded.
 
        - {b Precondition}: get_ast_kind c v == NUMERAL_AST
-
+      
        - {b See also}: {!get_numeral_string}
 
        def_API('get_numeral_int', BOOL, (_in(CONTEXT), _in(AST), _out(INT)))
@@ -3932,7 +3932,7 @@ external get_numeral_rational_int64 : context -> ast -> bool * int64 * int64
 	= "camlidl_z3_Z3_get_numeral_rational_int64"
 
 (**
-       Summary: Return a lower bound for the given real algebraic number.
+       Summary: Return a lower bound for the given real algebraic number. 
        The interval isolating the number is smaller than 1/10^precision.
        The result is a numeral AST of sort Real.
 
@@ -3944,7 +3944,7 @@ external get_algebraic_number_lower : context -> ast -> int -> ast
 	= "camlidl_z3_Z3_get_algebraic_number_lower"
 
 (**
-       Summary: Return a upper bound for the given real algebraic number.
+       Summary: Return a upper bound for the given real algebraic number. 
        The interval isolating the number is smaller than 1/10^precision.
        The result is a numeral AST of sort Real.
 
@@ -3956,11 +3956,11 @@ external get_algebraic_number_upper : context -> ast -> int -> ast
 	= "camlidl_z3_Z3_get_algebraic_number_upper"
 
 (**
-        {4 {L Patterns}}
+        {4 {L Patterns}} 
 *)
 (**
-       Summary: Convert a pattern into ast.
-        - {b Remarks}: [pattern_to_ast c p]  can be replaced by [(p :> ast)].
+       Summary: Convert a pattern into ast. 
+        - {b Remarks}: [pattern_to_ast c p]  can be replaced by [(p :> ast)]. 
 
        def_API('pattern_to_ast', AST, (_in(CONTEXT), _in(PATTERN)))
 *)
@@ -3993,13 +3993,13 @@ external get_pattern : context -> pattern -> int -> ast
 	= "camlidl_z3_Z3_get_pattern"
 
 (**
-        {4 {L Quantifiers}}
+        {4 {L Quantifiers}} 
 *)
 (**
        Summary: Return index of de-Brujin bound variable.
 
        - {b Precondition}: get_ast_kind a == VAR_AST
-
+    
        def_API('get_index_value', UINT, (_in(CONTEXT), _in(AST)))
 *)
 external get_index_value : context -> ast -> int
@@ -4007,27 +4007,27 @@ external get_index_value : context -> ast -> int
 
 (**
        Summary: Determine if quantifier is universal.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
-
-       def_API('is_quantifier_forall', BOOL, (_in(CONTEXT), _in(AST)))
+       
+       def_API('is_quantifier_forall', BOOL, (_in(CONTEXT), _in(AST)))       
 *)
 external is_quantifier_forall : context -> ast -> bool
 	= "camlidl_z3_Z3_is_quantifier_forall"
 
 (**
        Summary: Obtain weight of quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
-       def_API('get_quantifier_weight', UINT, (_in(CONTEXT), _in(AST)))
+       def_API('get_quantifier_weight', UINT, (_in(CONTEXT), _in(AST)))       
 *)
 external get_quantifier_weight : context -> ast -> int
 	= "camlidl_z3_Z3_get_quantifier_weight"
 
 (**
        Summary: Return number of patterns used in quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_num_patterns', UINT, (_in(CONTEXT), _in(AST)))
@@ -4037,7 +4037,7 @@ external get_quantifier_num_patterns : context -> ast -> int
 
 (**
        Summary: Return i'th pattern.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_pattern_ast', PATTERN, (_in(CONTEXT), _in(AST), _in(UINT)))
@@ -4047,7 +4047,7 @@ external get_quantifier_pattern_ast : context -> ast -> int -> pattern
 
 (**
        Summary: Return number of no_patterns used in quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_num_no_patterns', UINT, (_in(CONTEXT), _in(AST)))
@@ -4057,7 +4057,7 @@ external get_quantifier_num_no_patterns : context -> ast -> int
 
 (**
        Summary: Return i'th no_pattern.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_no_pattern_ast', AST, (_in(CONTEXT), _in(AST), _in(UINT)))
@@ -4067,7 +4067,7 @@ external get_quantifier_no_pattern_ast : context -> ast -> int -> ast
 
 (**
        Summary: Return number of bound variables of quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_num_bound', UINT, (_in(CONTEXT), _in(AST)))
@@ -4077,7 +4077,7 @@ external get_quantifier_num_bound : context -> ast -> int
 
 (**
        Summary: Return symbol of the i'th bound variable.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_bound_name', SYMBOL, (_in(CONTEXT), _in(AST), _in(UINT)))
@@ -4087,9 +4087,9 @@ external get_quantifier_bound_name : context -> ast -> int -> symbol
 
 (**
        Summary: Return sort of the i'th bound variable.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
-
+       
        def_API('get_quantifier_bound_sort', SORT, (_in(CONTEXT), _in(AST), _in(UINT)))
 *)
 external get_quantifier_bound_sort : context -> ast -> int -> sort
@@ -4097,16 +4097,16 @@ external get_quantifier_bound_sort : context -> ast -> int -> sort
 
 (**
        Summary: Return body of quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
-
+       
        def_API('get_quantifier_body', AST, (_in(CONTEXT), _in(AST)))
 *)
 external get_quantifier_body : context -> ast -> ast
 	= "camlidl_z3_Z3_get_quantifier_body"
 
 (**
-        {3 {L Simplification}}
+        {3 {L Simplification}} 
 *)
 (**
         Summary: Interface to simplifier.
@@ -4120,9 +4120,9 @@ external simplify : context -> ast -> ast
 
 (**
         Summary: Interface to simplifier.
-
+        
         Provides an interface to the AST simplifier used by Z3.
-        This procedure is similar to {!simplify}, but the behavior of the simplifier
+        This procedure is similar to {!simplify}, but the behavior of the simplifier 
         can be configured using the given parameter set.
 
         def_API('simplify_ex', AST, (_in(CONTEXT), _in(AST), _in(PARAMS)))
@@ -4132,7 +4132,7 @@ external simplify_ex : context -> ast -> params -> ast
 
 (**
        Summary: Return a string describing all available parameters.
-
+    
        def_API('simplify_get_help', STRING, (_in(CONTEXT),))
 *)
 external simplify_get_help : context -> string
@@ -4151,7 +4151,7 @@ external simplify_get_param_descrs : context -> param_descrs
 *)
 (**
        Summary: Update the arguments of term [a] using the arguments [args].
-       The number of arguments [num_args] should coincide
+       The number of arguments [num_args] should coincide 
        with the number of arguments to [a].
        If [a] is a quantifier, then num_args has to be 1.
 
@@ -4206,27 +4206,27 @@ type model_refined = {
 }
 
 
-(**
+(** 
    Summary: [model_refine c m] is the refined model of [m].
 *)
 val model_refine : context -> model -> model_refined
 
 (**
        Summary: \[ [ model_eval c m t ] \]
-       Evaluate the AST node [t] in the given model.
-
-        Return [None] if the term was not successfully evaluated.
-
+       Evaluate the AST node [t] in the given model. 
+       
+        Return [None] if the term was not successfully evaluated. 
+       
        If [model_completion] is TRUE, then Z3 will assign an interpretation for any constant or function that does
        not have an interpretation in [m]. These constants and functions were essentially don't cares.
 
        The evaluation may fail for the following reasons:
-
+       
        - [t] contains a quantifier.
-
-       - the model [m] is partial, that is, it doesn't have a complete interpretation for uninterpreted functions.
+       
+       - the model [m] is partial, that is, it doesn't have a complete interpretation for uninterpreted functions. 
        That is, the option {e MODEL_PARTIAL=true } was used.
-
+       
        - [t] is type incorrect.
 
        def_API('model_eval', BOOL, (_in(CONTEXT), _in(MODEL), _in(AST), _in(BOOL), _out(AST)))
@@ -4235,12 +4235,12 @@ external model_eval : context -> model -> ast -> bool -> ast option
 	= "camlidl_z3_Z3_model_eval"
 
 (**
-        {4 {L Low-level API}}
+        {4 {L Low-level API}} 
 *)
 (**
        Summary: Return the interpretation (i.e., assignment) of constant [a] in the model [m].
-       Return  [None],
-       if the model does not assign an interpretation for [a].
+       Return  [None],  
+       if the model does not assign an interpretation for [a]. 
        That should be interpreted as: the value of [a] does not matter.
 
        - {b Precondition}: get_arity c a == 0
@@ -4252,14 +4252,14 @@ external model_get_const_interp : context -> model -> func_decl -> ast option
 
 (**
        Summary: Return the interpretation of the function [f] in the model [m].
-       Return  [None],
-       if the model does not assign an interpretation for [f].
+       Return  [None],  
+       if the model does not assign an interpretation for [f]. 
        That should be interpreted as: the [f] does not matter.
-
+       
        - {b Precondition}: get_arity c f > 0
 
-
-
+       
+       
 
        def_API('model_get_func_interp', FUNC_INTERP, (_in(CONTEXT), _in(MODEL), _in(FUNC_DECL)))
 *)
@@ -4268,7 +4268,7 @@ external model_get_func_interp : context -> model -> func_decl -> func_interp op
 
 (**
        Summary: Return the number of constants assigned by the given model.
-
+       
        - {b See also}: {!model_get_const_decl}
 
        def_API('model_get_num_consts', UINT, (_in(CONTEXT), _in(MODEL)))
@@ -4278,12 +4278,12 @@ external model_get_num_consts : context -> model -> int
 
 (**
        Summary: \[ [ model_get_const_decl c m i ] \]
-       Return the i-th constant in the given model.
+       Return the i-th constant in the given model. 
 
        - {b Precondition}: i < model_get_num_consts c m
 
        - {b See also}: {!model_eval}
-
+       
        def_API('model_get_const_decl', FUNC_DECL, (_in(CONTEXT), _in(MODEL), _in(UINT)))
 *)
 external model_get_const_decl : context -> model -> int -> func_decl
@@ -4291,7 +4291,7 @@ external model_get_const_decl : context -> model -> int -> func_decl
 
 (**
        Summary: Return the number of function interpretations in the given model.
-
+       
        A function interpretation is represented as a finite map and an 'else' value.
        Each entry in the finite map represents the value of a function given a set of arguments.
 
@@ -4315,11 +4315,11 @@ external model_get_func_decl : context -> model -> int -> func_decl
 
 (**
        Summary: Return the number of uninterpreted sorts that [m] assigs an interpretation to.
-
+       
        Z3 also provides an intepretation for uninterpreted sorts used in a formua.
        The interpretation for a sort [s] is a finite set of distinct values. We say this finite set is
        the "universe" of [s].
-
+       
        - {b See also}: {!model_get_sort}
        - {b See also}: {!model_get_sort_universe}
 
@@ -4330,9 +4330,9 @@ external model_get_num_sorts : context -> model -> int
 
 (**
        Summary: Return a uninterpreted sort that [m] assigns an interpretation.
-
+       
        - {b Precondition}: i < model_get_num_sorts c m
-
+    
        - {b See also}: {!model_get_num_sorts}
        - {b See also}: {!model_get_sort_universe}
 
@@ -4343,7 +4343,7 @@ external model_get_sort : context -> model -> int -> sort
 
 (**
        Summary: Return the finite set of distinct values that represent the interpretation for sort [s].
-
+       
        - {b See also}: {!model_get_num_sorts}
        - {b See also}: {!model_get_sort}
 
@@ -4357,7 +4357,7 @@ external model_get_sort_universe : context -> model -> sort -> ast_vector
        It is the array such that forall indices [i] we have that {e (select (_ as-array f) i) } is equal to {e (f i) }.
        This procedure returns TRUE if the [a] is an [as-array] AST node.
 
-       Z3 current solvers have minimal support for [as_array] nodes.
+       Z3 current solvers have minimal support for [as_array] nodes. 
 
        - {b See also}: {!get_as_array_func_decl}
 
@@ -4368,7 +4368,7 @@ external is_as_array : context -> ast -> bool
 
 (**
        Summary: Return the function declaration [f] associated with a {e (_ as_array f) } node.
-
+    
        - {b See also}: {!is_as_array}
 
        def_API('get_as_array_func_decl', FUNC_DECL, (_in(CONTEXT), _in(AST)))
@@ -4393,7 +4393,7 @@ external func_interp_get_num_entries : context -> func_interp -> int
        value of [f] in a particular point.
 
        - {b Precondition}: i < func_interp_get_num_entries c f
-
+       
        - {b See also}: {!func_interp_get_num_entries}
 
        def_API('func_interp_get_entry', FUNC_ENTRY, (_in(CONTEXT), _in(FUNC_INTERP), _in(UINT)))
@@ -4421,11 +4421,11 @@ external func_interp_get_arity : context -> func_interp -> int
 	= "camlidl_z3_Z3_func_interp_get_arity"
 
 (**
-       Summary: Return the value of this point.
-
+       Summary: Return the value of this point. 
+       
        A func_entry object represents an element in the finite map used to encode
        a function interpretation.
-
+       
        - {b See also}: {!func_interp_get_entry}
 
        def_API('func_entry_get_value', AST, (_in(CONTEXT), _in(FUNC_ENTRY)))
@@ -4435,7 +4435,7 @@ external func_entry_get_value : context -> func_entry -> ast
 
 (**
        Summary: Return the number of arguments in a func_entry object.
-
+       
        - {b See also}: {!func_interp_get_entry}
 
        def_API('func_entry_get_num_args', UINT, (_in(CONTEXT), _in(FUNC_ENTRY)))
@@ -4449,7 +4449,7 @@ external func_entry_get_num_args : context -> func_entry -> int
        - {b Precondition}: i < func_entry_get_num_args c e
 
        - {b See also}: {!func_interp_get_entry}
-
+       
        def_API('func_entry_get_arg', AST, (_in(CONTEXT), _in(FUNC_ENTRY), _in(UINT)))
 *)
 external func_entry_get_arg : context -> func_entry -> int -> ast
@@ -4460,7 +4460,7 @@ external func_entry_get_arg : context -> func_entry -> int -> ast
 *)
 (**
        Summary: Log interaction to a file.
-
+       
        extra_API('open_log', INT, (_in(STRING),))
 *)
 external open_log : string -> bool
@@ -4468,7 +4468,7 @@ external open_log : string -> bool
 
 (**
        Summary: Append user-defined string to interaction log.
-
+       
        The interaction log is opened using open_log.
        It contains the formulas that are checked using Z3.
        You can use this command to append comments, for instance.
@@ -4490,7 +4490,7 @@ external close_log : unit -> unit
        Summary: Enable/disable printing warning messages to the console.
 
        Warnings are printed after passing [true], warning messages are
-       suppressed after calling this method with [false].
+       suppressed after calling this method with [false].       
 
        def_API('toggle_warning_messages', VOID, (_in(BOOL),))
 *)
@@ -4504,9 +4504,9 @@ external toggle_warning_messages : bool -> unit
        Summary: Select mode for the format used for pretty-printing AST nodes.
 
        The default mode for pretty printing AST nodes is to produce
-       SMT-LIB style output where common subexpressions are printed
+       SMT-LIB style output where common subexpressions are printed 
        at each occurrence. The mode is called PRINT_SMTLIB_FULL.
-       To print shared common subexpressions only once,
+       To print shared common subexpressions only once, 
        use the PRINT_LOW_LEVEL mode.
        To print in way that conforms to SMT-LIB standards and uses let
        expressions to share common sub-expressions use PRINT_SMTLIB_COMPLIANT.
@@ -4523,9 +4523,9 @@ external set_ast_print_mode : context -> ast_print_mode -> unit
 (**
        Summary: Convert the given AST node into a string.
 
-
-
-
+       
+       
+       
        - {b See also}: {!pattern_to_string}
        - {b See also}: {!sort_to_string}
 
@@ -4555,9 +4555,9 @@ external func_decl_to_string : context -> func_decl -> string
 (**
        Summary: Convert the given model into a string.
 
-
-
-
+       
+       
+       
 
        def_API('model_to_string', STRING, (_in(CONTEXT), _in(MODEL)))
 *)
@@ -4567,13 +4567,13 @@ external model_to_string : context -> model -> string
 (**
        Summary: Convert the given benchmark into SMT-LIB formatted string.
 
-
-
-
+       
+       
+       
 
        @param c - context.
        @param name - name of benchmark. The argument is optional.
-       @param logic - the benchmark logic.
+       @param logic - the benchmark logic. 
        @param status - the status string (sat, unsat, or unknown)
        @param attributes - other attributes, such as source, difficulty or category.
        @param num_assumptions - number of assumptions.
@@ -4590,8 +4590,8 @@ external benchmark_to_smtlib_string : context -> string -> string -> string -> s
 *)
 (**
        Summary: \[ [ parse_smtlib2_string c str ] \]
-       Parse the given string using the SMT-LIB2 parser.
-
+       Parse the given string using the SMT-LIB2 parser. 
+              
        It returns a formula comprising of the conjunction of assertions in the scope
        (up to push/pop) at the end of the string.
 
@@ -4612,9 +4612,9 @@ external parse_smtlib2_file : context -> string -> symbol array -> sort array ->
 (**
   Summary: \[ [ parse_smtlib_string_x c str sort_names sorts decl_names decls ] \]
 
-  Parse the given string using the SMT-LIB parser.
+  Parse the given string using the SMT-LIB parser. 
 
-  The symbol table of the parser can be initialized using the given sorts and declarations.
+  The symbol table of the parser can be initialized using the given sorts and declarations. 
   The symbols in the arrays [sort_names] and [decl_names] don't need to match the names
   of the sorts and declarations in the arrays [sorts] and [decls]. This is an useful feature
   since we can use arbitrary names to reference sorts and declarations defined using the API.
@@ -4647,19 +4647,19 @@ val parse_smtlib_string_formula: context -> string -> symbol array -> sort array
 val parse_smtlib_file_formula: context -> string -> symbol array -> sort array -> symbol array -> func_decl array -> ast
 
 (**
-        {4 {L Low-level API}}
+        {4 {L Low-level API}} 
 *)
 (**
        Summary: \[ [ parse_smtlib_string c str sort_names sorts decl_names decls ] \]
-       Parse the given string using the SMT-LIB parser.
-
-       The symbol table of the parser can be initialized using the given sorts and declarations.
+       Parse the given string using the SMT-LIB parser. 
+              
+       The symbol table of the parser can be initialized using the given sorts and declarations. 
        The symbols in the arrays [sort_names] and [decl_names] don't need to match the names
        of the sorts and declarations in the arrays [sorts] and [decls]. This is an useful feature
        since we can use arbitrary names to reference sorts and declarations defined using the C API.
 
        The formulas, assumptions and declarations defined in [str] can be extracted using the functions:
-       {!get_smtlib_num_formulas}, {!get_smtlib_formula}, {!get_smtlib_num_assumptions}, {!get_smtlib_assumption},
+       {!get_smtlib_num_formulas}, {!get_smtlib_formula}, {!get_smtlib_num_assumptions}, {!get_smtlib_assumption}, 
        {!get_smtlib_num_decls}, and {!get_smtlib_decl}.
 
        def_API('parse_smtlib_string', VOID, (_in(CONTEXT), _in(STRING), _in(UINT), _in_array(2, SYMBOL), _in_array(2, SORT), _in(UINT), _in_array(5, SYMBOL), _in_array(5, FUNC_DECL)))
@@ -4764,7 +4764,7 @@ external get_smtlib_error : context -> string
 (**
        Summary: \[ [ parse_z3_string c str ] \]
        Parse the given string using the Z3 native parser.
-
+       
        Return the conjunction of asserts made in the input.
 
        def_API('parse_z3_string', AST, (_in(CONTEXT), _in(STRING)))
@@ -4804,7 +4804,7 @@ external get_error_msg_ex : context -> error_code -> string
 
 (**
    Summary: Return a string describing the given error code.
-*)
+*) 
 val get_error_msg: context -> error_code -> string
 
 (**
@@ -4822,10 +4822,10 @@ external get_version : unit -> int * int * int * int
         {2 {L Fixedpoint facilities}}
 *)
 (**
-       Summary: Create a new fixedpoint context.
-
-
-
+       Summary: Create a new fixedpoint context. 
+       
+       
+       
 
        def_API('mk_fixedpoint', FIXEDPOINT, (_in(CONTEXT), ))
 *)
@@ -4835,8 +4835,8 @@ external mk_fixedpoint : context -> fixedpoint
 (**
        Summary: Add a universal Horn clause as a named rule.
        The [horn_rule] should be of the form:
-
-       {v
+ 
+       {v 
            horn_rule ::= (forall (bound-vars) horn_rule)
                       |  (=> atoms horn_rule)
                       |  atom
@@ -4848,19 +4848,19 @@ external fixedpoint_add_rule : context -> fixedpoint -> ast -> symbol -> unit
 	= "camlidl_z3_Z3_fixedpoint_add_rule"
 
 (**
-       Summary: Add a Database fact.
-
+       Summary: Add a Database fact. 
+             
        @param c - context
        @param d - fixed point context
        @param r - relation signature for the row.
-       @param num_args - number of columns for the given row.
+       @param num_args - number of columns for the given row. 
        @param args - array of the row elements.
 
-       The number of arguments [num_args] should be equal to the number
+       The number of arguments [num_args] should be equal to the number 
        of sorts in the domain of [r]. Each sort in the domain should be an integral
       (bit-vector, Boolean or or finite domain sort).
 
-       The call has the same effect as adding a rule where
+       The call has the same effect as adding a rule where 
  is applied to the arguments.
 
        def_API('fixedpoint_add_fact', VOID, (_in(CONTEXT), _in(FIXEDPOINT), _in(FUNC_DECL), _in(UINT), _in_array(3, UINT)))
@@ -4882,12 +4882,12 @@ external fixedpoint_assert : context -> fixedpoint -> ast -> unit
 (**
         Summary: Pose a query against the asserted rules.
 
-        {v
+        {v 
            query ::= (exists (bound-vars) query)
-                 |  literals
+                 |  literals 
          v}
 
-        query returns
+        query returns 
         - L_FALSE if the query is unsatisfiable.
         - L_TRUE if the query is satisfiable. Obtain the answer by calling {!fixedpoint_get_answer}.
         - L_UNDEF if the query was interrupted, timed out or otherwise failed.
@@ -4901,8 +4901,8 @@ external fixedpoint_query : context -> fixedpoint -> ast -> lbool
         Summary: Pose multiple queries against the asserted rules.
 
         The queries are encoded as relations (function declarations).
-
-        query returns
+         
+        query returns 
         - L_FALSE if the query is unsatisfiable.
         - L_TRUE if the query is satisfiable. Obtain the answer by calling {!fixedpoint_get_answer}.
         - L_UNDEF if the query was interrupted, timed out or otherwise failed.
@@ -4915,7 +4915,7 @@ external fixedpoint_query_relations : context -> fixedpoint -> func_decl array -
 (**
        Summary: Retrieve a formula that encodes satisfying answers to the query.
 
-
+       
        When used in Datalog mode, the returned answer is a disjunction of conjuncts.
        Each conjunct encodes values of the bound variables of the query that are satisfied.
        In PDR mode, the returned answer is a single conjunction.
@@ -4931,14 +4931,14 @@ external fixedpoint_get_answer : context -> fixedpoint -> ast
        Summary: Retrieve a string that describes the last status returned by {!fixedpoint_query}.
 
        Use this method when {!fixedpoint_query} returns L_UNDEF.
-
+       
        def_API('fixedpoint_get_reason_unknown', STRING, (_in(CONTEXT), _in(FIXEDPOINT) ))
 *)
 external fixedpoint_get_reason_unknown : context -> fixedpoint -> string
 	= "camlidl_z3_Z3_fixedpoint_get_reason_unknown"
 
 (**
-       Summary: Update a named rule.
+       Summary: Update a named rule. 
        A rule with the same name must have been previously created.
 
        def_API('fixedpoint_update_rule', VOID, (_in(CONTEXT), _in(FIXEDPOINT), _in(AST), _in(SYMBOL)))
@@ -4949,10 +4949,10 @@ external fixedpoint_update_rule : context -> fixedpoint -> ast -> symbol -> unit
 (**
        Summary: Query the PDR engine for the maximal levels properties are known about predicate.
 
-       This call retrieves the maximal number of relevant unfoldings
+       This call retrieves the maximal number of relevant unfoldings 
        of [pred] with respect to the current exploration state.
        Note: this functionality is PDR specific.
-
+    
        def_API('fixedpoint_get_num_levels', UINT, (_in(CONTEXT), _in(FIXEDPOINT), _in(FUNC_DECL)))
 *)
 external fixedpoint_get_num_levels : context -> fixedpoint -> func_decl -> int
@@ -4973,7 +4973,7 @@ external fixedpoint_get_cover_delta : context -> fixedpoint -> int -> func_decl 
 
 (**
        Summary: Add property about the predicate [pred].
-       Add a property of predicate [pred] at [level].
+       Add a property of predicate [pred] at [level]. 
        It gets pushed forward when possible.
 
        Note: level = -1 is treated as the fixedpoint. So passing -1 for the [level]
@@ -4999,7 +4999,7 @@ external fixedpoint_get_statistics : context -> fixedpoint -> stats
        Fixedpoint defined relations have least-fixedpoint semantics.
        For example, the relation is empty if it does not occur
        in a head or a fact.
-
+       
        def_API('fixedpoint_register_relation', VOID, (_in(CONTEXT), _in(FIXEDPOINT), _in(FUNC_DECL)))
 *)
 external fixedpoint_register_relation : context -> fixedpoint -> func_decl -> unit
@@ -5028,7 +5028,7 @@ external fixedpoint_simplify_rules : context -> fixedpoint -> ast array -> func_
 	= "camlidl_z3_Z3_fixedpoint_simplify_rules"
 
 (**
-       Summary: Set parameters on fixedpoint context.
+       Summary: Set parameters on fixedpoint context.       
 
        def_API('fixedpoint_set_params', VOID, (_in(CONTEXT), _in(FIXEDPOINT), _in(PARAMS)))
 *)
@@ -5037,7 +5037,7 @@ external fixedpoint_set_params : context -> fixedpoint -> params -> unit
 
 (**
        Summary: Return a string describing all fixedpoint available parameters.
-
+       
        def_API('fixedpoint_get_help', STRING, (_in(CONTEXT), _in(FIXEDPOINT)))
 *)
 external fixedpoint_get_help : context -> fixedpoint -> string
@@ -5065,7 +5065,7 @@ external fixedpoint_to_string : context -> fixedpoint -> ast array -> string
 
 (**
        Summary: Create a backtracking point.
-
+       
        The fixedpoint solver contains a set of rules, added facts and assertions.
        The set of rules, facts and assertions are restored upon calling {!fixedpoint_pop}.
 
@@ -5078,7 +5078,7 @@ external fixedpoint_push : context -> fixedpoint -> unit
 
 (**
        Summary: Backtrack one backtracking point.
-
+       
        - {b See also}: {!fixedpoint_push}
 
        - {b Precondition}: The number of calls to pop cannot exceed calls to push.
@@ -5094,8 +5094,8 @@ external fixedpoint_pop : context -> fixedpoint -> unit
 (**
        Summary: Return an empty AST vector.
 
-
-
+       
+       
 
        def_API('mk_ast_vector', AST_VECTOR, (_in(CONTEXT),))
 *)
@@ -5112,7 +5112,7 @@ external ast_vector_size : context -> ast_vector -> int
 
 (**
        Summary: Return the AST at position [i] in the AST vector [v].
-
+       
        - {b Precondition}: i < ast_vector_size c v
 
        def_API('ast_vector_get', AST, (_in(CONTEXT), _in(AST_VECTOR), _in(UINT)))
@@ -5121,17 +5121,17 @@ external ast_vector_get : context -> ast_vector -> int -> ast
 	= "camlidl_z3_Z3_ast_vector_get"
 
 (**
-       Summary: Update position [i] of the AST vector [v] with the AST [a].
+       Summary: Update position [i] of the AST vector [v] with the AST [a]. 
 
        - {b Precondition}: i < ast_vector_size c v
-
+    
        def_API('ast_vector_set', VOID, (_in(CONTEXT), _in(AST_VECTOR), _in(UINT), _in(AST)))
 *)
 external ast_vector_set : context -> ast_vector -> int -> ast -> unit
 	= "camlidl_z3_Z3_ast_vector_set"
 
 (**
-       Summary: Resize the AST vector [v].
+       Summary: Resize the AST vector [v]. 
 
        def_API('ast_vector_resize', VOID, (_in(CONTEXT), _in(AST_VECTOR), _in(UINT)))
 *)
@@ -5156,7 +5156,7 @@ external ast_vector_translate : context -> ast_vector -> context -> ast_vector
 
 (**
        Summary: Convert AST vector into a string.
-
+    
        def_API('ast_vector_to_string', STRING, (_in(CONTEXT), _in(AST_VECTOR)))
 *)
 external ast_vector_to_string : context -> ast_vector -> string
@@ -5168,8 +5168,8 @@ external ast_vector_to_string : context -> ast_vector -> string
 (**
        Summary: Return an empty mapping from AST to AST
 
-
-
+       
+       
 
        def_API('mk_ast_map', AST_MAP, (_in(CONTEXT),) )
 *)
@@ -5186,7 +5186,7 @@ external ast_map_contains : context -> ast_map -> ast -> bool
 
 (**
        Summary: Return the value associated with the key [k].
-
+       
        The procedure invokes the error handler if [k] is not in the map.
 
        def_API('ast_map_find', AST, (_in(CONTEXT), _in(AST_MAP), _in(AST)))
@@ -5228,7 +5228,7 @@ external ast_map_size : context -> ast_map -> int
 
 (**
        Summary: Return the keys stored in the given map.
-
+       
        def_API('ast_map_keys', AST_VECTOR, (_in(CONTEXT), _in(AST_MAP)))
 *)
 external ast_map_keys : context -> ast_map -> ast_vector
@@ -5249,16 +5249,16 @@ external ast_map_to_string : context -> ast_map -> string
        Summary: Create a goal (aka problem). A goal is essentially a set
        of formulas, that can be solved and/or transformed using
        tactics and solvers.
-
+       
        If models == true, then model generation is enabled for the new goal.
 
        If unsat_cores == true, then unsat core generation is enabled for the new goal.
 
-       If proofs == true, then proof generation is enabled for the new goal. Remark, the
+       If proofs == true, then proof generation is enabled for the new goal. Remark, the 
        Z3 context c must have been created with proof generation support.
 
-
-
+       
+       
 
        def_API('mk_goal', GOAL, (_in(CONTEXT), _in(BOOL), _in(BOOL), _in(BOOL)))
 *)
@@ -5276,8 +5276,8 @@ external goal_precision : context -> goal -> goal_prec
 	= "camlidl_z3_Z3_goal_precision"
 
 (**
-       Summary: Add a new formula [a] to the given goal.
-
+       Summary: Add a new formula [a] to the given goal. 
+       
        def_API('goal_assert', VOID, (_in(CONTEXT), _in(GOAL), _in(AST)))
 *)
 external goal_assert : context -> goal -> ast -> unit
@@ -5301,7 +5301,7 @@ external goal_depth : context -> goal -> int
 
 (**
        Summary: Erase all formulas from the given goal.
-
+       
        def_API('goal_reset', VOID, (_in(CONTEXT), _in(GOAL)))
 *)
 external goal_reset : context -> goal -> unit
@@ -5372,7 +5372,7 @@ external goal_to_string : context -> goal -> string
        Summary: Return a tactic associated with the given name.
        The complete list of tactics may be obtained using the procedures {!get_num_tactics} and {!get_tactic_name}.
        It may also be obtained using the command {e (help-tactics) } in the SMT 2.0 front-end.
-
+    
        Tactics are the basic building block for creating custom solvers for specific problem domains.
 
        def_API('mk_tactic', TACTIC, (_in(CONTEXT), _in(STRING)))
@@ -5547,8 +5547,8 @@ external probe_le : context -> probe -> probe -> probe
        Summary: Return a probe that evaluates to "true" when the value returned by [p1] is greater than or equal to the value returned by [p2].
 
        - {b Remarks}: For probes, "true" is any value different from 0.0.
-
-       def_API('probe_ge', PROBE, (_in(CONTEXT), _in(PROBE), _in(PROBE)))
+       
+       def_API('probe_ge', PROBE, (_in(CONTEXT), _in(PROBE), _in(PROBE))) 
 *)
 external probe_ge : context -> probe -> probe -> probe
 	= "camlidl_z3_Z3_probe_ge"
@@ -5557,7 +5557,7 @@ external probe_ge : context -> probe -> probe -> probe
        Summary: Return a probe that evaluates to "true" when the value returned by [p1] is equal to the value returned by [p2].
 
        - {b Remarks}: For probes, "true" is any value different from 0.0.
-
+    
        def_API('probe_eq', PROBE, (_in(CONTEXT), _in(PROBE), _in(PROBE)))
 *)
 external probe_eq : context -> probe -> probe -> probe
@@ -5623,7 +5623,7 @@ external get_num_probes : context -> int
        Summary: Return the name of the i probe.
 
        - {b Precondition}: i < get_num_probes c
-
+       
        def_API('get_probe_name', STRING, (_in(CONTEXT), _in(UINT)))
 *)
 external get_probe_name : context -> int -> string
@@ -5672,7 +5672,7 @@ external probe_apply : context -> probe -> goal -> float
 
 (**
        Summary: Apply tactic [t] to the goal [g].
-
+       
        def_API('tactic_apply', APPLY_RESULT, (_in(CONTEXT), _in(TACTIC), _in(GOAL)))
 *)
 external tactic_apply : context -> tactic -> goal -> apply_result
@@ -5704,7 +5704,7 @@ external apply_result_get_num_subgoals : context -> apply_result -> int
 
 (**
        Summary: Return one of the subgoals in the [apply_result] object returned by {!tactic_apply}.
-
+       
        - {b Precondition}: i < apply_result_get_num_subgoals c r
 
        def_API('apply_result_get_subgoal', GOAL, (_in(CONTEXT), _in(APPLY_RESULT), _in(UINT)))
@@ -5727,10 +5727,10 @@ external apply_result_convert_model : context -> apply_result -> int -> model ->
 (**
        Summary: Create a new (incremental) solver. This solver also uses a
        set of builtin tactics for handling the first check-sat command, and
-       check-sat commands that take more than a given number of milliseconds to be solved.
-
-
-
+       check-sat commands that take more than a given number of milliseconds to be solved. 
+       
+       
+       
 
        def_API('mk_solver', SOLVER, (_in(CONTEXT),))
 *)
@@ -5748,9 +5748,9 @@ external mk_simple_solver : context -> solver
 (**
        Summary: Create a new solver customized for the given logic.
        It behaves like {!mk_solver} if the logic is unknown or unsupported.
-
-
-
+       
+       
+       
 
        def_API('mk_solver_for_logic', SOLVER, (_in(CONTEXT), _in(SYMBOL)))
 *)
@@ -5793,8 +5793,8 @@ external solver_set_params : context -> solver -> params -> unit
 
 (**
        Summary: Create a backtracking point.
-
-       The solver contains a stack of assertions.
+       
+       The solver contains a stack of assertions. 
 
        - {b See also}: {!solver_pop}
 
@@ -5805,7 +5805,7 @@ external solver_push : context -> solver -> unit
 
 (**
        Summary: Backtrack [n] backtracking points.
-
+       
        - {b See also}: {!solver_push}
 
        - {b Precondition}: n <= solver_get_num_scopes c s
@@ -5825,10 +5825,10 @@ external solver_reset : context -> solver -> unit
 
 (**
        Summary: Return the number of backtracking points.
-
+       
        - {b See also}: {!solver_push}
        - {b See also}: {!solver_pop}
-
+       
        def_API('solver_get_num_scopes', UINT, (_in(CONTEXT), _in(SOLVER)))
 *)
 external solver_get_num_scopes : context -> solver -> int
@@ -5836,7 +5836,7 @@ external solver_get_num_scopes : context -> solver -> int
 
 (**
        Summary: Assert a constraint into the solver.
-
+       
        The functions {!solver_check} and {!solver_check_assumptions} should be
        used to check whether the logical context is consistent or not.
 
@@ -5847,8 +5847,8 @@ external solver_assert : context -> solver -> ast -> unit
 
 (**
        Summary: Return the set of asserted formulas as a goal object.
-
-       def_API('solver_get_assertions', AST_VECTOR, (_in(CONTEXT), _in(SOLVER)))
+    
+       def_API('solver_get_assertions', AST_VECTOR, (_in(CONTEXT), _in(SOLVER)))       
 *)
 external solver_get_assertions : context -> solver -> ast_vector
 	= "camlidl_z3_Z3_solver_get_assertions"
@@ -5861,7 +5861,7 @@ external solver_get_assertions : context -> solver -> ast_vector
        L_FALSE) and model construction is enabled.
 
        The function {!solver_get_proof} retrieves a proof if proof
-       generation was enabled when the context was created, and the
+       generation was enabled when the context was created, and the 
        assertions are unsatisfiable (i.e., the result is [L_FALSE)].
 
        def_API('solver_check', INT, (_in(CONTEXT), _in(SOLVER)))
@@ -5873,9 +5873,9 @@ external solver_check : context -> solver -> lbool
        Summary: Check whether the assertions in the given solver and
        optional assumptions are consistent or not.
 
-       The function {!solver_get_unsat_core} retrieves the subset of the
+       The function {!solver_get_unsat_core} retrieves the subset of the 
        assumptions used in the unsatisfiability proof produced by Z3.
-
+      
        - {b See also}: {!solver_check}
 
        def_API('solver_check_assumptions', INT, (_in(CONTEXT), _in(SOLVER), _in(UINT), _in_array(2, AST)))
@@ -5886,9 +5886,9 @@ external solver_check_assumptions : context -> solver -> ast array -> lbool
 (**
        Summary: Retrieve the model for the last {!solver_check} or {!solver_check_assumptions}
 
-       The error handler is invoked if a model is not available because
+       The error handler is invoked if a model is not available because 
        the commands above were not invoked for the given solver, or if the result was [L_FALSE].
-
+       
        def_API('solver_get_model', MODEL, (_in(CONTEXT), _in(SOLVER)))
 *)
 external solver_get_model : context -> solver -> model
@@ -5927,7 +5927,7 @@ external solver_get_reason_unknown : context -> solver -> string
 (**
        Summary: Return statistics for the given solver.
 
-
+       
 
        def_API('solver_get_statistics', STATS, (_in(CONTEXT), _in(SOLVER)))
 *)
@@ -5950,21 +5950,21 @@ type stat_datum = Stat_int of int | Stat_float of float
 type stats_refined = (string, stat_datum) Hashtbl.t
 
 
-(**
+(** 
    Summary: [stats_refine c s] is the refined stats of [s].
 *)
 val stats_refine : context -> stats -> stats_refined
 
 (**
        Summary: Convert a statistics into a string.
-
+       
        def_API('stats_to_string', STRING, (_in(CONTEXT), _in(STATS)))
 *)
 external stats_to_string : context -> stats -> string
 	= "camlidl_z3_Z3_stats_to_string"
 
 (**
-        {4 {L Low-level API}}
+        {4 {L Low-level API}} 
 *)
 (**
        Summary: Return the number of statistical data in [s].
@@ -5986,7 +5986,7 @@ external stats_get_key : context -> stats -> int -> string
 
 (**
        Summary: Return TRUE if the given statistical data is a unsigned int integer.
-
+       
        - {b Precondition}: idx < stats_size c s
 
        def_API('stats_is_uint', BOOL, (_in(CONTEXT), _in(STATS), _in(UINT)))
@@ -5996,7 +5996,7 @@ external stats_is_uint : context -> stats -> int -> bool
 
 (**
        Summary: Return TRUE if the given statistical data is a double.
-
+       
        - {b Precondition}: idx < stats_size c s
 
        def_API('stats_is_double', BOOL, (_in(CONTEXT), _in(STATS), _in(UINT)))
@@ -6006,7 +6006,7 @@ external stats_is_double : context -> stats -> int -> bool
 
 (**
        Summary: Return the unsigned int value of the given statistical data.
-
+       
        - {b Precondition}: idx < stats_size c s && stats_is_uint c s
 
        def_API('stats_get_uint_value', UINT, (_in(CONTEXT), _in(STATS), _in(UINT)))
@@ -6016,7 +6016,7 @@ external stats_get_uint_value : context -> stats -> int -> int
 
 (**
        Summary: Return the double value of the given statistical data.
-
+       
        - {b Precondition}: idx < stats_size c s && stats_is_double c s
 
        def_API('stats_get_double_value', DOUBLE, (_in(CONTEXT), _in(STATS), _in(UINT)))
@@ -6049,14 +6049,14 @@ external get_implied_equalities : context -> solver -> ast array -> lbool * int 
 	= "camlidl_z3_Z3_get_implied_equalities"
 
 
-(**
-   {2 {L Legacy V3 API}}
-*)
+(** 
+   {2 {L Legacy V3 API}} 
+*) 
 
 module V3 : sig
-(**
-   {2 {L Legacy V3 API}}
-*)
+(** 
+   {2 {L Legacy V3 API}} 
+*) 
 
 (* File generated from z3.idl *)
 
@@ -6294,16 +6294,16 @@ and ast_print_mode =
 
 
 (**
-
+   
 
 *)
 (**
    {2 {L Types}}
+   
+   
+    Most of the types in the API are abstract. 
 
-
-    Most of the types in the API are abstract.
-
-
+   
    - [context]: manager of all other Z3 objects, global configuration options, etc.
    - [symbol]: Lisp-like symbol used to name types, constants, and functions.  A symbol can be created using string or integers.
    - [ast]: abstract syntax tree node. That is, the data-structure used in Z3 to represent terms, formulas and types.
@@ -6311,7 +6311,7 @@ and ast_print_mode =
    - [func_decl]: kind of AST used to represent function symbols.
    - [app]: kind of AST used to represent function applications.
    - [pattern]: kind of AST used to represent pattern and multi-patterns used to guide quantifier instantiation.
-
+   
    - [params]: parameter set used to configure many components such as: simplifiers, tactics, solvers, etc.
    - [model]: model for the constraints asserted into the logical context.
    - [func_interp]: interpretation of a function in a model.
@@ -6327,11 +6327,11 @@ and ast_print_mode =
    - [stats]: statistical data for a solver.
 *)
 (**
-    {!lbool}
+    {!lbool}  
    Lifted Boolean type: [false], [undefined], [true].
 *)
 (**
-    {!symbol_kind}
+    {!symbol_kind}  
    The different kinds of symbol.
    In Z3, a symbol can be represented using integers and strings (See {!get_symbol_kind}).
 
@@ -6339,7 +6339,7 @@ and ast_print_mode =
    - {b See also}: {!mk_string_symbol}
 *)
 (**
-    {!parameter_kind}
+    {!parameter_kind}  
    The different kinds of parameters that can be associated with function symbols.
    - {b See also}: {!get_decl_num_parameters}
    - {b See also}: {!get_decl_parameter_kind}
@@ -6353,11 +6353,11 @@ and ast_print_mode =
    - PARAMETER_FUNC_DECL is used for function declaration parameters.
 *)
 (**
-    {!sort_kind}
+    {!sort_kind}  
    The different kinds of Z3 types (See {!get_sort_kind}).
 *)
 (**
-    {!ast_kind}
+    {!ast_kind}  
    The different kinds of Z3 AST (abstract syntax trees). That is, terms, formulas and types.
 
    - APP_AST:            constant and applications
@@ -6369,7 +6369,7 @@ and ast_print_mode =
    - UNKNOWN_AST:        internal
 *)
 (**
-    {!decl_kind}
+    {!decl_kind}  
    The different kinds of interpreted function kinds.
 
    - OP_TRUE The constant true.
@@ -6434,9 +6434,9 @@ and ast_print_mode =
    - OP_POWER Power operator x^y.
 
    - OP_STORE Array store. It satisfies select(store(a,i,v),j) = if i = j then v else select(a,j).
-        Array store takes at least 3 arguments.
+        Array store takes at least 3 arguments. 
 
-   - OP_SELECT Array select.
+   - OP_SELECT Array select. 
 
    - OP_CONST_ARRAY The constant array. For example, select(const(v),i) = v holds for every v and i. The function is unary.
 
@@ -6471,7 +6471,7 @@ and ast_print_mode =
    - OP_BSUB Binary subtraction.
 
    - OP_BMUL Binary multiplication.
-
+    
    - OP_BSDIV Binary signed division.
 
    - OP_BUDIV Binary unsigned int division.
@@ -6491,7 +6491,7 @@ and ast_print_mode =
    - OP_BUREM0 Unary function. burem(x,0) is congruent to burem0(x).
 
    - OP_BSMOD0 Unary function. bsmod(x,0) is congruent to bsmod0(x).
-
+    
    - OP_ULEQ Unsigned bit-vector <= - Binary relation.
 
    - OP_SLEQ Signed bit-vector  <= - Binary relation.
@@ -6560,7 +6560,7 @@ and ast_print_mode =
        is not supported by the decision procedures. Only the most
        rudimentary simplification rules are applied to this function.
 
-   - OP_CARRY Compute the carry bit in a full-adder.
+   - OP_CARRY Compute the carry bit in a full-adder. 
        The meaning is given by the equivalence
        (carry l1 l2 l3) <=> (or (and l1 l2) (and l1 l3) (and l2 l3)))
 
@@ -6573,7 +6573,7 @@ and ast_print_mode =
    - OP_PR_TRUE: Proof for the expression 'true'.
 
    - OP_PR_ASSERTED: Proof for a fact asserted by the user.
-
+   
    - OP_PR_GOAL: Proof for a fact (tagged as goal) asserted by the user.
 
    - OP_PR_MODUS_PONENS: Given a proof for p and a proof for (implies p q), produces a proof for q.
@@ -6585,7 +6585,7 @@ and ast_print_mode =
           The second antecedents may also be a proof for (iff p q).
 
    - OP_PR_REFLEXIVITY: A proof for (R t t), where R is a reflexive relation. This proof object has no antecedents.
-        The only reflexive relations that are used are
+        The only reflexive relations that are used are 
         equivalence modulo namings, equality and equivalence.
         That is, R is either '~', '=' or 'iff'.
 
@@ -6605,7 +6605,7 @@ and ast_print_mode =
        }
 
    - OP_PR_TRANSITIVITY_STAR: Condensed transitivity proof. This proof object is only used if the parameter PROOF_MODE is 1.
-     It combines several symmetry and transitivity proofs.
+     It combines several symmetry and transitivity proofs. 
 
           Example:
           {e
@@ -6618,7 +6618,7 @@ and ast_print_mode =
 
           Assuming that this proof object is a proof for (R s t), then
           a proof checker must check if it is possible to prove (R s t)
-          using the antecedents, symmetry and transitivity.  That is,
+          using the antecedents, symmetry and transitivity.  That is, 
           if there is a path from s to t, if we view every
           antecedent (R a b) as an edge between a and b.
 
@@ -6636,8 +6636,8 @@ and ast_print_mode =
 
        T1: (~ p q)
        [quant-intro T1]: (~ (forall (x) p) (forall (x) q))
-
-   - OP_PR_DISTRIBUTIVITY: Distributivity proof object.
+   
+   - OP_PR_DISTRIBUTIVITY: Distributivity proof object. 
           Given that f (= or) distributes over g (= and), produces a proof for
 
           (= (f a (g c d))
@@ -6651,11 +6651,11 @@ and ast_print_mode =
           where each f and g can have arbitrary number of arguments.
 
           This proof object has no antecedents.
-          Remark. This rule is used by the CNF conversion pass and
+          Remark. This rule is used by the CNF conversion pass and 
           instantiated by f = or, and g = and.
-
+    
    - OP_PR_AND_ELIM: Given a proof for (and l_1 ... l_n), produces a proof for l_i
-
+        
        {e
        T1: (and l_1 ... l_n)
        [and-elim T1]: l_i
@@ -6671,10 +6671,10 @@ and ast_print_mode =
           The head function symbol of t is interpreted.
 
           This proof object has no antecedents.
-          The conclusion of a rewrite rule is either an equality (= t s),
+          The conclusion of a rewrite rule is either an equality (= t s), 
           an equivalence (iff t s), or equi-satisfiability (~ t s).
           Remark: if f is bool, then = is iff.
-
+          
 
           Examples:
           {e
@@ -6696,22 +6696,22 @@ and ast_print_mode =
    - OP_PR_PULL_QUANT: A proof for (iff (f (forall (x) q(x)) r) (forall (x) (f (q x) r))). This proof object has no antecedents.
 
    - OP_PR_PULL_QUANT_STAR: A proof for (iff P Q) where Q is in prenex normal form.
-       This proof object is only used if the parameter PROOF_MODE is 1.
+       This proof object is only used if the parameter PROOF_MODE is 1.       
        This proof object has no antecedents.
-
+  
    - OP_PR_PUSH_QUANT: A proof for:
 
        {e
           (iff (forall (x_1 ... x_m) (and p_1[x_1 ... x_m] ... p_n[x_1 ... x_m]))
                (and (forall (x_1 ... x_m) p_1[x_1 ... x_m])
-                 ...
+                 ... 
                (forall (x_1 ... x_m) p_n[x_1 ... x_m])))
                }
          This proof object has no antecedents.
 
-   - OP_PR_ELIM_UNUSED_VARS:
+   - OP_PR_ELIM_UNUSED_VARS:  
           A proof for (iff (forall (x_1 ... x_n y_1 ... y_m) p[x_1 ... x_n])
-                           (forall (x_1 ... x_n) p[x_1 ... x_n]))
+                           (forall (x_1 ... x_n) p[x_1 ... x_n])) 
 
           It is used to justify the elimination of unused variables.
           This proof object has no antecedents.
@@ -6721,14 +6721,14 @@ and ast_print_mode =
           if x does not occur in t.
 
           This proof object has no antecedents.
-
+          
           Several variables can be eliminated simultaneously.
 
    - OP_PR_QUANT_INST: A proof of (or (not (forall (x) (P x))) (P a))
 
    - OP_PR_HYPOTHESIS: Mark a hypothesis in a natural deduction style proof.
 
-   - OP_PR_LEMMA:
+   - OP_PR_LEMMA: 
 
        {e
           T1: false
@@ -6738,7 +6738,7 @@ and ast_print_mode =
           It converts the proof in a proof for (or (not l_1) ... (not l_n)),
           when T1 contains the hypotheses: l_1, ..., l_n.
 
-   - OP_PR_UNIT_RESOLUTION:
+   - OP_PR_UNIT_RESOLUTION: 
        {e
           T1:      (or l_1 ... l_n l_1' ... l_m')
           T2:      (not l_1)
@@ -6747,7 +6747,7 @@ and ast_print_mode =
           [unit-resolution T1 ... T(n+1)]: (or l_1' ... l_m')
           }
 
-   - OP_PR_IFF_TRUE:
+   - OP_PR_IFF_TRUE: 
       {e
        T1: p
        [iff-true T1]: (iff p true)
@@ -6762,14 +6762,14 @@ and ast_print_mode =
    - OP_PR_COMMUTATIVITY:
 
           [comm]: (= (f a b) (f b a))
-
+          
           f is a commutative operator.
 
           This proof object has no antecedents.
           Remark: if f is bool, then = is iff.
-
+   
    - OP_PR_DEF_AXIOM: Proof object used to justify Tseitin's like axioms:
-
+       
           {e
           (or (not (and p q)) p)
           (or (not (and p q)) q)
@@ -6798,7 +6798,7 @@ and ast_print_mode =
           You can recover the propositional tautologies by
           unfolding the Boolean connectives in the axioms a small
           bounded number of steps (=3).
-
+    
    - OP_PR_DEF_INTRO: Introduces a name for a formula/term.
        Suppose e is an expression with free variables x, and def-intro
        introduces the name n(x). The possible cases are:
@@ -6814,17 +6814,17 @@ and ast_print_mode =
        [def-intro]: (and (or (not cond) (= n th)) (or cond (= n el)))
 
        Otherwise:
-       [def-intro]: (= n e)
+       [def-intro]: (= n e)       
 
-   - OP_PR_APPLY_DEF:
+   - OP_PR_APPLY_DEF: 
        [apply-def T1]: F ~ n
        F is 'equivalent' to n, given that T1 is a proof that
        n is a name for F.
-
+   
    - OP_PR_IFF_OEQ:
        T1: (iff p q)
        [iff~ T1]: (~ p q)
-
+ 
    - OP_PR_NNF_POS: Proof for a (positive) NNF step. Example:
        {e
           T1: (not s_1) ~ r_1
@@ -6839,7 +6839,7 @@ and ast_print_mode =
         The quantifier is retained (unless the bound variables are eliminated).
         Example
         {e
-           T1: q ~ q_new
+           T1: q ~ q_new 
            [nnf-pos T1]: (~ (forall (x T) q) (forall (x T) q_new))
         }
        (b) When recursively creating NNF over Boolean formulas, where the top-level
@@ -6848,7 +6848,7 @@ and ast_print_mode =
        NNF_NEG furthermore handles the case where negation is pushed
        over Boolean connectives 'and' and 'or'.
 
-
+    
    - OP_PR_NFF_NEG: Proof for a (negative) NNF step. Examples:
           {e
           T1: (not s_1) ~ r_1
@@ -6869,24 +6869,24 @@ and ast_print_mode =
                                    (and (or r_1 r_2) (or r_1' r_2')))
        }
    - OP_PR_NNF_STAR: A proof for (~ P Q) where Q is in negation normal form.
-
-       This proof object is only used if the parameter PROOF_MODE is 1.
-
+       
+       This proof object is only used if the parameter PROOF_MODE is 1.       
+              
        This proof object may have n antecedents. Each antecedent is a PR_DEF_INTRO.
 
    - OP_PR_CNF_STAR: A proof for (~ P Q) where Q is in conjunctive normal form.
-       This proof object is only used if the parameter PROOF_MODE is 1.
-       This proof object may have n antecedents. Each antecedent is a PR_DEF_INTRO.
+       This proof object is only used if the parameter PROOF_MODE is 1.       
+       This proof object may have n antecedents. Each antecedent is a PR_DEF_INTRO.          
 
-   - OP_PR_SKOLEMIZE: Proof for:
-
+   - OP_PR_SKOLEMIZE: Proof for:  
+       
           {e
           [sk]: (~ (not (forall x (p x y))) (not (p (sk y) y)))
           [sk]: (~ (exists x (p x y)) (p (sk y) y))
           }
 
           This proof object has no antecedents.
-
+   
    - OP_PR_MODUS_PONENS_OEQ: Modus ponens style rule for equi-satisfiability.
        {e
           T1: p
@@ -6899,9 +6899,9 @@ and ast_print_mode =
          The theory lemma function comes with one or more parameters.
          The first parameter indicates the name of the theory.
          For the theory of arithmetic, additional parameters provide hints for
-         checking the theory lemma.
+         checking the theory lemma. 
          The hints for arithmetic are:
-
+         
          - farkas - followed by rational coefficients. Multiply the coefficients to the
            inequalities in the lemma, add the (negated) inequalities and obtain a contradiction.
 
@@ -6932,7 +6932,7 @@ and ast_print_mode =
         {e
              (=> (and ln+1 ln+2 .. ln+m) (or l0 l1 .. ln-1))
         }
-        In other words we use the following (Prolog style) convention for Horn
+        In other words we use the following (Prolog style) convention for Horn 
         implications:
         The head of a Horn implication is position 0,
         the first conjunct in the body of an implication is position 1
@@ -6955,16 +6955,16 @@ and ast_print_mode =
 
 
       - OP_RA_STORE: Insert a record into a relation.
-        The function takes [n+1] arguments, where the first argument is the relation and the remaining [n] elements
+        The function takes [n+1] arguments, where the first argument is the relation and the remaining [n] elements 
         correspond to the [n] columns of the relation.
 
-      - OP_RA_EMPTY: Creates the empty relation.
-
+      - OP_RA_EMPTY: Creates the empty relation. 
+        
       - OP_RA_IS_EMPTY: Tests if the relation is empty.
 
       - OP_RA_JOIN: Create the relational join.
 
-      - OP_RA_UNION: Create the union or convex hull of two relations.
+      - OP_RA_UNION: Create the union or convex hull of two relations. 
         The function takes two arguments.
 
       - OP_RA_WIDEN: Widen two relations.
@@ -6974,7 +6974,7 @@ and ast_print_mode =
         The function takes one argument.
 
       - OP_RA_FILTER: Filter (restrict) a relation with respect to a predicate.
-        The first argument is a relation.
+        The first argument is a relation. 
         The second argument is a predicate with free de-Brujin indices
         corresponding to the columns of the relation.
         So the first column in the relation has index 0.
@@ -6989,23 +6989,23 @@ and ast_print_mode =
         target are elements in x in pos, such that there is no y in neg that agrees with
         x on the columns c1, d1, .., cN, dN.
 
-
-      - OP_RA_RENAME: rename columns in the relation.
+    
+      - OP_RA_RENAME: rename columns in the relation. 
         The function takes one argument.
         The parameters contain the renaming as a cycle.
-
+         
       - OP_RA_COMPLEMENT: Complement the relation.
 
       - OP_RA_SELECT: Check if a record is an element of the relation.
         The function takes [n+1] arguments, where the first argument is a relation,
         and the remaining [n] arguments correspond to a record.
 
-      - OP_RA_CLONE: Create a fresh copy (clone) of a relation.
+      - OP_RA_CLONE: Create a fresh copy (clone) of a relation. 
         The function is logically the identity, but
         in the context of a register machine allows
-        for  [OP_RA_UNION]
+        for  [OP_RA_UNION]  
         to perform destructive updates to the first argument.
-
+        
 
       - OP_FD_LT: A less than predicate over the finite domain FINITE_DOMAIN_SORT.
 
@@ -7025,10 +7025,10 @@ and ast_print_mode =
       - OP_UNINTERPRETED: kind used for uninterpreted symbols.
 *)
 (**
-    {!param_kind}
+    {!param_kind}  
 
    The different kinds of parameters that can be associated with parameter sets.
-   (see {!mk_params}).
+   (see {!mk_params}). 
 
     - PK_UINT integer parameters.
     - PK_BOOL boolean parameters.
@@ -7039,7 +7039,7 @@ and ast_print_mode =
     - PK_INVALID invalid parameter.
 *)
 (**
-    {!search_failure}
+    {!search_failure}  
    The different kinds of search failure types.
 
    - NO_FAILURE:         The last search was successful
@@ -7052,7 +7052,7 @@ and ast_print_mode =
    - QUANTIFIERS:        Logical context contains universal quantifiers
 *)
 (**
-    {!ast_print_mode}
+    {!ast_print_mode}  
    Z3 pretty printing modes (See {!set_ast_print_mode}).
 
    - PRINT_SMTLIB_FULL:   Print AST nodes in SMTLIB verbose format.
@@ -7062,7 +7062,7 @@ and ast_print_mode =
 *)
 (**
   Definitions for update_api.py
-
+  
   def_Type('CONFIG',           'config',           'Config')
   def_Type('CONTEXT',          'context',          'ContextObj')
   def_Type('AST',              'ast',              'Ast')
@@ -7096,7 +7096,7 @@ and ast_print_mode =
 (**
        Summary: Create a configuration.
 
-       Configurations are created in order to assign parameters prior to creating
+       Configurations are created in order to assign parameters prior to creating 
        contexts for Z3 interaction. For example, if the users wishes to use model
        generation, then call:
 
@@ -7105,7 +7105,7 @@ and ast_print_mode =
         - {b Remarks}: Consider using {!mk_context_x} instead of using
        explicit configuration objects. The function {!mk_context_x}
        receives an array of string pairs. This array represents the
-       configuration options.
+       configuration options. 
 
        - {b See also}: {!set_param_value}
        - {b See also}: {!del_config}
@@ -7130,7 +7130,7 @@ external del_config : config -> unit
 
        The list of all configuration parameters can be obtained using the Z3 executable:
 
-       {v
+       {v 
        z3.exe -ini?
         v}
 
@@ -7145,15 +7145,15 @@ external set_param_value : config -> string -> string -> unit
        {2 {L Create context}}
 *)
 (**
-       Summary: Create a context using the given configuration.
-
+       Summary: Create a context using the given configuration. 
+    
        After a context is created, the configuration cannot be changed,
        although some parameters can be changed using {!update_param_value}.
        All main interaction with Z3 happens in the context of a [context].
 
+       
 
-
-
+       
 
        def_API('mk_context', CONTEXT, (_in(CONFIG),))
 *)
@@ -7175,14 +7175,14 @@ external del_context : context -> unit
 
        The list of all configuration parameters can be obtained using the Z3 executable:
 
-       {v
+       {v 
        z3.exe -ini?
         v}
 
        Only a few configuration parameters are mutable once the context is created.
        The error handler is invoked when trying to modify an immutable parameter.
 
-
+       
         - {b See also}: {!mk_context }
 
        def_API('update_param_value', VOID, (_in(CONTEXT), _in(STRING), _in(STRING)))
@@ -7192,12 +7192,12 @@ external update_param_value : context -> string -> string -> unit
 
 (**
        Summary: Get a configuration parameter.
-
-       Returns  [None]
+      
+       Returns  [None]  
        if the parameter value does not exist.
 
-
-
+       
+       
         - {b See also}: {!mk_context }
 
        def_API('get_param_value', BOOL, (_in(CONTEXT), _in(STRING), _out(STRING)))
@@ -7209,7 +7209,7 @@ external get_param_value : context -> string -> string option
        {2 {L Symbols}}
 *)
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
        Summary: Create a Z3 symbol using an integer.
@@ -7242,11 +7242,11 @@ external mk_string_symbol : context -> string -> symbol
        {2 {L Sorts}}
 *)
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
        Summary: Create a free (uninterpreted) type using the given name (symbol).
-
+       
        Two free types are considered the same iff the have the same name.
 
        def_API('mk_uninterpreted_sort', SORT, (_in(CONTEXT), _in(SYMBOL)))
@@ -7255,7 +7255,7 @@ external mk_uninterpreted_sort : context -> symbol -> sort
 	= "camlidl_z3V3_Z3_mk_uninterpreted_sort"
 
 (**
-       Summary: Create the Boolean type.
+       Summary: Create the Boolean type. 
 
        This type is used to create propositional variables and predicates.
 
@@ -7279,7 +7279,7 @@ external mk_int_sort : context -> sort
 	= "camlidl_z3V3_Z3_mk_int_sort"
 
 (**
-       Summary: Create the real type.
+       Summary: Create the real type. 
 
        This type is not a floating point number.
        Z3 does not have support for floating point numbers yet.
@@ -7291,7 +7291,7 @@ external mk_real_sort : context -> sort
 
 (**
        Summary: Create a bit-vector type of the given size.
-
+    
        This type can also be seen as a machine integer.
 
        - {b Remarks}: The size of the bitvector type must be greater than zero.
@@ -7304,7 +7304,7 @@ external mk_bv_sort : context -> int -> sort
 (**
        Summary: Create a named finite domain sort.
 
-       To create constants that belong to the finite domain,
+       To create constants that belong to the finite domain, 
        use the APIs for creating numerals and pass a numeric
        constant together with the sort returned by this call.
 
@@ -7316,8 +7316,8 @@ external mk_finite_domain_sort : context -> symbol -> int64 -> sort
 	= "camlidl_z3V3_Z3_mk_finite_domain_sort"
 
 (**
-       Summary: Create an array type.
-
+       Summary: Create an array type. 
+       
        We usually represent the array type as: {e [domain -> range] }.
        Arrays are usually used to model the heap/memory in software verification.
 
@@ -7331,13 +7331,13 @@ external mk_array_sort : context -> sort -> sort -> sort
 
 (**
        Summary: Create a tuple type.
-
+       
         [mk_tuple_sort c name field_names field_sorts] creates a tuple with a constructor named [name],
        a [n] fields, where [n] is the size of the arrays [field_names] and [field_sorts].
+       
 
-
-
-
+       
+       
 
        @param c logical context
        @param mk_tuple_name name of the constructor function associated with the tuple type.
@@ -7354,15 +7354,15 @@ external mk_tuple_sort : context -> symbol -> symbol array -> sort array -> sort
 
 (**
        Summary: Create a enumeration sort.
-
-        [mk_enumeration_sort c enums] creates an enumeration sort with enumeration names [enums],
+       
+        [mk_enumeration_sort c enums] creates an enumeration sort with enumeration names [enums], 
                it also returns [n] predicates, where [n] is the number of [enums] corresponding
                to testing whether an element is one of the enumerants.
+       
 
-
-
-
-
+       
+       
+       
        @param c logical context
        @param name name of the enumeration sort.
        @param n number of elemenets in enumeration sort.
@@ -7370,8 +7370,8 @@ external mk_tuple_sort : context -> symbol -> symbol array -> sort array -> sort
        @param enum_consts constants corresponding to the enumerated elements.
        @param enum_testers predicates testing if terms of the enumeration sort correspond to an enumeration.
 
-       For example, if this function is called with three symbols A, B, C and the name S, then
-       [s] is a sort whose name is S, and the function returns three terms corresponding to A, B, C in
+       For example, if this function is called with three symbols A, B, C and the name S, then 
+       [s] is a sort whose name is S, and the function returns three terms corresponding to A, B, C in 
        [enum_consts]. The array [enum_testers] has three predicates of type {e (s -> Bool) }.
        The first predicate (corresponding to A) is true when applied to A, and false otherwise.
        Similarly for the other predicates.
@@ -7383,12 +7383,12 @@ external mk_enumeration_sort : context -> symbol -> symbol array -> sort * func_
 
 (**
        Summary: Create a list sort
-
+       
         [mk_list_sort c name elem_sort] creates a list sort of [name], over elements of sort [elem_sort].
+       
 
-
-
-
+       
+       
 
        @param c logical context
        @param name name of the list sort.
@@ -7407,18 +7407,18 @@ external mk_list_sort : context -> symbol -> sort -> sort * func_decl * func_dec
 
 (**
        Summary: Create a constructor.
-
+       
        @param c logical context.
        @param name constructor name.
        @param recognizer name of recognizer function.
        @param num_fields number of fields in constructor.
        @param field_names names of the constructor fields.
-       @param sorts field sorts,  [None]
+       @param sorts field sorts,  [None]  
                     if the field sort refers to a recursive sort.
        @param sort_refs reference to datatype sort that is an argument to the constructor; if the corresponding
-                        sort reference is  [None],
-                        then the value in sort_refs should be an index referring to
-                        one of the recursive datatypes that is declared.
+                        sort reference is  [None],  
+                        then the value in sort_refs should be an index referring to 
+                        one of the recursive datatypes that is declared.                        
 
        def_API('mk_constructor', CONSTRUCTOR, (_in(CONTEXT), _in(SYMBOL), _in(SYMBOL), _in(UINT), _in_array(3, SYMBOL), _in_array(3, SORT), _in_array(3, UINT)))
 *)
@@ -7437,7 +7437,7 @@ external del_constructor : context -> constructor -> unit
 	= "camlidl_z3V3_Z3_del_constructor"
 
 (**
-       Summary: Create datatype, such as lists, trees, records, enumerations or unions of records.
+       Summary: Create datatype, such as lists, trees, records, enumerations or unions of records. 
        The datatype may be recursive. Return the datatype sort.
 
        @param c logical context.
@@ -7490,8 +7490,8 @@ external mk_datatypes : context -> symbol array -> constructor_list array -> sor
 	= "camlidl_z3V3_Z3_mk_datatypes"
 
 (**
-       Summary: Query constructor for declared functions.
-
+       Summary: Query constructor for declared functions. 
+      
        @param c logical context.
        @param constr constructor container. The container must have been passed in to a {!mk_datatype} call.
        @param num_fields number of accessor fields in the constructor.
@@ -7511,7 +7511,7 @@ external query_constructor : context -> constructor -> int -> func_decl * func_d
        Summary: Declare a constant or function.
 
         [mk_func_decl c n d r] creates a function with name [n], domain [d], and range [r].
-       The arity of the function is the size of the array [d].
+       The arity of the function is the size of the array [d]. 
 
        @param c logical context.
        @param s name of the constant or function.
@@ -7542,14 +7542,14 @@ external mk_app : context -> func_decl -> ast array -> ast
 
 (**
        Summary: Declare and create a constant.
-
-
-
-
-
-
-
-        [mk_const c s t] is a shorthand for [mk_app c (mk_func_decl c s [||] t) [||]]
+       
+       
+       
+       
+       
+       
+       
+        [mk_const c s t] is a shorthand for [mk_app c (mk_func_decl c s [||] t) [||]] 
 
        - {b See also}: {!mk_func_decl}
        - {b See also}: {!mk_app}
@@ -7563,9 +7563,9 @@ external mk_const : context -> symbol -> sort -> ast
        Summary: Declare a fresh constant or function.
 
        Z3 will generate an unique name for this function declaration.
-
-
-
+       
+       
+       
 
        - {b See also}: {!mk_func_decl}
 
@@ -7576,17 +7576,17 @@ external mk_fresh_func_decl : context -> string -> sort array -> sort -> func_de
 
 (**
        Summary: Declare and create a fresh constant.
+       
+       
+       
 
+        [mk_fresh_const c p t] is a shorthand for [mk_app c (mk_fresh_func_decl c p [||] t) [||]]. 
 
-
-
-        [mk_fresh_const c p t] is a shorthand for [mk_app c (mk_fresh_func_decl c p [||] t) [||]].
-
-
-
+       
+       
        - {b See also}: {!mk_func_decl}
        - {b See also}: {!mk_app}
-
+       
        def_API('mk_fresh_const', AST, (_in(CONTEXT), _in(STRING), _in(SORT)))
 *)
 external mk_fresh_const : context -> string -> sort -> ast
@@ -7597,7 +7597,7 @@ external mk_fresh_const : context -> string -> sort -> ast
 *)
 (**
         Summary: Create an AST node representing [true].
-
+        
         def_API('mk_true', AST, (_in(CONTEXT), ))
 *)
 external mk_true : context -> ast
@@ -7614,8 +7614,8 @@ external mk_false : context -> ast
 (**
         Summary: \[ [ mk_eq c l r ] \]
         Create an AST node representing {e l = r }.
-
-        The nodes [l] and [r] must have the same type.
+        
+        The nodes [l] and [r] must have the same type. 
 
         def_API('mk_eq', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
@@ -7623,14 +7623,14 @@ external mk_eq : context -> ast -> ast -> ast
 	= "camlidl_z3V3_Z3_mk_eq"
 
 (**
-
+       
         Summary: \[ [mk_distinct c [| t_1; ...; t_n |]] \] Create an AST
        node represeting a distinct construct. It is used for declaring
-       the arguments t_i pairwise distinct.
+       the arguments t_i pairwise distinct. 
 
        The [distinct] construct is used for declaring the arguments pairwise distinct.
        That is, {e Forall 0 <= i < j < num_args. not args[i] = args[j] }.
-
+       
        All arguments must have the same sort.
 
        - {b Remarks}: The number of arguments of a distinct construct must be greater than one.
@@ -7641,9 +7641,9 @@ external mk_distinct : context -> ast array -> ast
 	= "camlidl_z3V3_Z3_mk_distinct"
 
 (**
-        Summary: \[ [ mk_not c a ] \]
+        Summary: \[ [ mk_not c a ] \] 
         Create an AST node representing {e not(a) }.
-
+        
         The node [a] must have Boolean sort.
 
         def_API('mk_not', AST, (_in(CONTEXT), _in(AST)))
@@ -7652,7 +7652,7 @@ external mk_not : context -> ast -> ast
 	= "camlidl_z3V3_Z3_mk_not"
 
 (**
-       Summary: \[ [ mk_ite c t1 t2 t2 ] \]
+       Summary: \[ [ mk_ite c t1 t2 t2 ] \] 
        Create an AST node representing an if-then-else: {e ite(t1, t2,
        t3) }.
 
@@ -7698,12 +7698,12 @@ external mk_xor : context -> ast -> ast -> ast
 	= "camlidl_z3V3_Z3_mk_xor"
 
 (**
+       
+        Summary: \[ [mk_and c [| t_1; ...; t_n |]] \] Create the conjunction: {e t_1 and ... and t_n}. 
 
-        Summary: \[ [mk_and c [| t_1; ...; t_n |]] \] Create the conjunction: {e t_1 and ... and t_n}.
-
-
+       
        All arguments must have Boolean sort.
-
+       
        - {b Remarks}: The number of arguments must be greater than zero.
 
        def_API('mk_and', AST, (_in(CONTEXT), _in(UINT), _in_array(1, AST)))
@@ -7712,10 +7712,10 @@ external mk_and : context -> ast array -> ast
 	= "camlidl_z3V3_Z3_mk_and"
 
 (**
+       
+        Summary: \[ [mk_or c [| t_1; ...; t_n |]] \] Create the disjunction: {e t_1 or ... or t_n}. 
 
-        Summary: \[ [mk_or c [| t_1; ...; t_n |]] \] Create the disjunction: {e t_1 or ... or t_n}.
-
-
+       
        All arguments must have Boolean sort.
 
        - {b Remarks}: The number of arguments must be greater than zero.
@@ -7729,10 +7729,10 @@ external mk_or : context -> ast array -> ast
        {2 {L Arithmetic: Integers and Reals}}
 *)
 (**
+       
+        Summary: \[ [mk_add c [| t_1; ...; t_n |]] \] Create the term: {e t_1 + ... + t_n}. 
 
-        Summary: \[ [mk_add c [| t_1; ...; t_n |]] \] Create the term: {e t_1 + ... + t_n}.
-
-
+       
        All arguments must have int or real sort.
 
        - {b Remarks}: The number of arguments must be greater than zero.
@@ -7743,12 +7743,12 @@ external mk_add : context -> ast array -> ast
 	= "camlidl_z3V3_Z3_mk_add"
 
 (**
+       
+        Summary: \[ [mk_mul c [| t_1; ...; t_n |]] \] Create the term: {e t_1 * ... * t_n}. 
 
-        Summary: \[ [mk_mul c [| t_1; ...; t_n |]] \] Create the term: {e t_1 * ... * t_n}.
-
-
+       
        All arguments must have int or real sort.
-
+       
        - {b Remarks}: Z3 has limited support for non-linear arithmetic.
        - {b Remarks}: The number of arguments must be greater than zero.
 
@@ -7758,22 +7758,22 @@ external mk_mul : context -> ast array -> ast
 	= "camlidl_z3V3_Z3_mk_mul"
 
 (**
+       
+        Summary: \[ [mk_sub c [| t_1; ...; t_n |]] \] Create the term: {e t_1 - ... - t_n}. 
 
-        Summary: \[ [mk_sub c [| t_1; ...; t_n |]] \] Create the term: {e t_1 - ... - t_n}.
-
-
+       
        All arguments must have int or real sort.
 
        - {b Remarks}: The number of arguments must be greater than zero.
-
+       
        def_API('mk_sub', AST, (_in(CONTEXT), _in(UINT), _in_array(1, AST)))
 *)
 external mk_sub : context -> ast array -> ast
 	= "camlidl_z3V3_Z3_mk_sub"
 
 (**
-
-        Summary: \[ [mk_unary_minus c arg] \] Create the term: {e - arg}.
+       
+        Summary: \[ [mk_unary_minus c arg] \] Create the term: {e - arg}. 
 
        The arguments must have int or real type.
 
@@ -7783,8 +7783,8 @@ external mk_unary_minus : context -> ast -> ast
 	= "camlidl_z3V3_Z3_mk_unary_minus"
 
 (**
-
-        Summary: \[ [mk_div c t_1 t_2] \] Create the term: {e t_1 div t_2}.
+       
+        Summary: \[ [mk_div c t_1 t_2] \] Create the term: {e t_1 div t_2}. 
 
        The arguments must either both have int type or both have real type.
        If the arguments have int type, then the result type is an int type, otherwise the
@@ -7796,8 +7796,8 @@ external mk_div : context -> ast -> ast -> ast
 	= "camlidl_z3V3_Z3_mk_div"
 
 (**
-
-        Summary: \[ [mk_mod c t_1 t_2] \] Create the term: {e t_1 mod t_2}.
+       
+        Summary: \[ [mk_mod c t_1 t_2] \] Create the term: {e t_1 mod t_2}. 
 
        The arguments must have int type.
 
@@ -7807,8 +7807,8 @@ external mk_mod : context -> ast -> ast -> ast
 	= "camlidl_z3V3_Z3_mk_mod"
 
 (**
-
-        Summary: \[ [mk_rem c t_1 t_2] \] Create the term: {e t_1 rem t_2}.
+       
+        Summary: \[ [mk_rem c t_1 t_2] \] Create the term: {e t_1 rem t_2}. 
 
        The arguments must have int type.
 
@@ -7818,7 +7818,7 @@ external mk_rem : context -> ast -> ast -> ast
 	= "camlidl_z3V3_Z3_mk_rem"
 
 (**
-
+       
 
        The arguments must have int or real type.
 
@@ -7828,7 +7828,7 @@ external mk_power : context -> ast -> ast -> ast
 	= "camlidl_z3V3_Z3_mk_power"
 
 (**
-        Summary: \[ [ mk_lt c t1 t2 ] \]
+        Summary: \[ [ mk_lt c t1 t2 ] \] 
         Create less than.
 
         The nodes [t1] and [t2] must have the same sort, and must be int or real.
@@ -7841,7 +7841,7 @@ external mk_lt : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_le c t1 t2 ] \]
         Create less than or equal to.
-
+        
         The nodes [t1] and [t2] must have the same sort, and must be int or real.
 
         def_API('mk_le', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -7852,7 +7852,7 @@ external mk_le : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_gt c t1 t2 ] \]
         Create greater than.
-
+        
         The nodes [t1] and [t2] must have the same sort, and must be int or real.
 
         def_API('mk_gt', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -7863,7 +7863,7 @@ external mk_gt : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_ge c t1 t2 ] \]
         Create greater than or equal to.
-
+        
         The nodes [t1] and [t2] must have the same sort, and must be int or real.
 
         def_API('mk_ge', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -7878,10 +7878,10 @@ external mk_ge : context -> ast -> ast -> ast
         There is also a converse operation exposed.
         It follows the semantics prescribed by the SMT-LIB standard.
 
-        You can take the floor of a real by
+        You can take the floor of a real by 
         creating an auxiliary integer constant [k] and
         and asserting {e  mk_int2real(k) <= t1 < mk_int2real(k)+1 }.
-
+        
         The node [t1] must have sort integer.
 
         - {b See also}: {!mk_real2int}
@@ -7901,7 +7901,7 @@ external mk_int2real : context -> ast -> ast
 
         - {b See also}: {!mk_int2real}
         - {b See also}: {!mk_is_int}
-
+        
         def_API('mk_real2int', AST, (_in(CONTEXT), _in(AST)))
 *)
 external mk_real2int : context -> ast -> ast
@@ -7913,7 +7913,7 @@ external mk_real2int : context -> ast -> ast
 
         - {b See also}: {!mk_int2real}
         - {b See also}: {!mk_real2int}
-
+        
         def_API('mk_is_int', AST, (_in(CONTEXT), _in(AST)))
 *)
 external mk_is_int : context -> ast -> ast
@@ -7949,7 +7949,7 @@ external mk_bvredand : context -> ast -> ast
        Take disjunction of bits in vector, return vector of length 1.
 
        The node [t1] must have a bit-vector sort.
-
+       
        def_API('mk_bvredor', AST, (_in(CONTEXT), _in(AST)))
 *)
 external mk_bvredor : context -> ast -> ast
@@ -7960,7 +7960,7 @@ external mk_bvredor : context -> ast -> ast
        Bitwise and.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvand', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvand : context -> ast -> ast -> ast
@@ -7982,7 +7982,7 @@ external mk_bvor : context -> ast -> ast -> ast
        Bitwise exclusive-or.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvxor', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvxor : context -> ast -> ast -> ast
@@ -7990,7 +7990,7 @@ external mk_bvxor : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvnand c t1 t2 ] \]
-       Bitwise nand.
+       Bitwise nand. 
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
@@ -8001,10 +8001,10 @@ external mk_bvnand : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvnor c t1 t2 ] \]
-       Bitwise nor.
+       Bitwise nor. 
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvnor', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvnor : context -> ast -> ast -> ast
@@ -8012,8 +8012,8 @@ external mk_bvnor : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvxnor c t1 t2 ] \]
-       Bitwise xnor.
-
+       Bitwise xnor. 
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvxnor', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8023,7 +8023,7 @@ external mk_bvxnor : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvneg c t1 ] \]
-       Standard two's complement unary minus.
+       Standard two's complement unary minus. 
 
        The node [t1] must have bit-vector sort.
 
@@ -8035,7 +8035,7 @@ external mk_bvneg : context -> ast -> ast
 (**
         Summary: \[ [ mk_bvadd c t1 t2 ] \]
         Standard two's complement addition.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
 
         def_API('mk_bvadd', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8046,7 +8046,7 @@ external mk_bvadd : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_bvsub c t1 t2 ] \]
         Standard two's complement subtraction.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
 
         def_API('mk_bvsub', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8057,7 +8057,7 @@ external mk_bvsub : context -> ast -> ast -> ast
 (**
         Summary: \[ [ mk_bvmul c t1 t2 ] \]
         Standard two's complement multiplication.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
 
         def_API('mk_bvmul', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8067,14 +8067,14 @@ external mk_bvmul : context -> ast -> ast -> ast
 
 (**
         Summary: \[ [ mk_bvudiv c t1 t2 ] \]
-        Unsigned division.
+        Unsigned division. 
 
         It is defined as the [floor] of {e t1/t2 } if [t2] is
         different from zero. If {e t2 } is zero, then the result
         is undefined.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
-
+        
         def_API('mk_bvudiv', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvudiv : context -> ast -> ast -> ast
@@ -8082,18 +8082,18 @@ external mk_bvudiv : context -> ast -> ast -> ast
 
 (**
         Summary: \[ [ mk_bvsdiv c t1 t2 ] \]
-        Two's complement signed division.
+        Two's complement signed division. 
 
         It is defined in the following way:
 
         - The [floor] of {e t1/t2 } if [t2] is different from zero, and {e t1*t2 >= 0 }.
 
         - The [ceiling] of {e t1/t2 } if [t2] is different from zero, and {e t1*t2 < 0 }.
-
+        
         If {e t2 } is zero, then the result is undefined.
-
+        
         The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
         def_API('mk_bvsdiv', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsdiv : context -> ast -> ast -> ast
@@ -8104,9 +8104,9 @@ external mk_bvsdiv : context -> ast -> ast -> ast
        Unsigned remainder.
 
        It is defined as {e t1 - (t1 /u t2) * t2 }, where {e /u } represents unsigned int division.
-
+       
        If {e t2 } is zero, then the result is undefined.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvurem', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8122,7 +8122,7 @@ external mk_bvurem : context -> ast -> ast -> ast
        The most significant bit (sign) of the result is equal to the most significant bit of [t1].
 
        If {e t2 } is zero, then the result is undefined.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        - {b See also}: {!mk_bvsmod}
@@ -8135,9 +8135,9 @@ external mk_bvsrem : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_bvsmod c t1 t2 ] \]
        Two's complement signed remainder (sign follows divisor).
-
+       
        If {e t2 } is zero, then the result is undefined.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        - {b See also}: {!mk_bvsrem}
@@ -8152,7 +8152,7 @@ external mk_bvsmod : context -> ast -> ast -> ast
        Unsigned less than.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvult', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvult : context -> ast -> ast -> ast
@@ -8161,9 +8161,9 @@ external mk_bvult : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_bvslt c t1 t2 ] \]
        Two's complement signed less than.
-
+       
        It abbreviates:
-       {v
+       {v 
       (or (and (= (extract[|m-1|:|m-1|] t1) bit1)
                (= (extract[|m-1|:|m-1|] t2) bit0))
           (and (= (extract[|m-1|:|m-1|] t1) (extract[|m-1|:|m-1|] t2))
@@ -8193,7 +8193,7 @@ external mk_bvule : context -> ast -> ast -> ast
        Two's complement signed less than or equal to.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvsle', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsle : context -> ast -> ast -> ast
@@ -8204,7 +8204,7 @@ external mk_bvsle : context -> ast -> ast -> ast
        Unsigned greater than or equal to.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvuge', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvuge : context -> ast -> ast -> ast
@@ -8215,7 +8215,7 @@ external mk_bvuge : context -> ast -> ast -> ast
        Two's complement signed greater than or equal to.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvsge', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsge : context -> ast -> ast -> ast
@@ -8237,7 +8237,7 @@ external mk_bvugt : context -> ast -> ast -> ast
        Two's complement signed greater than.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvsgt', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsgt : context -> ast -> ast -> ast
@@ -8246,7 +8246,7 @@ external mk_bvsgt : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_concat c t1 t2 ] \]
        Concatenate the given bit-vectors.
-
+       
        The nodes [t1] and [t2] must have (possibly different) bit-vector sorts
 
        The result is a bit-vector of size {e n1+n2 }, where [n1] ([n2)] is the size
@@ -8277,7 +8277,7 @@ external mk_extract : context -> int -> int -> ast -> ast
        bit-vector.
 
        The node [t1] must have a bit-vector sort.
-
+       
        def_API('mk_sign_ext', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
 external mk_sign_ext : context -> int -> ast -> ast
@@ -8288,8 +8288,8 @@ external mk_sign_ext : context -> int -> ast -> ast
        Extend the given bit-vector with zeros to the (unsigned int) equivalent
        bitvector of size {e m+i }, where [m] is the size of the
        given bit-vector.
-
-       The node [t1] must have a bit-vector sort.
+       
+       The node [t1] must have a bit-vector sort. 
 
        def_API('mk_zero_ext', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
@@ -8299,9 +8299,9 @@ external mk_zero_ext : context -> int -> ast -> ast
 (**
        Summary: \[ [ mk_repeat c i t1 ] \]
        Repeat the given bit-vector up length {e i }.
-
-       The node [t1] must have a bit-vector sort.
-
+       
+       The node [t1] must have a bit-vector sort. 
+    
        def_API('mk_repeat', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
 external mk_repeat : context -> int -> ast -> ast
@@ -8314,8 +8314,8 @@ external mk_repeat : context -> int -> ast -> ast
        It is equivalent to multiplication by {e 2^x } where [x] is the value of the
        third argument.
 
-       NB. The semantics of shift operations varies between environments. This
-       definition does not necessarily capture directly the semantics of the
+       NB. The semantics of shift operations varies between environments. This 
+       definition does not necessarily capture directly the semantics of the 
        programming language or assembly architecture you are modeling.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
@@ -8332,8 +8332,8 @@ external mk_bvshl : context -> ast -> ast -> ast
        It is equivalent to unsigned int division by {e 2^x } where [x] is the
        value of the third argument.
 
-       NB. The semantics of shift operations varies between environments. This
-       definition does not necessarily capture directly the semantics of the
+       NB. The semantics of shift operations varies between environments. This 
+       definition does not necessarily capture directly the semantics of the 
        programming language or assembly architecture you are modeling.
 
        The nodes [t1] and [t2] must have the same bit-vector sort.
@@ -8346,15 +8346,15 @@ external mk_bvlshr : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_bvashr c t1 t2 ] \]
        Arithmetic shift right.
-
+       
        It is like logical shift right except that the most significant
        bits of the result always copy the most significant bit of the
        second argument.
 
-       The semantics of shift operations varies between environments. This
-       definition does not necessarily capture directly the semantics of the
+       The semantics of shift operations varies between environments. This 
+       definition does not necessarily capture directly the semantics of the 
        programming language or assembly architecture you are modeling.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvashr', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8365,8 +8365,8 @@ external mk_bvashr : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_rotate_left c i t1 ] \]
        Rotate bits of [t1] to the left [i] times.
-
-       The node [t1] must have a bit-vector sort.
+       
+       The node [t1] must have a bit-vector sort. 
 
        def_API('mk_rotate_left', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
@@ -8376,9 +8376,9 @@ external mk_rotate_left : context -> int -> ast -> ast
 (**
        Summary: \[ [ mk_rotate_right c i t1 ] \]
        Rotate bits of [t1] to the right [i] times.
-
-       The node [t1] must have a bit-vector sort.
-
+       
+       The node [t1] must have a bit-vector sort. 
+       
        def_API('mk_rotate_right', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
 external mk_rotate_right : context -> int -> ast -> ast
@@ -8387,7 +8387,7 @@ external mk_rotate_right : context -> int -> ast -> ast
 (**
        Summary: \[ [ mk_ext_rotate_left c t1 t2 ] \]
        Rotate bits of [t1] to the left [t2] times.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_ext_rotate_left', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8398,9 +8398,9 @@ external mk_ext_rotate_left : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_ext_rotate_right c t1 t2 ] \]
        Rotate bits of [t1] to the right [t2] times.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_ext_rotate_right', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_ext_rotate_right : context -> ast -> ast -> ast
@@ -8410,12 +8410,12 @@ external mk_ext_rotate_right : context -> ast -> ast -> ast
        Summary: \[ [ mk_int2bv c n t1 ] \]
        Create an [n] bit bit-vector from the integer argument [t1].
 
-       NB. This function is essentially treated as uninterpreted.
+       NB. This function is essentially treated as uninterpreted. 
        So you cannot expect Z3 to precisely reflect the semantics of this function
        when solving constraints with this function.
-
-       The node [t1] must have integer sort.
-
+       
+       The node [t1] must have integer sort. 
+       
        def_API('mk_int2bv', AST, (_in(CONTEXT), _in(UINT), _in(AST)))
 *)
 external mk_int2bv : context -> int -> ast -> ast
@@ -8424,16 +8424,16 @@ external mk_int2bv : context -> int -> ast -> ast
 (**
        Summary: \[ [ mk_bv2int c t1 is_signed ] \]
        Create an integer from the bit-vector argument [t1].
-       If [is_signed] is false, then the bit-vector [t1] is treated as unsigned int.
+       If [is_signed] is false, then the bit-vector [t1] is treated as unsigned int. 
        So the result is non-negative
        and in the range {e [0..2^N-1] }, where N are the number of bits in [t1].
        If [is_signed] is true, [t1] is treated as a signed bit-vector.
 
-       This function is essentially treated as uninterpreted.
+       This function is essentially treated as uninterpreted. 
        So you cannot expect Z3 to precisely reflect the semantics of this function
        when solving constraints with this function.
 
-       The node [t1] must have a bit-vector sort.
+       The node [t1] must have a bit-vector sort. 
 
        def_API('mk_bv2int', AST, (_in(CONTEXT), _in(AST), _in(BOOL)))
 *)
@@ -8444,7 +8444,7 @@ external mk_bv2int : context -> ast -> bool -> ast
        Summary: \[ [ mk_bvadd_no_overflow c t1 t2 is_signed ] \]
        Create a predicate that checks that the bit-wise addition
        of [t1] and [t2] does not overflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvadd_no_overflow', AST, (_in(CONTEXT), _in(AST), _in(AST), _in(BOOL)))
@@ -8456,9 +8456,9 @@ external mk_bvadd_no_overflow : context -> ast -> ast -> bool -> ast
        Summary: \[ [ mk_bvadd_no_underflow c t1 t2 ] \]
        Create a predicate that checks that the bit-wise signed addition
        of [t1] and [t2] does not underflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+    
        def_API('mk_bvadd_no_underflow', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvadd_no_underflow : context -> ast -> ast -> ast
@@ -8468,9 +8468,9 @@ external mk_bvadd_no_underflow : context -> ast -> ast -> ast
        Summary: \[ [ mk_bvsub_no_overflow c t1 t2 ] \]
        Create a predicate that checks that the bit-wise signed subtraction
        of [t1] and [t2] does not overflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvsub_no_overflow', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsub_no_overflow : context -> ast -> ast -> ast
@@ -8480,7 +8480,7 @@ external mk_bvsub_no_overflow : context -> ast -> ast -> ast
        Summary: \[ [ mk_bvsub_no_underflow c t1 t2 is_signed ] \]
        Create a predicate that checks that the bit-wise subtraction
        of [t1] and [t2] does not underflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvsub_no_underflow', AST, (_in(CONTEXT), _in(AST), _in(AST), _in(BOOL)))
@@ -8490,11 +8490,11 @@ external mk_bvsub_no_underflow : context -> ast -> ast -> bool -> ast
 
 (**
        Summary: \[ [ mk_bvsdiv_no_overflow c t1 t2 ] \]
-       Create a predicate that checks that the bit-wise signed division
+       Create a predicate that checks that the bit-wise signed division 
        of [t1] and [t2] does not overflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvsdiv_no_overflow', AST, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
 external mk_bvsdiv_no_overflow : context -> ast -> ast -> ast
@@ -8502,9 +8502,9 @@ external mk_bvsdiv_no_overflow : context -> ast -> ast -> ast
 
 (**
        Summary: \[ [ mk_bvneg_no_overflow c t1 ] \]
-       Check that bit-wise negation does not overflow when
+       Check that bit-wise negation does not overflow when 
        [t1] is interpreted as a signed bit-vector.
-
+       
        The node [t1] must have bit-vector sort.
 
        def_API('mk_bvneg_no_overflow', AST, (_in(CONTEXT), _in(AST)))
@@ -8516,9 +8516,9 @@ external mk_bvneg_no_overflow : context -> ast -> ast
        Summary: \[ [ mk_bvmul_no_overflow c t1 t2 is_signed ] \]
        Create a predicate that checks that the bit-wise multiplication
        of [t1] and [t2] does not overflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
-
+       
        def_API('mk_bvmul_no_overflow', AST, (_in(CONTEXT), _in(AST), _in(AST), _in(BOOL)))
 *)
 external mk_bvmul_no_overflow : context -> ast -> ast -> bool -> ast
@@ -8528,7 +8528,7 @@ external mk_bvmul_no_overflow : context -> ast -> ast -> bool -> ast
        Summary: \[ [ mk_bvmul_no_underflow c t1 t2 ] \]
        Create a predicate that checks that the bit-wise signed multiplication
        of [t1] and [t2] does not underflow.
-
+       
        The nodes [t1] and [t2] must have the same bit-vector sort.
 
        def_API('mk_bvmul_no_underflow', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8542,9 +8542,9 @@ external mk_bvmul_no_underflow : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_select c a i ] \]
        Array read.
-       The argument [a] is the array and [i] is the index of the array that gets read.
-
-       The node [a] must have an array sort {e [domain -> range] },
+       The argument [a] is the array and [i] is the index of the array that gets read.      
+ 
+       The node [a] must have an array sort {e [domain -> range] }, 
        and [i] must have the sort [domain].
        The sort of the result is [range].
 
@@ -8559,15 +8559,15 @@ external mk_select : context -> ast -> ast -> ast
 (**
        Summary: \[ [ mk_store c a i v ] \]
        Array update.
-
+       
        The node [a] must have an array sort {e [domain -> range] }, [i] must have sort [domain],
        [v] must have sort range. The sort of the result is {e [domain -> range] }.
        The semantics of this function is given by the theory of arrays described in the SMT-LIB
        standard. See http:
        The result of this function is an array that is equal to [a] (with respect to [select)]
-       on all indices except for [i], where it maps to [v] (and the [select] of [a] with
+       on all indices except for [i], where it maps to [v] (and the [select] of [a] with 
        respect to [i] may be a different value).
-
+       
        - {b See also}: {!mk_array_sort}
        - {b See also}: {!mk_select}
 
@@ -8578,8 +8578,8 @@ external mk_store : context -> ast -> ast -> ast -> ast
 
 (**
         Summary: Create the constant array.
-
-        The resulting term is an array, such that a [select] on an arbitrary index
+         
+        The resulting term is an array, such that a [select] on an arbitrary index 
         produces the value [v].
 
         @param c logical context.
@@ -8594,11 +8594,11 @@ external mk_const_array : context -> sort -> ast -> ast
 (**
        Summary: \[ [ mk_map f n args ] \]
        map f on the the argument arrays.
-
+       
        The [n] nodes [args] must be of array sorts {e [domain_i -> range_i] }.
        The function declaration [f] must have type {e  range_1 .. range_n -> range }.
        [v] must have sort range. The sort of the result is {e [domain_i -> range] }.
-
+       
        - {b See also}: {!mk_array_sort}
        - {b See also}: {!mk_store}
        - {b See also}: {!mk_select}
@@ -8610,7 +8610,7 @@ external mk_map : context -> func_decl -> int -> ast -> ast
 
 (**
         Summary: Access the array default value.
-        Produces the default range value, for arrays that can be represented as
+        Produces the default range value, for arrays that can be represented as 
         finite maps with a default range value.
 
         @param c logical context.
@@ -8650,7 +8650,7 @@ external mk_full_set : context -> sort -> ast
 
 (**
        Summary: Add an element to a set.
-
+       
        The first argument must be a set, the second an element.
 
        def_API('mk_set_add', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8660,7 +8660,7 @@ external mk_set_add : context -> ast -> ast -> ast
 
 (**
        Summary: Remove an element to a set.
-
+       
        The first argument must be a set, the second an element.
 
        def_API('mk_set_del', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8702,7 +8702,7 @@ external mk_set_complement : context -> ast -> ast
 
 (**
        Summary: Check for set membership.
-
+       
        The first argument should be an element type of the set.
 
        def_API('mk_set_member', AST, (_in(CONTEXT), _in(AST), _in(AST)))
@@ -8722,17 +8722,17 @@ external mk_set_subset : context -> ast -> ast -> ast
        {2 {L Numerals}}
 *)
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
-       Summary: Create a numeral of a given sort.
+       Summary: Create a numeral of a given sort. 
 
        @param c logical context.
        @param numeral A string representing the numeral value in decimal notation. If the given sort is a real, then the numeral can be a rational, that is, a string of the form {e [num]* / [num]* }.
-       @param ty The sort of the numeral. In the current implementation, the given sort can be an int, real, finite-domain, or bit-vectors of arbitrary size.
-
+       @param ty The sort of the numeral. In the current implementation, the given sort can be an int, real, finite-domain, or bit-vectors of arbitrary size. 
+       
        - {b See also}: {!mk_int}
-
+       
 
        def_API('mk_numeral', AST, (_in(CONTEXT), _in(STRING), _in(SORT)))
 *)
@@ -8750,7 +8750,7 @@ external mk_numeral : context -> string -> sort -> ast
 
        - {b See also}: {!mk_numeral}
        - {b See also}: {!mk_int}
-
+       
 
        def_API('mk_real', AST, (_in(CONTEXT), _in(INT), _in(INT)))
 *)
@@ -8758,8 +8758,8 @@ external mk_real : context -> int -> int -> ast
 	= "camlidl_z3V3_Z3_mk_real"
 
 (**
-       Summary: Create a numeral of an int, bit-vector, or finite-domain sort.
-
+       Summary: Create a numeral of an int, bit-vector, or finite-domain sort. 
+       
        This function can be use to create numerals that fit in a machine integer.
        It is slightly faster than {!mk_numeral} since it is not necessary to parse a string.
 
@@ -8771,8 +8771,8 @@ external mk_int : context -> int -> sort -> ast
 	= "camlidl_z3V3_Z3_mk_int"
 
 (**
-       Summary: Create a numeral of a int, bit-vector, or finite-domain sort.
-
+       Summary: Create a numeral of a int, bit-vector, or finite-domain sort. 
+       
        This function can be use to create numerals that fit in a machine long long integer.
        It is slightly faster than {!mk_numeral} since it is not necessary to parse a string.
 
@@ -8797,7 +8797,7 @@ external mk_int64 : context -> int64 -> sort -> ast
        Patterns comprise a list of terms. The list should be
        non-empty.  If the list comprises of more than one term, it is
        a called a multi-pattern.
-
+       
        In general, one can pass in a list of (multi-)patterns in the
        quantifier constructor.
 
@@ -8816,7 +8816,7 @@ external mk_pattern : context -> ast array -> pattern
        the meaning of de-Bruijn indices by indicating the compilation process from
        non-de-Bruijn formulas to de-Bruijn format.
 
-       {v
+       {v  
        abs(forall (x1) phi) = forall (x1) abs1(phi, x1, 0)
        abs(forall (x1, x2) phi) = abs(forall (x1) abs(forall (x2) phi))
        abs1(x, x, n) = b_n
@@ -8828,7 +8828,7 @@ external mk_pattern : context -> ast array -> pattern
        The last line is significant: the index of a bound variable is different depending
        on the scope in which it appears. The deeper x appears, the higher is its
        index.
-
+       
        @param c logical context
        @param index de-Bruijn index
        @param ty sort of the bound variable
@@ -8844,11 +8844,11 @@ external mk_bound : context -> int -> sort -> ast
 (**
        Summary: Create a forall formula. It takes an expression [body] that contains bound variables
        of the same sorts as the sorts listed in the array [sorts]. The bound variables are de-Bruijn indices created
-       using {!mk_bound}. The array [decl_names] contains the names that the quantified formula uses for the
+       using {!mk_bound}. The array [decl_names] contains the names that the quantified formula uses for the 
        bound variables. Z3 applies the convention that the last element in the [decl_names] and [sorts] array
        refers to the variable with index 0, the second to last element of [decl_names] and [sorts] refers
        to the variable with index 1, etc.
-
+       
 
         [mk_forall c w p t n b] creates a forall formula, where
        [w] is the weight, [p] is an array of patterns, [t] is an array
@@ -8856,9 +8856,9 @@ external mk_bound : context -> int -> sort -> ast
        'names' of the bound variables, and [b] is the body of the
        quantifier. Quantifiers are associated with weights indicating
        the importance of using the quantifier during
-       instantiation.
-
-
+       instantiation. 
+       
+       
        @param c logical context.
        @param weight quantifiers are associated with weights indicating the importance of using the quantifier during instantiation. By default, pass the weight 0.
        @param num_patterns number of patterns.
@@ -8867,7 +8867,7 @@ external mk_bound : context -> int -> sort -> ast
        @param sorts the sorts of the bound variables.
        @param decl_names names of the bound variables
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_bound}
        - {b See also}: {!mk_exists}
@@ -8879,7 +8879,7 @@ external mk_forall : context -> int -> pattern array -> sort array -> symbol arr
 
 (**
        Summary: Create an exists formula. Similar to {!mk_forall}.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_bound}
        - {b See also}: {!mk_forall}
@@ -8891,9 +8891,9 @@ external mk_exists : context -> int -> pattern array -> sort array -> symbol arr
 	= "camlidl_z3_Z3_mk_exists_bytecode" "camlidl_z3V3_Z3_mk_exists"
 
 (**
-       Summary: Create a quantifier - universal or existential, with pattern hints.
+       Summary: Create a quantifier - universal or existential, with pattern hints. 
        See the documentation for {!mk_forall} for an explanation of the parameters.
-
+       
        @param c logical context.
        @param is_forall flag to indicate if this is a universal or existential quantifier.
        @param weight quantifiers are associated with weights indicating the importance of using the quantifier during instantiation. By default, pass the weight 0.
@@ -8903,7 +8903,7 @@ external mk_exists : context -> int -> pattern array -> sort array -> symbol arr
        @param sorts array of sorts of the bound variables.
        @param decl_names names of the bound variables.
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_bound}
        - {b See also}: {!mk_forall}
@@ -8916,7 +8916,7 @@ external mk_quantifier : context -> bool -> int -> pattern array -> sort array -
 
 (**
        Summary: Create a quantifier - universal or existential, with pattern hints, no patterns, and attributes
-
+       
        @param c logical context.
        @param is_forall flag to indicate if this is a universal or existential quantifier.
        @param quantifier_id identifier to identify quantifier
@@ -8930,7 +8930,7 @@ external mk_quantifier : context -> bool -> int -> pattern array -> sort array -
        @param sorts array of sorts of the bound variables.
        @param decl_names names of the bound variables.
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_bound}
        - {b See also}: {!mk_forall}
@@ -8946,14 +8946,14 @@ external mk_quantifier_ex : context -> bool -> int -> symbol -> symbol -> patter
        will form the set of bound variables.
 
        @param c logical context.
-       @param weight quantifiers are associated with weights indicating the importance of using
+       @param weight quantifiers are associated with weights indicating the importance of using 
               the quantifier during instantiation. By default, pass the weight 0.
        @param num_bound number of constants to be abstracted into bound variables.
        @param bound array of constants to be abstracted into bound variables.
        @param num_patterns number of patterns.
        @param patterns array containing the patterns created using {!mk_pattern}.
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_exists_const}
 
@@ -8969,14 +8969,14 @@ external mk_forall_const : context -> int -> app array -> pattern array -> ast -
        will form the set of bound variables.
 
        @param c logical context.
-       @param weight quantifiers are associated with weights indicating the importance of using
+       @param weight quantifiers are associated with weights indicating the importance of using 
               the quantifier during instantiation. By default, pass the weight 0.
        @param num_bound number of constants to be abstracted into bound variables.
        @param bound array of constants to be abstracted into bound variables.
        @param num_patterns number of patterns.
        @param patterns array containing the patterns created using {!mk_pattern}.
        @param body the body of the quantifier.
-
+       
        - {b See also}: {!mk_pattern}
        - {b See also}: {!mk_forall_const}
 
@@ -8986,7 +8986,7 @@ external mk_exists_const : context -> int -> app array -> pattern array -> ast -
 	= "camlidl_z3V3_Z3_mk_exists_const"
 
 (**
-       Summary: Create a universal or existential
+       Summary: Create a universal or existential 
        quantifier using a list of constants that
        will form the set of bound variables.
 
@@ -8996,7 +8996,7 @@ external mk_quantifier_const : context -> bool -> int -> app array -> pattern ar
 	= "camlidl_z3_Z3_mk_quantifier_const_bytecode" "camlidl_z3V3_Z3_mk_quantifier_const"
 
 (**
-       Summary: Create a universal or existential
+       Summary: Create a universal or existential 
        quantifier using a list of constants that
        will form the set of bound variables.
 
@@ -9009,10 +9009,10 @@ external mk_quantifier_const_ex : context -> bool -> int -> symbol -> symbol -> 
        {2 {L Accessors}}
 *)
 (**
-        {3 {L Symbols}}
+        {3 {L Symbols}} 
 *)
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
        Summary: Return [INT_SYMBOL] if the symbol was constructed
@@ -9026,8 +9026,8 @@ external get_symbol_kind : context -> symbol -> symbol_kind
 
 (**
        Summary: \[ [ get_symbol_int c s ] \]
-       Return the symbol int value.
-
+       Return the symbol int value. 
+       
        - {b Precondition}: get_symbol_kind s == INT_SYMBOL
 
        - {b See also}: {!mk_int_symbol}
@@ -9039,26 +9039,26 @@ external get_symbol_int : context -> symbol -> int
 
 (**
        Summary: \[ [ get_symbol_string c s ] \]
-       Return the symbol name.
+       Return the symbol name. 
 
        - {b Precondition}: get_symbol_string s == STRING_SYMBOL
 
-
-
-
+       
+       
+       
 
        - {b See also}: {!mk_string_symbol}
-
+    
        def_API('get_symbol_string', STRING, (_in(CONTEXT), _in(SYMBOL)))
 *)
 external get_symbol_string : context -> symbol -> string
 	= "camlidl_z3V3_Z3_get_symbol_string"
 
 (**
-        {3 {L Sorts}}
+        {3 {L Sorts}} 
 *)
 (**
-       Summary: Return the sort name as a symbol.
+       Summary: Return the sort name as a symbol. 
 
        def_API('get_sort_name', SYMBOL, (_in(CONTEXT), _in(SORT)))
 *)
@@ -9067,7 +9067,7 @@ external get_sort_name : context -> sort -> symbol
 
 (**
         Summary: Return a unique identifier for [s].
-         - {b Remarks}: Implicitly used by [Pervasives.( = )] and [Pervasives.compare].
+         - {b Remarks}: Implicitly used by [Pervasives.( = )] and [Pervasives.compare]. 
 
         def_API('get_sort_id', UINT, (_in(CONTEXT), _in(SORT)))
 *)
@@ -9075,11 +9075,11 @@ external get_sort_id : context -> sort -> int
 	= "camlidl_z3V3_Z3_get_sort_id"
 
 (**
-        {4 {L Redundant low-level API}}
+        {4 {L Redundant low-level API}} 
 *)
 (**
-       Summary: Convert a [sort] into [ast].
-        - {b Remarks}: [sort_to_ast c s] can be replaced by [(s :> ast)].
+       Summary: Convert a [sort] into [ast]. 
+        - {b Remarks}: [sort_to_ast c s] can be replaced by [(s :> ast)]. 
 
        def_API('sort_to_ast', AST, (_in(CONTEXT), _in(SORT)))
 *)
@@ -9088,7 +9088,7 @@ external sort_to_ast : context -> sort -> ast
 
 (**
        Summary: compare sorts.
-        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used.
+        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used. 
 
        def_API('is_eq_sort', BOOL, (_in(CONTEXT), _in(SORT), _in(SORT)))
 *)
@@ -9107,7 +9107,7 @@ external get_sort_kind : context -> sort -> sort_kind
 
 (**
        Summary: \[ [ get_bv_sort_size c t ] \]
-       Return the size of the given bit-vector sort.
+       Return the size of the given bit-vector sort. 
 
        - {b Precondition}: get_sort_kind c t == BV_SORT
 
@@ -9120,8 +9120,8 @@ external get_bv_sort_size : context -> sort -> int
 	= "camlidl_z3V3_Z3_get_bv_sort_size"
 
 (**
-
-         Summary: Return the size of the sort in [r].  Return [None] if the call failed.
+        
+         Summary: Return the size of the sort in [r].  Return [None] if the call failed. 
         That is, get_sort_kind(s) == FINITE_DOMAIN_SORT
 
         def_API('get_finite_domain_sort_size', BOOL, (_in(CONTEXT), _in(SORT), _out(UINT64)))
@@ -9132,7 +9132,7 @@ external get_finite_domain_sort_size : context -> sort -> int64 option
 (**
        Summary: \[ [ get_array_sort_domain c t ] \]
        Return the domain of the given array sort.
-
+       
        - {b Precondition}: get_sort_kind c t == ARRAY_SORT
 
        - {b See also}: {!mk_array_sort}
@@ -9144,8 +9144,8 @@ external get_array_sort_domain : context -> sort -> sort
 	= "camlidl_z3V3_Z3_get_array_sort_domain"
 
 (**
-       Summary: \[ [ get_array_sort_range c t ] \]
-       Return the range of the given array sort.
+       Summary: \[ [ get_array_sort_range c t ] \] 
+       Return the range of the given array sort. 
 
        - {b Precondition}: get_sort_kind c t == ARRAY_SORT
 
@@ -9160,13 +9160,13 @@ external get_array_sort_range : context -> sort -> sort
 (**
        Summary: \[ [ get_tuple_sort_mk_decl c t ] \]
        Return the constructor declaration of the given tuple
-       sort.
+       sort. 
 
        - {b Precondition}: get_sort_kind c t == DATATYPE_SORT
 
        - {b See also}: {!mk_tuple_sort}
        - {b See also}: {!get_sort_kind}
-
+       
        def_API('get_tuple_sort_mk_decl', FUNC_DECL, (_in(CONTEXT), _in(SORT)))
 *)
 external get_tuple_sort_mk_decl : context -> sort -> func_decl
@@ -9174,7 +9174,7 @@ external get_tuple_sort_mk_decl : context -> sort -> func_decl
 
 (**
        Summary: \[ [ get_tuple_sort_num_fields c t ] \]
-       Return the number of fields of the given tuple sort.
+       Return the number of fields of the given tuple sort. 
 
        - {b Precondition}: get_sort_kind c t == DATATYPE_SORT
 
@@ -9189,14 +9189,14 @@ external get_tuple_sort_num_fields : context -> sort -> int
 (**
        Summary: \[ [ get_tuple_sort_field_decl c t i ] \]
        Return the i-th field declaration (i.e., projection function declaration)
-       of the given tuple sort.
+       of the given tuple sort. 
 
        - {b Precondition}: get_sort_kind t == DATATYPE_SORT
        - {b Precondition}: i < get_tuple_sort_num_fields c t
-
+       
        - {b See also}: {!mk_tuple_sort}
        - {b See also}: {!get_sort_kind}
-
+       
        def_API('get_tuple_sort_field_decl', FUNC_DECL, (_in(CONTEXT), _in(SORT), _in(UINT)))
 *)
 external get_tuple_sort_field_decl : context -> sort -> int -> func_decl
@@ -9281,18 +9281,18 @@ external get_relation_arity : context -> sort -> int
         - {b Precondition}: col < get_relation_arity c s
 
         - {b See also}: {!get_relation_arity}
-
+        
         def_API('get_relation_column', SORT, (_in(CONTEXT), _in(SORT), _in(UINT)))
 *)
 external get_relation_column : context -> sort -> int -> sort
 	= "camlidl_z3V3_Z3_get_relation_column"
 
 (**
-        {3 {L Function Declarations}}
+        {3 {L Function Declarations}} 
 *)
 (**
-       Summary: Convert a [func_decl] into [ast].
-        - {b Remarks}: [func_decl_to_ast c f]  can be replaced by [(f :> ast)].
+       Summary: Convert a [func_decl] into [ast]. 
+        - {b Remarks}: [func_decl_to_ast c f]  can be replaced by [(f :> ast)]. 
 
        def_API('func_decl_to_ast', AST, (_in(CONTEXT), _in(FUNC_DECL)))
 *)
@@ -9301,7 +9301,7 @@ external func_decl_to_ast : context -> func_decl -> ast
 
 (**
        Summary: compare terms.
-        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used.
+        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used. 
 
        def_API('is_eq_func_decl', BOOL, (_in(CONTEXT), _in(FUNC_DECL), _in(FUNC_DECL)))
 *)
@@ -9310,16 +9310,16 @@ external is_eq_func_decl : context -> func_decl -> func_decl -> bool
 
 (**
         Summary: Return a unique identifier for [f].
-         - {b Remarks}: Implicitly used by [Pervasives.( = )] and [Pervasives.compare].
-
+         - {b Remarks}: Implicitly used by [Pervasives.( = )] and [Pervasives.compare]. 
+    
         def_API('get_func_decl_id', UINT, (_in(CONTEXT), _in(FUNC_DECL)))
 *)
 external get_func_decl_id : context -> func_decl -> int
 	= "camlidl_z3V3_Z3_get_func_decl_id"
 
 (**
-       Summary: Return the constant declaration name as a symbol.
-
+       Summary: Return the constant declaration name as a symbol. 
+    
        def_API('get_decl_name', SYMBOL, (_in(CONTEXT), _in(FUNC_DECL)))
 *)
 external get_decl_name : context -> func_decl -> symbol
@@ -9356,11 +9356,11 @@ external get_arity : context -> func_decl -> int
 (**
        Summary: \[ [ get_domain c d i ] \]
        Return the sort of the i-th parameter of the given function declaration.
-
+       
        - {b Precondition}: i < get_domain_size d
 
        - {b See also}: {!get_domain_size}
-
+       
        def_API('get_domain', SORT, (_in(CONTEXT), _in(FUNC_DECL), _in(UINT)))
 *)
 external get_domain : context -> func_decl -> int -> sort
@@ -9368,7 +9368,7 @@ external get_domain : context -> func_decl -> int -> sort
 
 (**
        Summary: \[ [ get_range c d ] \]
-       Return the range of the given declaration.
+       Return the range of the given declaration. 
 
        If [d] is a constant (i.e., has zero arguments), then this
        function returns the sort of the constant.
@@ -9388,11 +9388,11 @@ external get_decl_num_parameters : context -> func_decl -> int
 
 (**
        Summary: Return the parameter type associated with a declaration.
-
+       
        @param c the context
        @param d the function declaration
        @param idx is the index of the named parameter it should be between 0 and the number of parameters.
-
+    
        def_API('get_decl_parameter_kind', UINT, (_in(CONTEXT), _in(FUNC_DECL), _in(UINT)))
 *)
 external get_decl_parameter_kind : context -> func_decl -> int -> parameter_kind
@@ -9469,12 +9469,12 @@ external get_decl_rational_parameter : context -> func_decl -> int -> string
 	= "camlidl_z3V3_Z3_get_decl_rational_parameter"
 
 (**
-        {3 {L Applications}}
+        {3 {L Applications}} 
 *)
 (**
-       Summary: Convert a [app] into [ast].
-        - {b Remarks}: [app_to_ast c a] can be replaced by [(a :> ast)].
-
+       Summary: Convert a [app] into [ast]. 
+        - {b Remarks}: [app_to_ast c a] can be replaced by [(a :> ast)]. 
+       
        def_API('app_to_ast', AST, (_in(CONTEXT), _in(APP)))
 *)
 external app_to_ast : context -> app -> ast
@@ -9501,7 +9501,7 @@ external get_app_num_args : context -> app -> int
 (**
        Summary: \[ [ get_app_arg c a i ] \]
        Return the i-th argument of the given application.
-
+       
        - {b Precondition}: i < get_num_args c a
 
        def_API('get_app_arg', AST, (_in(CONTEXT), _in(APP), _in(UINT)))
@@ -9510,11 +9510,11 @@ external get_app_arg : context -> app -> int -> ast
 	= "camlidl_z3V3_Z3_get_app_arg"
 
 (**
-        {3 {L Terms}}
+        {3 {L Terms}} 
 *)
 (**
        Summary: compare terms.
-        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used.
+        - {b Remarks}: [Pervasives.( = )] or [Pervasives.compare] can also be used. 
 
        def_API('is_eq_ast', BOOL, (_in(CONTEXT), _in(AST), _in(AST)))
 *)
@@ -9523,7 +9523,7 @@ external is_eq_ast : context -> ast -> ast -> bool
 
 (**
         Summary: Return a unique identifier for [t].
-         - {b Remarks}: Implicitly used by [Pervasives.compare] for values of type [ast], [app], [sort], [func_decl], and [pattern].
+         - {b Remarks}: Implicitly used by [Pervasives.compare] for values of type [ast], [app], [sort], [func_decl], and [pattern]. 
 
         def_API('get_ast_id', UINT, (_in(CONTEXT), _in(AST)))
 *)
@@ -9532,7 +9532,7 @@ external get_ast_id : context -> ast -> int
 
 (**
        Summary: Return a hash code for the given AST.
-        - {b Remarks}: Implicitly used by [Hashtbl.hash] for values of type [ast], [app], [sort], [func_decl], and [pattern].
+        - {b Remarks}: Implicitly used by [Hashtbl.hash] for values of type [ast], [app], [sort], [func_decl], and [pattern]. 
 
        def_API('get_ast_hash', UINT, (_in(CONTEXT), _in(AST)))
 *)
@@ -9541,9 +9541,9 @@ external get_ast_hash : context -> ast -> int
 
 (**
        Summary: Return the sort of an AST node.
-
+       
        The AST node must be a constant, application, numeral, bound variable, or quantifier.
-
+       
        def_API('get_sort', SORT, (_in(CONTEXT), _in(AST)))
 *)
 external get_sort : context -> ast -> sort
@@ -9551,7 +9551,7 @@ external get_sort : context -> ast -> sort
 
 (**
        Summary: Return true if the given expression [t] is well sorted.
-
+       
        def_API('is_well_sorted', BOOL, (_in(CONTEXT), _in(AST)))
 *)
 external is_well_sorted : context -> ast -> bool
@@ -9574,7 +9574,7 @@ external get_ast_kind : context -> ast -> ast_kind
 	= "camlidl_z3V3_Z3_get_ast_kind"
 
 (**
-      def_API('is_app', BOOL, (_in(CONTEXT), _in(AST)))
+      def_API('is_app', BOOL, (_in(CONTEXT), _in(AST)))      
 *)
 external is_app : context -> ast -> bool
 	= "camlidl_z3V3_Z3_is_app"
@@ -9587,15 +9587,15 @@ external is_numeral_ast : context -> ast -> bool
 
 (**
        Summary: Return true if the give AST is a real algebraic number.
-
+    
        def_API('is_algebraic_number', BOOL, (_in(CONTEXT), _in(AST)))
 *)
 external is_algebraic_number : context -> ast -> bool
 	= "camlidl_z3V3_Z3_is_algebraic_number"
 
 (**
-       Summary: Convert an [ast] into an [APP_AST].
-
+       Summary: Convert an [ast] into an [APP_AST]. 
+       
        - {b Precondition}: {v  get_ast_kind c a == [APP_AST]  v}
 
        def_API('to_app', APP, (_in(CONTEXT), _in(AST)))
@@ -9605,7 +9605,7 @@ external to_app : context -> ast -> app
 
 (**
        Summary: Convert an AST into a FUNC_DECL_AST. This is just type casting.
-
+       
        - {b Precondition}: {v  get_ast_kind c a == FUNC_DECL_AST  v}
 
        def_API('to_func_decl', FUNC_DECL, (_in(CONTEXT), _in(AST)))
@@ -9614,10 +9614,10 @@ external to_func_decl : context -> ast -> func_decl
 	= "camlidl_z3V3_Z3_to_func_decl"
 
 (**
-        {4 {L Numerals}}
+        {4 {L Numerals}} 
 *)
 (**
-        {5 {L Low-level API}}
+        {5 {L Low-level API}} 
 *)
 (**
        Summary: Return numeral value, as a string of a numeric constant term
@@ -9634,8 +9634,8 @@ external get_numeral_string : context -> ast -> string
        The result has at most [precision] decimal places.
 
        - {b Precondition}: get_ast_kind c a == NUMERAL_AST || is_algebraic_number c a
-
-       def_API('get_numeral_decimal_string', STRING, (_in(CONTEXT), _in(AST), _in(UINT)))
+    
+       def_API('get_numeral_decimal_string', STRING, (_in(CONTEXT), _in(AST), _in(UINT)))       
 *)
 external get_numeral_decimal_string : context -> ast -> int -> string
 	= "camlidl_z3V3_Z3_get_numeral_decimal_string"
@@ -9667,7 +9667,7 @@ external get_denominator : context -> ast -> ast
        @param a term.
        @param num numerator.
        @param den denominator.
-
+       
        Return [TRUE] if the numeral value fits in 64 bit numerals, [FALSE] otherwise.
 
        - {b Precondition}: get_ast_kind a == NUMERAL_AST
@@ -9683,7 +9683,7 @@ external get_numeral_small : context -> ast -> bool * int64 * int64
        the value can fit in a machine int. Return TRUE if the call succeeded.
 
        - {b Precondition}: get_ast_kind c v == NUMERAL_AST
-
+      
        - {b See also}: {!get_numeral_string}
 
        def_API('get_numeral_int', BOOL, (_in(CONTEXT), _in(AST), _out(INT)))
@@ -9720,7 +9720,7 @@ external get_numeral_rational_int64 : context -> ast -> bool * int64 * int64
 	= "camlidl_z3V3_Z3_get_numeral_rational_int64"
 
 (**
-       Summary: Return a lower bound for the given real algebraic number.
+       Summary: Return a lower bound for the given real algebraic number. 
        The interval isolating the number is smaller than 1/10^precision.
        The result is a numeral AST of sort Real.
 
@@ -9732,7 +9732,7 @@ external get_algebraic_number_lower : context -> ast -> int -> ast
 	= "camlidl_z3V3_Z3_get_algebraic_number_lower"
 
 (**
-       Summary: Return a upper bound for the given real algebraic number.
+       Summary: Return a upper bound for the given real algebraic number. 
        The interval isolating the number is smaller than 1/10^precision.
        The result is a numeral AST of sort Real.
 
@@ -9744,11 +9744,11 @@ external get_algebraic_number_upper : context -> ast -> int -> ast
 	= "camlidl_z3V3_Z3_get_algebraic_number_upper"
 
 (**
-        {4 {L Patterns}}
+        {4 {L Patterns}} 
 *)
 (**
-       Summary: Convert a pattern into ast.
-        - {b Remarks}: [pattern_to_ast c p]  can be replaced by [(p :> ast)].
+       Summary: Convert a pattern into ast. 
+        - {b Remarks}: [pattern_to_ast c p]  can be replaced by [(p :> ast)]. 
 
        def_API('pattern_to_ast', AST, (_in(CONTEXT), _in(PATTERN)))
 *)
@@ -9772,13 +9772,13 @@ external get_pattern : context -> pattern -> int -> ast
 	= "camlidl_z3V3_Z3_get_pattern"
 
 (**
-        {4 {L Quantifiers}}
+        {4 {L Quantifiers}} 
 *)
 (**
        Summary: Return index of de-Brujin bound variable.
 
        - {b Precondition}: get_ast_kind a == VAR_AST
-
+    
        def_API('get_index_value', UINT, (_in(CONTEXT), _in(AST)))
 *)
 external get_index_value : context -> ast -> int
@@ -9786,27 +9786,27 @@ external get_index_value : context -> ast -> int
 
 (**
        Summary: Determine if quantifier is universal.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
-
-       def_API('is_quantifier_forall', BOOL, (_in(CONTEXT), _in(AST)))
+       
+       def_API('is_quantifier_forall', BOOL, (_in(CONTEXT), _in(AST)))       
 *)
 external is_quantifier_forall : context -> ast -> bool
 	= "camlidl_z3V3_Z3_is_quantifier_forall"
 
 (**
        Summary: Obtain weight of quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
-       def_API('get_quantifier_weight', UINT, (_in(CONTEXT), _in(AST)))
+       def_API('get_quantifier_weight', UINT, (_in(CONTEXT), _in(AST)))       
 *)
 external get_quantifier_weight : context -> ast -> int
 	= "camlidl_z3V3_Z3_get_quantifier_weight"
 
 (**
        Summary: Return number of patterns used in quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_num_patterns', UINT, (_in(CONTEXT), _in(AST)))
@@ -9816,7 +9816,7 @@ external get_quantifier_num_patterns : context -> ast -> int
 
 (**
        Summary: Return i'th pattern.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_pattern_ast', PATTERN, (_in(CONTEXT), _in(AST), _in(UINT)))
@@ -9826,7 +9826,7 @@ external get_quantifier_pattern_ast : context -> ast -> int -> pattern
 
 (**
        Summary: Return number of no_patterns used in quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_num_no_patterns', UINT, (_in(CONTEXT), _in(AST)))
@@ -9836,7 +9836,7 @@ external get_quantifier_num_no_patterns : context -> ast -> int
 
 (**
        Summary: Return i'th no_pattern.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_no_pattern_ast', AST, (_in(CONTEXT), _in(AST), _in(UINT)))
@@ -9846,7 +9846,7 @@ external get_quantifier_no_pattern_ast : context -> ast -> int -> ast
 
 (**
        Summary: Return number of bound variables of quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_num_bound', UINT, (_in(CONTEXT), _in(AST)))
@@ -9856,7 +9856,7 @@ external get_quantifier_num_bound : context -> ast -> int
 
 (**
        Summary: Return symbol of the i'th bound variable.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
 
        def_API('get_quantifier_bound_name', SYMBOL, (_in(CONTEXT), _in(AST), _in(UINT)))
@@ -9866,9 +9866,9 @@ external get_quantifier_bound_name : context -> ast -> int -> symbol
 
 (**
        Summary: Return sort of the i'th bound variable.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
-
+       
        def_API('get_quantifier_bound_sort', SORT, (_in(CONTEXT), _in(AST), _in(UINT)))
 *)
 external get_quantifier_bound_sort : context -> ast -> int -> sort
@@ -9876,16 +9876,16 @@ external get_quantifier_bound_sort : context -> ast -> int -> sort
 
 (**
        Summary: Return body of quantifier.
-
+       
        - {b Precondition}: get_ast_kind a == QUANTIFIER_AST
-
+       
        def_API('get_quantifier_body', AST, (_in(CONTEXT), _in(AST)))
 *)
 external get_quantifier_body : context -> ast -> ast
 	= "camlidl_z3V3_Z3_get_quantifier_body"
 
 (**
-        {3 {L Simplification}}
+        {3 {L Simplification}} 
 *)
 (**
         Summary: Interface to simplifier.
@@ -9902,7 +9902,7 @@ external simplify : context -> ast -> ast
 *)
 (**
        Summary: Update the arguments of term [a] using the arguments [args].
-       The number of arguments [num_args] should coincide
+       The number of arguments [num_args] should coincide 
        with the number of arguments to [a].
        If [a] is a quantifier, then num_args has to be 1.
 
@@ -9935,7 +9935,7 @@ external substitute_vars : context -> ast -> ast array -> ast
 *)
 (**
        Summary: Log interaction to a file.
-
+       
        extra_API('open_log', INT, (_in(STRING),))
 *)
 external open_log : string -> bool
@@ -9943,7 +9943,7 @@ external open_log : string -> bool
 
 (**
        Summary: Append user-defined string to interaction log.
-
+       
        The interaction log is opened using open_log.
        It contains the formulas that are checked using Z3.
        You can use this command to append comments, for instance.
@@ -9965,7 +9965,7 @@ external close_log : unit -> unit
        Summary: Enable/disable printing warning messages to the console.
 
        Warnings are printed after passing [true], warning messages are
-       suppressed after calling this method with [false].
+       suppressed after calling this method with [false].       
 
        def_API('toggle_warning_messages', VOID, (_in(BOOL),))
 *)
@@ -9979,9 +9979,9 @@ external toggle_warning_messages : bool -> unit
        Summary: Select mode for the format used for pretty-printing AST nodes.
 
        The default mode for pretty printing AST nodes is to produce
-       SMT-LIB style output where common subexpressions are printed
+       SMT-LIB style output where common subexpressions are printed 
        at each occurrence. The mode is called PRINT_SMTLIB_FULL.
-       To print shared common subexpressions only once,
+       To print shared common subexpressions only once, 
        use the PRINT_LOW_LEVEL mode.
        To print in way that conforms to SMT-LIB standards and uses let
        expressions to share common sub-expressions use PRINT_SMTLIB_COMPLIANT.
@@ -9998,9 +9998,9 @@ external set_ast_print_mode : context -> ast_print_mode -> unit
 (**
        Summary: Convert the given AST node into a string.
 
-
-
-
+       
+       
+       
        - {b See also}: {!pattern_to_string}
        - {b See also}: {!sort_to_string}
 
@@ -10030,9 +10030,9 @@ external func_decl_to_string : context -> func_decl -> string
 (**
        Summary: Convert the given model into a string.
 
-
-
-
+       
+       
+       
 
        def_API('model_to_string', STRING, (_in(CONTEXT), _in(MODEL)))
 *)
@@ -10042,13 +10042,13 @@ external model_to_string : context -> model -> string
 (**
        Summary: Convert the given benchmark into SMT-LIB formatted string.
 
-
-
-
+       
+       
+       
 
        @param c - context.
        @param name - name of benchmark. The argument is optional.
-       @param logic - the benchmark logic.
+       @param logic - the benchmark logic. 
        @param status - the status string (sat, unsat, or unknown)
        @param attributes - other attributes, such as source, difficulty or category.
        @param num_assumptions - number of assumptions.
@@ -10065,8 +10065,8 @@ external benchmark_to_smtlib_string : context -> string -> string -> string -> s
 *)
 (**
        Summary: \[ [ parse_smtlib2_string c str ] \]
-       Parse the given string using the SMT-LIB2 parser.
-
+       Parse the given string using the SMT-LIB2 parser. 
+              
        It returns a formula comprising of the conjunction of assertions in the scope
        (up to push/pop) at the end of the string.
 
@@ -10084,19 +10084,19 @@ external parse_smtlib2_file : context -> string -> symbol array -> sort array ->
 	= "camlidl_z3_Z3_parse_smtlib2_file_bytecode" "camlidl_z3V3_Z3_parse_smtlib2_file"
 
 (**
-        {4 {L Low-level API}}
+        {4 {L Low-level API}} 
 *)
 (**
        Summary: \[ [ parse_smtlib_string c str sort_names sorts decl_names decls ] \]
-       Parse the given string using the SMT-LIB parser.
-
-       The symbol table of the parser can be initialized using the given sorts and declarations.
+       Parse the given string using the SMT-LIB parser. 
+              
+       The symbol table of the parser can be initialized using the given sorts and declarations. 
        The symbols in the arrays [sort_names] and [decl_names] don't need to match the names
        of the sorts and declarations in the arrays [sorts] and [decls]. This is an useful feature
        since we can use arbitrary names to reference sorts and declarations defined using the C API.
 
        The formulas, assumptions and declarations defined in [str] can be extracted using the functions:
-       {!get_smtlib_num_formulas}, {!get_smtlib_formula}, {!get_smtlib_num_assumptions}, {!get_smtlib_assumption},
+       {!get_smtlib_num_formulas}, {!get_smtlib_formula}, {!get_smtlib_num_assumptions}, {!get_smtlib_assumption}, 
        {!get_smtlib_num_decls}, and {!get_smtlib_decl}.
 
        def_API('parse_smtlib_string', VOID, (_in(CONTEXT), _in(STRING), _in(UINT), _in_array(2, SYMBOL), _in_array(2, SORT), _in(UINT), _in_array(5, SYMBOL), _in_array(5, FUNC_DECL)))
@@ -10200,7 +10200,7 @@ external get_smtlib_error : context -> string
 (**
        Summary: \[ [ parse_z3_string c str ] \]
        Parse the given string using the Z3 native parser.
-
+       
        Return the conjunction of asserts made in the input.
 
        def_API('parse_z3_string', AST, (_in(CONTEXT), _in(STRING)))
@@ -10228,9 +10228,9 @@ external get_version : unit -> int * int * int * int
 	= "camlidl_z3V3_Z3_get_version"
 
 (**
-       Summary: Reset all allocated resources.
+       Summary: Reset all allocated resources. 
 
-       Use this facility on out-of memory errors.
+       Use this facility on out-of memory errors. 
        It allows discharging the previous state and resuming afresh.
        Any pointers previously returned by the API
        become invalid.
@@ -10275,15 +10275,15 @@ external theory_get_context : theory -> context
 
 (**
        Summary: Assert a theory axiom/lemmas during the search.
-
-       An axiom added at search level [n] will remain in the logical context until
-       level [n] is backtracked.
+       
+       An axiom added at search level [n] will remain in the logical context until 
+       level [n] is backtracked. 
 
        The callbacks for push ({!set_push_callback}) and pop
        ({!set_pop_callback}) can be used to track when the search
        level is increased (i.e., new case-split) and decreased (i.e.,
        case-split is backtracked).
-
+       
        Z3 tracks the theory axioms asserted. So, multiple assertions of the same axiom are
        ignored.
 *)
@@ -10302,7 +10302,7 @@ external theory_assume_eq : theory -> ast -> ast -> unit
 
 (**
        Summary: Enable/disable the simplification of theory axioms asserted using {!theory_assert_axiom}.
-       By default, the simplification of theory specific operators is disabled.
+       By default, the simplification of theory specific operators is disabled. 
        That is, the reduce theory callbacks are not invoked for theory axioms.
        The default behavior is useful when asserting axioms stating properties of theory operators.
 *)
@@ -10319,10 +10319,10 @@ external theory_get_eqc_root : theory -> ast -> ast
        Summary: Return the next element in the equivalence class containing [n].
 
        The elements in an equivalence class are organized in a circular list.
-       You can traverse the list by calling this function multiple times
+       You can traverse the list by calling this function multiple times 
        using the result from the previous call. This is illustrated in the
        code snippet below.
-       {v
+       {v 
            ast curr = n;
            do
              curr = theory_get_eqc_next(theory, curr);
@@ -10333,14 +10333,14 @@ external theory_get_eqc_next : theory -> ast -> ast
 	= "camlidl_z3V3_Z3_theory_get_eqc_next"
 
 (**
-       Summary: Return the number of parents of [n] that are operators of the given theory.
+       Summary: Return the number of parents of [n] that are operators of the given theory. 
 *)
 external theory_get_num_parents : theory -> ast -> int
 	= "camlidl_z3V3_Z3_theory_get_num_parents"
 
 (**
-       Summary: Return the i-th parent of [n].
-       See {!theory_get_num_parents}.
+       Summary: Return the i-th parent of [n]. 
+       See {!theory_get_num_parents}. 
 *)
 external theory_get_parent : theory -> ast -> int -> ast
 	= "camlidl_z3V3_Z3_theory_get_parent"
@@ -10367,7 +10367,7 @@ external theory_get_num_elems : theory -> int
 
 (**
        Summary: Return the i-th elem of the given theory in the logical context.
-
+       
        - {b See}: {!theory_get_num_elems}
 *)
 external theory_get_elem : theory -> int -> ast
@@ -10383,7 +10383,7 @@ external theory_get_num_apps : theory -> int
 
 (**
        Summary: Return the i-th application of the given theory in the logical context.
-
+       
        - {b See}: {!theory_get_num_apps}
 *)
 external theory_get_app : theory -> int -> ast
@@ -10422,7 +10422,7 @@ external set_logic : context -> string -> bool
 
 (**
         Summary: Create a backtracking point.
-
+        
         The logical context can be viewed as a stack of contexts.  The
         scope level is the number of elements on this stack. The stack
         of contexts is simulated using trail (undo) stacks.
@@ -10438,17 +10438,17 @@ external push : context -> unit
 
 (**
        Summary: Backtrack.
-
+       
        Restores the context from the top of the stack, and pops it off the
        stack.  Any changes to the logical context (by {!assert_cnstr} or
        other functions) between the matching {!push} and [pop]
        operators are flushed, and the context is completely restored to
        what it was right before the {!push}.
-
+       
        - {b See also}: {!push}
 
        @deprecated Subsumed by {!solver_pop}
-
+       
        def_API('pop', VOID, (_in(CONTEXT), _in(UINT)))
 *)
 external pop : context -> int -> unit
@@ -10456,12 +10456,12 @@ external pop : context -> int -> unit
 
 (**
        Summary: Retrieve the current scope level.
-
+       
        It retrieves the number of scopes that have been pushed, but not yet popped.
-
+       
        - {b See also}: {!push}
        - {b See also}: {!pop}
-
+    
        @deprecated Subsumed by {!solver_get_num_scopes}.
 
        def_API('get_num_scopes', UINT, (_in(CONTEXT),))
@@ -10470,23 +10470,23 @@ external get_num_scopes : context -> int
 	= "camlidl_z3V3_Z3_get_num_scopes"
 
 (**
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+    
+       
+       
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        @deprecated This function has no effect.
+        @deprecated This function has no effect. 
 
        def_API('persist_ast', VOID, (_in(CONTEXT), _in(AST), _in(UINT)))
 *)
@@ -10495,10 +10495,10 @@ external persist_ast : context -> ast -> int -> unit
 
 (**
        Summary: Assert a constraint into the logical context.
-
+       
        After one assertion, the logical context may become
-       inconsistent.
-
+       inconsistent.  
+       
        The functions {!check} or {!check_and_get_model} should be
        used to check whether the logical context is consistent or not.
 
@@ -10517,19 +10517,19 @@ external assert_cnstr : context -> ast -> unit
 
        If the logical context is not unsatisfiable (i.e., the return value is different from [L_FALSE)]
        and model construction is enabled (see {!mk_config}),
-
+       
         then a valid model is returned.  Otherwise, it is unsafe to use the returned model.
-
-
-
-
-
-
+       
+       
+       
+       
+       
+       
        - {b Remarks}: Model construction must be enabled using configuration
        parameters (See, {!mk_config}).
 
        - {b See also}: {!check}
-
+       
 
        @deprecated Subsumed by {!solver_check}
 
@@ -10544,7 +10544,7 @@ external check_and_get_model : context -> lbool * model
        The function {!check_and_get_model} should be used when models are needed.
 
        - {b See also}: {!check_and_get_model}
-
+    
        @deprecated Subsumed by {!solver_check}
 
        def_API('check', INT, (_in(CONTEXT),))
@@ -10556,36 +10556,36 @@ external check : context -> lbool
        Summary: Check whether the given logical context and optional assumptions is consistent or not.
 
        If the logical context is not unsatisfiable (i.e., the return value is different from [L_FALSE)],
-
+       
        and model construction is enabled (see {!mk_config}),
-
+       
         then a valid model is returned.  Otherwise, it is unsafe to use the returned model.
-
-
-
-
+       
+       
+       
+       
 
        @param c logical context.
        @param num_assumptions number of auxiliary assumptions.
        @param assumptions array of auxiliary assumptions
        @param m optional pointer to a model.
        @param proof optional pointer to a proof term.
-       @param core_size size of unsatisfiable core.
-       @param core pointer to an array receiving unsatisfiable core.
+       @param core_size size of unsatisfiable core. 
+       @param core pointer to an array receiving unsatisfiable core. 
               The unsatisfiable core is a subset of the assumptions, so the array has the same size as the assumptions.
               The [core] array is not populated if [core_size] is set to 0.
 
        - {b Precondition}: assumptions comprises of propositional literals.
-            In other words, you cannot use compound formulas for assumptions,
+            In other words, you cannot use compound formulas for assumptions, 
             but should use propositional variables or negations of propositional variables.
-
-
-
-
+              
+       
+       
+       
 
        - {b See also}: {!check}
-
-
+       
+    
        @deprecated Subsumed by {!solver_check_assumptions}
 
        def_API('check_assumptions', INT, (_in(CONTEXT), _in(UINT), _in_array(1, AST), _out(MODEL), _out(AST), _out(UINT), _out_array2(1, 5, AST)))
@@ -10595,11 +10595,11 @@ external check_assumptions : context -> ast array -> int -> ast array -> lbool *
 
 (**
        Summary: Delete a model object.
-
+       
        - {b See also}: {!check_and_get_model}
-
+    
        @deprecated Subsumed by solver API
-
+       
        def_API('del_model', VOID, (_in(CONTEXT), _in(MODEL)))
 *)
 external del_model : context -> model -> unit
@@ -10610,13 +10610,13 @@ external del_model : context -> model -> unit
 *)
 (**
        Summary: Cancel an ongoing check.
-
+       
        Notifies the current check to abort and return.
        This method should be called from a different thread
        than the one performing the check.
-
+       
        @deprecated Use {!interrupt} instead.
-
+       
        def_API('soft_check_cancel', VOID, (_in(CONTEXT), ))
 *)
 external soft_check_cancel : context -> unit
@@ -10624,8 +10624,8 @@ external soft_check_cancel : context -> unit
 
 (**
        Summary: Retrieve reason for search failure.
-
-       If a call to {!check} or {!check_and_get_model} returns L_UNDEF,
+       
+       If a call to {!check} or {!check_and_get_model} returns L_UNDEF, 
        use this facility to determine the more detailed cause of search failure.
 
        @deprecated Subsumed by {!solver_get_reason_unknown}
@@ -10646,8 +10646,8 @@ external get_search_failure : context -> search_failure
        @param is_pos label polarity.
        @param f formula being labeled.
 
-       A label behaves as an identity function, so the truth value of the
-       labeled formula is unchanged. Labels are used for identifying
+       A label behaves as an identity function, so the truth value of the 
+       labeled formula is unchanged. Labels are used for identifying 
        useful sub-formulas when generating counter-examples.
 
        @deprecated Labels are only supported by the old Solver API.
@@ -10691,7 +10691,7 @@ external get_relevant_literals : context -> literals
 	= "camlidl_z3V3_Z3_get_relevant_literals"
 
 (**
-        Summary: Retrieve the set of literals that whose assignment were
+        Summary: Retrieve the set of literals that whose assignment were 
         guess, but not propagated during the search.
 
         - {b See also}: {!del_literals}
@@ -10700,7 +10700,7 @@ external get_relevant_literals : context -> literals
         - {b See also}: {!get_literal}
 
         @deprecated This procedure is based on the old Solver API.
-
+        
         def_API('get_guessed_literals', LITERALS, (_in(CONTEXT), ))
 *)
 external get_guessed_literals : context -> literals
@@ -10708,7 +10708,7 @@ external get_guessed_literals : context -> literals
 
 (**
        Summary: Delete a labels context.
-
+       
        - {b See also}: {!get_relevant_labels}
 
         @deprecated This procedure is based on the old Solver API.
@@ -10720,7 +10720,7 @@ external del_literals : context -> literals -> unit
 
 (**
        Summary: Retrieve the number of label symbols that were returned.
-
+       
        - {b See also}: {!get_relevant_labels}
 
         @deprecated This procedure is based on the old Solver API.
@@ -10744,7 +10744,7 @@ external get_label_symbol : context -> literals -> int -> symbol
        Summary: Retrieve literal expression at idx.
 
        @deprecated This procedure is based on the old Solver API.
-
+       
        def_API('get_literal', AST, (_in(CONTEXT), _in(LITERALS), _in(UINT)))
 *)
 external get_literal : context -> literals -> int -> ast
@@ -10752,7 +10752,7 @@ external get_literal : context -> literals -> int -> ast
 
 (**
        Summary: Disable label.
-
+       
        The disabled label is not going to be used when blocking the subsequent search.
 
        - {b See also}: {!block_literals}
@@ -10779,8 +10779,8 @@ external block_literals : context -> literals -> unit
 *)
 (**
        Summary: Return the number of constants assigned by the given model.
-
-        - {b Remarks}: Consider using {!get_model_constants}.
+       
+        - {b Remarks}: Consider using {!get_model_constants}. 
 
        - {b See also}: {!get_model_constant}
 
@@ -10793,9 +10793,9 @@ external get_model_num_constants : context -> model -> int
 
 (**
        Summary: \[ [ get_model_constant c m i ] \]
-       Return the i-th constant in the given model.
+       Return the i-th constant in the given model. 
 
-        - {b Remarks}: Consider using {!get_model_constants}.
+        - {b Remarks}: Consider using {!get_model_constants}. 
 
        - {b Precondition}: i < get_model_num_constants c m
 
@@ -10808,7 +10808,7 @@ external get_model_constant : context -> model -> int -> func_decl
 
 (**
        Summary: Return the number of function interpretations in the given model.
-
+       
        A function interpretation is represented as a finite map and an 'else' value.
        Each entry in the finite map represents the value of a function given a set of arguments.
 
@@ -10835,9 +10835,9 @@ external get_model_func_decl : context -> model -> int -> func_decl
 	= "camlidl_z3V3_Z3_get_model_func_decl"
 
 (**
-       Summary: Return the value of the given constant or function
+       Summary: Return the value of the given constant or function 
        in the given model.
-
+       
        @deprecated Consider using {!model_eval} or {!model_get_func_interp}
 
        def_API('eval_func_decl', BOOL, (_in(CONTEXT), _in(MODEL), _in(FUNC_DECL), _out(AST)))
@@ -10847,13 +10847,13 @@ external eval_func_decl : context -> model -> func_decl -> bool * ast
 
 (**
        Summary: \[ [ is_array_value c v ] \]
-       Determine whether the term encodes an array value.
-       A term encodes an array value if it is a nested sequence of
+       Determine whether the term encodes an array value.       
+       A term encodes an array value if it is a nested sequence of 
        applications of store on top of a constant array.
        The indices to the stores have to be values (for example, integer constants)
        so that equality between the indices can be evaluated.
        Array values are useful for representing interpretations for arrays.
-
+              
        Return the number of entries mapping to non-default values of the array.
 
        @deprecated Use {!is_as_array}
@@ -10868,7 +10868,7 @@ external is_array_value : context -> model -> ast -> bool * int
        An array values is represented as a dictionary plus a
        default (else) value. This function returns the array graph.
 
-       - {b Precondition}: TRUE == is_array_value c v &num_entries
+       - {b Precondition}: TRUE == is_array_value c v &num_entries       
 
        @deprecated Use func_interp objects and {!get_as_array_func_decl}
 
@@ -10880,11 +10880,11 @@ external get_array_value : context -> model -> ast -> ast array -> ast array -> 
 (**
        Summary: \[ [ get_model_func_else c m i ] \]
        Return the 'else' value of the i-th function interpretation in the given model.
-
+ 
        A function interpretation is represented as a finite map and an 'else' value.
 
-        - {b Remarks}: Consider using {!get_model_funcs}.
-
+        - {b Remarks}: Consider using {!get_model_funcs}. 
+       
        - {b Precondition}: i < get_model_num_funcs c m
 
        - {b See also}: {!get_model_num_funcs}
@@ -10902,11 +10902,11 @@ external get_model_func_else : context -> model -> int -> ast
 (**
        Summary: \[ [ get_model_func_num_entries c m i ] \]
        Return the number of entries of the i-th function interpretation in the given model.
-
+ 
        A function interpretation is represented as a finite map and an 'else' value.
 
-        - {b Remarks}: Consider using {!get_model_funcs}.
-
+        - {b Remarks}: Consider using {!get_model_funcs}. 
+       
        - {b Precondition}: i < get_model_num_funcs c m
 
        - {b See also}: {!get_model_num_funcs}
@@ -10928,11 +10928,11 @@ external get_model_func_num_entries : context -> model -> int -> int
 
        A function interpretation is represented as a finite map and an 'else' value.
        This function returns the j-th entry of this map.
-
+      
        An entry represents the value of a function given a set of arguments.
+       
 
-
-        - {b Remarks}: Consider using {!get_model_funcs}.
+        - {b Remarks}: Consider using {!get_model_funcs}. 
 
        - {b Precondition}: i < get_model_num_funcs c m
        - {b Precondition}: j < get_model_func_num_entries c m i
@@ -10955,11 +10955,11 @@ external get_model_func_entry_num_args : context -> model -> int -> int -> int
 
        A function interpretation is represented as a finite map and an 'else' value.
        This function returns the j-th entry of this map.
-
+      
        An entry represents the value of a function given a set of arguments.
+       
 
-
-        - {b Remarks}: Consider using {!get_model_funcs}.
+        - {b Remarks}: Consider using {!get_model_funcs}. 
 
        - {b Precondition}: i < get_model_num_funcs c m
        - {b Precondition}: j < get_model_func_num_entries c m i
@@ -10983,11 +10983,11 @@ external get_model_func_entry_arg : context -> model -> int -> int -> int -> ast
 
        A function interpretation is represented as a finite map and an 'else' value.
        This function returns the j-th entry of this map.
-
+      
        An entry represents the value of a function given a set of arguments.
+       
 
-
-        - {b Remarks}: Consider using {!get_model_funcs}.
+        - {b Remarks}: Consider using {!get_model_funcs}. 
 
        - {b Precondition}: i < get_model_num_funcs c m
        - {b Precondition}: j < get_model_func_num_entries c m i
@@ -11004,15 +11004,15 @@ external get_model_func_entry_value : context -> model -> int -> int -> ast
 
 (**
        Summary: \[ [ eval c m t ] \]
-       Evaluate the AST node [t] in the given model.
-
-        Return a pair: Boolean and value. The Boolean is true if the term was successfully evaluated.
+       Evaluate the AST node [t] in the given model. 
+       
+        Return a pair: Boolean and value. The Boolean is true if the term was successfully evaluated. 
 
        The evaluation may fail for the following reasons:
 
        - [t] contains a quantifier.
 
-       - the model [m] is partial, that is, it doesn't have a complete interpretation for uninterpreted functions.
+       - the model [m] is partial, that is, it doesn't have a complete interpretation for uninterpreted functions. 
          That is, the option {e MODEL_PARTIAL=true } was used.
 
        - [t] is type incorrect.
@@ -11029,7 +11029,7 @@ external eval : context -> model -> ast -> bool * ast
 
        Provides direct way to evaluate declarations
        without going over terms.
-
+    
        @deprecated Consider using {!model_eval} and {!substitute_vars}
 
        def_API('eval_decl', BOOL, (_in(CONTEXT), _in(MODEL), _in(FUNC_DECL), _in(UINT), _in_array(3, AST), _out(AST)))
@@ -11042,15 +11042,15 @@ external eval_decl : context -> model -> func_decl -> ast array -> bool * ast
 *)
 (**
        Summary: Convert the given logical context into a string.
-
+       
        This function is mainly used for debugging purposes. It displays
        the internal structure of a logical context.
 
+       
+       
+       
 
-
-
-
-       @deprecated This method is obsolete. It just displays the internal representation of
+       @deprecated This method is obsolete. It just displays the internal representation of 
        the global solver available for backward compatibility reasons.
 
        def_API('context_to_string', STRING, (_in(CONTEXT),))
@@ -11060,15 +11060,15 @@ external context_to_string : context -> string
 
 (**
        Summary: Return runtime statistics as a string.
-
+       
        This function is mainly used for debugging purposes. It displays
        statistics of the search activity.
 
+       
+       
+       
 
-
-
-
-       @deprecated This method is based on the old solver API.
+       @deprecated This method is based on the old solver API. 
        Use {!stats_to_string} when using the new solver API.
 
        def_API('statistics_to_string', STRING, (_in(CONTEXT),))
@@ -11078,15 +11078,15 @@ external statistics_to_string : context -> string
 
 (**
        Summary: Extract satisfying assignment from context as a conjunction.
-
+       
        This function can be used for debugging purposes. It returns a conjunction
        of formulas that are assigned to true in the current context.
        This conjunction will contain not only the assertions that are set to true
        under the current assignment, but will also include additional literals
-       if there has been a call to {!check} or {!check_and_get_model}.
-
+       if there has been a call to {!check} or {!check_and_get_model}.       
+       
        @deprecated This method is based on the old solver API.
-
+    
        def_API('get_context_assignment', AST, (_in(CONTEXT),))
 *)
 external get_context_assignment : context -> ast
@@ -11136,13 +11136,13 @@ val get_tuple_sort: context -> sort -> (func_decl * func_decl array)
 
 (**
   \[ [ datatype_constructor_refined ] \] is the refinement of a datatype constructor.
-
+  
   It contains the constructor declaration, recognizer, and list of accessor functions.
 *)
-type datatype_constructor_refined = {
-   constructor : func_decl;
-   recognizer : func_decl;
-   accessors : func_decl array
+type datatype_constructor_refined = { 
+   constructor : func_decl; 
+   recognizer : func_decl; 
+   accessors : func_decl array 
 }
 
 (**
@@ -11191,9 +11191,9 @@ val get_model_func_entries: context -> model -> int -> (ast array * ast) array;;
   - {b See also}: {!get_model_func_entries}
   - {b See also}: {!get_model_func_else}
 *)
-val get_model_funcs: context -> model ->
+val get_model_funcs: context -> model -> 
   (symbol *
-   (ast array * ast) array *
+   (ast array * ast) array * 
    ast) array
 
 (**
@@ -11257,7 +11257,7 @@ val get_smtlib_decls: context -> func_decl array
 val get_smtlib_parse_results: context -> (ast array * ast array * func_decl array)
 
 (**
-  \[ [ parse_smtlib_string_formula c ... ] \] calls [(parse_smtlib_string c ...)] and returns the single formula produced.
+  \[ [ parse_smtlib_string_formula c ... ] \] calls [(parse_smtlib_string c ...)] and returns the single formula produced. 
 
   Recommended for functional style interface to the SMT-LIB parser.
 
@@ -11267,7 +11267,7 @@ val get_smtlib_parse_results: context -> (ast array * ast array * func_decl arra
 val parse_smtlib_string_formula: context -> string -> symbol array -> sort array -> symbol array -> func_decl array -> ast
 
 (**
-  \[ [ parse_smtlib_file_formula c ... ] \] calls [(parse_smtlib_file c ...)] and returns the single formula produced.
+  \[ [ parse_smtlib_file_formula c ... ] \] calls [(parse_smtlib_file c ...)] and returns the single formula produced. 
 
   Recommended for functional style interface to the SMT-LIB parser.
 
@@ -11350,7 +11350,7 @@ val sort_refine: context -> sort -> sort_refined;;
 
   - {b See also}: {!term_refined}
 *)
-type binder_type = | Forall | Exists
+type binder_type = | Forall | Exists 
 
 (**
   \[ [ numeral_refined ] \] is the refinement of a numeral .
@@ -11359,7 +11359,7 @@ type binder_type = | Forall | Exists
   64 bit integers are treated as small.
 
 *)
-type numeral_refined =
+type numeral_refined = 
   | Numeral_small  of int64 * int64
   | Numeral_large  of string
 
@@ -11368,7 +11368,7 @@ type numeral_refined =
 
   - {b See also}: {!term_refine}
 *)
-type term_refined =
+type term_refined = 
   | Term_app        of decl_kind * func_decl * ast array
   | Term_quantifier of binder_type * int * ast array array * (symbol * sort) array * ast
   | Term_numeral    of numeral_refined * sort
@@ -11381,7 +11381,7 @@ type term_refined =
 *)
 val term_refine : context -> ast -> term_refined
 
-(**
+(** 
   \[ [mk_theory c name ] \] create a custom theory.
 
 *)
@@ -11415,7 +11415,7 @@ val set_new_app_callback : theory -> (ast -> unit) -> unit
 (**
   \[ [set_new_elem_callback th cb] \] set callback for registering new element.
 
-  - {b See also}: the help for the corresponding C API function.
+  - {b See also}: the help for the corresponding C API function.  
 *)
 val set_new_elem_callback : theory -> (ast -> unit) -> unit
 

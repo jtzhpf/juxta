@@ -66,7 +66,7 @@ namespace smt {
             clause2app_triple                      m_clause2apps;
         };
         _triple                                    m_triple;
-
+        
 
 
         void gc();
@@ -81,7 +81,7 @@ namespace smt {
         void instantiate(app * n1, app * n2, app* r);
         void reset_app_triples();
         void gc_triples();
-
+        
     public:
         dyn_ack_manager(context & ctx, dyn_ack_params & p);
         ~dyn_ack_manager();
@@ -118,7 +118,7 @@ namespace smt {
                 eq_eh(n1, n2, r);
         }
 
-
+        
         /**
            \brief This method is invoked when it is safe to expand the new ackermann rule entries.
         */

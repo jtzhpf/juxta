@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Expr.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -38,9 +38,9 @@ public class Expr extends AST
 	}
 
 	/**
-	 * Returns a simplified version of the expression
+	 * Returns a simplified version of the expression 
 	 * A set of
-	 * parameters <param name="p">a Params object</param> to configure the simplifier
+	 * parameters <param name="p">a Params object</param> to configure the simplifier 
 	 * <seealso cref="Context.SimplifyHelp"/>
 	 **/
 	public Expr simplify(Params p) throws Z3Exception
@@ -158,7 +158,7 @@ public class Expr extends AST
 	/**
 	 * Translates (copies) the term to the Context <paramref name="ctx"/>.
 	 * <param name="ctx">A context</param>
-	 *
+	 * 
 	 * @return A copy of the term which is associated with <paramref
 	 *         name="ctx"/>
 	 **/
@@ -192,7 +192,7 @@ public class Expr extends AST
 
 	/**
 	 * Indicates whether the term is well-sorted.
-	 *
+	 * 
 	 * @return True if the term is well-sorted, false otherwise.
 	 **/
 	public boolean isWellSorted() throws Z3Exception
@@ -1136,7 +1136,7 @@ public class Expr extends AST
 	 * only used if the parameter PROOF_MODE is 1. It combines several symmetry
 	 * and transitivity proofs. Example: T1: (R a b) T2: (R c b) T3: (R c d)
 	 * [trans* T1 T2 T3]: (R a d) R must be a symmetric and transitive relation.
-	 *
+	 * 
 	 * Assuming that this proof object is a proof for (R s t), then a proof
 	 * checker must check if it is possible to prove (R s t) using the
 	 * antecedents, symmetry and transitivity. That is, if there is a path from
@@ -1177,7 +1177,7 @@ public class Expr extends AST
 	 * also justifies the following equality: (= (f (g a b) (g c d)) (g (f a c)
 	 * (f a d) (f b c) (f b d))) where each f and g can have arbitrary number of
 	 * arguments.
-	 *
+	 * 
 	 * This proof object has no antecedents. Remark. This rule is used by the
 	 * CNF conversion pass and instantiated by f = or, and g = and. </remarks>
 	 **/
@@ -1210,11 +1210,11 @@ public class Expr extends AST
 	 * Indicates whether the term is a proof by rewriting <remarks> A proof for
 	 * a local rewriting step (= t s). The head function symbol of t is
 	 * interpreted.
-	 *
+	 * 
 	 * This proof object has no antecedents. The conclusion of a rewrite rule is
 	 * either an equality (= t s), an equivalence (iff t s), or
 	 * equi-satisfiability (~ t s). Remark: if f is bool, then = is iff.
-	 *
+	 * 
 	 * Examples: (= (+ x 0) x) (= (+ x 1 2) (+ 3 x)) (iff (or x false) x)
 	 * </remarks>
 	 **/
@@ -1276,7 +1276,7 @@ public class Expr extends AST
 	 * Indicates whether the term is a proof for elimination of unused
 	 * variables. <remarks> A proof for (iff (forall (x_1 ... x_n y_1 ... y_m)
 	 * p[x_1 ... x_n]) (forall (x_1 ... x_n) p[x_1 ... x_n]))
-	 *
+	 * 
 	 * It is used to justify the elimination of unused variables. This proof
 	 * object has no antecedents. </remarks>
 	 **/
@@ -1289,9 +1289,9 @@ public class Expr extends AST
 	 * Indicates whether the term is a proof for destructive equality resolution
 	 * <remarks> A proof for destructive equality resolution: (iff (forall (x)
 	 * (or (not (= x t)) P[x])) P[t]) if x does not occur in t.
-	 *
+	 * 
 	 * This proof object has no antecedents.
-	 *
+	 * 
 	 * Several variables can be eliminated simultaneously. </remarks>
 	 **/
 	public boolean isProofDER() throws Z3Exception
@@ -1320,7 +1320,7 @@ public class Expr extends AST
 	/**
 	 * Indicates whether the term is a proof by lemma <remarks> T1: false [lemma
 	 * T1]: (or (not l_1) ... (not l_n))
-	 *
+	 * 
 	 * This proof object has one antecedent: a hypothetical proof for false. It
 	 * converts the proof in a proof for (or (not l_1) ... (not l_n)), when T1
 	 * contains the hypotheses: l_1, ..., l_n. </remarks>
@@ -1361,9 +1361,9 @@ public class Expr extends AST
 	/**
 	 * Indicates whether the term is a proof by commutativity <remarks> [comm]:
 	 * (= (f a b) (f b a))
-	 *
+	 * 
 	 * f is a commutative operator.
-	 *
+	 * 
 	 * This proof object has no antecedents. Remark: if f is bool, then = is
 	 * iff. </remarks>
 	 **/
@@ -1375,7 +1375,7 @@ public class Expr extends AST
 	/**
 	 * Indicates whether the term is a proof for Tseitin-like axioms <remarks>
 	 * Proof object used to justify Tseitin's like axioms:
-	 *
+	 * 
 	 * (or (not (and p q)) p) (or (not (and p q)) q) (or (not (and p q r)) p)
 	 * (or (not (and p q r)) q) (or (not (and p q r)) r) ... (or (and p q) (not
 	 * p) (not q)) (or (not (or p q)) p q) (or (or p q) (not p)) (or (or p q)
@@ -1383,7 +1383,7 @@ public class Expr extends AST
 	 * (or (iff p q) (not p) (not q)) (or (iff p q) p q) (or (not (ite a b c))
 	 * (not a) b) (or (not (ite a b c)) a c) (or (ite a b c) (not a) (not b))
 	 * (or (ite a b c) a (not c)) (or (not (not a)) (not a)) (or (not a) a)
-	 *
+	 * 
 	 * This proof object has no antecedents. Note: all axioms are propositional
 	 * tautologies. Note also that 'and' and 'or' can take multiple arguments.
 	 * You can recover the propositional tautologies by unfolding the Boolean
@@ -1400,15 +1400,15 @@ public class Expr extends AST
 	 * <remarks> Introduces a name for a formula/term. Suppose e is an
 	 * expression with free variables x, and def-intro introduces the name n(x).
 	 * The possible cases are:
-	 *
+	 * 
 	 * When e is of Boolean type: [def-intro]: (and (or n (not e)) (or (not n)
 	 * e))
-	 *
+	 * 
 	 * or: [def-intro]: (or (not n) e) when e only occurs positively.
-	 *
+	 * 
 	 * When e is of the form (ite cond th el): [def-intro]: (and (or (not cond)
 	 * (= n th)) (or cond (= n el)))
-	 *
+	 * 
 	 * Otherwise: [def-intro]: (= n e) </remarks>
 	 **/
 	public boolean isProofDefIntro() throws Z3Exception
@@ -1438,17 +1438,17 @@ public class Expr extends AST
 	/**
 	 * Indicates whether the term is a proof for a positive NNF step <remarks>
 	 * Proof for a (positive) NNF step. Example:
-	 *
+	 * 
 	 * T1: (not s_1) ~ r_1 T2: (not s_2) ~ r_2 T3: s_1 ~ r_1' T4: s_2 ~ r_2'
 	 * [nnf-pos T1 T2 T3 T4]: (~ (iff s_1 s_2) (and (or r_1 r_2') (or r_1'
 	 * r_2)))
-	 *
+	 * 
 	 * The negation normal form steps NNF_POS and NNF_NEG are used in the
 	 * following cases: (a) When creating the NNF of a positive force
 	 * quantifier. The quantifier is retained (unless the bound variables are
 	 * eliminated). Example T1: q ~ q_new [nnf-pos T1]: (~ (forall (x T) q)
 	 * (forall (x T) q_new))
-	 *
+	 * 
 	 * (b) When recursively creating NNF over Boolean formulas, where the
 	 * top-level connective is changed during NNF conversion. The relevant
 	 * Boolean connectives for NNF_POS are 'implies', 'iff', 'xor', 'ite'.
@@ -1463,7 +1463,7 @@ public class Expr extends AST
 	/**
 	 * Indicates whether the term is a proof for a negative NNF step <remarks>
 	 * Proof for a (negative) NNF step. Examples:
-	 *
+	 * 
 	 * T1: (not s_1) ~ r_1 ... Tn: (not s_n) ~ r_n [nnf-neg T1 ... Tn]: (not
 	 * (and s_1 ... s_n)) ~ (or r_1 ... r_n) and T1: (not s_1) ~ r_1 ... Tn:
 	 * (not s_n) ~ r_n [nnf-neg T1 ... Tn]: (not (or s_1 ... s_n)) ~ (and r_1
@@ -1480,9 +1480,9 @@ public class Expr extends AST
 	 * Indicates whether the term is a proof for (~ P Q) here Q is in negation
 	 * normal form. <remarks> A proof for (~ P Q) where Q is in negation normal
 	 * form.
-	 *
+	 * 
 	 * This proof object is only used if the parameter PROOF_MODE is 1.
-	 *
+	 * 
 	 * This proof object may have n antecedents. Each antecedent is a
 	 * PR_DEF_INTRO. </remarks>
 	 **/
@@ -1506,10 +1506,10 @@ public class Expr extends AST
 	/**
 	 * Indicates whether the term is a proof for a Skolemization step <remarks>
 	 * Proof for:
-	 *
+	 * 
 	 * [sk]: (~ (not (forall x (p x y))) (not (p (sk y) y))) [sk]: (~ (exists x
 	 * (p x y)) (p (sk y) y))
-	 *
+	 * 
 	 * This proof object has no antecedents. </remarks>
 	 **/
 	public boolean isProofSkolemize() throws Z3Exception
@@ -1530,7 +1530,7 @@ public class Expr extends AST
 	/**
 	 * Indicates whether the term is a proof for theory lemma <remarks> Generic
 	 * proof for theory lemmas.
-	 *
+	 * 
 	 * The theory lemma function comes with one or more parameters. The first
 	 * parameter indicates the name of the theory. For the theory of arithmetic,
 	 * additional parameters provide hints for checking the theory lemma. The
@@ -1637,9 +1637,9 @@ public class Expr extends AST
 	 * negation of another. <remarks> Intersect the first relation with respect
 	 * to negation of the second relation (the function takes two arguments).
 	 * Logically, the specification can be described by a function
-	 *
+	 * 
 	 * target = filter_by_negation(pos, neg, columns)
-	 *
+	 * 
 	 * where columns are pairs c1, d1, .., cN, dN of columns from pos and neg,
 	 * such that target are elements in x in pos, such that there is no y in neg
 	 * that agrees with x on the columns c1, d1, .., cN, dN. </remarks>
@@ -1754,7 +1754,7 @@ public class Expr extends AST
 
 	void checkNativeObject(long obj) throws Z3Exception
 	{
-		if (!Native.isApp(getContext().nCtx(), obj) &&
+		if (!Native.isApp(getContext().nCtx(), obj) && 
 		    Native.getAstKind(getContext().nCtx(), obj) != Z3_ast_kind.Z3_VAR_AST.toInt() &&
 		    Native.getAstKind(getContext().nCtx(), obj) != Z3_ast_kind.Z3_QUANTIFIER_AST.toInt())
 		    throw new Z3Exception("Underlying object is not a term");

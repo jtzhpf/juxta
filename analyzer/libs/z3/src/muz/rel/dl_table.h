@@ -58,7 +58,7 @@ namespace datalog {
     public:
         typedef hashtable_table table;
 
-        hashtable_table_plugin(relation_manager & manager)
+        hashtable_table_plugin(relation_manager & manager) 
             : table_plugin(symbol("hashtable"), manager) {}
 
         virtual table_base * mk_empty(const table_signature & s);
@@ -73,7 +73,7 @@ namespace datalog {
 
         class our_iterator_core;
 
-        typedef hashtable<table_fact, svector_hash_proc<table_element_hash>,
+        typedef hashtable<table_fact, svector_hash_proc<table_element_hash>, 
             vector_eq_proc<table_fact> > storage;
 
         storage m_data;
@@ -115,7 +115,7 @@ namespace datalog {
     public:
         typedef bitvector_table table;
 
-        bitvector_table_plugin(relation_manager & manager)
+        bitvector_table_plugin(relation_manager & manager) 
             : table_plugin(symbol("bitvector"), manager) {}
 
         virtual bool can_handle_signature(const table_signature & s);
@@ -138,7 +138,7 @@ namespace datalog {
         bitvector_table(bitvector_table_plugin & plugin, const table_signature & sig);
     public:
         virtual void add_fact(const table_fact & f);
-        virtual void remove_fact(const table_element* fact);
+        virtual void remove_fact(const table_element* fact);                   
         virtual bool contains_fact(const table_fact & f) const;
         virtual iterator begin() const;
         virtual iterator end() const;
@@ -161,7 +161,7 @@ namespace datalog {
     public:
         typedef equivalence_table table;
 
-        equivalence_table_plugin(relation_manager & manager)
+        equivalence_table_plugin(relation_manager & manager) 
             : table_plugin(symbol("equivalence"), manager) {}
 
         virtual bool can_handle_signature(const table_signature & s);
@@ -169,28 +169,28 @@ namespace datalog {
         virtual table_base * mk_empty(const table_signature & s);
 
     protected:
-        virtual table_union_fn * mk_union_fn(const table_base & tgt, const table_base & src,
+        virtual table_union_fn * mk_union_fn(const table_base & tgt, const table_base & src, 
             const table_base * delta);
         virtual table_transformer_fn * mk_select_equal_and_project_fn(
-            const table_base & t,
+            const table_base & t, 
             const table_element & value, unsigned col);
         virtual table_join_fn * mk_join_project_fn(const table_base & t1, const table_base & t2,
-            unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
+            unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
             const unsigned * removed_cols);
 
 
 #if 0
         virtual table_join_fn * mk_join_fn(const table_base & t1, const table_base & t2,
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2);
-        virtual table_transformer_fn * mk_project_fn(const table_base & t, unsigned col_cnt,
+        virtual table_transformer_fn * mk_project_fn(const table_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
         virtual table_transformer_fn * mk_rename_fn(const table_base & t, unsigned permutation_cycle_len,
             const unsigned * permutation_cycle);
             const table_element & value, unsigned col);
-        virtual table_intersection_filter_fn * mk_filter_by_negation_fn(const table_base & t,
-                const table_base & negated_obj, unsigned joined_col_cnt,
+        virtual table_intersection_filter_fn * mk_filter_by_negation_fn(const table_base & t, 
+                const table_base & negated_obj, unsigned joined_col_cnt, 
                 const unsigned * t_cols, const unsigned * negated_cols);
-#endif
+#endif 
     };
 
     class equivalence_table : public table_base {
@@ -223,14 +223,14 @@ namespace datalog {
 
             unsigned operator*() { return m_current; }
 
-            class_iterator& operator++() {
-                m_current = m_parent.m_uf.next(m_current);
-                m_end = (m_current == m_last);
-                return *this;
+            class_iterator& operator++() { 
+                m_current = m_parent.m_uf.next(m_current); 
+                m_end = (m_current == m_last); 
+                return *this; 
             }
 
             bool operator==(const class_iterator & it) const {
-                return
+                return 
                     (m_end && it.m_end) ||
                     (!m_end && !it.m_end && m_current == it.m_current);
             }
@@ -242,11 +242,11 @@ namespace datalog {
 
         void add_fact_sparse(table_fact const& f);
         void mk_sparse();
-
+        
 
     public:
         virtual void add_fact(const table_fact & f);
-        virtual void remove_fact(const table_element* fact);
+        virtual void remove_fact(const table_element* fact);                   
         virtual bool contains_fact(const table_fact & f) const;
         virtual table_base* clone() const;
         virtual iterator begin() const;
@@ -258,7 +258,7 @@ namespace datalog {
 
     };
 
-
+    
 };
 
 #endif /* _DL_TABLE_H_ */

@@ -63,12 +63,12 @@ static void test(char const *ex) {
     lbool result = ctx.check();
     SASSERT(result == l_true);
     ref<model> md;
-    ctx.get_model(md);
+    ctx.get_model(md);    
     expr_ref pr = qe::arith_project(*md, vars, lits);
-
+    
     std::cout << mk_pp(fml, m) << "\n";
     std::cout << mk_pp(pr, m) << "\n";
-
+    
 }
 
 static void test2(char const *ex) {
@@ -91,9 +91,9 @@ static void test2(char const *ex) {
     lbool result = ctx.check();
     SASSERT(result == l_true);
     ref<model> md;
-    ctx.get_model(md);
+    ctx.get_model(md);  
     ctx.pop(1);
-
+    
     std::cout << mk_pp(fml, m) << "\n";
 
     expr_ref pr2(m), fml2(m);
@@ -120,8 +120,8 @@ static void test2(char const *ex) {
     ctx.assert_expr(npr2);
     VERIFY(l_false == ctx.check());
     ctx.pop(1);
-
-
+    
+    
 }
 
 void tst_qe_arith() {

@@ -15,9 +15,9 @@ Author:
 
 Notes:
 
-   [1] Elwyn Ralph Berlekamp. Factoring Polynomials over Finite Fields. Bell System Technical Journal,
+   [1] Elwyn Ralph Berlekamp. Factoring Polynomials over Finite Fields. Bell System Technical Journal, 
        46(8-10):1853-1859, 1967.
-   [2] Donald Ervin Knuth. The Art of Computer Programming, volume 2: Seminumerical Algorithms. Addison Wesley, third
+   [2] Donald Ervin Knuth. The Art of Computer Programming, volume 2: Seminumerical Algorithms. Addison Wesley, third 
        edition, 1997.
    [3] Henri Cohen. A Course in Computational Algebraic Number Theory. Springer Verlag, 1993.
 
@@ -48,14 +48,14 @@ unsigned get_p_from_manager(zp_numeral_manager const & zp_nm) {
 
 /**
    \brief The Q-I matrix from Berelkamp's algorithm [1,2].
-
-   Given a polynomial f = \sum f_k x^k of degree n, with f_i in Z_p[x], the i-th row of Q is a representation of
+   
+   Given a polynomial f = \sum f_k x^k of degree n, with f_i in Z_p[x], the i-th row of Q is a representation of 
    x^(p*i) modulo f, i.e.
 
       x^(p*i) modulo f = \sum_j q[i][j] x^j
-
-   If f is of degree n, the matrix is square nxn. When the this matrix is constructed we obtain Q - I, because
-   this is what we need in the algorithm. After construction, the null space vectors can be extracted one-by one using
+    
+   If f is of degree n, the matrix is square nxn. When the this matrix is constructed we obtain Q - I, because 
+   this is what we need in the algorithm. After construction, the null space vectors can be extracted one-by one using 
    the next_null_space_vector method.
 */
 class berlekamp_matrix {
@@ -81,7 +81,7 @@ class berlekamp_matrix {
     }
 
 public:
-
+    
     /**
        \brief Construct the matrix as explained above, f should be in the Z_p.
     */
@@ -96,7 +96,7 @@ public:
 
         TRACE("polynomial::factorization::bughunt", tout << "polynomial::berlekamp_matrix("; m_upm.display(tout, f); tout << ", " << p << ")" << endl;);
 
-        // the first row is always the vector [1, 0, ..., 0], since x^0 = 0 (modulo f)
+        // the first row is always the vector [1, 0, ..., 0], since x^0 = 0 (modulo f)        
         m_matrix.push_back(1);
         for (unsigned j = 0; j < m_size; ++ j) {
             m_matrix.push_back(0);
@@ -108,19 +108,19 @@ public:
         // so we can compute a_{k+1,j} = a_{k, j-1} - a_{k,n-1}*f_j
         // every p-th row we add to the matrix
         scoped_numeral tmp(m_zpm);
-        unsigned row = 0, previous_row = 0;
+        unsigned row = 0, previous_row = 0;        
         for (unsigned k = 1; true; previous_row = row, ++ k) {
 
             // add another row if we need it
             if (k % p == 1) {
                 if (++ row >= m_size) {
                     break;
-                }
+                }                
                 for (unsigned j = 0; j < m_size; ++ j) {
                     m_matrix.push_back(0);
-                }
-            }
-
+                }            
+            }            
+            
             // the multiplier
             m_zpm.set(tmp, get(previous_row, m_size - 1));
 
@@ -132,7 +132,7 @@ public:
             // add the 0 element (same formula with a_{k,-1} = 0)
             m_zpm.mul(f[0], tmp, get(row, 0));
             m_zpm.neg(get(row, 0));
-        }
+        }        
 
         // do Q - I
         for (unsigned i = 0; i < m_size; ++ i) {
@@ -152,20 +152,20 @@ public:
     }
 
     /**
-       \brief 'Disagonalizes' the matrix using only column operations. The reusling matrix will have -1 at pivot
+       \brief 'Disagonalizes' the matrix using only column operations. The reusling matrix will have -1 at pivot 
        elements. Returns the rank of the null space.
     */
     unsigned diagonalize() {
-
+        
         scoped_numeral multiplier(m_zpm);
 
         unsigned null_rank = 0;
         for (unsigned i = 0; i < m_size; ++ i) {
 
-            // get the first non-zero entry in the m_null_row row
+            // get the first non-zero entry in the m_null_row row        
             bool column_found = false;
             for (unsigned j = 0; j < m_size; ++ j) {
-                if (m_column_pivot[j] < 0 && !m_zpm.is_zero(get(i, j))) {
+                if (m_column_pivot[j] < 0 && !m_zpm.is_zero(get(i, j))) {                    
                     column_found = true;
                     m_column_pivot[j] = i;
                     m_row_pivot[i] = j;
@@ -177,7 +177,7 @@ public:
 
                     // multiply the pivot column with the multiplier
                     for (unsigned k = m_null_row; k < m_size; ++ k) {
-                        m_zpm.mul(get(k, j), multiplier, get(k, j));
+                        m_zpm.mul(get(k, j), multiplier, get(k, j));                        
                     }
                     // pivot is -1 so we can add it to the rest of the columns to eliminate the row
                     for (unsigned other_j = 0; other_j < m_size; ++ other_j) {
@@ -194,18 +194,18 @@ public:
                 null_rank ++;
             }
         }
-
+    
         TRACE("polynomial::factorization::bughunt", tout << "polynomial::diagonalize():" << endl; display(tout); tout << endl;);
-
+        
         return null_rank;
     }
 
     /**
-       If rank of the matrix is n - r, we are interested in linearly indeprendent vectors v_1, ..., v_r (the basis of
+       If rank of the matrix is n - r, we are interested in linearly indeprendent vectors v_1, ..., v_r (the basis of 
        the null space), such that v_k A = 0. This method will give one at a time. The method returns true if vector has
-       been computed properly. The first vector [1, 0, ..., 0] is ignored (m_null_row starts from 1).
+       been computed properly. The first vector [1, 0, ..., 0] is ignored (m_null_row starts from 1).       
     */
-    bool next_null_space_vector(numeral_vector & v) {
+    bool next_null_space_vector(numeral_vector & v) {        
         SASSERT(v.size() <= m_size);
         v.resize(m_size);
         for (; m_null_row < m_size; ++ m_null_row) {
@@ -214,11 +214,11 @@ public:
                 for (unsigned j = 0; j < m_size; ++ j) {
                     if (m_row_pivot[j] >= 0) {
                         m_zpm.set(v[j], get(m_null_row, m_row_pivot[j]));
-                    }
+                    } 
                     else {
                         if (j == m_null_row) {
                             m_zpm.set(v[j], 1);
-                        }
+                        } 
                         else {
                             m_zpm.set(v[j], 0);
                         }
@@ -227,7 +227,7 @@ public:
                 ++ m_null_row;
                 return true;
             }
-        }
+        }    
         // didn't find the vector
         return false;
     }
@@ -238,7 +238,7 @@ public:
     void display(std::ostream & out) const {
         for (unsigned i = 0; i < m_matrix.size() / m_size; ++ i) {
             for (unsigned j = 0; j < m_size; ++ j) {
-                out << m_zpm.to_string(get(i, j)) << "\t";
+                out << m_zpm.to_string(get(i, j)) << "\t";    
             }
             out << endl;
         }
@@ -253,103 +253,103 @@ void zp_square_free_factor(zp_manager & upm, numeral_vector const & f, zp_factor
     zp_numeral_manager & nm = upm.m();
     unsigned p = get_p_from_manager(upm.m());
 
-    TRACE("polynomial::factorization", tout << "polynomial::square_free_factor("; upm.display(tout, f); tout << ") over Z_" << p << endl;);
+    TRACE("polynomial::factorization", tout << "polynomial::square_free_factor("; upm.display(tout, f); tout << ") over Z_" << p << endl;);    
 
     scoped_numeral_vector div_tmp(nm);
 
-    // [initialize] T_0 = f, e = 1
+    // [initialize] T_0 = f, e = 1    
     // trim and get the make it monic if not already
-    SASSERT(f.size() > 1);
-    scoped_numeral_vector T_0(nm);
-    upm.set(f.size(), f.c_ptr(), T_0);
-    scoped_numeral constant(nm);
+    SASSERT(f.size() > 1);        
+    scoped_numeral_vector T_0(nm);    
+    upm.set(f.size(), f.c_ptr(), T_0);    
+    scoped_numeral constant(nm);    
     upm.mk_monic(T_0.size(), T_0.c_ptr(), constant);
     sq_free_factors.set_constant(constant);
-    TRACE("polynomial::factorization::bughunt",
+    TRACE("polynomial::factorization::bughunt", 
         tout << "Initial factors: " << sq_free_factors << endl;
         tout << "R.<x> = GF(" << p << ")['x']" << endl;
         tout << "T_0 = "; upm.display(tout, T_0); tout << endl;
-    );
+    );    
     unsigned e = 1;
 
-    // we repeat until we get a constant
+    // we repeat until we get a constant 
     scoped_numeral_vector T_0_d(nm);
-    scoped_numeral_vector T(nm);
+    scoped_numeral_vector T(nm);        
     scoped_numeral_vector V(nm);
     scoped_numeral_vector W(nm);
     scoped_numeral_vector A_ek(nm);
-    while (T_0.size() > 1)
+    while (T_0.size() > 1) 
     {
         // [initialize e-loop] T = gcd(T_0, T_0'), V / T_0/T, k = 0
         unsigned k = 0;
-        TRACE("polynomial::factorization::bughunt", tout << "k = 0" << endl;);
+        TRACE("polynomial::factorization::bughunt", tout << "k = 0" << endl;);    
 
         // T_0_d = T_0'
         upm.derivative(T_0.size(), T_0.c_ptr(), T_0_d);
-        TRACE("polynomial::factorization::bughunt",
-            tout << "T_0_d = T_0.derivative(x)" << endl;
+        TRACE("polynomial::factorization::bughunt", 
+            tout << "T_0_d = T_0.derivative(x)" << endl;    
             tout << "T_0_d == "; upm.display(tout, T_0_d); tout << endl;
-        );
+        );    
 
         // T = gcd(T_0, T_0')
         upm.gcd(T_0.size(), T_0.c_ptr(), T_0_d.size(), T_0_d.c_ptr(), T);
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "T = T_0.gcd(T_0_d)" << endl;
             tout << "T == "; upm.display(tout, T); tout << endl;
-        );
+        );    
 
         // V = T_0 / T
         upm.div(T_0.size(), T_0.c_ptr(), T.size(), T.c_ptr(), V);
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "V = T_0.quo_rem(T)[0]" << endl;
             tout << "V == "; upm.display(tout, V); tout << endl;
-        );
+        );    
 
         while (V.size() > 1) {
-            // [special case]
+            // [special case] 
             if ((++k) % p == 0) {
                 ++ k;
                 // T = T/V
                 upm.div(T.size(), T.c_ptr(), V.size(), V.c_ptr(), T);
-                TRACE("polynomial::factorization::bughunt",
+                TRACE("polynomial::factorization::bughunt", 
                     tout << "T = T.quo_rem(V)[0]" << endl;
                     tout << "T == "; upm.display(tout, T); tout << endl;
-                );
+                );    
             }
 
             // [compute A_ek]
 
             // W = gcd(T, V)
             upm.gcd(T.size(), T.c_ptr(), V.size(), V.c_ptr(), W);
-            TRACE("polynomial::factorization::bughunt",
+            TRACE("polynomial::factorization::bughunt", 
                 tout << "W = T.gcd(V)" << endl;
                 upm.display(tout, W); tout << endl;
-            );
+            );    
 
             // A_ek = V/W
             upm.div(V.size(), V.c_ptr(), W.size(), W.c_ptr(), A_ek);
-            TRACE("polynomial::factorization::bughunt",
+            TRACE("polynomial::factorization::bughunt", 
                 tout << "A_ek = V.quo_rem(W)[0]" << endl;
                 tout << "A_ek == "; upm.display(tout, A_ek); tout << endl;
-            );
+            );    
 
             // V = W
             V.swap(W);
-            TRACE("polynomial::factorization::bughunt",
-                tout << "V = W" << endl;
+            TRACE("polynomial::factorization::bughunt", 
+                tout << "V = W" << endl;    
                 tout << "V == "; upm.display(tout, V); tout << endl;
-            );
+            );    
 
             // T = T/V
             upm.div(T.size(), T.c_ptr(), V.size(), V.c_ptr(), T);
-            TRACE("polynomial::factorization::bughunt",
+            TRACE("polynomial::factorization::bughunt", 
                 tout << "T = T.quo_rem(V)[0]" << endl;
                 tout << "T == "; upm.display(tout, T); tout << endl;
-            );
+            );    
 
             // if not constant, we output it
             if (A_ek.size() > 1) {
-                TRACE("polynomial::factorization::bughunt", tout << "Factor: ("; upm.display(tout, A_ek); tout << ")^" << e*k << endl;);
+                TRACE("polynomial::factorization::bughunt", tout << "Factor: ("; upm.display(tout, A_ek); tout << ")^" << e*k << endl;);    
                 sq_free_factors.push_back(A_ek, e*k);
             }
         }
@@ -361,19 +361,19 @@ void zp_square_free_factor(zp_manager & upm, numeral_vector const & f, zp_factor
             T_0.push_back(numeral());
             nm.set(T_0.back(), T[deg_p]);
         }
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "T_0 = "; upm.display(tout, T_0); tout << endl;
-        );
+        );    
     }
 
-    TRACE("polynomial::factorization", tout << "polynomial::square_free_factor("; upm.display(tout, f); tout << ") => " << sq_free_factors << endl;);
+    TRACE("polynomial::factorization", tout << "polynomial::square_free_factor("; upm.display(tout, f); tout << ") => " << sq_free_factors << endl;);    
 }
 
 bool zp_factor(zp_manager & upm, numeral_vector const & f, zp_factors & factors) {
 
     unsigned p = get_p_from_manager(upm.m());
 
-    TRACE("polynomial::factorization", tout << "polynomial::factor("; upm.display(tout, f); tout << ") over Z_" << p << endl;);
+    TRACE("polynomial::factorization", tout << "polynomial::factor("; upm.display(tout, f); tout << ") over Z_" << p << endl;);    
 
     // get the sq-free parts (all of them will be monic)
     zp_factors sq_free_factors(upm);
@@ -387,7 +387,7 @@ bool zp_factor(zp_manager & upm, numeral_vector const & f, zp_factors & factors)
             for (; j < factors.distinct_factors(); ++ j) {
                 factors.set_degree(j, sq_free_factors.get_degree(i)*factors.get_degree(j));
             }
-        }
+        } 
         else {
             factors.push_back(sq_free_factors[i], sq_free_factors.get_degree(i));
         }
@@ -395,7 +395,7 @@ bool zp_factor(zp_manager & upm, numeral_vector const & f, zp_factors & factors)
     // add the constant
     factors.set_constant(sq_free_factors.get_constant());
 
-    TRACE("polynomial::factorization", tout << "polynomial::factor("; upm.display(tout, f); tout << ") => " << factors << endl;);
+    TRACE("polynomial::factorization", tout << "polynomial::factor("; upm.display(tout, f); tout << ") => " << factors << endl;);    
 
     return factors.total_factors() > 1;
 }
@@ -404,18 +404,18 @@ bool zp_factor_square_free(zp_manager & upm, numeral_vector const & f, zp_factor
     return zp_factor_square_free_berlekamp(upm, f, factors, false);
 }
 
-bool zp_factor_square_free_berlekamp(zp_manager & upm, numeral_vector const & f, zp_factors & factors, bool randomized) {
+bool zp_factor_square_free_berlekamp(zp_manager & upm, numeral_vector const & f, zp_factors & factors, bool randomized) {    
     SASSERT(upm.degree(f) > 1);
 
     mpzzp_manager & zpm = upm.m();
     unsigned p = get_p_from_manager(zpm);
-
-    TRACE("polynomial::factorization", tout << "upolynomial::factor_square_free_berlekamp("; upm.display(tout, f); tout << ", " << p << ")" << endl;);
+    
+    TRACE("polynomial::factorization", tout << "upolynomial::factor_square_free_berlekamp("; upm.display(tout, f); tout << ", " << p << ")" << endl;);    
     SASSERT(zpm.is_one(f.back()));
 
     // construct the berlekamp Q matrix to get the null space
     berlekamp_matrix Q_I(upm, f);
-
+    
     // copy the inital polynomial to factors
     unsigned first_factor = factors.distinct_factors();
     factors.push_back(f, 1);
@@ -424,11 +424,11 @@ bool zp_factor_square_free_berlekamp(zp_manager & upm, numeral_vector const & f,
     unsigned r = Q_I.diagonalize();
     if (r == 1) {
         // since r == 1 == number of factors, then f is irreducible
-        TRACE("polynomial::factorization", tout << "upolynomial::factor_square_free_berlekamp("; upm.display(tout, f); tout << ", " << p << ") => " << factors << endl;);
+        TRACE("polynomial::factorization", tout << "upolynomial::factor_square_free_berlekamp("; upm.display(tout, f); tout << ", " << p << ") => " << factors << endl;);    
         return false;
     }
 
-    TRACE("polynomial::factorization::bughunt", tout << "upolynomial::factor_square_free_berlekamp(): computing factors, expecting " << r << endl;);
+    TRACE("polynomial::factorization::bughunt", tout << "upolynomial::factor_square_free_berlekamp(): computing factors, expecting " << r << endl;);        
 
     scoped_numeral_vector gcd(zpm);
     scoped_numeral_vector div(zpm);
@@ -438,50 +438,50 @@ bool zp_factor_square_free_berlekamp(zp_manager & upm, numeral_vector const & f,
     scoped_numeral_vector v_k(zpm);
     while (Q_I.next_null_space_vector(v_k)) {
 
-        TRACE("polynomial::factorization::bughunt",
-            tout << "null vector: ";
+        TRACE("polynomial::factorization::bughunt", 
+            tout << "null vector: "; 
             for(unsigned j = 0; j < d; ++ j) {
                 tout << zpm.to_string(v_k[j]) << " ";
             }
             tout << endl;
         );
-
+        
         upm.trim(v_k);
-        // TRACE("polynomial::factorization", tout << "v_k = "; upm.display(tout, v_k); tout << endl;);
-
+        // TRACE("polynomial::factorization", tout << "v_k = "; upm.display(tout, v_k); tout << endl;);    
+        
         unsigned current_factor_end = factors.distinct_factors();
         for (unsigned current_factor_i = first_factor; current_factor_i < current_factor_end; ++ current_factor_i) {
 
             // we have v such that vQ = v, viewing v as a polynomial, we get that v^n - v = 0 (mod f)
-            // since v^n -v = v*(v-1)*...*(v - p-1) we compute the gcd(v - s, f) to extract the
+            // since v^n -v = v*(v-1)*...*(v - p-1) we compute the gcd(v - s, f) to extract the 
             // factors. it also holds that g = \prod gcd(v - s, f), so we just accumulate them
-
-            // if it's of degree 1, we're done (have to index the array as we are adding to it), as
+            
+            // if it's of degree 1, we're done (have to index the array as we are adding to it), as 
             if (factors[current_factor_i].size() == 2) {
                 continue;
             }
 
             for (unsigned s = 0; s < p; ++ s) {
-
+                
                 numeral_vector const & current_factor = factors[current_factor_i];
 
                 // we just take one off v_k each time to get all of them
                 zpm.dec(v_k[0]);
-
+            
                 // get the gcd
                 upm.gcd(v_k.size(), v_k.c_ptr(), current_factor.size(), current_factor.c_ptr(), gcd);
 
                 // if the gcd is 1, or the the gcd is f, we just ignroe it
                 if (gcd.size() != 1 && gcd.size() != current_factor.size()) {
-
+                
                     // get the divisor also (no need to normalize the div, both are monic)
                     upm.div(current_factor.size(), current_factor.c_ptr(), gcd.size(), gcd.c_ptr(), div);
 
-                    TRACE("polynomial::factorization::bughunt",
+                    TRACE("polynomial::factorization::bughunt", 
                         tout << "current_factor = "; upm.display(tout, current_factor); tout << endl;
                         tout << "gcd_norm = "; upm.display(tout, gcd); tout << endl;
                         tout << "div = "; upm.display(tout, div); tout << endl;
-                    );
+                    );                
 
                     // continue with the rest
                     factors.swap_factor(current_factor_i, div);
@@ -489,11 +489,11 @@ bool zp_factor_square_free_berlekamp(zp_manager & upm, numeral_vector const & f,
                     // add the new factor(s)
                     factors.push_back(gcd, 1);
 
-                }
+                } 
 
                 // at the point where we have all the factors, we are done
                 if (factors.distinct_factors() - first_factor == r) {
-                    TRACE("polynomial::factorization", tout << "polynomial::factor("; upm.display(tout, f); tout << ", " << p << ") => " << factors << " of degree " << factors.get_degree() << endl;);
+                    TRACE("polynomial::factorization", tout << "polynomial::factor("; upm.display(tout, f); tout << ", " << p << ") => " << factors << " of degree " << factors.get_degree() << endl;);    
                     return true;
                 }
             }
@@ -508,16 +508,16 @@ bool zp_factor_square_free_berlekamp(zp_manager & upm, numeral_vector const & f,
 /**
    Check if the hensel lifting was correct, i.e. that C = A*B (mod br).
 */
-bool check_hansel_lift(z_manager & upm, numeral_vector const & C,
-    numeral const & a, numeral const & b, numeral const & r,
+bool check_hansel_lift(z_manager & upm, numeral_vector const & C, 
+    numeral const & a, numeral const & b, numeral const & r, 
     numeral_vector const & A, numeral_vector const & B,
-    numeral_vector const & A_lifted, numeral_vector const & B_lifted)
+    numeral_vector const & A_lifted, numeral_vector const & B_lifted) 
 {
     z_numeral_manager & nm = upm.zm();
 
     scoped_mpz br(nm);
     nm.mul(b, r, br);
-
+    
     zp_manager br_upm(upm.zm());
     br_upm.set_zp(br);
 
@@ -531,7 +531,7 @@ bool check_hansel_lift(z_manager & upm, numeral_vector const & C,
     upm.sub(C.size(), C.c_ptr(), test1.size(), test1.c_ptr(), test1);
     to_zp_manager(br_upm, test1);
     if (test1.size() != 0) {
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "sage: R.<x> = ZZ['x']" << endl;
             tout << "sage: A = "; upm.display(tout, A); tout << endl;
             tout << "sage: B = "; upm.display(tout, B); tout << endl;
@@ -539,7 +539,7 @@ bool check_hansel_lift(z_manager & upm, numeral_vector const & C,
             tout << "sage: test1 = C - AB" << endl;
             tout << "sage: print test1.change_ring(GF(" << nm.to_string(br) << "))" << endl;
             tout << "sage: print 'expected 0'" << endl;
-        );
+        );    
         return false;
     }
 
@@ -568,14 +568,14 @@ bool check_hansel_lift(z_manager & upm, numeral_vector const & C,
 /**
    Performs a Hensel lift of A and B in Z_a to Z_b, where p is prime and and a = p^{a_k}, b = p^{b_k},
    r = (a, b), with the following assumptions:
-
-     (1) UA + VB = 1 (mod a)
+   
+     (1) UA + VB = 1 (mod a) 
      (2) C = A*B (mod b)
      (3) (l(A), r) = 1 (importand in order to divide by A, i.e. to invert l(A))
-     (4) deg(A) + deg(B) = deg(C)
+     (4) deg(A) + deg(B) = deg(C)     
 
-   The output of is two polynomials A1, B1  such that A1 = A (mod b), B1 = B (mod b),
-   l(A1) = l(A), deg(A1) = deg(A), deg(B1) = deg(B) and C = A1 B1 (mod b*r). Such A1, B1 are unique if
+   The output of is two polynomials A1, B1  such that A1 = A (mod b), B1 = B (mod b), 
+   l(A1) = l(A), deg(A1) = deg(A), deg(B1) = deg(B) and C = A1 B1 (mod b*r). Such A1, B1 are unique if 
    r is prime. See [3] p. 138.
 */
 void hensel_lift(z_manager & upm, numeral const & a, numeral const & b, numeral const & r,
@@ -583,8 +583,8 @@ void hensel_lift(z_manager & upm, numeral const & a, numeral const & b, numeral 
     numeral_vector const & C, numeral_vector & A_lifted, numeral_vector & B_lifted) {
 
     z_numeral_manager & nm = upm.zm();
-
-    TRACE("polynomial::factorization::bughunt",
+    
+    TRACE("polynomial::factorization::bughunt", 
         tout << "polynomial::hensel_lift(";
         tout << "a = " << nm.to_string(a) << ", ";
         tout << "b = " << nm.to_string(b) << ", ";
@@ -605,61 +605,61 @@ void hensel_lift(z_manager & upm, numeral const & a, numeral const & b, numeral 
     // by (2) C = AB (mod b), hence (C - AB) is divisible by b
     // define thus let f = (C - AB)/b in Z_r
     scoped_numeral_vector f(upm.m());
-    upm.mul(A.size(), A.c_ptr(), B.size(), B.c_ptr(), f);
-    upm.sub(C.size(), C.c_ptr(), f.size(), f.c_ptr(), f);
+    upm.mul(A.size(), A.c_ptr(), B.size(), B.c_ptr(), f); 
+    upm.sub(C.size(), C.c_ptr(), f.size(), f.c_ptr(), f); 
     upm.div(f, b);
     to_zp_manager(r_upm, f);
-    TRACE("polynomial::factorization",
+    TRACE("polynomial::factorization", 
         tout << "f = "; upm.display(tout, f); tout << endl;
     );
 
-    // we need to get A1 = A (mod b), B1 = B (mode b) so we know that we need
+    // we need to get A1 = A (mod b), B1 = B (mode b) so we know that we need 
     // A1 = A + b*S, B1 = B + b*T in Z[x] for some S and T with deg(S) <= deg(A), deg(T) <= deg(B)
-    // we also need (mod b*r) C = A1*B1 = (A + b*S)*(B + b*T) = AB + b(AT + BS) + b^2*ST
+    // we also need (mod b*r) C = A1*B1 = (A + b*S)*(B + b*T) = AB + b(AT + BS) + b^2*ST 
     // if we find S and T, we will have found our A1 and B1
-    // since r divides b, then b^2 contains b*r and we know that it must be that C = AB + b(AT + BS) (mod b*r)
-    // which is equivalent to
-    //   (5) f = (C - AB)/b = AT + BS (mod r)
-    // having (1) AU + BV = 1 (mod r) and (5) AT + BS = f (mod r), we know that
+    // since r divides b, then b^2 contains b*r and we know that it must be that C = AB + b(AT + BS) (mod b*r) 
+    // which is equivalent to 
+    //   (5) f = (C - AB)/b = AT + BS (mod r)     
+    // having (1) AU + BV = 1 (mod r) and (5) AT + BS = f (mod r), we know that 
     // A*(fU) + B*(fV) = f (mod r), i.e. T = fU, S = fV is a solution
     // but we also know that we need an S with deg(S) <= deg(A) so we can do the following
-    // we know that l(A) is invertible so we can find the exact remainder of fV with A, i.e. find the qotient
+    // we know that l(A) is invertible so we can find the exact remainder of fV with A, i.e. find the qotient 
     // t in the division and set
-    // A*(fU + tB) + B*(fV - tA) = f
+    // A*(fU + tB) + B*(fV - tA) = f 
     // T = fU + tB, S = fU - tA
     // since l(A) is invertible in Z_r, we can (in Z_r) use exact division to get Vf = At + R with deg(R) < A
     // we now know that deg(A+bS) = deg(A), but we also know (4) which will guarantee that deg(B+bT) = deg(B)
-
+    
     // compute the S, T (compute in Z_r[x])
     scoped_numeral_vector Vf(r_upm.m()), t(r_upm.m()), S(r_upm.m());
-    TRACE("polynomial::factorization::bughunt",
+    TRACE("polynomial::factorization::bughunt", 
         tout << "V == "; upm.display(tout, V); tout << endl;
     );
     r_upm.mul(V.size(), V.c_ptr(), f.size(), f.c_ptr(), Vf);
-    TRACE("polynomial::factorization::bughunt",
-        tout << "Vf = V*f" << endl;
+    TRACE("polynomial::factorization::bughunt", 
+        tout << "Vf = V*f" << endl; 
         tout << "Vf == "; upm.display(tout, Vf); tout << endl;
     );
-    r_upm.div_rem(Vf.size(), Vf.c_ptr(), A.size(), A.c_ptr(), t, S);
-    TRACE("polynomial::factorization::bughunt",
-        tout << "[t, S] = Vf.quo_rem(A)" << endl;
+    r_upm.div_rem(Vf.size(), Vf.c_ptr(), A.size(), A.c_ptr(), t, S);    
+    TRACE("polynomial::factorization::bughunt", 
+        tout << "[t, S] = Vf.quo_rem(A)" << endl; 
         tout << "t == "; upm.display(tout, t); tout << endl;
         tout << "S == "; upm.display(tout, S); tout << endl;
     );
     scoped_numeral_vector T(r_upm.m()), tmp(r_upm.m());
     r_upm.mul(U.size(), U.c_ptr(), f.size(), f.c_ptr(), T); // T = fU
-    TRACE("polynomial::factorization::bughunt",
-        tout << "T == U*f" << endl;
+    TRACE("polynomial::factorization::bughunt", 
+        tout << "T == U*f" << endl; 
         tout << "T == "; upm.display(tout, T); tout << endl;
     );
     r_upm.mul(B.size(), B.c_ptr(), t.size(), t.c_ptr(), tmp); // tmp = Bt
-    TRACE("polynomial::factorization::bughunt",
-        tout << "tmp = B*t" << endl;
+    TRACE("polynomial::factorization::bughunt", 
+        tout << "tmp = B*t" << endl; 
         tout << "tmp == "; upm.display(tout, tmp); tout << endl;
     );
     r_upm.add(T.size(), T.c_ptr(), tmp.size(), tmp.c_ptr(), T); // T = Uf + Bt
-    TRACE("polynomial::factorization::bughunt",
-        tout << "T = B*tmp" << endl;
+    TRACE("polynomial::factorization::bughunt", 
+        tout << "T = B*tmp" << endl; 
         tout << "T == "; upm.display(tout, T); tout << endl;
     );
 
@@ -677,13 +677,13 @@ bool check_quadratic_hensel(zp_manager & zpe_upm, numeral_vector const & U, nume
 
     // compute UA+BV expecting to get 1 (in Z_pe[x])
     scoped_mpz_vector tmp1(nm);
-    scoped_mpz_vector tmp2(nm);
+    scoped_mpz_vector tmp2(nm);    
     zpe_upm.mul(U.size(), U.c_ptr(), A.size(), A.c_ptr(), tmp1);
     zpe_upm.mul(V.size(), V.c_ptr(), B.size(), B.c_ptr(), tmp2);
     scoped_mpz_vector one(nm);
     zpe_upm.add(tmp1.size(), tmp1.c_ptr(), tmp2.size(), tmp2.c_ptr(), one);
     if (one.size() != 1 || !nm.is_one(one[0])) {
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "sage: R.<x> = Zmod(" << nm.to_string(zpe_upm.m().p()) << ")['x']" << endl;
             tout << "sage: A = "; zpe_upm.display(tout, A); tout << endl;
             tout << "sage: B = "; zpe_upm.display(tout, B); tout << endl;
@@ -691,7 +691,7 @@ bool check_quadratic_hensel(zp_manager & zpe_upm, numeral_vector const & U, nume
             tout << "sage: V = "; zpe_upm.display(tout, V); tout << endl;
             tout << "sage: print  (1 - UA - VB)" << endl;
             tout << "sage: print 'expected 0'" << endl;
-        );
+        );    
         return false;
     }
 
@@ -704,11 +704,11 @@ bool check_quadratic_hensel(zp_manager & zpe_upm, numeral_vector const & U, nume
      * B = B_lift (mod p)
      * C = A*B (mod p^e)
 */
-void hensel_lift_quadratic(z_manager& upm, numeral_vector const & C,
+void hensel_lift_quadratic(z_manager& upm, numeral_vector const & C, 
                            zp_manager & zpe_upm, numeral_vector & A, numeral_vector & B, unsigned e) {
     z_numeral_manager & nm = upm.zm();
 
-    TRACE("polynomial::factorization::bughunt",
+    TRACE("polynomial::factorization::bughunt", 
         tout << "polynomial::hansel_lift_quadratic(";
         tout << "A = "; upm.display(tout, A); tout << ", ";
         tout << "B = "; upm.display(tout, B); tout << ", ";
@@ -730,33 +730,33 @@ void hensel_lift_quadratic(z_manager& upm, numeral_vector const & C,
     scoped_mpz_vector A_lifted(nm), B_lifted(nm);
     for (unsigned k = 1; k < e; k *= 2) {
         upm.checkpoint();
-        // INVARIANT(a = p^e, b = p^e, r = gcd(a, b) = p^e):
+        // INVARIANT(a = p^e, b = p^e, r = gcd(a, b) = p^e): 
         // C = AB (mod b), UA + VB = 1 (mod a)
         // deg(U) < deg(B), dev(V) < deg(A), deg(C) = deg(A) + deg(V)
         // gcd(l(A), r) = 1
-
-        // regular hensel lifting from a to b*r, here from pe -> pk*pk = p^{k*k}
-        numeral const & pe = zpe_upm.m().p();
-
+        
+        // regular hensel lifting from a to b*r, here from pe -> pk*pk = p^{k*k} 
+        numeral const & pe = zpe_upm.m().p();  
+        
         hensel_lift(upm, pe, pe, pe, U, A, V, B, C, A_lifted, B_lifted);
         // now we have C = AB (mod b*r)
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "A_lifted = "; upm.display(tout, A_lifted); tout << endl;
             tout << "B_lifted = "; upm.display(tout, B_lifted); tout << endl;
             tout << "C = "; upm.display(tout, C); tout << endl;
         );
-
+        
         // we employ similar reasoning as in the regular hansel lemma now
-        // we need to lift UA + VB = 1 (mod a)
+        // we need to lift UA + VB = 1 (mod a) 
         // since after the lift, we still have UA + VB = 1 (mod a) we know that (1 - UA - VB)/a is in Z[x]
-        // so we can compute g = (1 - UA - VB)/a
+        // so we can compute g = (1 - UA - VB)/a 
         // we need U1 and V1 such that U1A + V1B = 1 (mod a^2), with U1 = U mod a, V1 = V mod a
         // hence U1 = U + aS, V1 = V + aT and we need
         // (U + aS)A + (V + aT)B = 1 (mod a^2) same as
-        // UA + VB + a(SA + TB) = 1 (mod a^2) same as
+        // UA + VB + a(SA + TB) = 1 (mod a^2) same as 
         // SA + TB = g (mod a) hence
         // (gU + tB)A + (gV - tA)B = g (mod a) will be a solution and we pick t such that deg(gV - tA) < deg(A)
-
+        
         // compute g
         scoped_mpz_vector tmp1(nm), g(nm);
         g.push_back(numeral());
@@ -767,7 +767,7 @@ void hensel_lift_quadratic(z_manager& upm, numeral_vector const & C,
         upm.sub(g.size(), g.c_ptr(), tmp1.size(), tmp1.c_ptr(), g); // g = 1 - UA - VB
         upm.div(g, pe);
         to_zp_manager(zpe_upm, g);
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "g = (1 - A_lifted*U - B_lifted*V)/" << nm.to_string(pe) << endl;
             tout << "g == "; upm.display(tout, g); tout << endl;
         );
@@ -779,7 +779,7 @@ void hensel_lift_quadratic(z_manager& upm, numeral_vector const & C,
         zpe_upm.mul(g.size(), g.c_ptr(), U.size(), U.c_ptr(), tmp1); // tmp1 = gU
         zpe_upm.mul(t.size(), t.c_ptr(), B.size(), B.c_ptr(), tmp2); // tmp2 = tB
         zpe_upm.add(tmp1.size(), tmp1.c_ptr(), tmp2.size(), tmp2.c_ptr(), S);
-
+        
         // now update U = U + a*S and V = V + a*T
         upm.mul(S.size(), S.c_ptr(), pe);
         upm.mul(T.size(), T.c_ptr(), pe);
@@ -793,7 +793,7 @@ void hensel_lift_quadratic(z_manager& upm, numeral_vector const & C,
         to_zp_manager(zpe_upm, A_lifted);
         to_zp_manager(zpe_upm, B_lifted);
 
-        // at this point we have INVARIANT(a = (p^e)^2, b = (p^e)^2, r = (p^e)^2)
+        // at this point we have INVARIANT(a = (p^e)^2, b = (p^e)^2, r = (p^e)^2) 
         A.swap(A_lifted);
         B.swap(B_lifted);
 
@@ -803,7 +803,7 @@ void hensel_lift_quadratic(z_manager& upm, numeral_vector const & C,
 
 bool check_hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors const & zp_fs, zp_factors const & zpe_fs, unsigned e) {
     numeral_manager & nm(upm.m());
-
+    
     zp_manager & zp_upm = zp_fs.upm();
     zp_manager & zpe_upm = zpe_fs.upm();
 
@@ -815,25 +815,25 @@ bool check_hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors con
     if (!nm.ge(pe, power)) {
         return false;
     }
-
+    
     // check f = lc(f) * zp_fs (mod p)
     scoped_numeral_vector mult_zp(nm), f_zp(nm);
     zp_fs.multiply(mult_zp);
     to_zp_manager(zp_upm, f, f_zp);
     zp_upm.mul(mult_zp, f_zp.back());
     if (!upm.eq(mult_zp, f_zp)) {
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "f = "; upm.display(tout, f); tout << endl;
             tout << "zp_fs = " << zp_fs << endl;
             tout << "sage: R.<x> = Zmod(" << nm.to_string(p) << ")['x']" << endl;
             tout << "sage: mult_zp = "; upm.display(tout, mult_zp); tout << endl;
             tout << "sage: f_zp = "; upm.display(tout, f_zp); tout << endl;
             tout << "sage: mult_zp == f_zp" << endl;
-        );
+        );    
         return false;
     }
 
-    // check individual factors
+    // check individual factors 
     if (zpe_fs.distinct_factors() != zp_fs.distinct_factors()) {
         return false;
     }
@@ -841,10 +841,10 @@ bool check_hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors con
     // check f = lc(f) * zpe_fs (mod p^e)
     scoped_numeral_vector mult_zpe(nm), f_zpe(nm);
     zpe_fs.multiply(mult_zpe);
-    to_zp_manager(zpe_upm, f, f_zpe);
+    to_zp_manager(zpe_upm, f, f_zpe);   
     zpe_upm.mul(mult_zpe, f_zpe.back());
     if (!upm.eq(mult_zpe, f_zpe)) {
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "f = "; upm.display(tout, f); tout << endl;
             tout << "zpe_fs = " << zpe_fs << endl;
             tout << "sage: R.<x> = Zmod(" << nm.to_string(pe) << ")['x']" << endl;
@@ -881,14 +881,14 @@ void hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors const & z
     zp_numeral_manager & zpe_nm = zpe_fs.nm();
     zp_manager & zpe_upm = zpe_fs.upm();
     zpe_nm.set_zp(zp_nm.p());
-
-    TRACE("polynomial::factorization::bughunt",
+    
+    TRACE("polynomial::factorization::bughunt", 
         tout << "polynomial::hansel_lift("; upm.display(tout, f); tout << ", " << zp_fs << ")" << endl;
     );
 
     // lift the factors one by one
     scoped_mpz_vector A(nm), B(nm), C(nm), f_parts(nm); // these will all be in Z_p
-
+    
     // copy of f, that we'll be cutting parts of
     upm.set(f.size(), f.c_ptr(), f_parts);
 
@@ -899,31 +899,31 @@ void hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors const & z
     // (3) f = (\prod_{k < i} A_k) * f_parts (mod p^e)
     for (int i = 0, i_end = zp_fs.distinct_factors()-1; i < i_end; ++ i) {
         SASSERT(zp_fs.get_degree(i) == 1); // p was chosen so that f is square-free
-
+        
         // F_i = A (mod Z_p)
         zp_upm.set(zp_fs[i].size(), zp_fs[i].c_ptr(), A);
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "A = "; upm.display(tout, A); tout << endl;
         );
-
+        
         // C = f_parts (mod Z_p)
         if (i > 0) {
             to_zp_manager(zp_upm, f_parts, C);
-        }
+        } 
         else {
-            // first time around, we don't have p^e yet, so first time we just compute C
+            // first time around, we don't have p^e yet, so first time we just compute C 
             zp_fs.multiply(C);
             scoped_mpz lc(nm);
             zp_nm.set(lc, f.back());
             zp_upm.mul(C, lc);
         }
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "C = "; upm.display(tout, C); tout << endl;
         );
 
         // we take B to be what's left from C and A
         zp_upm.div(C.size(), C.c_ptr(), A.size(), A.c_ptr(), B);
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "B = "; upm.display(tout, B); tout << endl;
         );
 
@@ -931,20 +931,20 @@ void hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors const & z
         zpe_nm.set_zp(zp_nm.p());
         hensel_lift_quadratic(upm, f_parts, zpe_upm, A, B, e);
         CASSERT("polynomial::factorizatio::bughunt", check_individual_lift(zp_upm, zp_fs[i], zpe_upm, A));
-        TRACE("polynomial::factorization",
-            tout << "lifted to " << nm.to_string(zpe_upm.m().p()) << endl;
+        TRACE("polynomial::factorization", 
+            tout << "lifted to " << nm.to_string(zpe_upm.m().p()) << endl;        
             tout << "A = "; upm.display(tout, A); tout << endl;
             tout << "B = "; upm.display(tout, B); tout << endl;
         );
-
+        
         // if this is the first time round, we also construct f_parts (now we have correct p^e)
         if (i == 0) {
             to_zp_manager(zpe_upm, f, f_parts);
         }
-
+        
         // take the lifted A out of f_parts
         zpe_upm.div(f_parts.size(), f_parts.c_ptr(), A.size(), A.c_ptr(), f_parts);
-
+        
         // add the lifted factor (kills A)
         zpe_fs.push_back_swap(A, 1);
     }
@@ -956,7 +956,7 @@ void hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors const & z
     zpe_upm.mul(B, lc_inv);
     zpe_fs.push_back_swap(B, 1);
 
-    TRACE("polynomial::factorization::bughunt",
+    TRACE("polynomial::factorization::bughunt", 
         tout << "polynomial::hansel_lift("; upm.display(tout, f); tout << ", " << zp_fs << ") => " << zpe_fs << endl;
     );
 
@@ -965,10 +965,10 @@ void hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors const & z
 
 // get a bound on B for the factors of f with degree less or equal to deg(f)/2
 // and then choose e to be smallest such that p^e > 2*lc(f)*B, we use the mignotte
-//
-// from [3, pg 134]
-// |p| = sqrt(\sum |p_i|^2). If a = \sum a_i x^i, b = \sum b_j, deg b = n, and b divides a, then for all j
-//
+// 
+// from [3, pg 134] 
+// |p| = sqrt(\sum |p_i|^2). If a = \sum a_i x^i, b = \sum b_j, deg b = n, and b divides a, then for all j 
+// 
 //                 |b_j| <= (n-1 over j)|a| + (n-1 over j-1)|lc(a)|
 //
 // when factoring a polynomial, we find a bound B for a factor of f of degree <= deg(f)/2
@@ -992,7 +992,7 @@ static unsigned mignotte_bound(z_manager & upm, numeral_vector const & f, numera
 
     // by above we can pick (n-1 over (n-1/2))|a| + (n-1 over (n-1)/2)lc(a)
     // we approximate both binomial-coefficients with 2^(n-1), so to get 2B we use 2^n(f_norm + lc(f))
-    scoped_numeral bound(nm);
+    scoped_numeral bound(nm); 
     nm.set(bound, 1);
     nm.mul2k(bound, n, bound);
     scoped_numeral tmp(nm);
@@ -1001,7 +1001,7 @@ static unsigned mignotte_bound(z_manager & upm, numeral_vector const & f, numera
     nm.add(f_norm, tmp, f_norm);
     nm.mul(bound, f_norm, bound);
 
-    // we need e such that p^e >= B
+    // we need e such that p^e >= B    
     nm.set(tmp, p);
     unsigned e;
     for (e = 1; nm.le(tmp, bound); e *= 2) {
@@ -1016,12 +1016,12 @@ static unsigned mignotte_bound(z_manager & upm, numeral_vector const & f, numera
    This method also assumes f is primitive.
 */
 bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs, unsigned k, factor_params const & params) {
-    TRACE("polynomial::factorization::bughunt",
+    TRACE("polynomial::factorization::bughunt", 
         tout << "sage: f = "; upm.display(tout, f); tout << endl;
         tout << "sage: if (not f.is_squarefree()): print 'Error, f is not square-free'" << endl;
         tout << "sage: print 'Factoring :', f" << endl;
         tout << "sage: print 'Expected factors: ', f.factor()" << endl;
-    );
+    );    
 
     numeral_manager & nm = upm.m();
 
@@ -1034,7 +1034,7 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
 
     scoped_numeral_vector f_pp(nm);
     upm.set(f.size(), f.c_ptr(), f_pp);
-
+    
     // make sure the leading coefficient is positive
     if (!f_pp.empty() && nm.is_neg(f_pp[f_pp.size() - 1])) {
         for (unsigned i = 0; i < f_pp.size(); i++)
@@ -1048,32 +1048,32 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
         }
     }
 
-    TRACE("polynomial::factorization::bughunt",
+    TRACE("polynomial::factorization::bughunt", 
         tout << "sage: f_pp = "; upm.display(tout, f_pp); tout << endl;
         tout << "sage: if (not (f_pp * 1 == f): print 'Error, content computation wrong'" << endl;
-    );
+    ); 
 
     // the variables we'll be using and updating in Z_p
-    scoped_numeral p(nm);
+    scoped_numeral p(nm); 
     nm.set(p, 2);
     zp_manager zp_upm(nm.m());
     zp_upm.set_zp(p);
     zp_factors zp_fs(zp_upm);
     scoped_numeral zp_fs_p(nm); nm.set(zp_fs_p, 2);
-
+    
     // we keep all the possible sets of degrees of factors in this set
     factorization_degree_set degree_set(zp_upm);
 
     // we try get some number of factorizations in Z_p, for some primes
-    // get the prime p such that
+    // get the prime p such that 
     // (1) (f_prim mod p) stays square-free
-    // (2) l(f_prim) mod p doesn't vanish, i.e. we don't get a polynomial of smaller degree
+    // (2) l(f_prim) mod p doesn't vanish, i.e. we don't get a polynomial of smaller degree            
     prime_iterator prime_it;
-    scoped_numeral gcd_tmp(nm);
+    scoped_numeral gcd_tmp(nm);    
     unsigned trials = 0;
     while (trials < params.m_p_trials) {
         upm.checkpoint();
-        // construct prime to check
+        // construct prime to check 
         uint64 next_prime = prime_it.next();
         if (next_prime > params.m_max_p) {
             fs.push_back(f_pp, k);
@@ -1084,32 +1084,32 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
 
         // we need gcd(lc(f_pp), p) = 1
         nm.gcd(p, f_pp.back(), gcd_tmp);
-        TRACE("polynomial::factorization::bughunt",
-            tout << "sage: if (not (gcd(" << nm.to_string(p) << ", " << nm.to_string(f_pp.back()) << ")) == " <<
+        TRACE("polynomial::factorization::bughunt", 
+            tout << "sage: if (not (gcd(" << nm.to_string(p) << ", " << nm.to_string(f_pp.back()) << ")) == " << 
               nm.to_string(gcd_tmp) << "): print 'Error, wrong gcd'" << endl;
-        );
+        );    
         if (!nm.is_one(gcd_tmp)) {
             continue;
         }
-
-        // if it's not square free, we also try somehting else
+    
+        // if it's not square free, we also try somehting else 
         scoped_numeral_vector f_pp_zp(nm);
         to_zp_manager(zp_upm, f_pp, f_pp_zp);
 
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "sage: Rp.<x_p> = GF(" << nm.to_string(p) << ")['x_p']"; tout << endl;
             tout << "sage: f_pp_zp = "; zp_upm.display(tout, f_pp_zp, "x_p"); tout << endl;
-        );
+        );    
 
         if (!zp_upm.is_square_free(f_pp_zp.size(), f_pp_zp.c_ptr()))
             continue;
-
+        
         // we make it monic
         zp_upm.mk_monic(f_pp_zp.size(), f_pp_zp.c_ptr());
 
         // found a candidate, factorize in Z_p and add back the constant
         zp_factors current_fs(zp_upm);
-        bool factored = zp_factor_square_free(zp_upm, f_pp_zp, current_fs);
+        bool factored = zp_factor_square_free(zp_upm, f_pp_zp, current_fs);        
         if (!factored) {
             fs.push_back(f_pp, k);
             return true;
@@ -1120,7 +1120,7 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
         if (degree_set.max_degree() == 0) {
             // first time, initialize
             degree_set.swap(current_degree_set);
-        }
+        } 
         else {
             degree_set.intersect(current_degree_set);
         }
@@ -1137,58 +1137,58 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
             zp_fs.swap(current_fs);
             nm.set(zp_fs_p, p);
 
-            TRACE("polynomial::factorization::bughunt",
+            TRACE("polynomial::factorization::bughunt", 
                 tout << "best zp factorization (Z_" << nm.to_string(zp_fs_p) << "): ";
                 tout << zp_fs << endl;
                 tout << "best degree set: "; degree_set.display(tout); tout << endl;
             );
         }
     }
-#ifndef _EXTERNAL_RELEASE
+#ifndef _EXTERNAL_RELEASE 
     IF_VERBOSE(FACTOR_VERBOSE_LVL, verbose_stream() << "(polynomial-factorization :at GF_" << nm.to_string(zp_upm.p()) << ")" << std::endl;);
 #endif
-
-    // make sure to set the zp_manager back to modulo zp_fs_p
+    
+    // make sure to set the zp_manager back to modulo zp_fs_p 
     zp_upm.set_zp(zp_fs_p);
-
-    TRACE("polynomial::factorization::bughunt",
+    
+    TRACE("polynomial::factorization::bughunt", 
           tout << "best zp factorization (Z_" << nm.to_string(zp_fs_p) << "): " << zp_fs << endl;
           tout << "best degree set: "; degree_set.display(tout); tout << endl;
           );
-
+    
     // get a bound on B for the factors of f_pp with degree less or equal to deg(f)/2
     // and then choose e to be smallest such that p^e > 2*lc(f)*B, we use the mignotte
     unsigned e = mignotte_bound(upm, f_pp, zp_fs_p);
-    TRACE("polynomial::factorization::bughunt",
+    TRACE("polynomial::factorization::bughunt", 
           tout << "out p = " << nm.to_string(zp_fs_p) << ", and we'll work p^e for e = " << e << endl;
           );
-
+    
     // we got a prime factoring, so we do the lifting now
     zp_manager zpe_upm(nm.m());
     zpe_upm.set_zp(zp_fs_p);
     zp_numeral_manager & zpe_nm = zpe_upm.m();
-
+    
     zp_factors zpe_fs(zpe_upm);
     // this might give something bigger than p^e, but the lifting proocedure will update the zpe_nm
     // zp factors are monic, so will be the zpe factors, i.e. f_pp = zpe_fs * lc(f_pp) (mod p^e)
-    hensel_lift(upm, f_pp, zp_fs, e, zpe_fs);
-
-#ifndef _EXTERNAL_RELEASE
+    hensel_lift(upm, f_pp, zp_fs, e, zpe_fs); 
+    
+#ifndef _EXTERNAL_RELEASE 
     IF_VERBOSE(FACTOR_VERBOSE_LVL, verbose_stream() << "(polynomial-factorization :num-candidate-factors " << zpe_fs.distinct_factors() << ")" << std::endl;);
 #endif
-
+    
     // the leading coefficient of f_pp mod p^e
     scoped_numeral f_pp_lc(nm);
     zpe_nm.set(f_pp_lc, f_pp.back());
-
+    
     // we always keep in f_pp the the actual primitive part f_pp*lc(f_pp)
     upm.mul(f_pp, f_pp_lc);
-
+    
     // now we go through the combinations of factors to check construct the factorization
     ufactorization_combination_iterator it(zpe_fs, degree_set);
     scoped_numeral_vector trial_factor(nm), trial_factor_quo(nm);
     scoped_numeral trial_factor_cont(nm);
-    TRACE("polynomial::factorization::bughunt",
+    TRACE("polynomial::factorization::bughunt", 
           tout << "STARTING TRIAL DIVISION" << endl;
           tout << "zpe_fs" << zpe_fs << endl;
           tout << "degree_set = "; degree_set.display(tout); tout << endl;
@@ -1220,7 +1220,7 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
                 continue;
             }
             it.left(trial_factor);
-        }
+        } 
         else {
             // do a quick check first
             scoped_numeral tmp(nm);
@@ -1235,15 +1235,15 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
 
         // add the lc(f_pp) to the trial divisor
         zpe_upm.mul(trial_factor, f_pp_lc);
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "f_pp*lc(f_pp) = "; upm.display(tout, f_pp); tout << endl;
-            tout << "trial_factor = "; upm.display(tout, trial_factor); tout << endl;
+            tout << "trial_factor = "; upm.display(tout, trial_factor); tout << endl;    
         );
 
-        bool true_factor = upm.exact_div(f_pp, trial_factor, trial_factor_quo);
-
-        TRACE("polynomial::factorization::bughunt",
-            tout << "trial_factor = "; upm.display(tout, trial_factor); tout << endl;
+        bool true_factor = upm.exact_div(f_pp, trial_factor, trial_factor_quo);        
+        
+        TRACE("polynomial::factorization::bughunt", 
+            tout << "trial_factor = "; upm.display(tout, trial_factor); tout << endl;    
             tout << "trial_factor_quo = "; upm.display(tout, trial_factor_quo); tout << endl;
             tout << "result = " << (true_factor ? "true" : "false") << endl;
         );
@@ -1254,7 +1254,7 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
                 // as noted above, we still use the original factor
                 trial_factor.swap(trial_factor_quo);
             }
-            // We need to get the content out of the factor
+            // We need to get the content out of the factor 
             upm.get_primitive_and_content(trial_factor, trial_factor, trial_factor_cont);
             // add the factor
             fs.push_back(trial_factor, k);
@@ -1265,18 +1265,18 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
             upm.mul(f_pp, f_pp_lc);
             // but we also remove it from the iterator
             remove = true;
-        }
+        } 
         else {
             // don't remove this combination
             remove = false;
         }
-        TRACE("polynomial::factorization::bughunt",
+        TRACE("polynomial::factorization::bughunt", 
             tout << "factors = " << fs << endl;
             tout << "f_pp*lc(f_pp) = "; upm.display(tout, f_pp); tout << endl;
             tout << "lc(f_pp) = " << f_pp_lc << endl;
         );
     }
-#ifndef _EXTERNAL_RELEASE
+#ifndef _EXTERNAL_RELEASE 
     IF_VERBOSE(FACTOR_VERBOSE_LVL, verbose_stream() << "(polynomial-factorization :search-size " << counter << ")" << std::endl;);
 #endif
 
@@ -1284,7 +1284,7 @@ bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs,
     if (f_pp.size() > 1) {
         upm.div(f_pp, f_pp_lc);
         fs.push_back(f_pp, k);
-    }
+    } 
     else {
         // if a constant it must be 1 (it was primitve)
         SASSERT(f_pp.size() == 1 && nm.is_one(f_pp.back()));

@@ -22,7 +22,7 @@ Notes:
 
 class split_clause_tactic : public tactic {
     bool          m_largest_clause;
-
+    
     unsigned select_clause(ast_manager & m, goal_ref const & in) {
         unsigned result_idx = UINT_MAX;
         unsigned len = 0;
@@ -51,7 +51,7 @@ class split_clause_tactic : public tactic {
         proof *       m_clause_pr;
     public:
         split_pc(ast_manager & m, app * cls, proof * pr):m_manager(m), m_clause(cls), m_clause_pr(pr) {
-            m.inc_ref(cls);
+            m.inc_ref(cls); 
             m.inc_ref(pr);
         }
 
@@ -91,7 +91,7 @@ public:
         t->m_largest_clause = m_largest_clause;
         return t;
     }
-
+    
     virtual ~split_clause_tactic() {
     }
 
@@ -99,19 +99,19 @@ public:
         m_largest_clause = p.get_bool("split_largest_clause", false);
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) { 
         r.insert("split_largest_clause", CPK_BOOL, "(default: false) split the largest clause in the goal.");
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         SASSERT(in->is_well_sorted());
         tactic_report report("split-clause", *in);
         TRACE("before_split_clause", in->display(tout););
-        pc = 0; mc = 0; core = 0;
+        pc = 0; mc = 0; core = 0; 
         ast_manager & m = in->m();
         unsigned cls_pos = select_clause(m, in);
         if (cls_pos == UINT_MAX) {
@@ -139,7 +139,7 @@ public:
             result.push_back(subgoal_i);
         }
     }
-
+    
     virtual void cleanup() {
         // do nothing this tactic is too simple
     }

@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    A manager class for PDR, taking care of creating of AST
+    A manager class for PDR, taking care of creating of AST 
     objects and conversions between them.
 
 Author:
@@ -39,7 +39,7 @@ namespace pdr {
             m_bound_decls(bound_decls),
             m_aux_decls(aux_decls) {
         }
-
+        
         void operator()(app* a) {
             if (a->get_family_id() == null_family_id) {
                 func_decl* f = a->get_decl();
@@ -54,7 +54,7 @@ namespace pdr {
 
     typedef hashtable<symbol, symbol_hash_proc, symbol_eq_proc> symbol_set;
 
-    expr_ref inductive_property::fixup_clause(expr* fml) const {
+    expr_ref inductive_property::fixup_clause(expr* fml) const {        
         expr_ref_vector disjs(m);
         qe::flatten_or(fml, disjs);
         expr_ref result(m);
@@ -78,7 +78,7 @@ namespace pdr {
         model_ref md;
         expr_ref result(m);
         to_model(md);
-        model_smt2_pp(stm, m, *md.get(), 0);
+        model_smt2_pp(stm, m, *md.get(), 0); 
         return stm.str();
     }
 
@@ -115,10 +115,10 @@ namespace pdr {
         expr_ref result(m);
         to_model(md);
         model2expr(md, result);
-        return result;
+        return result;        
     }
 
-
+    
     void inductive_property::display(ptr_vector<datalog::rule> const& rules, std::ostream& out) const {
         func_decl_set bound_decls, aux_decls;
         collect_decls_proc collect_decls(bound_decls, aux_decls);
@@ -165,7 +165,7 @@ namespace pdr {
         res.push_back("_n");
         return res;
     }
-
+    
     manager::manager(smt_params& fparams, unsigned max_num_contexts, ast_manager& manager) :
         m(manager),
         m_fparams(fparams),
@@ -174,7 +174,7 @@ namespace pdr {
         m_background(m.mk_true(), m),
         m_contexts(fparams, max_num_contexts, m),
         m_next_unique_num(0)
-    {
+    {        
     }
 
 
@@ -185,7 +185,7 @@ namespace pdr {
         m_mux.create_tuple(s, s->get_arity(), s->get_domain(), s->get_range(), 2, vect);
         m_o0_preds.push_back(vect[o_index(0)]);
     }
-
+    
     func_decl * manager::get_o_pred(func_decl* s, unsigned idx)
     {
         func_decl * res = m_mux.try_get_by_prefix(s, o_index(idx));
@@ -195,7 +195,7 @@ namespace pdr {
         SASSERT(res);
         return res;
     }
-
+    
     func_decl * manager::get_n_pred(func_decl* s)
     {
         func_decl * res = m_mux.try_get_by_prefix(s, n_index());
@@ -205,29 +205,29 @@ namespace pdr {
         SASSERT(res);
         return res;
     }
-
+    
     void manager::mk_model_into_cube(const expr_ref_vector & mdl, expr_ref & res) {
         m_brwr.mk_and(mdl.size(), mdl.c_ptr(), res);
     }
-
+    
     void manager::mk_core_into_cube(const expr_ref_vector & core, expr_ref & res) {
         m_brwr.mk_and(core.size(), core.c_ptr(), res);
     }
-
+    
     void manager::mk_cube_into_lemma(expr * cube, expr_ref & res) {
         m_brwr.mk_not(cube, res);
     }
-
+    
     void manager::mk_lemma_into_cube(expr * lemma, expr_ref & res) {
         m_brwr.mk_not(lemma, res);
     }
-
+    
     expr_ref manager::mk_and(unsigned sz, expr* const* exprs) {
         expr_ref result(m);
         m_brwr.mk_and(sz, exprs, result);
         return result;
     }
-
+    
     expr_ref manager::mk_or(unsigned sz, expr* const* exprs) {
         expr_ref result(m);
         m_brwr.mk_or(sz, exprs, result);
@@ -245,7 +245,7 @@ namespace pdr {
         m_brwr.mk_or(es.size(), es.c_ptr(), result);
         return result;
     }
-
+    
     void manager::get_or(expr* e, expr_ref_vector& result) {
         result.push_back(e);
         for (unsigned i = 0; i < result.size(); ) {
@@ -260,7 +260,7 @@ namespace pdr {
             }
         }
     }
-
+    
     bool manager::try_get_state_and_value_from_atom(expr * atom0, app *& state, app_ref& value)
     {
         if(!is_app(atom0)) {
@@ -299,7 +299,7 @@ namespace pdr {
         value = candidate_value;
         return true;
     }
-
+    
     bool manager::try_get_state_decl_from_atom(expr * atom, func_decl *& state) {
         app_ref dummy_value_holder(m);
         app * s;
@@ -310,8 +310,8 @@ namespace pdr {
         else {
             return false;
         }
-    }
-
+    }       
+        
     bool manager::implication_surely_holds(expr * lhs, expr * rhs, expr * bg) {
         smt::kernel sctx(m, get_fparams());
         if(bg) {

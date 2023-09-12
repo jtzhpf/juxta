@@ -31,7 +31,7 @@ Revision History:
 #include"expr_pattern_match.h"
 
 /**
-   \brief A pattern p_1 is smaller than a pattern p_2 iff
+   \brief A pattern p_1 is smaller than a pattern p_2 iff 
    every instance of p_2 is also an instance of p_1.
 
    Example: f(X) is smaller than f(g(X)) because
@@ -49,7 +49,7 @@ class smaller_pattern {
     void save(expr * p1, expr * p2);
     bool process(expr * p1, expr * p2);
 
-    smaller_pattern & operator=(smaller_pattern const &);
+    smaller_pattern & operator=(smaller_pattern const &); 
 
 public:
 
@@ -65,7 +65,7 @@ class pattern_inference : public simplifier {
     family_id                  m_bfid;
     family_id                  m_afid;
     svector<family_id>         m_forbidden;
-    obj_hashtable<func_decl>   m_preferred;
+    obj_hashtable<func_decl>   m_preferred;        
     smaller_pattern            m_le;
     unsigned                   m_num_bindings;
     unsigned                   m_num_no_patterns;
@@ -119,14 +119,14 @@ class pattern_inference : public simplifier {
             unsigned  m_delta;
             entry():m_node(0), m_delta(0) {}
             entry(expr * n, unsigned d):m_node(n), m_delta(d) {}
-            unsigned hash() const {
+            unsigned hash() const { 
                 return hash_u_u(m_node->get_id(), m_delta);
             }
-            bool operator==(entry const & e) const {
-                return m_node == e.m_node && m_delta == e.m_delta;
+            bool operator==(entry const & e) const { 
+                return m_node == e.m_node && m_delta == e.m_delta; 
             }
         };
-
+        
         struct info {
             expr_ref    m_node;
             uint_set    m_free_vars;
@@ -134,7 +134,7 @@ class pattern_inference : public simplifier {
             info(ast_manager & m, expr * n, uint_set const & vars, unsigned sz):
                 m_node(n, m), m_free_vars(vars), m_size(sz) {}
         };
-
+        
         ast_manager &            m_manager;
         pattern_inference &      m_owner;
         family_id                m_afid;
@@ -155,7 +155,7 @@ class pattern_inference : public simplifier {
     };
 
     collect                    m_collect;
-
+    
     void add_candidate(app * n, uint_set const & s, unsigned size);
 
     void filter_looping_patterns(ptr_vector<app> & result);
@@ -166,7 +166,7 @@ class pattern_inference : public simplifier {
 
     class contains_subpattern {
         pattern_inference &  m_owner;
-        nat_set              m_already_processed;
+        nat_set              m_already_processed; 
         ptr_vector<expr>     m_todo;
         void save(expr * n);
     public:
@@ -176,9 +176,9 @@ class pattern_inference : public simplifier {
     };
 
     contains_subpattern        m_contains_subpattern;
-
+        
     bool contains_subpattern(expr * n);
-
+    
     struct pre_pattern {
         ptr_vector<app>  m_exprs;     // elements of the pattern.
         uint_set         m_free_vars; // set of free variables in m_exprs
@@ -194,11 +194,11 @@ class pattern_inference : public simplifier {
     void candidates2unary_patterns(ptr_vector<app> const & candidate_patterns,
                                    ptr_vector<app> & remaining_candidate_patterns,
                                    app_ref_buffer & result);
-
-    void candidates2multi_patterns(unsigned max_num_patterns,
-                                   ptr_vector<app> const & candidate_patterns,
+    
+    void candidates2multi_patterns(unsigned max_num_patterns, 
+                                   ptr_vector<app> const & candidate_patterns, 
                                    app_ref_buffer & result);
-
+    
     void reset_pre_patterns();
 
     /**
@@ -213,12 +213,12 @@ class pattern_inference : public simplifier {
                      unsigned num_no_patterns,           // IN num. patterns that should not be used.
                      expr * const * no_patterns,         // IN patterns that should not be used.
                      app_ref_buffer & result);           // OUT result
-
+    
     virtual void reduce1_quantifier(quantifier * q);
 
 public:
     pattern_inference(ast_manager & m, pattern_inference_params & params);
-
+    
     void register_forbidden_family(family_id fid) {
         SASSERT(fid != m_bfid);
         m_forbidden.push_back(fid);
@@ -233,10 +233,10 @@ public:
     }
 
     void register_preferred(unsigned num, func_decl * const * fs) { for (unsigned i = 0; i < num; i++) register_preferred(fs[i]); }
-
+    
     bool is_forbidden(func_decl const * decl) const {
         family_id fid = decl->get_family_id();
-        if (fid == m_bfid && decl->get_decl_kind() != OP_TRUE && decl->get_decl_kind() != OP_FALSE)
+        if (fid == m_bfid && decl->get_decl_kind() != OP_TRUE && decl->get_decl_kind() != OP_FALSE) 
             return true;
         return std::find(m_forbidden.begin(), m_forbidden.end(), fid) != m_forbidden.end();
     }

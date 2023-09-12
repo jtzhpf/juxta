@@ -25,11 +25,11 @@ namespace sat {
 
     cleaner::cleaner(solver & _s):
         s(_s),
-        m_last_num_units(0),
+        m_last_num_units(0), 
         m_cleanup_counter(0) {
         reset_statistics();
     }
-
+    
     /**
        - Delete watch lists of assigned literals.
        - Delete satisfied binary watched binary clauses
@@ -168,7 +168,7 @@ namespace sat {
         }
         ~report() {
             m_watch.stop();
-            IF_VERBOSE(SAT_VB_LVL,
+            IF_VERBOSE(SAT_VB_LVL, 
                        verbose_stream() << " (sat-cleaner :elim-literals " << (m_cleaner.m_elim_literals - m_elim_literals)
                        << " :elim-clauses " << (m_cleaner.m_elim_clauses - m_elim_clauses)
                        << " :cost " << m_cleaner.m_cleanup_counter
@@ -200,12 +200,12 @@ namespace sat {
         CASSERT("cleaner_bug", s.check_invariant());
         return true;
     }
-
+    
     void cleaner::reset_statistics() {
         m_elim_clauses = 0;
         m_elim_literals = 0;
     }
-
+    
     void cleaner::collect_statistics(statistics & st) const {
         st.update("elim clauses", m_elim_clauses);
         st.update("elim literals", m_elim_literals);

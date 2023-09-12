@@ -31,7 +31,7 @@ struct extension_model_converter::set_eval {
     set_eval(extension_model_converter * owner, model_evaluator * ev) {
         m_owner = owner;
         m_old   = owner->m_eval;
-        #pragma omp critical (extension_model_converter)
+        #pragma omp critical (extension_model_converter) 
         {
             owner->m_eval = ev;
         }
@@ -42,7 +42,7 @@ struct extension_model_converter::set_eval {
             m_owner->m_eval = m_old;
         }
     }
-
+    
 };
 
 static void display_decls_info(std::ostream & out, model_ref & md) {
@@ -92,7 +92,7 @@ void extension_model_converter::operator()(model_ref & md, unsigned goal_idx) {
 }
 
 void extension_model_converter::cancel() {
-    #pragma omp critical (extension_model_converter)
+    #pragma omp critical (extension_model_converter) 
     {
         if (m_eval)
             m_eval->cancel();
@@ -111,11 +111,11 @@ void extension_model_converter::display(std::ostream & out) {
 }
 
 model_converter * extension_model_converter::translate(ast_translation & translator) {
-    extension_model_converter * res = alloc(extension_model_converter, translator.to());
+    extension_model_converter * res = alloc(extension_model_converter, translator.to());    
     for (unsigned i = 0; i < m_vars.size(); i++)
         res->m_vars.push_back(translator(m_vars[i].get()));
     for (unsigned i = 0; i < m_defs.size(); i++)
-        res->m_defs.push_back(translator(m_defs[i].get()));
+        res->m_defs.push_back(translator(m_defs[i].get()));    
     // m_eval is a transient object. So, it doesn't need to be translated.
     return res;
 }

@@ -13,13 +13,13 @@ namespace datalog {
         smt_params params;
         ast_manager ast_m;
         register_engine re;
-        context ctx(ast_m, re, params);
+        context ctx(ast_m, re, params);    
         arith_util autil(ast_m);
         relation_manager & m = ctx.get_rel_context()->get_rmanager();
         m.register_plugin(alloc(interval_relation_plugin, m));
         interval_relation_plugin& ip = dynamic_cast<interval_relation_plugin&>(*m.get_relation_plugin(symbol("interval_relation")));
         SASSERT(&ip);
-
+        
         relation_signature sig;
         sort* int_sort = autil.mk_int();
         sig.push_back(int_sort);
@@ -48,20 +48,20 @@ namespace datalog {
         i2.filter_interpreted(cond1);
         i2.display(std::cout);
         // x0 <= 0
-
+        
         unsigned cols1[2] = { 1, 2};
         unsigned cols2[2] = { 2, 3};
-        relation_join_fn* join1 = ip.mk_join_fn(i1, i2, 2, cols1, cols2);
+        relation_join_fn* join1 = ip.mk_join_fn(i1, i2, 2, cols1, cols2);        
         relation_transformer_fn* proj1 = ip.mk_project_fn(i1, 2, cols2);
         relation_transformer_fn* ren1  = ip.mk_rename_fn(i1, 2, cols2);
         relation_union_fn*       union1 = ip.mk_union_fn(i1, i2, &i1);
         relation_mutator_fn*     filterId1 = ip.mk_filter_identical_fn(i1, 2, cols1);
-        relation_mutator_fn*     filterEq1 = ip.mk_filter_equal_fn(i1, num1, 2);
+        relation_mutator_fn*     filterEq1 = ip.mk_filter_equal_fn(i1, num1, 2);               
         relation_mutator_fn*     filterCond1 = ip.mk_filter_interpreted_fn(i1, cond2);
 
         relation_base* i3 = (*join1)(i2, i2);
-        i3->display(std::cout);
-
+        i3->display(std::cout);       
+ 
         relation_transformer_fn* proj2 = ip.mk_project_fn(*i3, 2, cols2);
 
         (*filterEq1)(i2);
@@ -72,7 +72,7 @@ namespace datalog {
         (*filterId1)(i2);
         i2.display(std::cout);
         // x0 <= 0
-        // x1 = x2 = 4
+        // x1 = x2 = 4       
         relation_fact fact1(ast_m);
         fact1.push_back(autil.mk_numeral(rational(0), true));
         fact1.push_back(autil.mk_numeral(rational(4), true));
@@ -94,8 +94,8 @@ namespace datalog {
         SASSERT(i2.empty());
 
         relation_base* i4 = (*proj2)(*i3);
-        i4->display(std::cout);
-
+        i4->display(std::cout);      
+        
         i1.deallocate();
         i2.deallocate();
         i3->deallocate();
@@ -117,13 +117,13 @@ namespace datalog {
         smt_params params;
         ast_manager ast_m;
         register_engine re;
-        context ctx(ast_m, re, params);
+        context ctx(ast_m, re, params);    
         arith_util autil(ast_m);
         relation_manager & m = ctx.get_rel_context()->get_rmanager();
         m.register_plugin(alloc(bound_relation_plugin, m));
         bound_relation_plugin& br = dynamic_cast<bound_relation_plugin&>(*m.get_relation_plugin(symbol("bound_relation")));
         SASSERT(&br);
-
+        
         relation_signature sig;
         sort* int_sort = autil.mk_int();
         sig.push_back(int_sort);
@@ -156,34 +156,34 @@ namespace datalog {
         lt_x0x3 = autil.mk_lt(ast_m.mk_var(0, int_sort), ast_m.mk_var(3, int_sort));
 
         num1 = autil.mk_numeral(rational(4), true);
-
+        
         unsigned cols1[2] = { 1, 2};
         unsigned cols2[2] = { 2, 3};
         unsigned cols3[3] = { 0, 2, 3 };
-        relation_join_fn* join1 = br.mk_join_fn(i1, i2, 2, cols1, cols2);
+        relation_join_fn* join1 = br.mk_join_fn(i1, i2, 2, cols1, cols2);        
         relation_transformer_fn* proj1 = br.mk_project_fn(i1, 2, cols2);
         relation_transformer_fn* ren1  = br.mk_rename_fn(i1, 3, cols3);
         relation_union_fn*       union1 = br.mk_union_fn(i1, i2, &i1);
         relation_mutator_fn*     filterId1 = br.mk_filter_identical_fn(i1, 2, cols1);
-        relation_mutator_fn*     filterEq1 = br.mk_filter_equal_fn(i1, num1, 2);
+        relation_mutator_fn*     filterEq1 = br.mk_filter_equal_fn(i1, num1, 2);               
         relation_mutator_fn*     filterCond1 = br.mk_filter_interpreted_fn(i1, cond3);
 
         relation_base* i3 = (*join1)(i2, i2);
-        i3->display(std::cout);
-
+        i3->display(std::cout);       
+ 
         relation_transformer_fn* proj2 = br.mk_project_fn(*i3, 2, cols2);
 
         (*filterEq1)(i2);
         i2.display(std::cout << "no-op still full\n");
         // no-op
-
+        
         (*filterCond1)(i2);
         i2.display(std::cout << "x2 < x3\n");
         // x2 < x3
 
         (*filterId1)(i2);
         i2.display(std::cout << "id\n");
-        // x1 = x2 < x3
+        // x1 = x2 < x3    
         relation_fact fact1(ast_m);
 
         i2.display(std::cout << "Orig\n");
@@ -198,7 +198,7 @@ namespace datalog {
         //SASSERT(i2.empty());
 
         relation_base* i4 = (*proj2)(*i3);
-        i4->display(std::cout);
+        i4->display(std::cout);      
 
         // test that equivalence classes are expanded.
         // { x1 = x3, x0 < x1 x1 < x2} u { x2 = x3, x0 < x3 } = { x0 < x3 }
@@ -228,7 +228,7 @@ namespace datalog {
             b1->display(std::cout << "b1 u b2:\n");
 
             // TBD check property;
-
+            
             b1->deallocate();
             b2->deallocate();
         }
@@ -260,11 +260,11 @@ namespace datalog {
             b1->display(std::cout << "b1 u b2:\n");
 
             // TBD check property;
-
+            
             b1->deallocate();
             b2->deallocate();
         }
-
+        
         i1.deallocate();
         i2.deallocate();
         i3->deallocate();

@@ -11,29 +11,29 @@ Abstract:
     Auxiliary variables are used to avoid blowup.
 
     Features:
-
+    
     - Efficient encoding is used for commonly used patterns such as:
        (iff a (iff b c))
        (or (not (or a b)) (not (or a c)) (not (or b c)))
 
-    - Efficient encoding is used for chains of if-then-elses
+    - Efficient encoding is used for chains of if-then-elses 
 
     - Distributivity is applied to non-shared nodes if the blowup is acceptable.
-
+    
     - The features above can be disabled/enabled using parameters.
 
     - The assertion-set is only modified if the resultant set of clauses
     is "acceptable".
 
-    Notes:
-
+    Notes: 
+    
     - Term-if-then-else expressions are not handled by this strategy.
     This kind of expression should be processed by other strategies.
 
     - Quantifiers are treated as "theory" atoms. They are viewed
     as propositional variables by this strategy.
-
-    - The assertion set may contain free variables.
+    
+    - The assertion set may contain free variables. 
 
     - This strategy assumes the assertion_set_rewriter was
     used before invoking it.
@@ -79,9 +79,9 @@ class tseitin_cnf_tactic : public tactic {
             bool      m_first;
             frame(app * n):m_t(n), m_first(true) {}
         };
-
+        
         typedef filter_model_converter mc;
-
+        
         ast_manager &              m;
         svector<frame>             m_frame_stack;
         obj_map<app, app*>         m_cache;
@@ -120,7 +120,7 @@ class tseitin_cnf_tactic : public tactic {
             updt_params(p);
             m_rw.set_flat(false);
         }
-
+        
         void updt_params(params_ref const & p) {
             m_common_patterns = p.get_bool("common_patterns", true);
             m_distributivity  = p.get_bool("distributivity",  true);
@@ -129,13 +129,13 @@ class tseitin_cnf_tactic : public tactic {
             m_ite_extra       = p.get_bool("ite_extra", true);
             m_max_memory      = megabytes_to_bytes(p.get_uint("max_memory", UINT_MAX));
         }
-
+        
         void push_frame(app * n) { m_frame_stack.push_back(frame(n)); }
-
+        
         void throw_op_not_handled() {
             throw tactic_exception("operator not supported, apply simplifier before invoking this strategy");
         }
-
+        
         void inv(expr * n, expr_ref & r) {
             if (m.is_true(n)) {
                 r = m.mk_false();
@@ -143,7 +143,7 @@ class tseitin_cnf_tactic : public tactic {
             }
             if (m.is_false(n)) {
                 r = m.mk_true();
-                return;
+                return; 
             }
             if (m.is_not(n)) {
                 r = to_app(n)->get_arg(0);
@@ -158,7 +158,7 @@ class tseitin_cnf_tactic : public tactic {
             else
                 r = n;
         }
-
+        
         void get_lit(expr * n, bool sign, expr_ref & r) {
         start:
             if (!is_app(n) ||
@@ -201,7 +201,7 @@ class tseitin_cnf_tactic : public tactic {
                 return;
             }
         }
-
+        
         void visit(expr * n, bool & visited, bool root = false) {
         start:
             if (!is_app(n))
@@ -245,16 +245,16 @@ class tseitin_cnf_tactic : public tactic {
                 return;
             }
         }
-
+        
         bool is_shared(expr * t) {
             return m_occs.is_shared(t);
         }
-
+        
         /**
            \brief Return true if n is of the form
-
+           
            (or (not (or a b)) (not (or a c)) (not (or b c)))
-
+           
            \remark This pattern is found in the following "circuits":
            - carry
            - less-than (signed and unsigned)
@@ -262,9 +262,9 @@ class tseitin_cnf_tactic : public tactic {
         bool is_or_3and(expr * n, expr * & a, expr * & b, expr * & c) {
             expr * a1, * a2, * b1, * b2, * c1, * c2;
             if (!m.is_or(n, a1, b1, c1) ||
-                !m.is_not(a1, a1) ||
+                !m.is_not(a1, a1) || 
                 is_shared(a1) ||
-                !m.is_not(b1, b1) ||
+                !m.is_not(b1, b1) || 
                 is_shared(b1) ||
                 !m.is_not(c1, c1) ||
                 is_shared(c1) ||
@@ -272,29 +272,29 @@ class tseitin_cnf_tactic : public tactic {
                 !m.is_or(b1, b1, b2) ||
                 !m.is_or(c1, c1, c2))
                 return false;
-
+            
             swap_if_gt(a1, a2);
             swap_if_gt(b1, b2);
             swap_if_gt(c1, c2);
-
+            
             if ((a1 == b1 && a2 == c1 && b2 == c2) ||
                 (a1 == b1 && a2 == c2 && b2 == c1) ||
                 (a1 == c1 && a2 == b1 && b2 == c2)) {
                 a = a1; b = a2; c = b2;
                 return true;
             }
-
+            
             if ((a1 == b2 && a2 == c2 && b1 == c1) ||
                 (a1 == c1 && a2 == b2 && b1 == c2) ||
                 (a1 == c2 && a2 == b2 && b1 == c1)) {
                 a = a1; b = a2; c = b1;
                 return true;
             }
-
+            
             return false;
         }
-
-
+        
+        
         /**
            \brief Return true if n is of the form
            (iff a (iff b c))
@@ -313,7 +313,7 @@ class tseitin_cnf_tactic : public tactic {
             }
             return false;
         }
-
+        
         void mk_clause(unsigned num, expr * const * ls) {
             expr_ref cls(m);
             m_rw.mk_or(num, ls, cls);
@@ -321,26 +321,26 @@ class tseitin_cnf_tactic : public tactic {
             if (m_produce_unsat_cores)
                 m_deps.push_back(m_curr_dep);
         }
-
+        
         void mk_clause(expr * l1) {
             return mk_clause(1, &l1);
         }
-
+        
         void mk_clause(expr * l1, expr * l2) {
             expr * ls[2] = { l1, l2 };
             mk_clause(2, ls);
         }
-
+        
         void mk_clause(expr * l1, expr * l2, expr * l3) {
             expr * ls[3] = { l1, l2, l3 };
             mk_clause(3, ls);
         }
-
+        
         void mk_clause(expr * l1, expr * l2, expr * l3, expr * l4) {
             expr * ls[4] = { l1, l2, l3, l4 };
             mk_clause(4, ls);
         }
-
+        
         app * mk_fresh() {
             m_num_aux_vars++;
             app * v = m.mk_fresh_const(0, m.mk_bool_sort());
@@ -349,16 +349,16 @@ class tseitin_cnf_tactic : public tactic {
                 m_mc->insert(v->get_decl());
             return v;
         }
-
+        
         void cache_result(app * t, app * r) {
             m_cache.insert(t, r);
             m_cache_domain.push_back(t);
         }
-
+        
         enum mres {
             NO,    // did not match
             CONT,  // matched but the children need to be processed
-            DONE   // matched
+            DONE   // matched 
         };
 
         mres match_not(app * t, bool first, bool root) {
@@ -380,7 +380,7 @@ class tseitin_cnf_tactic : public tactic {
             }
             return NO;
         }
-
+        
         mres match_or_3and(app * t, bool first, bool root) {
             if (!m_common_patterns)
                 return NO;
@@ -449,7 +449,7 @@ class tseitin_cnf_tactic : public tactic {
                     mk_clause(la,   lb,  lc);
                     mk_clause(la,  nlb, nlc);
                     mk_clause(nla,  lb, nlc);
-                    mk_clause(nla, nlb,  lc);
+                    mk_clause(nla, nlb,  lc); 
                 }
                 else {
                     app_ref k(m), nk(m);
@@ -458,19 +458,19 @@ class tseitin_cnf_tactic : public tactic {
                     mk_clause(nk, la,   lb,  lc);
                     mk_clause(nk, la,  nlb, nlc);
                     mk_clause(nk, nla,  lb, nlc);
-                    mk_clause(nk, nla, nlb,  lc);
-
+                    mk_clause(nk, nla, nlb,  lc); 
+                    
                     mk_clause(k, nla, nlb, nlc);
                     mk_clause(k, nla,  lb,  lc);
                     mk_clause(k,  la, nlb,  lc);
-                    mk_clause(k,  la,  lb, nlc);
+                    mk_clause(k,  la,  lb, nlc); 
                     cache_result(t, k);
                 }
                 return DONE;
             }
             return NO;
         }
-
+        
         mres match_iff(app * t, bool first, bool root) {
             expr * a, * b;
             if (is_iff(m, t, a, b)) {
@@ -495,10 +495,10 @@ class tseitin_cnf_tactic : public tactic {
                     app_ref k(m), nk(m);
                     k  = mk_fresh();
                     nk = m.mk_not(k);
-
+                    
                     mk_clause(nk, la,  nlb);
                     mk_clause(nk, nla,  lb);
-
+                    
                     mk_clause(k, nla, nlb);
                     mk_clause(k,  la,  lb);
                     cache_result(t, k);
@@ -507,7 +507,7 @@ class tseitin_cnf_tactic : public tactic {
             }
             return NO;
         }
-
+        
         mres match_ite(app * t, bool first, bool root) {
             if (!m.is_ite(t))
                 return NO;
@@ -544,19 +544,19 @@ class tseitin_cnf_tactic : public tactic {
                 nk = m.mk_not(k);
                 cache_result(t, k);
             }
-
+            
 #define MK_ITE_ROOT_CLS(L1, L2) {               \
     ctx.push_back(L1); ctx.push_back(L2);       \
     mk_clause(ctx.size(), ctx.c_ptr());         \
     ctx.pop_back(); ctx.pop_back();             \
 }
-
+            
 #define MK_ITE_CLS(L1, L2, L3) {                                \
     ctx.push_back(L1); ctx.push_back(L2); ctx.push_back(L3);    \
     mk_clause(ctx.size(), ctx.c_ptr());                         \
     ctx.pop_back(); ctx.pop_back(); ctx.pop_back();             \
 }
-
+            
             app * ite = t;
             while (true) {
                 get_lit(ite->get_arg(0), false, la);
@@ -613,7 +613,7 @@ class tseitin_cnf_tactic : public tactic {
                     if (m_ite_extra) {
                         MK_ITE_CLS(lb,   lc, nk);
                         MK_ITE_CLS(nlb, nlc, k);
-
+                        
                         ex_neg_ctx.push_back(lb); ex_neg_ctx.push_back(lc); ex_neg_ctx.push_back(nk);
                         mk_clause(ex_neg_ctx.size(), ex_neg_ctx.c_ptr());
                         ex_pos_ctx.push_back(nlb); ex_pos_ctx.push_back(nlc); ex_pos_ctx.push_back(k);
@@ -624,7 +624,7 @@ class tseitin_cnf_tactic : public tactic {
             }
             return DONE;
         }
-
+        
         mres match_or(app * t, bool first, bool root) {
             if (!m.is_or(t))
                 return NO;
@@ -637,7 +637,7 @@ class tseitin_cnf_tactic : public tactic {
                     expr * a0;
                     if (m_distributivity && m.is_not(a, a0) && m.is_or(a0) && !is_shared(a0)) {
                         unsigned num2 = to_app(a0)->get_num_args();
-                        if (num2 < m_distributivity_blowup && blowup * num2 < m_distributivity_blowup && blowup < blowup * num2) {
+                        if (num2 < m_distributivity_blowup && blowup * num2 < m_distributivity_blowup && blowup < blowup * num2) { 
                             blowup *= num2;
                             for (unsigned j = 0; j < num2; j++)
                                 visit(to_app(a0)->get_arg(j), visited);
@@ -649,14 +649,14 @@ class tseitin_cnf_tactic : public tactic {
                 if (!visited)
                     return CONT;
             }
-
+            
             app_ref k(m), nk(m);
             if (!root) {
                 k = mk_fresh();
                 nk = m.mk_not(k);
                 cache_result(t, k);
             }
-
+            
             unsigned num = t->get_num_args();
             bool distributivity = false;
             if (m_distributivity) {
@@ -670,7 +670,7 @@ class tseitin_cnf_tactic : public tactic {
                     }
                 }
             }
-
+            
             if (!distributivity) {
                 // easy case
                 expr_ref_buffer lits(m); expr_ref l(m);
@@ -703,7 +703,7 @@ class tseitin_cnf_tactic : public tactic {
                     expr * a0;
                     if (m.is_not(a, a0) && m.is_or(a0) && !is_shared(a0)) {
                         unsigned num2 = to_app(a0)->get_num_args();
-                        if (num2 < m_distributivity_blowup && blowup * num2 < m_distributivity_blowup && blowup < blowup * num2) {
+                        if (num2 < m_distributivity_blowup && blowup * num2 < m_distributivity_blowup && blowup < blowup * num2) { 
                             szs.push_back(num2);
                             blowup *= num2;
                             expr_ref_buffer lits(m);
@@ -727,7 +727,7 @@ class tseitin_cnf_tactic : public tactic {
                     buffer.push_back(l);
                     if (!root) {
                         inv(l, nl);
-                        mk_clause(nl, k);
+                        mk_clause(nl, k); 
                     }
                 }
                 SASSERT(offsets.size() == num);
@@ -750,16 +750,16 @@ class tseitin_cnf_tactic : public tactic {
             }
             return DONE;
         }
-
+        
 #define TRY(_MATCHER_)                                          \
     r = _MATCHER_(t, first, t == root);                         \
     if (r == CONT) goto loop;                                   \
     if (r == DONE) { m_frame_stack.pop_back(); continue; }
-
+        
         void set_cancel(bool f) {
             m_cancel = f;
         }
-
+        
         void checkpoint() {
             cooperate("tseitin cnf");
             if (m_cancel)
@@ -779,7 +779,7 @@ class tseitin_cnf_tactic : public tactic {
                 return;
             }
             expr * root = n;
-
+            
             app * t; bool first; mres r;
             while (!m_frame_stack.empty()) {
             loop:
@@ -803,9 +803,9 @@ class tseitin_cnf_tactic : public tactic {
             m_cache_domain.reset();
         }
 
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -813,7 +813,7 @@ class tseitin_cnf_tactic : public tactic {
             tactic_report report("tseitin-cnf", *g);
             fail_if_proof_generation("tseitin-cnf", g);
             m_produce_models      = g->models_enabled();
-            m_produce_unsat_cores = g->unsat_core_enabled();
+            m_produce_unsat_cores = g->unsat_core_enabled(); 
 
             m_occs(*g);
             reset_cache();
@@ -847,7 +847,7 @@ class tseitin_cnf_tactic : public tactic {
                 else
                     g->assert_expr(cls);
             }
-            if (m_produce_models && !m_fresh_vars.empty())
+            if (m_produce_models && !m_fresh_vars.empty()) 
                 mc = m_mc.get();
             else
                 mc = 0;
@@ -857,7 +857,7 @@ class tseitin_cnf_tactic : public tactic {
             SASSERT(g->is_well_sorted());
         }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
 public:
@@ -869,7 +869,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(tseitin_cnf_tactic, m, m_params);
     }
-
+        
     virtual ~tseitin_cnf_tactic() {
         dealloc(m_imp);
     }
@@ -884,19 +884,19 @@ public:
         r.insert("common_patterns", CPK_BOOL, "(default: true) minimize the number of auxiliary variables during CNF encoding by identifing commonly used patterns");
         r.insert("distributivity", CPK_BOOL, "(default: true) minimize the number of auxiliary variables during CNF encoding by applying distributivity over unshared subformulas");
         r.insert("distributivity_blowup", CPK_UINT, "(default: 32) maximum overhead for applying distributivity during CNF encoding");
-        r.insert("ite_chaing", CPK_BOOL, "(default: true) minimize the number of auxiliary variables during CNF encoding by identifing if-then-else chains");
+        r.insert("ite_chaing", CPK_BOOL, "(default: true) minimize the number of auxiliary variables during CNF encoding by identifing if-then-else chains");                                                       
         r.insert("ite_extra", CPK_BOOL, "(default: true) add redundant clauses (that improve unit propagation) when encoding if-then-else formulas");
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
         report_tactic_progress(":cnf-aux-vars", m_imp->m_num_aux_vars);
     }
-
+    
     virtual void cleanup() {
         ast_manager & m = m_imp->m;
         imp * d = alloc(imp, m, m_params);
@@ -916,7 +916,7 @@ public:
     virtual void collect_statistics(statistics & st) const {
         st.update("cnf encoding aux vars", m_imp->m_num_aux_vars);
     }
-
+    
     virtual void reset_statistics() {
         m_imp->m_num_aux_vars = 0;
     }

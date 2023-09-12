@@ -35,18 +35,18 @@ protected:
     const bool m_stay_non_negative;
 public:
     typedef map_impl::iterator iterator;
-
+    
     counter(bool stay_non_negative = true) : m_stay_non_negative(stay_non_negative) {}
-
+    
     void reset() { m_data.reset(); }
     iterator begin() const { return m_data.begin(); }
-    iterator end() const { return m_data.end(); }
+    iterator end() const { return m_data.end(); }    
     void update(unsigned el, int delta);
     int & get(unsigned el);
 
     /**
        \brief Increase values of elements in \c els by \c delta.
-
+       
        The function returns a reference to \c *this to allow for expressions like
        counter().count(sz, arr).get_positive_count()
     */
@@ -54,7 +54,7 @@ public:
     counter & count(const unsigned_vector & els, int delta = 1) {
         return count(els.size(), els.c_ptr(), delta);
     }
-
+    
     void collect_positive(uint_set & acc) const;
     unsigned get_positive_count() const;
 
@@ -74,7 +74,7 @@ protected:
     ptr_vector<expr> m_todo;
     ast_mark         m_mark;
     unsigned_vector  m_scopes;
-    unsigned get_max_var(bool & has_var);
+    unsigned get_max_var(bool & has_var);    
 public:
     var_counter(bool stay_non_negative = true): counter(stay_non_negative) {}
     void count_vars(ast_manager & m, const app * t, int coef = 1);
@@ -88,12 +88,12 @@ class ast_counter {
     bool     m_stay_non_negative;
  public:
     typedef map_impl::iterator iterator;
-
+    
     ast_counter(bool stay_non_negative = true) : m_stay_non_negative(stay_non_negative) {}
-
+    
     iterator begin() const { return m_data.begin(); }
     iterator end() const { return m_data.end(); }
-
+    
     int & get(ast * el) {
         return m_data.insert_if_not_there2(el, 0)->get_data().m_value;
     }
@@ -101,7 +101,7 @@ class ast_counter {
         get(el) += delta;
         SASSERT(!m_stay_non_negative || get(el) >= 0);
     }
-
+    
     void inc(ast * el) { update(el, 1); }
     void dec(ast * el) { update(el, -1); }
 };

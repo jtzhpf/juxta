@@ -31,9 +31,9 @@ class bv2int_rewriter_ctx {
     expr_ref_vector          m_side_conditions;
     obj_map<expr, expr*>     m_power2;
     expr_ref_vector          m_trail;
-
+    
 public:
-    bv2int_rewriter_ctx(ast_manager& m, params_ref const& p) :
+    bv2int_rewriter_ctx(ast_manager& m, params_ref const& p) : 
         m_side_conditions(m), m_trail(m) { update_params(p); }
 
     void reset() { m_side_conditions.reset(); m_trail.reset(); m_power2.reset(); }
@@ -41,13 +41,13 @@ public:
     unsigned num_side_conditions() const { return m_side_conditions.size(); }
     expr* const* side_conditions() const { return m_side_conditions.c_ptr(); }
     unsigned get_max_num_bits() const { return m_max_size; }
-
+    
     void collect_power2(goal const & s);
     bool is_power2(expr* x, expr*& log_x);
     obj_map<expr, expr*> const& power2() const { return m_power2; }
 
 private:
-    void update_params(params_ref const& p);
+    void update_params(params_ref const& p); 
 };
 
 class bv2int_rewriter {
@@ -74,14 +74,14 @@ private:
     br_status mk_gt(expr * arg1, expr * arg2, expr_ref & result);
     br_status mk_idiv(expr * arg1, expr * arg2, expr_ref & result);
     br_status mk_mod(expr * arg1, expr * arg2, expr_ref & result);
-    br_status mk_rem(expr * arg1, expr * arg2, expr_ref & result);
-    br_status mk_add(unsigned num_args, expr * const * args, expr_ref & result);
-    br_status mk_mul(unsigned num_args, expr * const * args, expr_ref & result);
-    br_status mk_sub(unsigned num_args, expr * const * args, expr_ref & result);
+    br_status mk_rem(expr * arg1, expr * arg2, expr_ref & result);   
+    br_status mk_add(unsigned num_args, expr * const * args, expr_ref & result);     
+    br_status mk_mul(unsigned num_args, expr * const * args, expr_ref & result); 
+    br_status mk_sub(unsigned num_args, expr * const * args, expr_ref & result); 
     br_status mk_add(expr* s, expr* t, expr_ref& result);
     br_status mk_mul(expr* s, expr* t, expr_ref& result);
     br_status mk_sub(expr* s, expr* t, expr_ref& result);
-    br_status mk_uminus(expr* e, expr_ref & result);
+    br_status mk_uminus(expr* e, expr_ref & result); 
 
     bool      is_bv2int(expr* e, expr_ref& s);
     bool      is_sbv2int(expr* e, expr_ref& s);

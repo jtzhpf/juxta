@@ -27,7 +27,7 @@ struct alloc_region {
         for (; it != end; ++it) {
             delete *it;
         }
-    }
+    }    
 };
 
 template<typename T>
@@ -55,7 +55,7 @@ struct symbol_table {
         m_map.insert(std::pair<z3::symbol, T>(s, val));
     }
 
-    bool find(z3::symbol const& s, T& val) {
+    bool find(z3::symbol const& s, T& val) { 
         typename map::iterator it = m_map.find(s);
         if (it == m_map.end()) {
             return false;
@@ -64,7 +64,7 @@ struct symbol_table {
             val = it->second;
             return true;
         }
-    }
+    }    
 };
 
 
@@ -122,9 +122,9 @@ class TreeNode {
     char const* m_symbol;
     int         m_symbol_index;
     TreeNode**  m_children;
-
+    
 public:
-    TreeNode(alloc_region& r, char const* sym,
+    TreeNode(alloc_region& r, char const* sym, 
              TreeNode* A, TreeNode* B, TreeNode* C, TreeNode* D, TreeNode* E,
              TreeNode* F, TreeNode* G, TreeNode* H, TreeNode* I, TreeNode* J):
         m_symbol(strdup(r, sym)),
@@ -142,7 +142,7 @@ public:
         m_children[9] = J;
 
     }
-
+        
     char const* symbol() const { return m_symbol; }
     TreeNode *const* children() const { return m_children; }
     TreeNode* child(unsigned i) const { return m_children[i]; }
@@ -151,12 +151,12 @@ public:
     void set_index(int idx) { m_symbol_index = idx; }
 };
 
-TreeNode* MkToken(alloc_region& r, char const* token, int symbolIndex) {
+TreeNode* MkToken(alloc_region& r, char const* token, int symbolIndex) { 
     TreeNode* ss;
     char* symbol = tptp_lval[symbolIndex];
     ss = new (r) TreeNode(r, symbol, NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
     ss->set_index(symbolIndex);
-    return ss;
+    return ss; 
 }
 
 
@@ -169,7 +169,7 @@ class env {
     z3::sort                       m_univ;
     symbol_table<z3::func_decl>    m_decls;
     symbol_table<z3::sort>         m_defined_sorts;
-    static std::vector<TreeNode*>*  m_nodes;
+    static std::vector<TreeNode*>*  m_nodes;    
     static alloc_region*                m_region;
     char const*                   m_filename;
 
@@ -179,7 +179,7 @@ class env {
         IMPLIES,
         IMPLIED,
         LESS_TILDE_GREATER,
-        TILDE_VLINE
+        TILDE_VLINE        
     };
 
     void mk_error(TreeNode* f, char const* msg) {
@@ -209,10 +209,10 @@ class env {
 
     void mk_annotated_formula(TreeNode* f, named_formulas& fmls) {
         if (!strcmp(f->symbol(),"fof_annotated")) {
-            fof_annotated(f->child(2), f->child(4), f->child(6), f->child(7), fmls);
+            fof_annotated(f->child(2), f->child(4), f->child(6), f->child(7), fmls);            
         }
         else if (!strcmp(f->symbol(),"tff_annotated")) {
-            fof_annotated(f->child(2), f->child(4), f->child(6), f->child(7), fmls);
+            fof_annotated(f->child(2), f->child(4), f->child(6), f->child(7), fmls);            
         }
         else if (!strcmp(f->symbol(),"cnf_annotated")) {
             cnf_annotated(f->child(2), f->child(4), f->child(6), f->child(7), fmls);
@@ -234,7 +234,7 @@ class env {
     void mk_include(TreeNode* file_name, TreeNode* formula_selection, named_formulas& fmls) {
         char const* fn = file_name->child(0)->symbol();
         TreeNode* name_list = formula_selection->child(2);
-        if (name_list && !strcmp("null",name_list->symbol())) {
+        if (name_list && !strcmp("null",name_list->symbol())) {            
             name_list = 0;
         }
         std::string inc_name;
@@ -242,25 +242,25 @@ class env {
         for (unsigned i = 1; !f_exists && i <= 3; ++i) {
             inc_name.clear();
             f_exists = mk_filename(fn, i, inc_name);
-
+            
         }
         if (!f_exists) {
             inc_name.clear();
-            f_exists = mk_env_filename(fn, inc_name);
+            f_exists = mk_env_filename(fn, inc_name);            
         }
         if (!f_exists) {
             inc_name = fn;
         }
-
+        
         parse(inc_name.c_str(), fmls);
         while (name_list) {
             return mk_error(name_list, "name list (not handled)");
             char const* name = name_list->child(0)->symbol();
-            name_list = name_list->child(2);
+            name_list = name_list->child(2);            
         }
     }
 
-#define CHECK(_node_) if (0 != strcmp(_node_->symbol(),#_node_)) return mk_error(_node_,#_node_);
+#define CHECK(_node_) if (0 != strcmp(_node_->symbol(),#_node_)) return mk_error(_node_,#_node_); 
 
     const char* get_name(TreeNode* name) {
         if (!name->child(0)) {
@@ -269,7 +269,7 @@ class env {
         if (!name->child(0)->child(0)) {
             return name->child(0)->symbol();
         }
-        return name->child(0)->child(0)->symbol();
+        return name->child(0)->child(0)->symbol();        
     }
 
     z3::expr mk_forall(z3::expr_vector& bound, z3::expr body) {
@@ -285,7 +285,7 @@ class env {
         delete[] vars;
         return z3::expr(m_context, r);
     }
-
+    
     void cnf_annotated(TreeNode* name, TreeNode* formula_role, TreeNode* formula, TreeNode* annotations, named_formulas& fmls) {
         symbol_set st;
         get_cnf_variables(formula, st);
@@ -413,7 +413,7 @@ class env {
                 fml = ! (f1 && fml);
             }
             else {
-                mk_error(f->child(1)->child(0), "connective");
+                mk_error(f->child(1)->child(0), "connective");            
             }
         }
         else if (!strcmp(name,"fof_or_formula") ||
@@ -474,7 +474,7 @@ class env {
             fof_formula(f->child(6), fml);
             fml = ite(f1, f2, fml);
         }
-        else if (!strcmp(name,"plain_atomic_formula") ||
+        else if (!strcmp(name,"plain_atomic_formula") ||             
             !strcmp(name,"defined_plain_formula") ||
             !strcmp(name,"system_atomic_formula")) {
             z3::sort srt(m_context.bool_sort());
@@ -536,7 +536,7 @@ class env {
     }
 
     void fof_quantified_formula(TreeNode* fol_quantifier, TreeNode* vl, TreeNode* formula, z3::expr& fml) {
-        unsigned l = m_bound.size();
+        unsigned l = m_bound.size();       
         mk_variable_list(vl);
         fof_formula(formula, fml);
         bool is_forall = !strcmp(fol_quantifier->child(0)->symbol(),"!");
@@ -592,7 +592,7 @@ class env {
                 s = mk_sort(sname);
                 if (sname == symbol("$rat")) {
                     throw failure_ex("rational sorts are not handled\n");
-                }
+                }                
                 mk_error(t, sname.str().c_str());
             }
         }
@@ -614,7 +614,7 @@ class env {
         }
         else if (!strcmp(name,"tff_atomic_type")) {
             mk_sort(t->child(0), s);
-        }
+        }            
         else if (!strcmp(name,"tff_mapping_type")) {
             TreeNode* t1 = t->child(0);
             if (t1->child(1)) {
@@ -631,7 +631,7 @@ class env {
         }
     }
 
-    void  mk_xprod_sort(TreeNode* t, z3::sort_vector& sorts) {
+    void  mk_xprod_sort(TreeNode* t, z3::sort_vector& sorts) {        
         char const* name = t->symbol();
         z3::sort s1(m_context), s2(m_context);
         if (!strcmp(name, "tff_atomic_type")) {
@@ -761,12 +761,12 @@ class env {
             !strcmp(f->symbol(),"atomic_defined_word") ||
             !strcmp(f->symbol(),"atomic_system_word")) {
             char const* ch = f->child(0)->symbol();
-            z3::symbol fn = symbol(ch);
+            z3::symbol fn = symbol(ch);   
             z3::func_decl fun(m_context);
             z3::context& ctx = r.ctx();
             if (!strcmp(ch,"$less")) {
                 check_arity(terms.size(), 2);
-                r = terms[0] < terms[1];
+                r = terms[0] < terms[1]; 
             }
             else if (!strcmp(ch,"$lesseq")) {
                 check_arity(terms.size(), 2);
@@ -823,7 +823,7 @@ class env {
             else if (!strcmp(ch,"$is_int")) {
                 check_arity(terms.size(), 1);
                 r = z3::expr(ctx, Z3_mk_is_int(ctx, terms[0]));
-            }
+            }            
             else if (!strcmp(ch,"$true")) {
                 r = ctx.bool_val(true);
             }
@@ -835,43 +835,43 @@ class env {
                 check_arity(terms.size(), 1);
                 r = ceiling(terms[0]);
             }
-            // truncate - The nearest integral value with magnitude not greater than the absolute value of the argument.
+            // truncate - The nearest integral value with magnitude not greater than the absolute value of the argument. 
             // if x >= 0 floor(x) else ceiling(x)
             else if (!strcmp(ch,"$truncate")) {
-                check_arity(terms.size(), 1);
+                check_arity(terms.size(), 1);    
                 r = truncate(terms[0]);
             }
-            //  The nearest integral number to the argument. When the argument
-            // is halfway between two integral numbers, the nearest even integral number to the argument.
+            //  The nearest integral number to the argument. When the argument 
+            // is halfway between two integral numbers, the nearest even integral number to the argument.  
             else if (!strcmp(ch,"$round")) {
-                check_arity(terms.size(), 1);
+                check_arity(terms.size(), 1); 
                 z3::expr t = terms[0];
                 z3::expr i = to_int(t);
                 z3::expr i2 = i + ctx.real_val(1,2);
                 r = ite(t > i2, i + 1, ite(t == i2, ite(is_even(i), i, i+1), i));
             }
-            // $quotient_e(N,D) - the Euclidean quotient, which has a non-negative remainder.
-            // If D is positive then $quotient_e(N,D) is the floor (in the type of N and D) of
+            // $quotient_e(N,D) - the Euclidean quotient, which has a non-negative remainder. 
+            // If D is positive then $quotient_e(N,D) is the floor (in the type of N and D) of 
             // the real division N/D, and if D is negative then $quotient_e(N,D) is the ceiling of N/D.
 
-            // $quotient_t(N,D) - the truncation of the real division N/D.
+            // $quotient_t(N,D) - the truncation of the real division N/D. 
             else if (!strcmp(ch,"$quotient_t")) {
-                check_arity(terms.size(), 2);
+                check_arity(terms.size(), 2); 
                 r = truncate(terms[0] / terms[1]);
             }
-            // $quotient_f(N,D) - the floor of the real division N/D.
+            // $quotient_f(N,D) - the floor of the real division N/D. 
             else if (!strcmp(ch,"$quotient_f")) {
-                check_arity(terms.size(), 2);
+                check_arity(terms.size(), 2); 
                 r = to_real(to_int(terms[0] / terms[1]));
             }
             // For t in {$int,$rat, $real}, x in {e, t,f}, $quotient_x and $remainder_x are related by
-            // ! [N:t,D:t] : $sum($product($quotient_x(N,D),D),$remainder_x(N,D)) = N
-            // For zero divisors the result is not specified.
+            // ! [N:t,D:t] : $sum($product($quotient_x(N,D),D),$remainder_x(N,D)) = N 
+            // For zero divisors the result is not specified. 
             else if (!strcmp(ch,"$remainder_t")) {
                 mk_not_handled(f, ch);
             }
             else if (!strcmp(ch,"$remainder_e")) {
-                check_arity(terms.size(), 2);
+                check_arity(terms.size(), 2); 
                 r = z3::expr(ctx, Z3_mk_mod(ctx, terms[0], terms[1]));
             }
             else if (!strcmp(ch,"$remainder_r")) {
@@ -891,7 +891,7 @@ class env {
             }
             else {
                 mk_error(f->child(0), "atomic, defined or system word");
-            }
+            }      
             return;
         }
         mk_error(f, "function");
@@ -971,7 +971,7 @@ class env {
         }
     }
 
-    void mk_let(TreeNode* let_vars, TreeNode* f, z3::expr& fml) {
+    void mk_let(TreeNode* let_vars, TreeNode* f, z3::expr& fml) {        
         mk_error(f, "let construct is not handled");
     }
 
@@ -1031,7 +1031,7 @@ class env {
             inc_name.append(m_filename,sep1+1);
         }
         append_rel_name(rel_name, inc_name);
-        return file_exists(inc_name.c_str());
+        return file_exists(inc_name.c_str());        
     }
 
     bool file_exists(char const* filename) {
@@ -1047,13 +1047,13 @@ class env {
 #ifdef _WINDOWS
         char buffer[1024];
         size_t sz;
-        errno_t err = getenv_s(
+        errno_t err = getenv_s( 
             &sz,
             buffer,
             "$TPTP");
         if (err != 0) {
             return false;
-        }
+        }        
 #else
         char const* buffer = getenv("$TPTP");
         if (!buffer) {
@@ -1079,8 +1079,8 @@ class env {
             else {
                 for (unsigned i = 0; i < 10; ++i) {
                     todo.push_back(t->child(i));
-                }
-            }
+                }                
+            }            
         }
     }
 
@@ -1096,7 +1096,7 @@ class env {
     z3::sort mk_sort(z3::symbol& s) {
         return z3::sort(m_context, Z3_mk_uninterpreted_sort(m_context, s));
     }
-
+    
 public:
     env(z3::context& ctx):
         m_context(ctx),
@@ -1114,12 +1114,12 @@ public:
 
     ~env() {
         delete m_region;
-        m_region = 0;
+        m_region = 0;        
     }
     void parse(const char* filename, named_formulas& fmls);
     static void register_node(TreeNode* t) { m_nodes->push_back(t); }
     static alloc_region& r() { return *m_region; }
-};
+};    
 
 std::vector<TreeNode*>* env::m_nodes = 0;
 alloc_region* env::m_region = 0;
@@ -1128,7 +1128,7 @@ alloc_region* env::m_region = 0;
 #  define P_ACT(ss) if(verbose)printf("%7d %s\n",yylineno,ss);
 #  define P_BUILD(sym,A,B,C,D,E,F,G,H,I,J) new (env::r()) TreeNode(env::r(), sym,A,B,C,D,E,F,G,H,I,J)
 #  define P_TOKEN(tok,symbolIndex) MkToken(env::r(), tok,symbolIndex)
-#  define P_PRINT(ss) env::register_node(ss)
+#  define P_PRINT(ss) env::register_node(ss) 
 
 
 // ------------------------------------------------------
@@ -1137,7 +1137,7 @@ alloc_region* env::m_region = 0;
 
 extern FILE* yyin;
 
-
+    
 void env::parse(const char* filename, named_formulas& fmls) {
     std::vector<TreeNode*> nodes;
     flet<char const*> fn(m_filename, filename);
@@ -1271,30 +1271,30 @@ public:
             case Z3_OP_XOR:
                 display_infix(out, "<~>", e);
                 break;
-            case Z3_OP_MUL:
+            case Z3_OP_MUL:  
                 display_binary(out, "$product", e);
-                break;
+                break;               
             case Z3_OP_ADD:
                 display_binary(out, "$sum", e);
-                break;
+                break;     
             case Z3_OP_SUB:
-                display_prefix(out, "$difference", e);
-                break;
+                display_prefix(out, "$difference", e); 
+                break;     
             case Z3_OP_LE:
                 display_prefix(out, "$lesseq", e);
-                break;
+                break;     
             case Z3_OP_GE:
                 display_prefix(out, "$greatereq", e);
-                break;
+                break;     
             case Z3_OP_LT:
                 display_prefix(out, "$less", e);
-                break;
+                break;     
             case Z3_OP_GT:
                 display_prefix(out, "$greater", e);
-                break;
+                break;     
             case Z3_OP_UMINUS:
                 display_prefix(out, "$uminus", e);
-                break;
+                break;            
             case Z3_OP_DIV:
                 display_prefix(out, "$quotient", e);
                 break;
@@ -1312,7 +1312,7 @@ public:
                 break;
             case Z3_OP_MOD:
                 display_prefix(out, "$remainder_e", e);
-                break;
+                break;                
             case Z3_OP_ITE:
                 display_prefix(out, e.is_bool()?"ite_f":"ite_t", e);
                 break;
@@ -1440,7 +1440,7 @@ public:
     void display_proof(std::ostream& out, named_formulas& fmls, z3::solver& solver) {
         m_node_number = 0;
         m_proof_ids.clear();
-        m_proof_hypotheses.clear();
+        m_proof_hypotheses.clear();        
         z3::expr proof = solver.proof();
         collect_axiom_ids(fmls);
         collect_decls(proof);
@@ -1497,7 +1497,7 @@ public:
             }
             m_proof_hypotheses.insert(std::make_pair(id, hyps));
         }
-
+        
     }
 
     unsigned display_proof_rec(std::ostream& out, z3::expr proof) {
@@ -1514,7 +1514,7 @@ public:
 
             switch (p.decl().decl_kind()) {
             case Z3_OP_PR_MODUS_PONENS_OEQ: {
-                unsigned hyp = display_proof_rec(out, p.arg(0));
+                unsigned hyp = display_proof_rec(out, p.arg(0));                
                 unsigned num = display_proof_hyp(out, hyp, p.arg(1));
                 m_proof_ids.insert(std::make_pair(id, num));
                 todo.pop_back();
@@ -1539,14 +1539,14 @@ public:
             todo.pop_back();
             unsigned num = ++m_node_number;
             m_proof_ids.insert(std::make_pair(id, num));
-
+            
             switch (p.decl().decl_kind()) {
             case Z3_OP_PR_ASSERTED: {
                 std::string formula_name;
                 std::string formula_file;
                 unsigned id = Z3_get_ast_id(ctx, p.arg(0));
                 std::map<unsigned, unsigned>::iterator it = m_axiom_ids.find(id);
-                if (it != m_axiom_ids.end()) {
+                if (it != m_axiom_ids.end()) {                    
                     formula_name = m_named_formulas->m_names[it->second];
                     formula_file = m_named_formulas->m_files[it->second];
                 }
@@ -1560,69 +1560,69 @@ public:
                 display(out, get_proof_formula(p));
                 out << "), file('" << formula_file << "','";
                 out << formula_name << "')).\n";
-                break;
-            }
+                break;               
+            } 
             case Z3_OP_PR_UNDEF:
                 throw failure_ex("undef rule not handled");
             case Z3_OP_PR_TRUE:
                 display_inference(out, "true", "thm", p);
-                break;
+                break;                 
             case Z3_OP_PR_GOAL:
                 display_inference(out, "goal", "thm", p);
-                break;
-            case Z3_OP_PR_MODUS_PONENS:
+                break;                 
+            case Z3_OP_PR_MODUS_PONENS: 
                 display_inference(out, "modus_ponens", "thm", p);
                 break;
-            case Z3_OP_PR_REFLEXIVITY:
+            case Z3_OP_PR_REFLEXIVITY: 
                 display_inference(out, "reflexivity", "thm", p);
                 break;
-            case Z3_OP_PR_SYMMETRY:
+            case Z3_OP_PR_SYMMETRY: 
                 display_inference(out, "symmetry", "thm", p);
                 break;
-            case Z3_OP_PR_TRANSITIVITY:
-            case Z3_OP_PR_TRANSITIVITY_STAR:
+            case Z3_OP_PR_TRANSITIVITY: 
+            case Z3_OP_PR_TRANSITIVITY_STAR: 
                 display_inference(out, "transitivity", "thm", p);
                 break;
-            case Z3_OP_PR_MONOTONICITY:
+            case Z3_OP_PR_MONOTONICITY: 
                 display_inference(out, "monotonicity", "thm", p);
                 break;
             case Z3_OP_PR_QUANT_INTRO:
                 display_inference(out, "quant_intro", "thm", p);
-                break;
-            case Z3_OP_PR_DISTRIBUTIVITY:
+                break;                
+            case Z3_OP_PR_DISTRIBUTIVITY: 
                 display_inference(out, "distributivity", "thm", p);
                 break;
-            case Z3_OP_PR_AND_ELIM:
+            case Z3_OP_PR_AND_ELIM: 
                 display_inference(out, "and_elim", "thm", p);
                 break;
-            case Z3_OP_PR_NOT_OR_ELIM:
+            case Z3_OP_PR_NOT_OR_ELIM: 
                 display_inference(out, "or_elim", "thm", p);
                 break;
-            case Z3_OP_PR_REWRITE:
-            case Z3_OP_PR_REWRITE_STAR:
+            case Z3_OP_PR_REWRITE:                 
+            case Z3_OP_PR_REWRITE_STAR: 
                 display_inference(out, "rewrite", "thm", p);
                 break;
-            case Z3_OP_PR_PULL_QUANT:
-            case Z3_OP_PR_PULL_QUANT_STAR:
+            case Z3_OP_PR_PULL_QUANT: 
+            case Z3_OP_PR_PULL_QUANT_STAR: 
                 display_inference(out, "pull_quant", "thm", p);
                 break;
-            case Z3_OP_PR_PUSH_QUANT:
+            case Z3_OP_PR_PUSH_QUANT: 
                 display_inference(out, "push_quant", "thm", p);
                 break;
-            case Z3_OP_PR_ELIM_UNUSED_VARS:
+            case Z3_OP_PR_ELIM_UNUSED_VARS: 
                 display_inference(out, "elim_unused_vars", "thm", p);
                 break;
-            case Z3_OP_PR_DER:
+            case Z3_OP_PR_DER: 
                 display_inference(out, "destructive_equality_resolution", "thm", p);
-                break;
+                break;                
             case Z3_OP_PR_QUANT_INST:
                 display_inference(out, "quant_inst", "thm", p);
                 break;
-            case Z3_OP_PR_HYPOTHESIS:
+            case Z3_OP_PR_HYPOTHESIS: 
                 out << "tff(" << m_node_number << ",assumption,(";
                 display(out, get_proof_formula(p));
                 out << "), introduced(assumption)).\n";
-                break;
+                break;                
             case Z3_OP_PR_LEMMA: {
                 out << "tff(" << m_node_number << ",plain,(";
                 display(out, get_proof_formula(p));
@@ -1631,55 +1631,55 @@ public:
                 std::set<unsigned> const& hyps = m_proof_hypotheses.find(parent_id)->second;
                 print_hypotheses(out, hyps);
                 out << "))).\n";
-                break;
-            }
-            case Z3_OP_PR_UNIT_RESOLUTION:
+                break;                
+            }     
+            case Z3_OP_PR_UNIT_RESOLUTION:                                 
                 display_inference(out, "unit_resolution", "thm", p);
+                break;                
+            case Z3_OP_PR_IFF_TRUE: 
+                display_inference(out, "iff_true", "thm", p); 
                 break;
-            case Z3_OP_PR_IFF_TRUE:
-                display_inference(out, "iff_true", "thm", p);
+            case Z3_OP_PR_IFF_FALSE: 
+                display_inference(out, "iff_false", "thm", p); 
                 break;
-            case Z3_OP_PR_IFF_FALSE:
-                display_inference(out, "iff_false", "thm", p);
-                break;
-            case Z3_OP_PR_COMMUTATIVITY:
-                display_inference(out, "commutativity", "thm", p);
-                break;
+            case Z3_OP_PR_COMMUTATIVITY: 
+                display_inference(out, "commutativity", "thm", p); 
+                break;                
             case Z3_OP_PR_DEF_AXIOM:
-                display_inference(out, "tautology", "thm", p);
+                display_inference(out, "tautology", "thm", p); 
+                break;                
+            case Z3_OP_PR_DEF_INTRO: 
+                display_inference(out, "def_intro", "sab", p); 
                 break;
-            case Z3_OP_PR_DEF_INTRO:
-                display_inference(out, "def_intro", "sab", p);
+            case Z3_OP_PR_APPLY_DEF: 
+                display_inference(out, "apply_def", "sab", p); 
                 break;
-            case Z3_OP_PR_APPLY_DEF:
-                display_inference(out, "apply_def", "sab", p);
-                break;
-            case Z3_OP_PR_IFF_OEQ:
-                display_inference(out, "iff_oeq", "sab", p);
+            case Z3_OP_PR_IFF_OEQ: 
+                display_inference(out, "iff_oeq", "sab", p); 
                 break;
             case Z3_OP_PR_NNF_POS:
-                display_inference(out, "nnf_pos", "sab", p);
+                display_inference(out, "nnf_pos", "sab", p); 
                 break;
-            case Z3_OP_PR_NNF_NEG:
-                display_inference(out, "nnf_neg", "sab", p);
+            case Z3_OP_PR_NNF_NEG: 
+                display_inference(out, "nnf_neg", "sab", p); 
                 break;
-            case Z3_OP_PR_NNF_STAR:
-                display_inference(out, "nnf", "sab", p);
+            case Z3_OP_PR_NNF_STAR: 
+                display_inference(out, "nnf", "sab", p); 
                 break;
-            case Z3_OP_PR_CNF_STAR:
-                display_inference(out, "cnf", "sab", p);
+            case Z3_OP_PR_CNF_STAR: 
+                display_inference(out, "cnf", "sab", p); 
                 break;
             case Z3_OP_PR_SKOLEMIZE:
-                display_inference(out, "skolemize", "sab", p);
-                break;
-            case Z3_OP_PR_MODUS_PONENS_OEQ:
-                display_inference(out, "modus_ponens_sab", "sab", p);
-                break;
-            case Z3_OP_PR_TH_LEMMA:
-                display_inference(out, "theory_lemma", "thm", p);
+                display_inference(out, "skolemize", "sab", p); 
+                break;                
+            case Z3_OP_PR_MODUS_PONENS_OEQ: 
+                display_inference(out, "modus_ponens_sab", "sab", p); 
+                break;                
+            case Z3_OP_PR_TH_LEMMA: 
+                display_inference(out, "theory_lemma", "thm", p); 
                 break;
             case Z3_OP_PR_HYPER_RESOLVE:
-                display_inference(out, "hyper_resolve", "thm", p);
+                display_inference(out, "hyper_resolve", "thm", p); 
                 break;
             default:
                 out << "TBD: " << m_node_number << "\n" << p << "\n";
@@ -1691,18 +1691,18 @@ public:
 
     unsigned display_proof_hyp(std::ostream& out, unsigned hyp, z3::expr p) {
         z3::expr fml = p.arg(p.num_args()-1);
-        z3::expr conclusion = fml.arg(1);
+        z3::expr conclusion = fml.arg(1);        
         switch (p.decl().decl_kind()) {
-        case Z3_OP_PR_REFLEXIVITY:
+        case Z3_OP_PR_REFLEXIVITY: 
             return display_hyp_inference(out, "reflexivity", "sab", conclusion, hyp);
         case Z3_OP_PR_IFF_OEQ: {
             unsigned hyp2 = display_proof_rec(out, p.arg(0));
             return display_hyp_inference(out, "modus_ponens", "thm", conclusion, hyp, hyp2);
         }
         case Z3_OP_PR_NNF_POS:
-        case Z3_OP_PR_NNF_STAR:
+        case Z3_OP_PR_NNF_STAR: 
             return display_hyp_inference(out, "nnf", "sab", conclusion, hyp);
-        case Z3_OP_PR_CNF_STAR:
+        case Z3_OP_PR_CNF_STAR: 
             return display_hyp_inference(out, "cnf", "sab", conclusion, hyp);
         case Z3_OP_PR_SKOLEMIZE:
             return display_hyp_inference(out, "skolemize", "sab", conclusion, hyp);
@@ -1720,9 +1720,9 @@ public:
             }
             return hyp;
         }
-        case Z3_OP_PR_MONOTONICITY:
-            throw failure_ex("monotonicity rule is not handled");
-        default:
+        case Z3_OP_PR_MONOTONICITY: 
+            throw failure_ex("monotonicity rule is not handled");            
+        default: 
             unsigned hyp2 = 0;
             if (p.num_args() == 2) {
                 hyp2 = display_proof_rec(out, p.arg(0));
@@ -1731,7 +1731,7 @@ public:
                 std::cout << "unexpected number of arguments: " << p << "\n";
                 throw failure_ex("unexpected number of arguments");
             }
-
+            
             return display_hyp_inference(out, p.decl().name().str().c_str(), "sab", conclusion, hyp, hyp2);
         }
         return 0;
@@ -1819,7 +1819,7 @@ public:
                     }
                 }
             }
-        }
+        }        
     }
 
     z3::expr get_proof_formula(z3::expr proof) {
@@ -1861,7 +1861,7 @@ public:
             display_sort_decl(out, sorts[i]);
         }
     }
-
+    
     void display_sort_decl(std::ostream& out, z3::sort& s) {
         out << "tff(" << s << "_type, type, (" << s << ": $tType)).\n";
     }
@@ -1910,7 +1910,7 @@ public:
 
     void collect_sort(z3::sort s) {
         unsigned id = Z3_get_sort_id(ctx, s);
-        if (s.sort_kind() == Z3_UNINTERPRETED_SORT &&
+        if (s.sort_kind() == Z3_UNINTERPRETED_SORT && 
             contains_id(id)) {
             seen_ids.insert(id);
             sorts.push_back(s);
@@ -1930,7 +1930,7 @@ public:
             collect_sort(f.domain(i));
         }
         collect_sort(f.range());
-    }
+    }    
 
     std::string upper_case_var(z3::symbol const& sym) {
         std::string result = sanitize(sym);
@@ -2061,7 +2061,7 @@ bool parse_is_sat_line(char const* line, bool& is_sat) {
     if (!parse_token(line, "%")) return false;
     if (!parse_token(line, "Status")) return false;
     if (!parse_token(line, ":")) return false;
-
+    
     if (parse_token(line, "Unsatisfiable")) {
         is_sat = false;
         return true;
@@ -2092,7 +2092,7 @@ bool parse_is_sat(char const* filename, bool& is_sat) {
         strm << "Could not open file " << filename << "\n";
         throw failure_ex(strm.str().c_str());
     }
-
+    
     for (unsigned i = 0; !is.eof() && i < 200; ++i) {
         std::string line;
         std::getline(is, line);
@@ -2194,7 +2194,7 @@ void parse_cmd_line_args(int argc, char ** argv) {
 
 static bool is_smt2_file(char const* filename) {
     size_t len = strlen(filename);
-    return (len > 4 && !strcmp(filename + len - 5,".smt2"));
+    return (len > 4 && !strcmp(filename + len - 5,".smt2"));    
 }
 
 static void check_error(z3::context& ctx) {
@@ -2228,7 +2228,7 @@ static void display_tptp(std::ostream& out) {
 }
 
 static void display_proof(z3::context& ctx, named_formulas& fmls, z3::solver& solver) {
-    pp_tptp pp(ctx);
+    pp_tptp pp(ctx);    
     pp.display_proof(std::cout, fmls, solver);
 }
 
@@ -2297,7 +2297,7 @@ static void display_model(z3::context& ctx, z3::model model) {
     pp.display_func_decls(std::cout);
     for (unsigned i = 0; i < fmls.size(); ++i) {
         pp.display_axiom(std::cout, fmls[i]);
-    }
+    }   
 }
 
 static void display_smt2(std::ostream& out) {
@@ -2319,15 +2319,15 @@ static void display_smt2(std::ostream& out) {
     for (size_t i = 0; i < num_assumptions; ++i) {
         assumptions[i] = fmls.m_formulas[i];
     }
-    Z3_string s =
+    Z3_string s = 
         Z3_benchmark_to_smtlib_string(
-            ctx,
+            ctx, 
             "Benchmark generated from TPTP", // comment
             0,         // no logic is set
             "unknown", // no status annotation
             "",        // attributes
-            static_cast<unsigned>(num_assumptions),
-            assumptions,
+            static_cast<unsigned>(num_assumptions), 
+            assumptions, 
             ctx.bool_val(true));
 
     out << s << "\n";
@@ -2339,7 +2339,7 @@ static void prove_tptp() {
     if (g_generate_proof) {
         config.set("proof", true);
         z3::set_param("proof", true);
-    }
+    }    
     z3::context ctx(config);
     z3::solver solver(ctx);
     g_solver  = &solver;
@@ -2351,7 +2351,7 @@ static void prove_tptp() {
         params.set("timeout", static_cast<unsigned>(g_timeout*1000));
         solver.set(params);
     }
-
+    
 
     named_formulas fmls;
     env env(ctx);
@@ -2370,7 +2370,7 @@ static void prove_tptp() {
 
     if (g_generate_core) {
         z3::expr_vector assumptions(ctx);
-
+        
         for (size_t i = 0; i < num_assumptions; ++i) {
             z3::expr pred = ctx.constant(fmls.m_names[i].c_str(), ctx.bool_sort());
             z3::expr def = fmls.m_formulas[i] == pred;
@@ -2382,7 +2382,7 @@ static void prove_tptp() {
     else {
         for (unsigned i = 0; i < num_assumptions; ++i) {
             solver.add(fmls.m_formulas[i]);
-        }
+        }        
         result = solver.check();
     }
 
@@ -2419,7 +2419,7 @@ static void prove_tptp() {
             std::cout << result << "\n";
         }
         else if (fmls.has_conjecture()) {
-            std::cout << "SZS status CounterSatisfiable\n";
+            std::cout << "SZS status CounterSatisfiable\n";            
         }
         else {
             std::cout << "SZS status Satisfiable\n";
@@ -2441,9 +2441,9 @@ static void prove_tptp() {
             std::cout << "SZS reason " << reason << "\n";
         }
         break;
-    }
+    }    
     bool is_sat = true;
-    if (g_check_status &&
+    if (g_check_status && 
         result != z3::unknown &&
         parse_is_sat(g_input_file, is_sat)) {
         if (is_sat && result == z3::unsat) {
@@ -2463,7 +2463,7 @@ int main(int argc, char** argv) {
     signal(SIGINT, on_ctrl_c);
 
     parse_cmd_line_args(argc, argv);
-
+    
     if (is_smt2_file(g_input_file)) {
         display_tptp(*g_out);
     }

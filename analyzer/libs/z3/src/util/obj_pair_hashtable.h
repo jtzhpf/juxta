@@ -31,7 +31,7 @@ template<typename T1, typename T2>
 class obj_pair_hash_entry {
     unsigned            m_hash; // cached hash code
     std::pair<T1*, T2*> m_data;
-
+    
 public:
     typedef std::pair<T1*, T2*> data;
     obj_pair_hash_entry():m_data(static_cast<T1*>(0),static_cast<T2*>(0)) {}
@@ -68,12 +68,12 @@ public:
         friend class entry;
     public:
         key_data():
-            m_key1(0),
+            m_key1(0), 
             m_key2(0),
             m_hash(0) {
         }
         key_data(Key1 * k1, Key2 * k2):
-            m_key1(k1),
+            m_key1(k1), 
             m_key2(k2) {
             m_hash = combine_hash(m_key1->hash(), m_key2->hash());
         }
@@ -110,7 +110,7 @@ protected:
     typedef core_hashtable<entry, obj_hash<key_data>, default_eq<key_data> > table;
 
     table m_table;
-
+  
     entry * find_core(Key1 * k1, Key2 * k2) const {
         return m_table.find_core(key_data(k1, k2));
     }
@@ -118,41 +118,41 @@ protected:
 public:
     obj_pair_map():
         m_table(DEFAULT_HASHTABLE_INITIAL_CAPACITY) {}
-
+    
     typedef typename table::iterator iterator;
-
+    
     void reset() {
         m_table.reset();
     }
-
-    bool empty() const {
+    
+    bool empty() const { 
         return m_table.empty();
     }
-
-    unsigned size() const {
-        return m_table.size();
+    
+    unsigned size() const { 
+        return m_table.size(); 
     }
-
-    unsigned capacity() const {
+    
+    unsigned capacity() const { 
         return m_table.capacity();
     }
-
-    iterator begin() const {
+    
+    iterator begin() const { 
         return m_table.begin();
     }
-
-    iterator end() const {
+    
+    iterator end() const { 
         return m_table.end();
     }
-
+    
     void insert(Key1 * k1, Key2 * k2, Value const & v) {
         m_table.insert(key_data(k1, k2, v));
     }
-
+    
     key_data const & insert_if_not_there(Key1 * k1, Key2 * k2, Value const & v) {
         return m_table.insert_if_not_there(key_data(k1, k2, v));
     }
-
+    
     bool find(Key1 * k1, Key2 * k2, Value & v) const {
         entry * e = find_core(k1, k2);
         if (e) {
@@ -160,11 +160,11 @@ public:
         }
         return (0 != e);
     }
-
-    bool contains(Key1 * k1, Key2 * k2) const {
-        return find_core(k1, k2) != 0;
+  
+    bool contains(Key1 * k1, Key2 * k2) const { 
+        return find_core(k1, k2) != 0; 
     }
-
+    
     void erase(Key1 * k1, Key2 * k2) {
         m_table.remove(key_data(k1, k2));
     }

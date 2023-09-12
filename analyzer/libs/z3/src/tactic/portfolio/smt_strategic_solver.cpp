@@ -84,7 +84,7 @@ tactic * mk_tactic_for_logic(ast_manager & m, params_ref const & p, symbol const
         return mk_qffpa_tactic(m, p);
     else if (logic=="HORN")
         return mk_horn_tactic(m, p);
-    else
+    else 
         return mk_default_tactic(m, p);
 }
 
@@ -92,7 +92,7 @@ class smt_strategic_solver_factory : public solver_factory {
     symbol m_logic;
 public:
     smt_strategic_solver_factory(symbol const & logic):m_logic(logic) {}
-
+    
     virtual ~smt_strategic_solver_factory() {}
     virtual solver * operator()(ast_manager & m, params_ref const & p, bool proofs_enabled, bool models_enabled, bool unsat_core_enabled, symbol const & logic) {
         symbol l;

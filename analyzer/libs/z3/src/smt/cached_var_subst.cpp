@@ -23,7 +23,7 @@ bool cached_var_subst::key_eq_proc::operator()(cached_var_subst::key * k1, cache
         return false;
     if (k1->m_num_bindings != k2->m_num_bindings)
         return false;
-    for (unsigned i = 0; i < k1->m_num_bindings; i++)
+    for (unsigned i = 0; i < k1->m_num_bindings; i++) 
         if (k1->m_bindings[i] != k2->m_bindings[i])
             return false;
     return true;
@@ -49,9 +49,9 @@ void cached_var_subst::operator()(quantifier * qa, unsigned num_bindings, smt::e
 
     new_key->m_qa           = qa;
     new_key->m_num_bindings = num_bindings;
-    for (unsigned i = 0; i < num_bindings; i++)
+    for (unsigned i = 0; i < num_bindings; i++) 
         new_key->m_bindings[i] = bindings[i]->get_owner();
-
+    
     instances::entry * entry = m_instances.insert_if_not_there2(new_key, 0);
     if (entry->get_data().m_key != new_key) {
         SASSERT(entry->get_data().m_value != 0);
@@ -60,14 +60,14 @@ void cached_var_subst::operator()(quantifier * qa, unsigned num_bindings, smt::e
         result = entry->get_data().m_value;
         return;
     }
-
+    
     m_proc(qa->get_expr(), new_key->m_num_bindings, new_key->m_bindings, result);
     // cache result
     entry->get_data().m_value = result;
 
     // remove key from cache
     m_new_keys[num_bindings] = 0;
-
+    
     // increment reference counters
     m_refs.push_back(qa);
     for (unsigned i = 0; i < new_key->m_num_bindings; i++)
@@ -76,4 +76,4 @@ void cached_var_subst::operator()(quantifier * qa, unsigned num_bindings, smt::e
 }
 
 
-
+ 

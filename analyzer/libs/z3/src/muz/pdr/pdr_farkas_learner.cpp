@@ -147,7 +147,7 @@ namespace pdr {
             UNREACHABLE();
             return c;
         }
-
+        
     public:
         constr(ast_manager& m) : m(m), a(m), m_ineqs(m), m_time(0) {}
 
@@ -166,8 +166,8 @@ namespace pdr {
             }
 
             if (!coef.is_zero() && !m.is_true(c)) {
-                m_coeffs.push_back(coef);
-                m_ineqs.push_back(fix_sign(is_pos, c));
+                m_coeffs.push_back(coef);                
+                m_ineqs.push_back(fix_sign(is_pos, c));                
             }
         }
 
@@ -180,15 +180,15 @@ namespace pdr {
                 return;
             }
             bool is_int = is_int_sort();
-            if (is_int) {
+            if (is_int) {                
                 normalize_coeffs();
             }
-            TRACE("pdr",
+            TRACE("pdr", 
                   for (unsigned i = 0; i < m_coeffs.size(); ++i) {
                       tout << m_coeffs[i] << ": " << mk_pp(m_ineqs[i].get(), m) << "\n";
                   }
                   );
-
+            
             res = extract_consequence(0, m_coeffs.size());
 
 #if 1
@@ -245,10 +245,10 @@ namespace pdr {
             if (m_ts.size() <= idx) {
                 m_roots.resize(idx+1);
                 m_size.resize(idx+1);
-                m_ts.resize(idx+1);
+                m_ts.resize(idx+1); 
                 m_roots[idx] = idx;
                 m_ts[idx] = m_time;
-                m_size[idx] = 1;
+                m_size[idx] = 1;                
                 return idx;
             }
             if (m_ts[idx] != m_time) {
@@ -339,7 +339,7 @@ namespace pdr {
             }
             else {
                 res = mk_le(res, zero);
-            }
+            }            
             res = m.mk_not(res);
             th_rewriter rw(m);
             params_ref params;
@@ -349,10 +349,10 @@ namespace pdr {
             expr_ref result(m);
             rw(res, result, pr);
             fix_dl(result);
-            return result;
+            return result;            
         }
-
-        // patch: swap addends to make static
+        
+        // patch: swap addends to make static 
         // features recognize difference constraint.
         void fix_dl(expr_ref& r) {
             expr* e;
@@ -363,7 +363,7 @@ namespace pdr {
                 return;
             }
             expr* e1, *e2, *e3, *e4;
-            if ((m.is_eq(r, e1, e2) || a.is_lt(r, e1, e2) || a.is_gt(r, e1, e2) ||
+            if ((m.is_eq(r, e1, e2) || a.is_lt(r, e1, e2) || a.is_gt(r, e1, e2) || 
                  a.is_le(r, e1, e2) || a.is_ge(r, e1, e2))) {
                 if (a.is_add(e1, e3, e4) && a.is_mul(e3)) {
                     r = m.mk_app(to_app(r)->get_decl(), a.mk_add(e4,e3), e2);
@@ -371,9 +371,9 @@ namespace pdr {
             }
         }
     };
-
-    farkas_learner::farkas_learner(smt_params& params, ast_manager& outer_mgr)
-        : m_proof_params(get_proof_params(params)),
+    
+    farkas_learner::farkas_learner(smt_params& params, ast_manager& outer_mgr) 
+        : m_proof_params(get_proof_params(params)), 
           m_pr(PROOF_MODE),
           m_constr(0),
           m_combine_farkas_coefficients(true),
@@ -512,13 +512,13 @@ namespace pdr {
     void farkas_learner::simplify_lemmas(expr_ref_vector& lemmas) {
         ast_manager& m = lemmas.get_manager();
         goal_ref g(alloc(goal, m, false, false, false));
-        TRACE("farkas_simplify_lemmas",
+        TRACE("farkas_simplify_lemmas",            
               for (unsigned i = 0; i < lemmas.size(); ++i) {
                   tout << mk_pp(lemmas[i].get(), m) << "\n";
               });
 
         for (unsigned i = 0; i < lemmas.size(); ++i) {
-            g->assert_expr(lemmas[i].get());
+            g->assert_expr(lemmas[i].get()); 
         }
         expr_ref tmp(m);
         model_converter_ref mc;
@@ -533,8 +533,8 @@ namespace pdr {
         for (unsigned i = 0; i < r->size(); ++i) {
             lemmas.push_back(r->form(i));
         }
-        TRACE("farkas_simplify_lemmas",
-              tout << "simplified:\n";
+        TRACE("farkas_simplify_lemmas", 
+              tout << "simplified:\n";           
               for (unsigned i = 0; i < lemmas.size(); ++i) {
                   tout << mk_pp(lemmas[i].get(), m) << "\n";
               });
@@ -645,7 +645,7 @@ namespace pdr {
                              H, H' |- b
 
        - def-axiom       |- C
-
+       
        - asserted        |- f
 
        Mark nodes by:
@@ -658,18 +658,18 @@ namespace pdr {
           - It depends on bs.
           - It does not depend on A.
 
-       NB: currently unit derivable is not symmetric: A clause can be
+       NB: currently unit derivable is not symmetric: A clause can be 
        unit derivable, but a unit literal with hypotheses is not.
        This is clearly wrong, because hypotheses are just additional literals
        in a clausal version.
 
-       NB: the routine is not interpolating, though an interpolating variant would
+       NB: the routine is not interpolating, though an interpolating variant would 
        be preferrable because then we can also use it for model propagation.
 
        We collect the unit derivable nodes from bs.
-       These are the weakenings of bs, besides the
+       These are the weakenings of bs, besides the 
        units under Farkas.
-
+                    
     */
 
 #define INSERT(_x_) if (!lemma_set.contains(_x_)) { lemma_set.insert(_x_); lemmas.push_back(_x_); }
@@ -688,13 +688,13 @@ namespace pdr {
         proof_utils::reduce_hypotheses(pr);
         proof_utils::permute_unit_resolution(pr);
         IF_VERBOSE(3, verbose_stream() << "Reduced proof:\n" << mk_ismt2_pp(pr, m) << "\n";);
-
+        
         ptr_vector<expr_set> hyprefs;
         obj_map<expr, expr_set*> hypmap;
         obj_hashtable<expr> lemma_set;
         ast_mark b_depend, a_depend, visited, b_closed;
         expr_set* empty_set = alloc(expr_set);
-        hyprefs.push_back(empty_set);
+        hyprefs.push_back(empty_set); 
         ptr_vector<proof> todo;
         TRACE("pdr_verbose", tout << mk_pp(pr, m) << "\n";);
         todo.push_back(pr);
@@ -749,14 +749,14 @@ namespace pdr {
 
 
             // Add lemmas that depend on bs, have no hypotheses, don't depend on A.
-            if ((!hyps->empty() || a_depend.is_marked(p)) &&
+            if ((!hyps->empty() || a_depend.is_marked(p)) && 
                 b_depend.is_marked(p) && !is_farkas_lemma(m, p)) {
-                for (unsigned i = 0; i < m.get_num_parents(p); ++i) {
+                for (unsigned i = 0; i < m.get_num_parents(p); ++i) {                
                     app* arg = to_app(p->get_arg(i));
                     if (IS_B_PURE(arg)) {
                         expr* fact = m.get_fact(arg);
                         if (is_pure_expr(Bsymbs, fact)) {
-                            TRACE("farkas_learner",
+                            TRACE("farkas_learner", 
                                   tout << "Add: " << mk_pp(m.get_fact(arg), m) << "\n";
                                   tout << mk_pp(arg, m) << "\n";
                                   );
@@ -769,7 +769,7 @@ namespace pdr {
                     }
                 }
             }
-
+            
             switch(p->get_decl_kind()) {
             case PR_ASSERTED:
                 if (bs.contains(m.get_fact(p))) {
@@ -796,7 +796,7 @@ namespace pdr {
             case PR_LEMMA: {
                 expr_set* hyps2 = alloc(expr_set);
                 hyprefs.push_back(hyps2);
-                datalog::set_union(*hyps2, *hyps);
+                datalog::set_union(*hyps2, *hyps); 
                 hyps = hyps2;
                 expr* fml = m.get_fact(p);
                 hyps->remove(fml);
@@ -813,7 +813,7 @@ namespace pdr {
             }
             case PR_TH_LEMMA: {
                 if (!is_farkas_lemma(m, p)) break;
-
+               
                 SASSERT(m.has_fact(p));
                 unsigned prem_cnt = m.get_num_parents(p);
                 func_decl * d = p->get_decl();
@@ -828,7 +828,7 @@ namespace pdr {
                 rational coef;
                 vector<rational> coeffs;
 
-                TRACE("farkas_learner",
+                TRACE("farkas_learner", 
                         for (unsigned i = 0; i < prem_cnt; ++i) {
                             VERIFY(params[i].is_rational(coef));
                             proof* prem = to_app(p->get_arg(i));
@@ -842,11 +842,11 @@ namespace pdr {
                 // The Farkas coefficient extraction in arith_core must be wrong.
                 // The coefficients would be always positive relative to the theory lemma.
 
-                for(unsigned i = 0; i < prem_cnt; ++i) {
+                for(unsigned i = 0; i < prem_cnt; ++i) {                    
                     expr * prem_e = p->get_arg(i);
                     SASSERT(is_app(prem_e));
                     proof * prem = to_app(prem_e);
-
+                   
                     if(IS_B_PURE(prem)) {
                         ++num_b_pures;
                     }
@@ -864,7 +864,7 @@ namespace pdr {
                     if (m.is_or(fact)) {
                         app* _or = to_app(fact);
                         num_args = _or->get_num_args();
-                        args = _or->get_args();
+                        args = _or->get_args();                        
                     }
                     SASSERT(prem_cnt + 2 + num_args == d->get_num_parameters());
                     for (unsigned i = 0; i < num_args; ++i) {
@@ -906,9 +906,9 @@ namespace pdr {
         ast_manager& m = lemmas.get_manager();
         ast_mark visited;
         proof* p0 = p;
-        ptr_vector<proof> todo;
+        ptr_vector<proof> todo;        
         todo.push_back(p);
-
+                      
         while (!todo.empty()) {
             p = todo.back();
             todo.pop_back();
@@ -924,7 +924,7 @@ namespace pdr {
             if (p->get_decl_kind() == PR_ASSERTED &&
                 bs.contains(m.get_fact(p))) {
                 expr* fact = m.get_fact(p);
-                TRACE("farkas_learner",
+                TRACE("farkas_learner", 
                       tout << mk_ll_pp(p0,m) << "\n";
                       tout << "Add: " << mk_pp(p,m) << "\n";);
                 INSERT(fact);
@@ -938,8 +938,8 @@ namespace pdr {
         app * a;
         func_decl* d;
         symbol sym;
-        return
-            is_app(e) &&
+        return 
+            is_app(e) && 
             (a = to_app(e), d = a->get_decl(), true) &&
             PR_TH_LEMMA == a->get_decl_kind() &&
             d->get_num_parameters() >= 2 &&
@@ -952,27 +952,27 @@ namespace pdr {
     void farkas_learner::test()  {
         smt_params params;
         enable_trace("farkas_learner");
-
+               
         bool res;
         ast_manager m;
-        reg_decl_plugins(m);
+        reg_decl_plugins(m);        
         arith_util a(m);
         pdr::farkas_learner fl(params, m);
         expr_ref_vector lemmas(m);
-
+        
         sort_ref int_s(a.mk_int(), m);
         expr_ref x(m.mk_const(symbol("x"), int_s), m);
         expr_ref y(m.mk_const(symbol("y"), int_s), m);
-        expr_ref z(m.mk_const(symbol("z"), int_s), m);
-        expr_ref u(m.mk_const(symbol("u"), int_s), m);
+        expr_ref z(m.mk_const(symbol("z"), int_s), m);    
+        expr_ref u(m.mk_const(symbol("u"), int_s), m);  
         expr_ref v(m.mk_const(symbol("v"), int_s), m);
 
         // A: x > y >= z
         // B: x < z
         // Farkas: x <= z
-        expr_ref A(m.mk_and(a.mk_gt(x,y), a.mk_ge(y,z)),m);
-        expr_ref B(a.mk_gt(z,x),m);
-        res = fl.get_lemma_guesses(A, B, lemmas);
+        expr_ref A(m.mk_and(a.mk_gt(x,y), a.mk_ge(y,z)),m);        
+        expr_ref B(a.mk_gt(z,x),m);        
+        res = fl.get_lemma_guesses(A, B, lemmas);        
         std::cout << "\nres: " << res << "\nlemmas: " << pp_cube(lemmas, m) << "\n";
 
         // A: x > y >= z + 2
@@ -983,7 +983,7 @@ namespace pdr {
         expr_ref eight(a.mk_numeral(rational(8), true), m);
         A = m.mk_and(a.mk_gt(x,y),a.mk_ge(y,a.mk_add(z,two)));
         B = m.mk_and(m.mk_eq(x,one), m.mk_eq(z, eight));
-        res = fl.get_lemma_guesses(A, B, lemmas);
+        res = fl.get_lemma_guesses(A, B, lemmas);        
         std::cout << "\nres: " << res << "\nlemmas: " << pp_cube(lemmas, m) << "\n";
 
         // A: x > y >= z \/ x >= u > z
@@ -991,7 +991,7 @@ namespace pdr {
         // Farkas: z >= x
         A = m.mk_or(m.mk_and(a.mk_gt(x,y),a.mk_ge(y,z)),m.mk_and(a.mk_ge(x,u),a.mk_gt(u,z)));
         B = a.mk_gt(z, a.mk_add(x,one));
-        res = fl.get_lemma_guesses(A, B, lemmas);
+        res = fl.get_lemma_guesses(A, B, lemmas);        
         std::cout << "\nres: " << res << "\nlemmas: " << pp_cube(lemmas, m) << "\n";
 
         // A: (x > y >= z \/ x >= u > z \/ u > v)
@@ -999,9 +999,9 @@ namespace pdr {
         // Farkas: z >= x & not (u > v)
         A = m.mk_or(m.mk_and(a.mk_gt(x,y),a.mk_ge(y,z)),m.mk_and(a.mk_ge(x,u),a.mk_gt(u,z)), a.mk_gt(u, v));
         B = m.mk_and(a.mk_gt(z, a.mk_add(x,one)), m.mk_not(a.mk_gt(u, v)));
-        res = fl.get_lemma_guesses(A, B, lemmas);
+        res = fl.get_lemma_guesses(A, B, lemmas);        
         std::cout << "\nres: " << res << "\nlemmas: " << pp_cube(lemmas, m) << "\n";
-
+        
     }
 
     void farkas_learner::collect_statistics(statistics& st) const {

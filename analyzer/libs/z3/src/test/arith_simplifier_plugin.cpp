@@ -5,12 +5,12 @@ typedef rational numeral;
 typedef vector<numeral> row;
 
 static void test_solve_integer_equations(
-    arith_eq_solver& asimp,
+    arith_eq_solver& asimp, 
     vector<row>& rows
-    )
+    ) 
 {
     row r_unsat;
-
+ 
     if (asimp.solve_integer_equations(rows, r_unsat)) {
         std::cout << "solved\n";
     }
@@ -22,12 +22,12 @@ static void test_solve_integer_equations(
         std::cout << "\n";
     }
 }
-
+               
 void tst_arith_simplifier_plugin() {
     smt_params params;
     ast_manager m;
     arith_eq_solver asimp(m);
-
+    
     row r1;
     row r2;
 
@@ -63,5 +63,5 @@ void tst_arith_simplifier_plugin() {
     rows[1][3] = numeral(1);
 
     test_solve_integer_equations(asimp, rows);
-
+    
 }

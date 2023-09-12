@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     ParamDescrs.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -46,7 +46,7 @@ public class ParamDescrs extends Z3Object
 
     /**
      * Retrieve all names of parameters.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Symbol[] getNames() throws Z3Exception

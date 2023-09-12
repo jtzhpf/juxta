@@ -49,7 +49,7 @@ namespace datalog {
     class mk_karr_invariants : public rule_transformer::plugin {
 
         class add_invariant_model_converter;
-
+        
         context&        m_ctx;
         ast_manager&    m;
         rule_manager&   rm;
@@ -69,7 +69,7 @@ namespace datalog {
         virtual ~mk_karr_invariants();
 
         virtual void cancel();
-
+        
         rule_set * operator()(rule_set const & source);
 
     };

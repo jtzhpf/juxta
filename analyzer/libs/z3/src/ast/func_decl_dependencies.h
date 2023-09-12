@@ -34,7 +34,7 @@ void collect_func_decls(ast_manager & m, expr * n, func_decl_set & r, bool ng_on
    \brief Auxiliary data-structure used for tracking dependencies between function declarations.
 
    The following pattern of use is expected:
-
+   
    func_decl_dependencies & dm;
    func_decl_set * S = dm.mk_func_decl_set();
    dm.collect_func_decls(t_1, S);
@@ -54,7 +54,7 @@ public:
     ~func_decl_dependencies() {
         reset();
     }
-
+    
     void reset();
 
     /**
@@ -67,12 +67,12 @@ public:
        \warning Failure to call #insert will produce a memory leak.
     */
     func_decl_set * mk_func_decl_set() { return alloc(func_decl_set); }
-
+    
     /**
        \brief Store the uninterpreted function declarations used in \c n into \c s.
     */
     void collect_func_decls(expr * n, func_decl_set * s);
-
+    
     /**
        \brief Store the uninterpreted function declarations (in non ground terms) used in \c n into \c s.
     */
@@ -80,12 +80,12 @@ public:
 
     /**
        \brief Insert \c f in the manager with the given set of dependencies.
-       The insertion succeeds iff
+       The insertion succeeds iff 
             1- no cycle is created between the new entry and
-            the already existing dependencies.
+            the already existing dependencies. 
             2- \c f was not already inserted into the manager.
-
-       Return false in case of failure.
+       
+       Return false in case of failure. 
 
        \remark The manager is the owner of the dependency sets.
     */

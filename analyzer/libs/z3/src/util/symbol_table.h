@@ -31,80 +31,80 @@ class symbol_table {
     struct key_data {
         symbol   m_key;
         T        m_data;
-
+     
         key_data() {
         }
 
         explicit key_data(symbol k):
             m_key(k) {
         }
-
+        
         key_data(symbol k, const T & d):
-            m_key(k),
+            m_key(k), 
             m_data(d) {
         }
     };
 
-    struct key_data_hash_proc {
-        unsigned operator()(const key_data & k) const {
+    struct key_data_hash_proc { 
+        unsigned operator()(const key_data & k) const { 
             return k.m_key.hash();
-        }
+        } 
     };
 
-    struct key_data_eq_proc {
-        bool operator()(const key_data & k1, const key_data & k2) const {
+    struct key_data_eq_proc { 
+        bool operator()(const key_data & k1, const key_data & k2) const { 
             return k1.m_key == k2.m_key;
-        }
+        } 
     };
 
     struct hash_entry {
         typedef key_data data;
         key_data m_data;
-
+     
         hash_entry() {
             SASSERT(m_data.m_key == symbol::null);
         }
 
-        unsigned get_hash() const {
+        unsigned get_hash() const { 
             return m_data.m_key.hash();
         }
 
-        bool is_free() const {
+        bool is_free() const { 
             return m_data.m_key == symbol::null;
         }
 
-        bool is_deleted() const {
+        bool is_deleted() const { 
             return m_data.m_key == symbol::dummy();
         }
 
-        bool is_used() const {
-            return !is_free() && !is_deleted();
+        bool is_used() const { 
+            return !is_free() && !is_deleted(); 
         }
 
-        key_data & get_data() {
-            return m_data;
+        key_data & get_data() { 
+            return m_data; 
         }
 
-        const key_data & get_data() const {
-            return m_data;
+        const key_data & get_data() const { 
+            return m_data; 
         }
 
-        void set_data(const key_data & d) {
-            m_data = d;
+        void set_data(const key_data & d) { 
+            m_data = d; 
         }
 
-        static void set_hash(unsigned h) {
+        static void set_hash(unsigned h) { 
         }
 
-        void mark_as_deleted() {
+        void mark_as_deleted() { 
             m_data.m_key = symbol::dummy();
         }
-
-        void mark_as_free() {
+        
+        void mark_as_free() { 
             m_data.m_key = symbol::null;
         }
     };
-
+  
     typedef core_hashtable<hash_entry, key_data_hash_proc, key_data_eq_proc> sym_table;
     typedef vector<key_data> trail_stack;
     sym_table   m_sym_table;
@@ -127,15 +127,15 @@ public:
         result = e->get_data().m_data;
         return true;
     }
-
-    bool contains(symbol key) const {
-        return m_sym_table.contains(key_data(key));
+    
+    bool contains(symbol key) const { 
+        return m_sym_table.contains(key_data(key)); 
     }
 
-    unsigned get_scope_level() const {
-        return m_trail_lims.size();
+    unsigned get_scope_level() const { 
+        return m_trail_lims.size(); 
     }
-
+    
     void insert(symbol key, const T & data) {
         if (get_scope_level() > 0) {
             key_data dummy(key);
@@ -156,11 +156,11 @@ public:
             m_sym_table.insert(key_data(key, data));
         }
     }
-
-    void begin_scope() {
-        m_trail_lims.push_back(m_trail_stack.size());
+    
+    void begin_scope() { 
+        m_trail_lims.push_back(m_trail_stack.size()); 
     }
-
+    
     void end_scope() {
         unsigned old_size = m_trail_lims.back();
         m_trail_lims.pop_back();
@@ -181,12 +181,12 @@ public:
         SASSERT(m_trail_stack.size() == old_size);
     }
 
-    void append(symbol_table<T> const& other) {
+    void append(symbol_table<T> const& other) { 
         typename sym_table::iterator it = other.m_sym_table.begin();
         typename sym_table::iterator end = other.m_sym_table.end();
 
         for (; it != end; ++it) {
-            insert((*it).m_key, (*it).m_data);
+            insert((*it).m_key, (*it).m_data);                
         }
     }
 

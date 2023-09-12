@@ -33,10 +33,10 @@ namespace smt {
         mam(context & ctx):
             m_context(ctx) {
         }
-
+        
         virtual ~mam() {
         }
-
+        
         virtual void add_pattern(quantifier * q, app * mp) = 0;
 
         virtual void push_scope() = 0;
@@ -44,21 +44,21 @@ namespace smt {
         virtual void pop_scope(unsigned num_scopes) = 0;
 
         virtual void match() = 0;
-
+        
         virtual void rematch(bool use_irrelevant = false) = 0;
 
         virtual bool has_work() const = 0;
 
         virtual void relevant_eh(enode * n, bool lazy) = 0;
-
+        
         virtual void add_eq_eh(enode * r1, enode * r2) = 0;
 
         virtual void reset() = 0;
 
         virtual void display(std::ostream& out) = 0;
-
+        
         virtual void on_match(quantifier * q, app * pat, unsigned num_bindings, enode * const * bindings, unsigned max_generation, ptr_vector<enode> & used_enodes) = 0;
-
+        
         virtual bool is_shared(enode * n) const = 0;
 
 #ifdef Z3DEBUG

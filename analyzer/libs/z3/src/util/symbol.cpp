@@ -6,7 +6,7 @@ Module Name:
     symbol.cpp
 
 Abstract:
-
+ 
     Lisp-like symbols.
 
 Author:
@@ -35,7 +35,7 @@ public:
 
     char const * get_str(char const * d) {
         char * result;
-        #pragma omp critical (cr_symbol)
+        #pragma omp critical (cr_symbol) 
         {
         char * r_d = const_cast<char *>(d);
         str_hashtable::entry * e;
@@ -87,7 +87,7 @@ symbol & symbol::operator=(char const * d) {
 
 std::string symbol::str() const {
     SASSERT(!is_marked());
-    if (GET_TAG(m_data) == 0) {
+    if (GET_TAG(m_data) == 0) { 
         if (m_data)
             return m_data;
         else
@@ -109,7 +109,7 @@ bool symbol::contains(char ch) const {
         return false;
     }
 }
-
+ 
 unsigned symbol::size() const {
     SASSERT(!is_marked());
     if (GET_TAG(m_data) == 0) {
@@ -127,7 +127,7 @@ unsigned symbol::size() const {
     }
 }
 
-bool lt(symbol const & s1, symbol const & s2) {
+bool lt(symbol const & s1, symbol const & s2) { 
     if (s1 == s2)
         return false;
     if (s1.is_numerical()) {

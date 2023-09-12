@@ -28,14 +28,14 @@ class s_integer {
     static s_integer m_minus_one;
 public:
 
-    unsigned hash() const {
+    unsigned hash() const { 
         return m_val;
     }
 
     struct hash_proc {  unsigned operator()(s_integer const& r) const { return r.hash(); }  };
     struct eq_proc { bool operator()(s_integer const& r1, s_integer const& r2) const { return r1 == r2; } };
 
-    void swap(s_integer & n) {
+    void swap(s_integer & n) { 
         std::swap(m_val, n.m_val);
     }
 
@@ -53,7 +53,7 @@ public:
     explicit s_integer(const rational & r):m_val(static_cast<int>(r.get_int64())) {}
 
     void reset() { m_val = 0; }
-
+    
     static bool is_big() { return false; }
     static bool is_int() { return true; }
     static bool is_s_integer() { return true; }
@@ -77,7 +77,7 @@ public:
     s_integer & operator/=(const s_integer & r) { m_val /= r.m_val; return *this; }
     s_integer & operator%=(const s_integer & r) { m_val %= r.m_val; return *this; }
     friend inline s_integer div(const s_integer & r1, const s_integer & r2) { return s_integer(r1.m_val / r2.m_val); }
-    friend inline s_integer mod(const s_integer & r1, const s_integer & r2) {
+    friend inline s_integer mod(const s_integer & r1, const s_integer & r2) { 
         s_integer r = r1;
         r %= r2;
         if (r.is_neg()) {

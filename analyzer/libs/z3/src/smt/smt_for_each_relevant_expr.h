@@ -26,7 +26,7 @@ Revision History:
 namespace smt {
 
     class context;
-
+   
 
     class check_at_labels {
         ast_manager &       m_manager;

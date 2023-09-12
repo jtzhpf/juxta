@@ -30,24 +30,24 @@ bool for_each_file(for_each_file_proc& proc, const char* base, const char* suffi
     pattern += suffix;
 
     char buffer[MAX_PATH];
-
+    
     WIN32_FIND_DATAA data;
     HANDLE h = FindFirstFileA(pattern.c_str(),&data);
 
     while (h != INVALID_HANDLE_VALUE) {
 
-        StringCchPrintfA(buffer, ARRAYSIZE(buffer), "%s\\%s", base, data.cFileName);
+        StringCchPrintfA(buffer, ARRAYSIZE(buffer), "%s\\%s", base, data.cFileName);       
 
         if (!proc(buffer)) {
             return false;
         }
-
+        
         if (!FindNextFileA(h,&data)) {
             break;
         }
     }
 
-    //
+    // 
     // Now recurse through sub-directories.
     //
 
@@ -67,7 +67,7 @@ bool for_each_file(for_each_file_proc& proc, const char* base, const char* suffi
                 return false;
             }
         }
-
+        
         if (!FindNextFileA(h,&data)) {
             break;
         }

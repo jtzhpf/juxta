@@ -11,7 +11,7 @@
 (declare-fun ?null () Int)
 (declare-fun ?typeof (Int) Int)
 (declare-fun ?asElems (Int) Int)
-(declare-fun ?isAllocated (Int Int) Int)
+(declare-fun ?isAllocated (Int Int) Int) 
 (declare-fun ?fClosedTime (Int) Int)
 (declare-fun ?eClosedTime (Int) Int)
 (declare-fun ?max (Int) Int)
@@ -23,7 +23,7 @@
 (declare-fun ?arrayType () Int)
 (declare-fun ?f (Int) Int)
 (declare-fun ?finv (Int) Int)
-(declare-fun ?select2 (Int Int Int) Int)
+(declare-fun ?select2 (Int Int Int) Int) 
 (declare-fun ?store2 (Int Int Int Int) Int)
 (declare-fun ?subtypes (Int Int) Bool)
 (declare-fun ?Unbox (Int) Int)
@@ -179,7 +179,7 @@
                   :pattern (?subtypes (?UnboxedType (?Box x p)) ?System.Object))))
 (assert  (forall ((h Int) (o Int) (f Int) (T Int))
                  (!
-                  (or
+                  (or 
                    (not (= (IntsHeap h) ?Smt.true))
                    (= (?select2 h o (?AsRepField f T)) ?nullObject)
                    (not (or (not (= (?select2 h (?select2 h o (?AsRepField f T)) ?ownerRef_) o))
@@ -195,7 +195,7 @@
                   :pattern (?select2 h o (?AsPeerField f)))))
 (assert  (forall ((h Int) (o Int))
                  (!
-                  (or
+                  (or 
                    (not (= (IntsHeap h) ?Smt.true))
                    (= (?select2 h o ?ownerFrame_) ?PeerGroupPlaceholder_)
                    (not (?subtypes (?select2 h (?select2 h o ?ownerRef_) ?inv_) (?select2 h o ?ownerFrame_)))
@@ -216,7 +216,7 @@
                   :pattern ((?subtypes (?typeof_ a) (?RefArray T r)) (?RefArrayGet (?select2 heap a ?elements_) i)))))
 (assert  (forall ((a Int) (T Int) (r Int))
                  (!
-                  (or (= a ?nullObject)
+                  (or (= a ?nullObject) 
                       (not (?subtypes (?typeof_ a) (?RefArray T r)))
                       (= (?Rank_ a) r))
                   :pattern (?subtypes (?typeof_ a) (?RefArray T r)))))

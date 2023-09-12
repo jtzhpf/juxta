@@ -28,7 +28,7 @@ namespace qe {
                 }
                 result[i] = result.back();
                 result.pop_back();
-                --i;
+                --i;                
             }
             else if (m.is_not(result[i].get(), e1) && m.is_implies(e1,e2,e3)) {
                 result.push_back(e2);
@@ -40,7 +40,7 @@ namespace qe {
                       m.is_false(e1))) {
                 result[i] = result.back();
                 result.pop_back();
-                --i;
+                --i;                
             }
             else if (m.is_false(result[i].get()) ||
                      (m.is_not(result[i].get(), e1) &&
@@ -54,7 +54,7 @@ namespace qe {
 
     void flatten_and(expr* fml, expr_ref_vector& result) {
         SASSERT(result.get_manager().is_bool(fml));
-        result.push_back(fml);
+        result.push_back(fml);        
         flatten_and(result);
     }
 
@@ -84,7 +84,7 @@ namespace qe {
                 }
                 result[i] = result.back();
                 result.pop_back();
-                --i;
+                --i;                
             }
             else if (m.is_implies(result[i].get(),e2,e3)) {
                 result.push_back(e3);
@@ -96,7 +96,7 @@ namespace qe {
                       m.is_true(e1))) {
                 result[i] = result.back();
                 result.pop_back();
-                --i;
+                --i;                
             }
             else if (m.is_true(result[i].get()) ||
                      (m.is_not(result[i].get(), e1) &&
@@ -105,13 +105,13 @@ namespace qe {
                 result.push_back(m.mk_true());
                 return;
             }
-        }
+        }        
     }
 
 
     void flatten_or(expr* fml, expr_ref_vector& result) {
         SASSERT(result.get_manager().is_bool(fml));
-        result.push_back(fml);
+        result.push_back(fml);        
         flatten_or(result);
     }
 

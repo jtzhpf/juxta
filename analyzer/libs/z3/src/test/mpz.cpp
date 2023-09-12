@@ -135,7 +135,7 @@ static void bug4() {
     mpz result2;
     m.set(result2, x);
     m.bitwise_or(result2, y, result2);
-
+    
     std::cout << m.to_string(result1) << " " << m.to_string(result2) << "\n";
     SASSERT(m.eq(result1, result2));
     m.del(x); m.del(y); m.del(result1); m.del(result2);

@@ -37,7 +37,7 @@ typedef enum {
 
 typedef int64 mpf_exp_t;
 
-class mpf {
+class mpf {    
     friend class mpf_manager;
     friend class scoped_mpf;
     unsigned ebits:15;
@@ -47,11 +47,11 @@ class mpf {
     mpf_exp_t exponent;
     mpf & operator=(mpf const & other) { UNREACHABLE(); return *this; }
     void set(unsigned ebits, unsigned sbits);
-public:
+public:    
     mpf();
     mpf(unsigned ebits, unsigned sbits);
     mpf(mpf const & other);
-    ~mpf();
+    ~mpf();    
     unsigned get_ebits() const { return ebits; }
     unsigned get_sbits() const { return sbits; }
     void swap(mpf & other);
@@ -76,12 +76,12 @@ public:
     void set(mpf & o, unsigned ebits, unsigned sbits, mpf_rounding_mode rm, char const * value);
     void set(mpf & o, unsigned ebits, unsigned sbits, mpf_rounding_mode rm, mpq const & significand, mpz const & exponent);
     void set(mpf & o, unsigned ebits, unsigned sbits, bool sign, uint64 significand, int exponent);
-    void set(mpf & o, unsigned ebits, unsigned sbits, bool sign, mpz const & significand, mpf_exp_t exponent);
+    void set(mpf & o, unsigned ebits, unsigned sbits, bool sign, mpz const & significand, mpf_exp_t exponent);	
     void set(mpf & o, mpf const & x);
     void set(mpf & o, unsigned ebits, unsigned sbits, mpf_rounding_mode rm, mpf const & x);
 
     void del(mpf & x) {
-        m_mpz_manager.del(x.significand);
+        m_mpz_manager.del(x.significand);        
     }
 
     void abs(mpf & o);
@@ -97,14 +97,14 @@ public:
 
     bool is_nzero(mpf const & x);
     bool is_pzero(mpf const & x);
-
+    
     // structural eq
     bool eq_core(mpf const & x, mpf const & y) {
-        return
-            x.ebits == y.ebits &&
-            x.sbits == y.sbits &&
-            x.sign == y.sign &&
-            m_mpz_manager.eq(x.significand, y.significand) &&
+        return 
+            x.ebits == y.ebits && 
+            x.sbits == y.sbits && 
+            x.sign == y.sign && 
+            m_mpz_manager.eq(x.significand, y.significand) && 
             x.exponent == y.exponent;
     }
 
@@ -119,7 +119,7 @@ public:
     void add(mpf_rounding_mode rm, mpf const & x, mpf const & y, mpf & o);
     void sub(mpf_rounding_mode rm, mpf const & x, mpf const & y, mpf & o);
     void mul(mpf_rounding_mode rm, mpf const & x, mpf const & y, mpf & o);
-    void div(mpf_rounding_mode rm, mpf const & x, mpf const & y, mpf & o);
+    void div(mpf_rounding_mode rm, mpf const & x, mpf const & y, mpf & o);    
 
     void fused_mul_add(mpf_rounding_mode rm, mpf const & x, mpf const & y, mpf const &z, mpf & o);
 
@@ -143,7 +143,7 @@ public:
 
     double to_double(mpf const & x);
     float to_float(mpf const & x);
-
+    
     bool sgn(mpf const & x) const { return x.sign; }
     const mpz & sig(mpf const & x) const { return x.significand; }
     const mpf_exp_t & exp(mpf const & x) const { return x.exponent; }
@@ -171,9 +171,9 @@ public:
     unsynch_mpz_manager & mpz_manager(void) { return m_mpz_manager; }
     unsynch_mpq_manager & mpq_manager(void) { return m_mpq_manager; }
 
-    unsigned hash(mpf const & a) {
-        return hash_u_u(m_mpz_manager.hash(a.significand),
-                        m_mpz_manager.hash(hash_ull(a.exponent)));
+    unsigned hash(mpf const & a) { 
+        return hash_u_u(m_mpz_manager.hash(a.significand), 
+                        m_mpz_manager.hash(hash_ull(a.exponent))); 
     }
 
     void mk_max_value(unsigned ebits, unsigned sbits, bool sign, mpf & o);
@@ -186,24 +186,24 @@ public:
 
     /**
        \brief Return the biggest k s.t. 2^k <= a.
-
+       
        \remark Return 0 if a is not positive.
     */
     unsigned prev_power_of_two(mpf const & a);
 
-protected:
+protected:    
     bool has_bot_exp(mpf const & x);
     bool has_top_exp(mpf const & x);
 
-    void unpack(mpf & o, bool normalize);
+    void unpack(mpf & o, bool normalize);    
     void add_sub(mpf_rounding_mode rm, mpf const & x, mpf const & y, mpf & o, bool sub);
     void round(mpf_rounding_mode rm, mpf & o);
-    void round_sqrt(mpf_rounding_mode rm, mpf & o);
+    void round_sqrt(mpf_rounding_mode rm, mpf & o);    
 
-    void mk_round_inf(mpf_rounding_mode rm, mpf & o);
+    void mk_round_inf(mpf_rounding_mode rm, mpf & o);    
 
     // Convert x into a mpz numeral. zm is the manager that owns o.
-    void to_mpz(mpf const & x, unsynch_mpz_manager & zm, mpz & o);
+    void to_mpz(mpf const & x, unsynch_mpz_manager & zm, mpz & o);    
     void to_mpz(mpf const & x, scoped_mpz & o) { to_mpz(x, o.m(), o); }
 
     class powers2 {
@@ -218,7 +218,7 @@ protected:
             dispose(m_p);
             dispose(m_pn);
             dispose(m_pm1);
-            dispose(m_pm1n);
+            dispose(m_pm1n);            
         }
 
         void dispose(u_map<mpz*> & map) {
@@ -254,7 +254,7 @@ protected:
                 m.dec(*new_obj);
                 if (negated) m.neg(*new_obj);
                 return *new_obj;
-            }
+            }            
         }
     };
 

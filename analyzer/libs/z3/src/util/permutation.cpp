@@ -35,7 +35,7 @@ void permutation::swap(unsigned i, unsigned j) {
     unsigned i_prime = m_p[i];
     unsigned j_prime = m_p[j];
     std::swap(m_p[i], m_p[j]);
-    std::swap(m_inv_p[i_prime], m_inv_p[j_prime]);
+    std::swap(m_inv_p[i_prime], m_inv_p[j_prime]); 
 }
 
 /**

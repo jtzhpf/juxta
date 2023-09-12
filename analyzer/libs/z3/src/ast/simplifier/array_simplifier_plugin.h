@@ -33,7 +33,7 @@ class array_simplifier_plugin : public simplifier_plugin {
 
     typedef ptr_vector<expr> entry;
 
-    struct entry_hash_proc {
+    struct entry_hash_proc { 
         unsigned operator()(ptr_vector<expr> * entry) const {
             return get_exprs_hash(entry->size(), entry->begin(), 0xbeef1010);
         }
@@ -76,7 +76,7 @@ class array_simplifier_plugin : public simplifier_plugin {
     ptr_vector<expr>   m_tmp;
     ptr_vector<expr>   m_tmp2;
     ptr_vector<expr>   m_todo;
-    static const unsigned m_select_cache_max_size = 100000;
+    static const unsigned m_select_cache_max_size = 100000; 
     typedef obj_map<expr, expr*> const_map;
     class store_info {
         store_info();
@@ -90,12 +90,12 @@ class array_simplifier_plugin : public simplifier_plugin {
     typedef obj_map<expr, store_info*> store_cache;
     store_cache          m_store_cache;
     unsigned             m_store_cache_size;
-    static const unsigned m_store_cache_max_size = 10000;
+    static const unsigned m_store_cache_max_size = 10000; 
     static const unsigned m_const_store_threshold = 5;
     enum const_select_result {
         NOT_CACHED,
         FOUND_DEFAULT,
-        FOUND_VALUE
+        FOUND_VALUE        
     };
 
 
@@ -106,9 +106,9 @@ public:
     virtual bool reduce(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result);
 
     virtual bool reduce_eq(expr * lhs, expr * rhs, expr_ref & result);
-
-    virtual bool reduce_distinct(unsigned num_args, expr * const * args, expr_ref & result);
-
+    
+    virtual bool reduce_distinct(unsigned num_args, expr * const * args, expr_ref & result);    
+   
     virtual void flush_caches();
 
 private:
@@ -127,7 +127,7 @@ private:
     void prune_select_cache();
     void prune_store_cache();
     void flush_select_cache();
-    void flush_store_cache();
+    void flush_store_cache();    
     void mk_set_difference(unsigned num_args, expr * const * args, expr_ref & result);
     void mk_empty_set(sort* ty, expr_ref & result);
     void mk_full_set(sort* ty, expr_ref & result);
@@ -142,8 +142,8 @@ private:
     bool insert_table(expr* def, unsigned arity, unsigned num_st, expr*const* const* st, arg_table& table);
     lbool eq_stores(expr* def, unsigned arity, unsigned num_st1, expr*const* const* st1, unsigned num_st2, expr*const* const* st2);
 
-    bool same_store(unsigned num_args, expr* const* args) const;
-    bool all_const_array(unsigned num_args, expr* const* args) const;
+    bool same_store(unsigned num_args, expr* const* args) const;    
+    bool all_const_array(unsigned num_args, expr* const* args) const;    
     bool all_values(unsigned num_args, expr* const* args) const;
     bool lex_lt(unsigned num_args, expr* const* args1, expr* const* args2);
 

@@ -82,11 +82,11 @@ static tactic * mk_bv2sat_tactic(ast_manager & m) {
     params_ref solver_p;
     // The cardinality constraint encoding generates a lot of shared if-then-else's that can be flattened.
     // Several of them are simplified to and/or. If we flat them, we increase a lot the memory consumption.
-    solver_p.set_bool("flat", false);
-    solver_p.set_bool("som", false);
+    solver_p.set_bool("flat", false); 
+    solver_p.set_bool("som", false); 
     // dynamic psm seems to work well.
     solver_p.set_sym("gc", symbol("dyn_psm"));
-
+    
     return using_params(and_then(mk_simplify_tactic(m),
                                  mk_propagate_values_tactic(m),
                                  mk_solve_eqs_tactic(m),
@@ -101,9 +101,9 @@ static tactic * mk_bv2sat_tactic(ast_manager & m) {
 
 static tactic * mk_pb_tactic(ast_manager & m) {
     params_ref pb2bv_p;
-    pb2bv_p.set_bool("ite_extra", true);
+    pb2bv_p.set_bool("ite_extra", true);    
     pb2bv_p.set_uint("pb2bv_all_clauses_limit", 8);
-
+    
     return and_then(fail_if_not(mk_is_pb_probe()),
                     fail_if(mk_produce_proofs_probe()),
                     fail_if(mk_produce_unsat_cores_probe()),
@@ -119,9 +119,9 @@ static tactic * mk_pb_tactic(ast_manager & m) {
 
 static tactic * mk_lia2sat_tactic(ast_manager & m) {
     params_ref pb2bv_p;
-    pb2bv_p.set_bool("ite_extra", true);
+    pb2bv_p.set_bool("ite_extra", true);    
     pb2bv_p.set_uint("pb2bv_all_clauses_limit", 8);
-
+    
     return and_then(fail_if(mk_is_unbounded_probe()),
                     fail_if(mk_produce_proofs_probe()),
                     fail_if(mk_produce_unsat_cores_probe()),
@@ -129,7 +129,7 @@ static tactic * mk_lia2sat_tactic(ast_manager & m) {
                     mk_normalize_bounds_tactic(m),
                     mk_lia2pb_tactic(m),
                     using_params(mk_pb2bv_tactic(m), pb2bv_p),
-                    fail_if_not(mk_is_qfbv_probe()),
+                    fail_if_not(mk_is_qfbv_probe()),                    
                     mk_bv2sat_tactic(m));
 }
 
@@ -175,7 +175,7 @@ tactic * mk_qflia_tactic(ast_manager & m, params_ref const & p) {
     main_p.set_bool("blast_distinct", true);
     main_p.set_uint("blast_distinct_threshold", 128);
     // main_p.set_bool("push_ite_arith", true);
-
+    
     params_ref pull_ite_p;
     pull_ite_p.set_bool("pull_cheap_ite", true);
     pull_ite_p.set_bool("push_ite_arith", false);
@@ -195,26 +195,26 @@ tactic * mk_qflia_tactic(ast_manager & m, params_ref const & p) {
                                              using_params(mk_simplify_tactic(m), pull_ite_p)),
                                     mk_solve_eqs_tactic(m),
                                     mk_elim_uncnstr_tactic(m),
-                                    using_params(mk_simplify_tactic(m), lhs_p)
+                                    using_params(mk_simplify_tactic(m), lhs_p) 
                                     );
 
     params_ref quasi_pb_p;
     quasi_pb_p.set_uint("lia2pb_max_bits", 64);
-
+    
     params_ref no_cut_p;
     no_cut_p.set_uint("arith.branch_cut_ratio", 10000000);
-
-
+    
+    
     tactic * st = using_params(and_then(preamble_st,
                                         or_else(mk_ilp_model_finder_tactic(m),
                                                 mk_pb_tactic(m),
-                                                and_then(fail_if_not(mk_quasi_pb_probe()),
+                                                and_then(fail_if_not(mk_quasi_pb_probe()), 
                                                          using_params(mk_lia2sat_tactic(m), quasi_pb_p),
                                                          mk_fail_if_undecided_tactic()),
                                                 mk_bounded_tactic(m),
                                                 mk_smt_tactic())),
                                main_p);
-
+    
     st->updt_params(p);
     return st;
 }

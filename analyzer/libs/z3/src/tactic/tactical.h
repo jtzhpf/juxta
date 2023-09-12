@@ -44,7 +44,7 @@ tactic * or_else(tactic * t1, tactic * t2, tactic * t3, tactic * t4, tactic * t5
 tactic * or_else(tactic * t1, tactic * t2, tactic * t3, tactic * t4, tactic * t5, tactic * t6, tactic * t7, tactic * t8, tactic * t9);
 tactic * or_else(tactic * t1, tactic * t2, tactic * t3, tactic * t4, tactic * t5, tactic * t6, tactic * t7, tactic * t8, tactic * t9, tactic * t10);
 
-tactic * repeat(tactic * t, unsigned max = UINT_MAX);
+tactic * repeat(tactic * t, unsigned max = UINT_MAX); 
 /**
    \brief Fails if \c t produeces more than \c threshold subgoals.
    Otherwise, it behabes like \c t.

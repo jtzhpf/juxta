@@ -161,7 +161,7 @@ static bool is_recursive_datatype(parameter const * parameters) {
         }
         already_found[tid] = GRAY;
         unsigned o                 = parameters[2 + 2*tid + 1].get_int(); // constructor offset
-        unsigned num_constructors  = parameters[o].get_int();
+        unsigned num_constructors  = parameters[o].get_int();            
         bool     can_process       = true;
         for (unsigned s = 1; s <= num_constructors; s++) {
             unsigned k_i           = parameters[o + s].get_int();
@@ -211,7 +211,7 @@ static sort_size get_datatype_size(parameter const * parameters) {
         }
         already_found[tid] = GRAY;
         unsigned o                 = parameters[2 + 2*tid + 1].get_int(); // constructor offset
-        unsigned num_constructors  = parameters[o].get_int();
+        unsigned num_constructors  = parameters[o].get_int();            
         bool     is_very_big       = false;
         bool     can_process       = true;
         for (unsigned s = 1; s <= num_constructors; s++) {
@@ -222,7 +222,7 @@ static sort_size get_datatype_size(parameter const * parameters) {
                 if (a_type.is_int()) {
                     int tid_prime = a_type.get_int();
                     switch (already_found[tid_prime]) {
-                    case WHITE:
+                    case WHITE: 
                         todo.push_back(tid_prime);
                         can_process = false;
                         break;
@@ -233,7 +233,7 @@ static sort_size get_datatype_size(parameter const * parameters) {
                         break;
                     }
                 }
-                else {
+                else { 
                     SASSERT(a_type.is_ast());
                     sort * ty = to_sort(a_type.get_ast());
                     if (ty->is_infinite()) {
@@ -259,7 +259,7 @@ static sort_size get_datatype_size(parameter const * parameters) {
                 for (unsigned s = 1; s <= num_constructors; s++) {
                     unsigned k_i           = parameters[o+s].get_int();
                     unsigned num_accessors = parameters[k_i+2].get_int();
-                    rational c_num(1);
+                    rational c_num(1); 
                     for (unsigned r = 0; r < num_accessors; r++) {
                         parameter const & a_type = parameters[k_i+4 + 2*r];
                         if (a_type.is_int()) {
@@ -338,7 +338,7 @@ datatype_util & datatype_decl_plugin::get_util() const {
     return *(m_util.get());
 }
 
-
+        
 sort * datatype_decl_plugin::mk_sort(decl_kind k, unsigned num_parameters, parameter const * parameters) {
     try {
         if (k != DATATYPE_SORT) {
@@ -361,7 +361,7 @@ sort * datatype_decl_plugin::mk_sort(decl_kind k, unsigned num_parameters, param
                 unsigned k_i            = read_int(num_parameters, parameters, o + s, found);
                 read_symbol(num_parameters, parameters, k_i, found);      // constructor name
                 read_symbol(num_parameters, parameters, k_i + 1, found);  // recognizer name
-                unsigned num_accessors  = read_int(num_parameters, parameters, k_i + 2, found);
+                unsigned num_accessors  = read_int(num_parameters, parameters, k_i + 2, found); 
                 unsigned first_accessor = k_i+3;
                 for (unsigned r = 0; r < num_accessors; r++) {
                     read_symbol(num_parameters, parameters, first_accessor + 2*r, found); // accessor name
@@ -384,7 +384,7 @@ sort * datatype_decl_plugin::mk_sort(decl_kind k, unsigned num_parameters, param
             m_manager->raise_exception("datatype is not well-founded");
             return 0;
         }
-
+        
         // compute datatype size
         sort_size ts = get_datatype_size(parameters);
         symbol const & tname = parameters[2+2*tid].get_symbol();
@@ -422,7 +422,7 @@ static sort * get_type(ast_manager & m, family_id datatype_fid, sort * source_da
     }
 }
 
-func_decl * datatype_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+func_decl * datatype_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                              unsigned arity, sort * const * domain, sort * range) {
     if (num_parameters < 2 || !parameters[0].is_ast() || !is_sort(parameters[0].get_ast())) {
         m_manager->raise_exception("invalid parameters for datatype operator");
@@ -452,7 +452,7 @@ func_decl * datatype_decl_plugin::mk_func_decl(decl_kind k, unsigned num_paramet
 
     switch (k) {
     case OP_DT_CONSTRUCTOR:
-        if (num_parameters != 2) {
+        if (num_parameters != 2) { 
             m_manager->raise_exception("invalid parameters for datatype constructor");
             return 0;
         }
@@ -470,7 +470,7 @@ func_decl * datatype_decl_plugin::mk_func_decl(decl_kind k, unsigned num_paramet
             // the reference count to domain could be 0.
             // we need to ensure that creating a temporary
             // copy of the same type causes a free.
-            //
+            // 
             sort_ref_vector domain_check(*m_manager);
 
             for (unsigned r = 0; r < num_accessors; r++) {
@@ -489,7 +489,7 @@ func_decl * datatype_decl_plugin::mk_func_decl(decl_kind k, unsigned num_paramet
             return m_manager->mk_func_decl(c_name, arity, domain, datatype, info);
         }
     case OP_DT_RECOGNISER:
-        if (num_parameters != 2 || arity != 1 || domain[0] != datatype) {
+        if (num_parameters != 2 || arity != 1 || domain[0] != datatype) { 
             m_manager->raise_exception("invalid parameters for datatype recogniser");
             return 0;
         }
@@ -502,7 +502,7 @@ func_decl * datatype_decl_plugin::mk_func_decl(decl_kind k, unsigned num_paramet
             return m_manager->mk_func_decl(r_name, arity, domain, b, info);
         }
     case OP_DT_ACCESSOR:
-        if (num_parameters != 3 || arity != 1 || domain[0] != datatype) {
+        if (num_parameters != 3 || arity != 1 || domain[0] != datatype) { 
             m_manager->raise_exception("invalid parameters for datatype accessor");
             return 0;
         }
@@ -559,7 +559,7 @@ bool datatype_decl_plugin::mk_datatypes(unsigned num_datatypes, datatype_decl * 
             for (unsigned k = 0; k < num_accessors; k++) {
                 accessor_decl * a  = accessors[k];
                 p.push_back(parameter(a->get_name()));
-                type_ref const & ty = a->get_type();
+                type_ref const & ty = a->get_type(); 
                 if (ty.is_idx()) {
                     if (static_cast<unsigned>(ty.get_idx()) >= num_datatypes) {
                         TRACE("datatype", tout << "Index out of bounds: " << ty.get_idx() << "\n";);
@@ -719,7 +719,7 @@ ptr_vector<func_decl> const * datatype_util::get_datatype_constructors(sort * ty
 
 /**
    \brief Return a constructor mk(T_1, ... T_n)
-   where each T_i is not a datatype or it is a datatype that contains
+   where each T_i is not a datatype or it is a datatype that contains 
    a constructor that will not contain directly or indirectly an element of the given sort.
 */
 func_decl * datatype_util::get_non_rec_constructor(sort * ty) {
@@ -747,7 +747,7 @@ func_decl * datatype_util::get_non_rec_constructor(sort * ty) {
 func_decl * datatype_util::get_non_rec_constructor_core(sort * ty, ptr_vector<sort> & forbidden_set) {
     // We must select a constructor c(T_1, ..., T_n):T such that
     //   1) T_i's are not recursive
-    // If there is no such constructor, then we select one that
+    // If there is no such constructor, then we select one that 
     //   2) each type T_i is not recursive or contains a constructor that does not depend on T
     ptr_vector<func_decl> const * constructors = get_datatype_constructors(ty);
     ptr_vector<func_decl>::const_iterator it  = constructors->begin();
@@ -837,7 +837,7 @@ ptr_vector<func_decl> const * datatype_util::get_constructor_accessors(func_decl
     return res;
 }
 
-func_decl * datatype_util::get_accessor_constructor(func_decl * accessor) {
+func_decl * datatype_util::get_accessor_constructor(func_decl * accessor) { 
     SASSERT(is_accessor(accessor));
     func_decl * r = 0;
     if (m_accessor2constructor.find(accessor, r))
@@ -932,11 +932,11 @@ void datatype_util::display_datatype(sort *s0, std::ostream& strm) {
             for (unsigned j = 0; j < accs->size(); ++j) {
                 func_decl* acc = (*accs)[j];
 				sort* s1 = acc->get_range();
-                strm << "(" << acc->get_name() << ": " << s1->get_name() << ") ";
+                strm << "(" << acc->get_name() << ": " << s1->get_name() << ") "; 
                 if (is_datatype(s1) && are_siblings(s1, s0) && !mark.is_marked(s1)) {
                         mark.mark(s1, true);
                         todo.push_back(s1);
-                }
+                }          
             }
 			strm << "\n";
         }

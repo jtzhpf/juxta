@@ -44,7 +44,7 @@ tactic * mk_qfufbv_tactic(ast_manager & m, params_ref const & p) {
                                         mk_smt_tactic()),
                                main_p);
 
-    //cond(is_qfbv(),
+    //cond(is_qfbv(), 
     // and_then(mk_bit_blaster(m),
     //          mk_sat_solver(m)),
     //  mk_smt_solver())

@@ -25,8 +25,8 @@ Revision History:
 #define ERR_PARSER              103
 #define ERR_UNSOUNDNESS         104
 #define ERR_INCOMPLETENESS      105
-#define ERR_INI_FILE            106
-#define ERR_NOT_IMPLEMENTED_YET 107
+#define ERR_INI_FILE            106 
+#define ERR_NOT_IMPLEMENTED_YET 107 
 #define ERR_OPEN_FILE           108
 #define ERR_CMD_LINE            109
 #define ERR_INTERNAL_FATAL      110

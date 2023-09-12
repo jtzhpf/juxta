@@ -38,8 +38,8 @@ class lia2pb_tactic : public tactic {
         bool                       m_partial_lia2pb;
         unsigned                   m_max_bits;
         unsigned                   m_total_bits;
-
-
+        
+       
         imp(ast_manager & _m, params_ref const & p):
             m(_m),
             m_bm(m),
@@ -48,7 +48,7 @@ class lia2pb_tactic : public tactic {
             m_rw(m, p) {
             updt_params(p);
         }
-
+    
         void updt_params_core(params_ref const & p) {
             m_partial_lia2pb = p.get_bool("lia2pb_partial", false);
             m_max_bits       = p.get_uint("lia2pb_max_bits", 32);
@@ -59,53 +59,53 @@ class lia2pb_tactic : public tactic {
             m_rw.updt_params(p);
             updt_params_core(p);
         }
-
+        
         void set_cancel(bool f) {
             m_rw.set_cancel(f);
         }
-
+        
         bool is_target_core(expr * n, rational & u) {
             if (!is_uninterp_const(n))
                 return false;
             rational l; bool s;
             if (m_bm.has_lower(n, l, s) &&
-                m_bm.has_upper(n, u, s) &&
+                m_bm.has_upper(n, u, s) &&  
                 l.is_zero() &&
-                !u.is_neg() &&
+                !u.is_neg() && 
                 u.get_num_bits() <= m_max_bits) {
-
+                
                 return true;
             }
             return false;
         }
-
+        
         bool is_bounded(expr * n) {
             rational u;
             return is_target_core(n, u);
         }
-
+        
         bool is_target(expr * n) {
             rational u;
             return is_target_core(n, u) && u > rational(1);
         }
-
+        
         struct failed {};
 
         struct visitor {
             imp & m_owner;
-
+            
             visitor(imp & o):m_owner(o) {}
-
+            
             void throw_failed(expr * n) {
                 TRACE("lia2pb", tout << "Failed at:\n" << mk_ismt2_pp(n, m_owner.m) << "\n";);
                 throw failed();
             }
-
-            void operator()(var * n) {
+            
+            void operator()(var * n) { 
                 throw_failed(n);
             }
-
-            void operator()(app * n) {
+            
+            void operator()(app * n) { 
                 family_id fid = n->get_family_id();
                 if (fid == m_owner.m.get_basic_family_id()) {
                     // all basic family ops are OK
@@ -142,8 +142,8 @@ class lia2pb_tactic : public tactic {
                         throw_failed(n);
                 }
             }
-
-            void operator()(quantifier * n) {
+            
+            void operator()(quantifier * n) { 
                 throw_failed(n);
             }
         };
@@ -164,7 +164,7 @@ class lia2pb_tactic : public tactic {
                 return false;
             }
         }
-
+        
         bool has_target() {
             bound_manager::iterator it  = m_bm.begin();
             bound_manager::iterator end = m_bm.end();
@@ -174,7 +174,7 @@ class lia2pb_tactic : public tactic {
             }
             return false;
         }
-
+        
         bool check_num_bits() {
             unsigned num_bits = 0;
             rational u;
@@ -191,9 +191,9 @@ class lia2pb_tactic : public tactic {
             return true;
         }
 
-        virtual void operator()(goal_ref const & g,
-                                goal_ref_buffer & result,
-                                model_converter_ref & mc,
+        virtual void operator()(goal_ref const & g, 
+                                goal_ref_buffer & result, 
+                                model_converter_ref & mc, 
                                 proof_converter_ref & pc,
                                 expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -210,9 +210,9 @@ class lia2pb_tactic : public tactic {
             }
 
             m_bm(*g);
-
+            
             TRACE("lia2pb", m_bm.display(tout););
-
+            
             // check if there is some variable to be converted
             if (!has_target()) {
                 // nothing to be done
@@ -220,13 +220,13 @@ class lia2pb_tactic : public tactic {
                 result.push_back(g.get());
                 return;
             }
-
+            
             if (!check(*g))
                 throw tactic_exception("goal is in a fragment unsupported by lia2pb");
-
+            
             if (!check_num_bits())
                 throw tactic_exception("lia2pb failed, number of necessary bits exceeds specified threshold (use option :lia2pb-total-bits to increase threshold)");
-
+            
             extension_model_converter * mc1 = 0;
             filter_model_converter    * mc2 = 0;
             if (m_produce_models) {
@@ -234,12 +234,12 @@ class lia2pb_tactic : public tactic {
                 mc2 = alloc(filter_model_converter, m);
                 mc  = concat(mc2, mc1);
             }
-
+            
             expr_ref zero(m);
             expr_ref one(m);
             zero = m_util.mk_numeral(rational(0), true);
             one  = m_util.mk_numeral(rational(1), true);
-
+            
             unsigned num_converted = 0;
             expr_substitution subst(m, m_produce_unsat_cores, false);
             rational u;
@@ -253,7 +253,7 @@ class lia2pb_tactic : public tactic {
                     def_args.reset();
                     rational a(1);
                     unsigned num_bits = u.get_num_bits();
-                    for (unsigned i = 0; i < num_bits; i++) {
+                    for (unsigned i = 0; i < num_bits; i++) {           
                         app * x_prime = m.mk_fresh_const(0, m_util.mk_int());
                         g->assert_expr(m_util.mk_le(zero, x_prime));
                         g->assert_expr(m_util.mk_le(x_prime, one));
@@ -279,9 +279,9 @@ class lia2pb_tactic : public tactic {
                         mc1->insert(to_app(x)->get_decl(), def);
                 }
             }
-
+            
             report_tactic_progress(":converted-lia2pb", num_converted);
-
+            
             m_rw.set_substitution(&subst);
 
             expr_ref   new_curr(m);
@@ -325,15 +325,15 @@ public:
         m_imp->updt_params(p);
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) { 
         r.insert("lia2pb_partial", CPK_BOOL, "(default: false) partial lia2pb conversion.");
         r.insert("lia2pb_max_bits", CPK_UINT, "(default: 32) maximum number of bits to be used (per variable) in lia2pb.");
         r.insert("lia2pb_total_bits", CPK_UINT, "(default: 2048) total number of bits to be used (per problem) in lia2pb.");
     }
 
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         try {
@@ -343,7 +343,7 @@ public:
             throw tactic_exception(ex.msg());
         }
     }
-
+    
     virtual void cleanup() {
         imp * d = alloc(imp, m_imp->m, m_params);
         #pragma omp critical (tactic_cancel)

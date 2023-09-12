@@ -31,16 +31,16 @@ class ufbv_rewriter_tactic : public tactic {
         imp(ast_manager & m, params_ref const & p) : m_manager(m),m_cancel(false) {
             updt_params(p);
         }
-
+        
         ast_manager & m() const { return m_manager; }
-
+        
         void set_cancel(bool f) {
             m_cancel = f;
         }
-
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -49,11 +49,11 @@ class ufbv_rewriter_tactic : public tactic {
             fail_if_unsat_core_generation("ufbv-rewriter", g);
 
             bool produce_proofs = g->proofs_enabled();
-
+            
             basic_simplifier_plugin bsimp(m_manager);
             bsimp.set_eliminate_and(true);
             ufbv_rewriter dem(m_manager, bsimp);
-
+            
             expr_ref_vector forms(m_manager), new_forms(m_manager);
             proof_ref_vector proofs(m_manager), new_proofs(m_manager);
 
@@ -64,12 +64,12 @@ class ufbv_rewriter_tactic : public tactic {
             }
 
             dem(forms.size(), forms.c_ptr(), proofs.c_ptr(), new_forms, new_proofs);
-
+        
             g->reset();
             for (unsigned i = 0; i < new_forms.size(); i++)
                 g->assert_expr(new_forms.get(i), produce_proofs ? new_proofs.get(i) : 0, 0);
 
-            mc = 0; // CMW: Remark: The demodulator could potentially remove all references to a variable.
+            mc = 0; // CMW: Remark: The demodulator could potentially remove all references to a variable. 
 
             g->inc_depth();
             result.push_back(g.get());
@@ -80,7 +80,7 @@ class ufbv_rewriter_tactic : public tactic {
         void updt_params(params_ref const & p) {
         }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
 
@@ -93,7 +93,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(ufbv_rewriter_tactic, m, m_params);
     }
-
+        
     virtual ~ufbv_rewriter_tactic() {
         dealloc(m_imp);
     }
@@ -108,15 +108,15 @@ public:
         insert_produce_models(r);
         insert_produce_proofs(r);
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
+    
     virtual void cleanup() {
         ast_manager & m = m_imp->m();
         imp * d = alloc(imp, m, m_params);

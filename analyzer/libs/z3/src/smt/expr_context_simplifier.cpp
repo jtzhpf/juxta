@@ -101,10 +101,10 @@ void expr_context_simplifier::reduce_rec(quantifier* q, expr_ref & result) {
 #endif
 }
 
-void expr_context_simplifier::reduce_rec(app * a, expr_ref & result) {
+void expr_context_simplifier::reduce_rec(app * a, expr_ref & result) {    
     if (m_manager.get_basic_family_id() == a->get_family_id()) {
         switch(a->get_decl_kind()) {
-        case OP_AND:
+        case OP_AND: 
             reduce_and(a->get_num_args(), a->get_args(), result);
             return;
         case OP_OR:
@@ -151,11 +151,11 @@ void expr_context_simplifier::reduce_rec(app * a, expr_ref & result) {
                 insert_context(tmp.get(), true);
                 reduce_rec(a->get_arg(1), tmp1);
                 clean_trail(trail_size);
-
+                
                 insert_context(tmp.get(), false);
                 reduce_rec(a->get_arg(2), tmp2);
                 clean_trail(trail_size);
-
+                
                 m_simp.mk_ite(tmp.get(), tmp1.get(), tmp2.get(), result);
             }
             return;
@@ -197,7 +197,7 @@ void expr_context_simplifier::insert_context(expr* e, bool polarity) {
 bool expr_context_simplifier::insert_arg(bool is_and, expr* arg, expr_ref_vector& args) {
     expr_ref tmp(m_manager);
     reduce_rec(arg, tmp);
-    TRACE("expr_context_simplifier", tout << mk_pp(arg, m_manager) << " -> " << mk_pp(tmp.get(), m_manager) << "\n";);
+    TRACE("expr_context_simplifier", tout << mk_pp(arg, m_manager) << " -> " << mk_pp(tmp.get(), m_manager) << "\n";);    
     if (is_true(tmp.get()) && is_and) {
         // skip.
     }
@@ -263,13 +263,13 @@ void expr_context_simplifier::reduce_or(unsigned num_args, expr * const* args, e
 }
 
 bool expr_context_simplifier::is_true(expr* e) const {
-    return
+    return 
         m_manager.is_true(e) ||
         (m_manager.is_not(e) && m_manager.is_false(to_app(e)->get_arg(0)));
 }
 
 bool expr_context_simplifier::is_false(expr* e) const {
-    return
+    return 
         m_manager.is_false(e) ||
         (m_manager.is_not(e) && m_manager.is_true(to_app(e)->get_arg(0)));
 }
@@ -278,7 +278,7 @@ bool expr_context_simplifier::is_false(expr* e) const {
 //
 // This routine performs strong context simplification.
 // It replaces sub-formulas by a fresh name
-// and checks if the original formula is equivalent
+// and checks if the original formula is equivalent 
 // to the resulting formula if the fresh name is set to
 // true or false.
 // otherwise it recursively expands the definition of the
@@ -290,16 +290,16 @@ bool expr_context_simplifier::is_false(expr* e) const {
 //  check visited
 //  check n'
 //  check !n'
-//  if each a is visited,
-//     fml' by fml'[a/a']
+//  if each a is visited, 
+//     fml' by fml'[a/a'] 
 //     pop_scope
 //  ow,
 //  let a be a non-visited argument.
 //  push_scope
 //  push (a, n'')
-//  assert (n' <=> f(visited_args, n'', visited_or_non_visited_args))
-//
-// The implementation avoid the stack. It uses the following vectors:
+//  assert (n' <=> f(visited_args, n'', visited_or_non_visited_args)) 
+// 
+// The implementation avoid the stack. It uses the following vectors: 
 //  todo  - DFS stack
 //  names - collection of fresh names.
 //  is_checked - Boolean to control if contextual equivalence with T or F was checked.
@@ -308,9 +308,9 @@ bool expr_context_simplifier::is_false(expr* e) const {
 //  The parent_ids, self_ids stacks are used to ensure that caching results can be done
 //  in a context dependent way. A cached result is only valid for simplification if
 //  it occurs in the context (on the path) where it was inserted.
-//
+// 
 
-expr_strong_context_simplifier::expr_strong_context_simplifier(smt_params& p, ast_manager& m):
+expr_strong_context_simplifier::expr_strong_context_simplifier(smt_params& p, ast_manager& m): 
     m_manager(m), m_arith(m), m_fn(0,m), m_solver(m, p) {
     sort* i_sort = m_arith.mk_int();
     m_fn = m.mk_func_decl(symbol(0xbeef101), i_sort, m.mk_bool_sort());
@@ -328,7 +328,7 @@ void expr_strong_context_simplifier::simplify_basic(expr* fml, expr_ref& result)
     if (!m.is_bool(fml) || has_quantifiers(fml)) {
         result = fml;
         return;
-    }
+    }                                                
 
     ptr_vector<expr> todo;
     ptr_vector<expr> names;
@@ -346,7 +346,7 @@ void expr_strong_context_simplifier::simplify_basic(expr* fml, expr_ref& result)
     app * a;
     unsigned sz;
     trail.push_back(n);
-
+    
     m_solver.assert_expr(m.mk_not(m.mk_iff(fml, n)));
     todo.push_back(fml);
     names.push_back(n);
@@ -396,7 +396,7 @@ void expr_strong_context_simplifier::simplify_basic(expr* fml, expr_ref& result)
             r = e;
             goto done;
         }
-
+       
         a = to_app(e);
         if (!is_checked.back()) {
             self_ids.back() = ++path_id;
@@ -420,7 +420,7 @@ void expr_strong_context_simplifier::simplify_basic(expr* fml, expr_ref& result)
             else if (!m.is_bool(arg)) {
                 args.push_back(arg);
             }
-            else if (!n2) {
+            else if (!n2) {                
                 n2 = m.mk_app(m_fn, m_arith.mk_numeral(rational(id++), true));
                 todo.push_back(arg);
                 parent_ids.push_back(self_pos);
@@ -447,10 +447,10 @@ void expr_strong_context_simplifier::simplify_basic(expr* fml, expr_ref& result)
             cache.insert(e, std::make_pair(pos, r));
         }
 
-        TRACE("expr_context_simplifier",
-              tout << mk_pp(e, m_manager)
-              << " checked: " << checked
-              << " cached: "
+        TRACE("expr_context_simplifier", 
+              tout << mk_pp(e, m_manager) 
+              << " checked: " << checked 
+              << " cached: " 
               << mk_pp(r?r:e, m_manager) << "\n";);
 
         todo.pop_back();
@@ -478,7 +478,7 @@ void expr_strong_context_simplifier::simplify_model_based(expr* fml, expr_ref& r
     if (!m.is_bool(fml) || has_quantifiers(fml)) {
         result = fml;
         return;
-    }
+    }                                                
 
     ptr_vector<expr> todo;
     ptr_vector<expr> names;
@@ -500,7 +500,7 @@ void expr_strong_context_simplifier::simplify_model_based(expr* fml, expr_ref& r
     if (is_sat == l_false) {
         result = m.mk_false();
         return;
-    }
+    }    
     // Collect assignments to sub-formulas from satisfying assignment.
     obj_map<expr,lbool> assignment_map;
     {
@@ -578,7 +578,7 @@ void expr_strong_context_simplifier::simplify_model_based(expr* fml, expr_ref& r
                 else {
                     value = l_undef;
                 }
-                assignment_map.insert(a, value);
+                assignment_map.insert(a, value);                
             }
             else if (m.is_iff(a, n1, n2) || m.is_eq(a, n1, n2)) {
                 lbool v1 = assignment_map.find(n1);
@@ -592,14 +592,14 @@ void expr_strong_context_simplifier::simplify_model_based(expr* fml, expr_ref& r
                 else {
                     value = l_false;
                 }
-                assignment_map.insert(a, value);
+                assignment_map.insert(a, value);                                
             }
             else {
                 assignment_map.insert(a, l_undef);
             }
         }
     }
-
+    
     m_solver.push();
     unsigned id = 1;
     expr* n = m.mk_app(m_fn, m_arith.mk_numeral(rational(id++), true));
@@ -608,7 +608,7 @@ void expr_strong_context_simplifier::simplify_model_based(expr* fml, expr_ref& r
     app * a;
     unsigned sz;
     trail.push_back(n);
-
+    
     m_solver.assert_expr(m.mk_not(m.mk_iff(fml, n)));
     todo.push_back(fml);
     names.push_back(n);
@@ -666,13 +666,13 @@ void expr_strong_context_simplifier::simplify_model_based(expr* fml, expr_ref& r
                     }
                     break;
                 }
-
+            
         }
         if (!is_app(e)) {
             r = e;
             goto done;
         }
-
+       
         a = to_app(e);
         if (!is_checked.back()) {
             self_ids.back() = ++path_id;
@@ -696,7 +696,7 @@ void expr_strong_context_simplifier::simplify_model_based(expr* fml, expr_ref& r
             else if (!m.is_bool(arg)) {
                 args.push_back(arg);
             }
-            else if (!n2) {
+            else if (!n2) {                
                 n2 = m.mk_app(m_fn, m_arith.mk_numeral(rational(id++), true));
                 todo.push_back(arg);
                 parent_ids.push_back(self_pos);
@@ -723,10 +723,10 @@ void expr_strong_context_simplifier::simplify_model_based(expr* fml, expr_ref& r
             cache.insert(e, std::make_pair(pos, r));
         }
 
-        TRACE("expr_context_simplifier",
-              tout << mk_pp(e, m_manager)
-              << " checked: " << checked
-              << " cached: "
+        TRACE("expr_context_simplifier", 
+              tout << mk_pp(e, m_manager) 
+              << " checked: " << checked 
+              << " cached: " 
               << mk_pp(r?r:e, m_manager) << "\n";);
 
         todo.pop_back();

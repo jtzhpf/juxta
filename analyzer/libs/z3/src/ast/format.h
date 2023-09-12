@@ -25,11 +25,11 @@ namespace format_ns {
     typedef app format;
 
     typedef app_ref format_ref;
-
+    
     enum format_sort_kind {
         FORMAT_SORT
     };
-
+    
     enum format_op_kind {
         OP_NIL,
         OP_STRING,
@@ -39,7 +39,7 @@ namespace format_ns {
         OP_LINE_BREAK,
         OP_LINE_BREAK_EXT
     };
-
+    
     struct f2f {
         format * operator()(format * f) { return f; }
     };
@@ -86,7 +86,7 @@ namespace format_ns {
                elem_n)
     */
     template<typename It, typename ToDoc>
-    format * mk_seq1(ast_manager & m, It const & begin, It const & end, ToDoc proc, char const * header,
+    format * mk_seq1(ast_manager & m, It const & begin, It const & end, ToDoc proc, char const * header, 
                      char const * lp = "(", char const * rp = ")") {
         if (begin == end)
             return mk_compose(m, mk_string(m, lp), mk_string(m, header), mk_string(m, rp));
@@ -94,11 +94,11 @@ namespace format_ns {
         It it = begin;
         format * first  = proc(*it);
         ++it;
-        return mk_group(m, mk_compose(m,
-                                      mk_string(m, lp),
-                                      mk_string(m, header),
-                                      mk_indent(m, indent,
-                                                mk_compose(m,
+        return mk_group(m, mk_compose(m, 
+                                      mk_string(m, lp), 
+                                      mk_string(m, header), 
+                                      mk_indent(m, indent, 
+                                                mk_compose(m, 
                                                            mk_string(m, " "),
                                                            first,
                                                            mk_seq(m, it, end, proc),
@@ -114,9 +114,9 @@ namespace format_ns {
           elem_n)
     */
     template<typename It, typename ToDoc>
-    format * mk_seq2(ast_manager & m, It const & begin, It const & end, ToDoc proc, char const * header,
+    format * mk_seq2(ast_manager & m, It const & begin, It const & end, ToDoc proc, char const * header, 
                      unsigned indent = FORMAT_DEFAULT_INDENT, char const * lp = "(", char const * rp = ")") {
-
+        
         if (begin == end)
             return mk_compose(m, mk_string(m, lp), mk_string(m, header), mk_string(m, rp));
         return mk_group(m, mk_compose(m,
@@ -147,11 +147,11 @@ namespace format_ns {
         It it = begin;
         format * first = proc(*it);
         ++it;
-        return mk_group(m,
-                        mk_compose(m,
+        return mk_group(m, 
+                        mk_compose(m, 
                                    mk_compose(m, mk_string(m, lp), mk_string(m, header)),
                                    mk_group(m, mk_indent(m, static_cast<unsigned>(strlen(header) + strlen(lp) + 1),
-                                                         mk_compose(m, mk_string(m, " "), first,
+                                                         mk_compose(m, mk_string(m, " "), first, 
                                                                     mk_seq(m, it, end1, proc)))),
                                    mk_indent(m, indent, mk_seq(m, end1, end, proc)),
                                    mk_string(m, rp)));
@@ -164,7 +164,7 @@ namespace format_ns {
           elem_n)
     */
     template<typename It, typename ToDoc>
-    format * mk_seq4(ast_manager & m, It const & begin, It const & end, ToDoc proc, unsigned indent = FORMAT_DEFAULT_INDENT,
+    format * mk_seq4(ast_manager & m, It const & begin, It const & end, ToDoc proc, unsigned indent = FORMAT_DEFAULT_INDENT, 
                      char const * lp = "(", char const * rp = ")") {
         if (begin == end)
             return mk_compose(m, mk_string(m, lp), mk_string(m, rp));
@@ -174,8 +174,8 @@ namespace format_ns {
         ++it;
         return mk_group(m, mk_compose(m,
                                       mk_indent(m, indent1, mk_compose(m, mk_string(m, lp), first)),
-                                      mk_indent(m, indent, mk_compose(m,
-                                                                      mk_seq(m, it, end, proc),
+                                      mk_indent(m, indent, mk_compose(m, 
+                                                                      mk_seq(m, it, end, proc), 
                                                                       mk_string(m, rp)))));
     }
 
@@ -186,11 +186,11 @@ namespace format_ns {
         elem_n)
     */
     template<typename It, typename ToDoc>
-    format * mk_seq5(ast_manager & m, It const & begin, It const & end, ToDoc proc,
+    format * mk_seq5(ast_manager & m, It const & begin, It const & end, ToDoc proc, 
                      char const * lp = "(", char const * rp = ")") {
         return mk_seq4(m, begin, end, proc, static_cast<unsigned>(strlen(lp)), lp, rp);
     }
-
+  
 };
 
 #endif /* _FORMAT_H_ */

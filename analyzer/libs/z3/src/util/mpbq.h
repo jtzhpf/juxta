@@ -12,8 +12,8 @@ Abstract:
     A binary rational is a number of the form a/2^k.
     All integers are binary rationals.
     Binary rational numbers can be implemented more efficiently than rationals.
-    Binary rationals form a Ring.
-    They are not closed under division.
+    Binary rationals form a Ring. 
+    They are not closed under division. 
     In Z3, they are used to implement algebraic numbers.
     The root isolation operations only use division by 2.
 
@@ -89,7 +89,7 @@ public:
     bool is_int(mpbq const & a) const { return a.m_k == 0; }
     void get_numerator(mpbq const & a, mpz & n) { m_manager.set(n, a.m_num); }
     unsigned get_denominator_power(mpbq const & a) { return a.m_k; }
-
+    
     bool is_zero(mpbq const & a) const { return m_manager.is_zero(a.m_num); }
     bool is_nonzero(mpbq const & a) const { return !is_zero(a); }
     bool is_one(mpbq const & a) const { return a.m_k == 0 && m_manager.is_one(a.m_num); }
@@ -124,7 +124,7 @@ public:
 
     /**
        \brief Return true if a^{1/n} is a binary rational, and store the result in a.
-       Otherwise, return false and return an lower bound based on the integer root of the
+       Otherwise, return false and return an lower bound based on the integer root of the 
        numerator and denominator/n
     */
     bool root_lower(mpbq & a, unsigned n);
@@ -132,7 +132,7 @@ public:
 
     /**
        \brief Return true if a^{1/n} is a binary rational, and store the result in a.
-       Otherwise, return false and return an upper bound based on the integer root of the
+       Otherwise, return false and return an upper bound based on the integer root of the 
        numerator and denominator/n
     */
     bool root_upper(mpbq & a, unsigned n);
@@ -169,7 +169,7 @@ public:
         Remark: mlog2(b) = log2(-b)
 
         Examples:
-
+        
         5/2^3     log2(5)  - 3      = -1
         21/2^2    log2(21) - 2      =  2
         -3/2^4    log2(3)  - 4  + 1 = -2
@@ -184,7 +184,7 @@ public:
         a <  0 -> mlog2(b) - k              a <= -2^{mlog2(b) - k}
     */
     int magnitude_ub(mpbq const & a);
-
+    
     /**
        \brief Return true if a < 1/2^k
     */
@@ -195,7 +195,7 @@ public:
     /**
        \brief Return true if q (= c/d) is a binary rational,
        and store it in bq (as a binary rational).
-       Otherwise return false, and set bq to c/2^{k+1}
+       Otherwise return false, and set bq to c/2^{k+1} 
        where k = log2(d)
     */
     bool to_mpbq(mpq const & q, mpbq & bq);
@@ -204,11 +204,11 @@ public:
        \brief Given a rational q which cannot be represented as a binary rational,
        and an interval (l, u) s.t. l < q < u. This method stores in u, a u' s.t.
        q < u' < u.
-       In the refinement process, the lower bound l may be also refined to l'
+       In the refinement process, the lower bound l may be also refined to l' 
        s.t. l < l' < q
     */
     void refine_upper(mpq const & q, mpbq & l, mpbq & u);
-
+    
     /**
        \brief Similar to refine_upper.
     */
@@ -273,9 +273,9 @@ public:
 
     /**
        \brief Approximate n as b/2^k' s.t. k' <= k.
-
+       
        if get_denominator_power(n) <= k, then n is not modified.
-
+       
        if get_denominator_power(n) > k, then
            if to_plus_inf,   old(n) < b/2^k'
            otherwise,        b/2^k' < old(n)
@@ -284,7 +284,7 @@ public:
 
     /**
        \brief Approximated division c <- a/b
-
+       
        The result is precise when:
        1) b is a power of two
        2) get_numerator(b) divides get_numerator(a)

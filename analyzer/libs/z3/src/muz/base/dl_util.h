@@ -57,9 +57,9 @@ namespace datalog {
         LAST_CACHE_MODE
     };
 
-    struct std_string_hash_proc {
-        unsigned operator()(const std::string & s) const
-        { return string_hash(s.c_str(), static_cast<unsigned>(s.length()), 17); }
+    struct std_string_hash_proc { 
+        unsigned operator()(const std::string & s) const 
+        { return string_hash(s.c_str(), static_cast<unsigned>(s.length()), 17); } 
     };
 
     // typedef int_hashtable<int_hash, default_eq<int> > idx_set;
@@ -68,7 +68,7 @@ namespace datalog {
     typedef u_map<var *> varidx2var_map;
     typedef obj_hashtable<func_decl> func_decl_set; //!< Rule dependencies.
     typedef vector<std::string> string_vector;
-
+    
     bool contains_var(expr * trm, unsigned var_idx);
 
     /**
@@ -96,25 +96,25 @@ namespace datalog {
        Non-local variables are coppied to new_rule_args, and their sorts to \c new_rule_domain.
        The new predicate is stored in \c new_pred.
     */
-    void mk_new_rule_tail(ast_manager & m, app * pred,
-                          var_idx_set const & non_local_vars,
-                          unsigned & next_idx, varidx2var_map & varidx2var,
-                          sort_ref_buffer & new_rule_domain, expr_ref_buffer & new_rule_args,
+    void mk_new_rule_tail(ast_manager & m, app * pred, 
+                          var_idx_set const & non_local_vars, 
+                          unsigned & next_idx, varidx2var_map & varidx2var, 
+                          sort_ref_buffer & new_rule_domain, expr_ref_buffer & new_rule_args, 
                           app_ref & new_pred);
 
     /**
-       \brief Simpler version of the previous function. Initializes next_idx with 0, and
+       \brief Simpler version of the previous function. Initializes next_idx with 0, and 
        an empty varid2var
     */
-    inline void mk_new_rule_tail(ast_manager & m, app * pred,
-                                 var_idx_set const & non_local_vars,
-                                 sort_ref_buffer & new_rule_domain, expr_ref_buffer & new_rule_args,
+    inline void mk_new_rule_tail(ast_manager & m, app * pred, 
+                                 var_idx_set const & non_local_vars, 
+                                 sort_ref_buffer & new_rule_domain, expr_ref_buffer & new_rule_args, 
                                  app_ref & new_pred) {
         unsigned next_idx = 0;
         varidx2var_map varidx2var;
         mk_new_rule_tail(m, pred, non_local_vars, next_idx, varidx2var, new_rule_domain, new_rule_args, new_pred);
     }
-
+     
     /**
        \brief Print a predicate \c f to the stream \c out.
     */
@@ -130,7 +130,7 @@ namespace datalog {
     */
     void display_fact(context & ctx, app * f, std::ostream & out);
 
-
+    
 
     class variable_intersection
     {
@@ -179,7 +179,7 @@ namespace datalog {
             m_consts.reset();
         }
 
-        bool args_match(const app * f1, const app * f2);
+        bool args_match(const app * f1, const app * f2); 
         bool args_self_match(const app * f);
 
         /**
@@ -202,7 +202,7 @@ namespace datalog {
         }
 
         /**
-           Find pairs of indexes of arguments of \c a1 and \c a2 that correspond to the same
+           Find pairs of indexes of arguments of \c a1 and \c a2 that correspond to the same 
            variable. Here we do not detect the constant arguments in \c a1 and \c a2.
         */
         template<typename T1, typename T2>
@@ -265,7 +265,7 @@ namespace datalog {
     }
 
     template<class T, class M>
-    void project_out_vector_columns(ref_vector<T,M> & container, unsigned removed_col_cnt,
+    void project_out_vector_columns(ref_vector<T,M> & container, unsigned removed_col_cnt, 
             const unsigned * removed_cols) {
         if(removed_col_cnt==0) {
             return;
@@ -343,7 +343,7 @@ namespace datalog {
     }
 
 
-    class rule_counter : public var_counter {
+    class rule_counter : public var_counter {        
     public:
         rule_counter(bool stay_non_negative = true): var_counter(stay_non_negative) {}
         void count_rule_vars(ast_manager & m, const rule * r, int coef = 1);
@@ -352,10 +352,10 @@ namespace datalog {
 
     void del_rule(horn_subsume_model_converter* mc, rule& r);
 
-    void resolve_rule(replace_proof_converter* pc, rule const& r1, rule const& r2, unsigned idx,
+    void resolve_rule(replace_proof_converter* pc, rule const& r1, rule const& r2, unsigned idx, 
                       expr_ref_vector const& s1, expr_ref_vector const& s2, rule const& res);
 
-    void resolve_rule(rule const& r1, rule const& r2, unsigned idx,
+    void resolve_rule(rule const& r1, rule const& r2, unsigned idx, 
                       expr_ref_vector const& s1, expr_ref_vector const& s2, rule& res);
 
     model_converter* mk_skip_model_converter();
@@ -476,7 +476,7 @@ namespace datalog {
         out << ")";
     }
 
-    template<class It, class V>
+    template<class It, class V> 
     unsigned find_index(const It & begin, const It & end, const V & val) {
         unsigned idx = 0;
         It it = begin;
@@ -493,7 +493,7 @@ namespace datalog {
         T it1 = begin1;
         U it2 = begin2;
         for(; it1!=end1 && it2!=end2; ++it1, ++it2) {
-            if(*it1!=*it2) {
+            if(*it1!=*it2) { 
                 return false;
             }
         }
@@ -509,7 +509,7 @@ namespace datalog {
         typename T::data * end1 = c1.c_ptr()+c1.size();
         typename U::data * it2 = c2.c_ptr();
         for(; it1!=end1; ++it1, ++it2) {
-            if(*it1!=*it2) {
+            if(*it1!=*it2) { 
                 return false;
             }
         }
@@ -528,22 +528,22 @@ namespace datalog {
     }
 
     template<class T>
-    struct obj_vector_hash_proc {
+    struct obj_vector_hash_proc { 
         unsigned operator()(const T & cont) const {
             return obj_vector_hash(cont);
-        }
+        } 
     };
 
     template<class T>
-    struct svector_hash_proc {
+    struct svector_hash_proc { 
         unsigned operator()(const svector<typename T::data> & cont) const {
             return svector_hash<T>()(cont);
-        }
+        } 
     };
 
 
     template<class T>
-    struct vector_eq_proc {
+    struct vector_eq_proc { 
         bool operator()(const T & c1, const T & c2) const { return vectors_equal(c1, c2); }
     };
 
@@ -663,10 +663,10 @@ namespace datalog {
 
 
     /**
-       \brief Consider \c translation as a map from indexes to values. Iterate through \c src and store
+       \brief Consider \c translation as a map from indexes to values. Iterate through \c src and store 
        transformed values of elements into \c res unless they are equal to \c UINT_MAX.
     */
-    void collect_and_transform(const unsigned_vector & src, const unsigned_vector & translation,
+    void collect_and_transform(const unsigned_vector & src, const unsigned_vector & translation, 
         unsigned_vector & res);
 
     /**
@@ -693,7 +693,7 @@ namespace datalog {
     //
     // -----------------------------------
 
-    void get_file_names(std::string directory, std::string extension, bool traverse_subdirs,
+    void get_file_names(std::string directory, std::string extension, bool traverse_subdirs, 
         string_vector & res);
 
     bool file_exists(std::string name);
@@ -721,10 +721,10 @@ namespace datalog {
     std::string to_string(uint64 num);
     /**
        \brief Read the sequence of decimal digits starting at \c s and interpret it as
-       uint64. If successful, \c res will contain the read number and \c s will point
-       to the first non-digit character, and true is returned. If the first character
+       uint64. If successful, \c res will contain the read number and \c s will point 
+       to the first non-digit character, and true is returned. If the first character 
        is not a digit, no parameter is modified and false is returned. If the uint64
-       overflows, \c points to the character which caused the overflow and false is
+       overflows, \c points to the character which caused the overflow and false is 
        returned.
      */
     bool read_uint64(const char * & s, uint64 & res);

@@ -6,7 +6,7 @@ Module Name:
     check_sat_result.h
 
 Abstract:
-    Abstract interface for storing the result produced by
+    Abstract interface for storing the result produced by 
     a check_sat like command
 
 Author:
@@ -33,12 +33,12 @@ Notes:
       - unsat-core (if the result is unsatisfiable)
       - reason-unknown (if the result is unknown, i.e., the solver failed to solve the problem)
       - label (if the result is satisfiable) this is legacy for Boogie
-
+      
 */
 class check_sat_result {
 protected:
     unsigned    m_ref_count;
-    lbool       m_status;
+    lbool       m_status; 
 public:
     check_sat_result():m_ref_count(0), m_status(l_undef) {}
     virtual ~check_sat_result() {}

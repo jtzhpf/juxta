@@ -23,12 +23,12 @@ Revision History:
 #include"map.h"
 
 namespace smt {
-
+    
     /**
-       \brief An index for detecting 'almost' congruences.
+       \brief An index for detecting 'almost' congruences. 
        We say (f t_1 ... t_n) is almost congruent to (f s_1 ... s_n) with respect to (r1,r2) iff
        for all j in [1,n] j  t_j = s_j or (t_j = r1 and s_j = r1) or (t_j = r1 and s_j = r2) or (t_j = r2 and s_j = r1) or (t_j = r2 and s_j = r2)
-
+       
        This index is used to speedup is_ext_diseq.
     */
     class almost_cg_table {
@@ -48,9 +48,9 @@ namespace smt {
             cg_eq(enode * & r1, enode * & r2):m_r1(r1), m_r2(r2) {}
             bool operator()(enode * n1, enode * n2) const;
         };
-
-        typedef map<enode *, list<enode*> *, cg_hash, cg_eq> table;
-
+        
+        typedef map<enode *, list<enode*> *, cg_hash, cg_eq> table; 
+        
         region  m_region;
         enode * m_r1;
         enode * m_r2;

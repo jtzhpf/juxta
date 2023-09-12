@@ -1,5 +1,5 @@
 
-def_module_params('nlsat',
+def_module_params('nlsat', 
                   description='nonlinear solver',
                   export=True,
                   params=(max_memory_param(),
@@ -11,6 +11,6 @@ def_module_params('nlsat',
                           ('max_conflicts', UINT, UINT_MAX, "maximum number of conflicts."),
                           ('shuffle_vars', BOOL, False, "use a random variable order."),
                           ('seed', UINT, 0, "random seed."),
-                          ('factor', BOOL, True, "factor polynomials produced during conflict resolution.")
-                          ))
-
+                          ('factor', BOOL, True, "factor polynomials produced during conflict resolution.")     
+                          ))         
+                

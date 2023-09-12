@@ -19,7 +19,7 @@ struct test_context {
     context.test_fails = 0;                                        \
     cout << "" << #CLASS_NAME << "<" << #TYPE << ">" << endl; \
     CLASS_NAME ## _test< TYPE, CALL_DESTRUCTORS >::run_tests(context);       \
-    context.fails += context.test_fails;
+    context.fails += context.test_fails;                                   
 
 #define TEST_METHOD(context, METHOD)                       \
     cout << "\t" << #METHOD << "... ";                     \

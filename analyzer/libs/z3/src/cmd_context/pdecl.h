@@ -20,7 +20,7 @@ Revision History:
 #define _PDECL_H_
 
 #include"ast.h"
-#include"obj_hashtable.h"
+#include"obj_hashtable.h" 
 #include"dictionary.h"
 #include"format.h"
 
@@ -192,7 +192,7 @@ class pconstructor_decl : public pdecl {
     symbol                     m_name;
     symbol                     m_recogniser_name;
     ptr_vector<paccessor_decl> m_accessors;
-    pconstructor_decl(unsigned id, unsigned num_params, pdecl_manager & m,
+    pconstructor_decl(unsigned id, unsigned num_params, pdecl_manager & m, 
                       symbol const & n, symbol const & r, unsigned num_accessors, paccessor_decl * const * accessors);
     virtual void finalize(pdecl_manager & m);
     virtual size_t obj_size() const { return sizeof(pconstructor_decl); }
@@ -212,7 +212,7 @@ class pdatatype_decl : public psort_decl {
     friend class pdatatypes_decl;
     ptr_vector<pconstructor_decl> m_constructors;
     pdatatypes_decl *             m_parent;
-    pdatatype_decl(unsigned id, unsigned num_params, pdecl_manager & m, symbol const & n,
+    pdatatype_decl(unsigned id, unsigned num_params, pdecl_manager & m, symbol const & n, 
                    unsigned num_constructors, pconstructor_decl * const * constructors);
     virtual void finalize(pdecl_manager & m);
     virtual size_t obj_size() const { return sizeof(pdatatype_decl); }
@@ -265,7 +265,7 @@ class pdecl_manager {
     struct indexed_sort_info;
 
     obj_map<sort, sort_info *>   m_sort2info; // for pretty printing sorts
-
+    
     void init_list();
     void del_decl_core(pdecl * p);
     void del_decl(pdecl * p);

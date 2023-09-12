@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     Leonardo (leonardo) 2008-01-08
-
+    
 --*/
 #ifndef _BV_SIMPLIFIER_PLUGIN_H_
 #define _BV_SIMPLIFIER_PLUGIN_H_
@@ -136,9 +136,9 @@ public:
     void mk_args_eq_numeral(app * app, expr * n, expr_ref & result);
 
     void mk_concat(unsigned num_args, expr * const * args, expr_ref & result);
-    void mk_concat(expr * arg1, expr * arg2, expr_ref & result) {
-        expr * args[2] = { arg1, arg2 };
-        mk_concat(2, args, result);
+    void mk_concat(expr * arg1, expr * arg2, expr_ref & result) { 
+        expr * args[2] = { arg1, arg2 }; 
+        mk_concat(2, args, result); 
     }
     void mk_zeroext(unsigned n, expr * arg, expr_ref & result);
     void mk_repeat(unsigned n, expr * arg, expr_ref & result);

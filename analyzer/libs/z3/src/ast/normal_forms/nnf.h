@@ -30,10 +30,10 @@ class nnf {
 public:
     nnf(ast_manager & m, defined_names & n, params_ref const & p = params_ref());
     ~nnf();
-
+    
     void operator()(expr * n,                          // [IN] expression that should be put into NNF
                     expr_ref_vector & new_defs,        // [OUT] new definitions
-                    proof_ref_vector & new_def_proofs, // [OUT] proofs of the new definitions
+                    proof_ref_vector & new_def_proofs, // [OUT] proofs of the new definitions 
                     expr_ref & r,                      // [OUT] resultant expression
                     proof_ref & p                      // [OUT] proof for (~ n r)
                     );

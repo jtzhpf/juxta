@@ -56,7 +56,7 @@ namespace datalog {
         context&  m_ctx;
         rule_set  m_rules;
         decl_set  m_preds;
-        bool      m_was_closed;
+        bool      m_was_closed;                        
 
     public:
 
@@ -72,15 +72,15 @@ namespace datalog {
         }
 
         ~scoped_query() {
-            m_ctx.reopen();
+            m_ctx.reopen();                                
             m_ctx.restrict_predicates(m_preds);
             m_ctx.replace_rules(m_rules);
             if (m_was_closed) {
-                m_ctx.close();
-            }
+                m_ctx.close();                                  
+            }          
         }
 
-        void reset() {
+        void reset() {        
             m_ctx.reopen();
             m_ctx.restrict_predicates(m_preds);
             m_ctx.replace_rules(m_rules);
@@ -89,11 +89,11 @@ namespace datalog {
     };
 
     rel_context::rel_context(context& ctx)
-        : rel_context_base(ctx.get_manager(), "datalog"),
-          m_context(ctx),
+        : rel_context_base(ctx.get_manager(), "datalog"), 
+          m_context(ctx), 
           m(ctx.get_manager()),
           m_rmanager(ctx),
-          m_answer(m),
+          m_answer(m), 
           m_last_result_relation(0),
           m_ectx(ctx) {
 
@@ -118,7 +118,7 @@ namespace datalog {
         if (m_last_result_relation) {
             m_last_result_relation->deallocate();
             m_last_result_relation = 0;
-        }
+        }        
     }
 
     lbool rel_context::saturate() {
@@ -127,11 +127,11 @@ namespace datalog {
     }
 
     lbool rel_context::saturate(scoped_query& sq) {
-        m_context.ensure_closed();
+        m_context.ensure_closed();        
         bool time_limit = m_context.soft_timeout()!=0;
         unsigned remaining_time_limit = m_context.soft_timeout();
         unsigned restart_time = m_context.initial_restart_timeout();
-
+                        
         instruction_block termination_code;
 
         lbool result;
@@ -165,7 +165,7 @@ namespace datalog {
             bool timeout_after_this_round = time_limit && (restart_time==0 || remaining_time_limit<=restart_time);
 
             if (time_limit || restart_time!=0) {
-                unsigned timeout = time_limit ? (restart_time!=0) ?
+                unsigned timeout = time_limit ? (restart_time!=0) ? 
                     std::min(remaining_time_limit, restart_time)
                     : remaining_time_limit : restart_time;
                 m_ectx.set_timelimit(timeout);
@@ -216,7 +216,7 @@ namespace datalog {
         TRACE("dl", display_profile(tout););
         return result;
     }
-
+ 
     lbool rel_context::query(unsigned num_rels, func_decl * const* rels) {
         get_rmanager().reset_saturated_marks();
         scoped_query _scoped_query(m_context);
@@ -258,7 +258,7 @@ namespace datalog {
                 res = l_false;
             }
             break;
-        }
+        }            
         case l_false:
             m_answer = m.mk_false();
             break;
@@ -271,13 +271,13 @@ namespace datalog {
     void rel_context::transform_rules() {
         rule_transformer transf(m_context);
         transf.register_plugin(alloc(mk_coi_filter, m_context));
-        transf.register_plugin(alloc(mk_filter_rules, m_context));
+        transf.register_plugin(alloc(mk_filter_rules, m_context));        
         transf.register_plugin(alloc(mk_simple_joins, m_context));
         if (m_context.unbound_compressor()) {
             transf.register_plugin(alloc(mk_unbound_compressor, m_context));
         }
         if (m_context.similarity_compressor()) {
-            transf.register_plugin(alloc(mk_similarity_compressor, m_context));
+            transf.register_plugin(alloc(mk_similarity_compressor, m_context)); 
         }
         transf.register_plugin(alloc(mk_partial_equivalence_transformer, m_context));
         transf.register_plugin(alloc(mk_rule_inliner, m_context));
@@ -314,10 +314,10 @@ namespace datalog {
             m_context.set_status(INPUT_ERROR);
             throw exn;
         }
-
+        
         m_context.close();
         reset_negated_tables();
-
+        
         if (m_context.generate_explanations()) {
             m_context.transform_rules(alloc(mk_explanations, m_context));
         }
@@ -330,10 +330,10 @@ namespace datalog {
         }
 
         lbool res = saturate(_scoped_query);
-
+        
         query_pred = m_context.get_rules().get_pred(query_pred);
 
-        if (res != l_undef) {
+        if (res != l_undef) {            
             m_last_result_relation = get_relation(query_pred).clone();
             if (m_last_result_relation->empty()) {
                 res = l_false;
@@ -347,7 +347,7 @@ namespace datalog {
                 }
             }
         }
-
+        
         return res;
     }
 
@@ -402,12 +402,12 @@ namespace datalog {
                     }
                 }
             }
-        }
+        }        
         func_decl_set::iterator it = depends_on_negation.begin(), end = depends_on_negation.end();
         for (; it != end; ++it) {
             func_decl* pred = *it;
             relation_base & rel = get_relation(pred);
-
+            
             if (!rel.empty()) {
                 TRACE("dl", tout << "Resetting: " << mk_ismt2_pp(pred, m) << "\n";);
                 rel.reset();
@@ -423,7 +423,7 @@ namespace datalog {
     relation_base * rel_context::try_get_relation(func_decl * pred) const { return get_rmanager().try_get_relation(pred); }
 
     expr_ref rel_context::try_get_formula(func_decl* p) const {
-        expr_ref result(m);
+        expr_ref result(m);        
         relation_base* rb = try_get_relation(p);
         if (rb) {
             rb->to_formula(result);
@@ -443,10 +443,10 @@ namespace datalog {
     bool rel_context::output_profile() const { return m_context.output_profile(); }
 
 
-    void rel_context::set_predicate_representation(func_decl * pred, unsigned relation_name_cnt,
+    void rel_context::set_predicate_representation(func_decl * pred, unsigned relation_name_cnt, 
                                                    symbol const * relation_names) {
 
-        TRACE("dl",
+        TRACE("dl", 
               tout << pred->get_name() << ": ";
               for (unsigned i = 0; i < relation_name_cnt; ++i) {
                   tout << relation_names[i] << " ";
@@ -457,7 +457,7 @@ namespace datalog {
         relation_manager & rmgr = get_rmanager();
         family_id target_kind = null_family_id;
         switch (relation_name_cnt) {
-        case 0:
+        case 0: 
             return;
         case 1:
             target_kind = get_ordinary_relation_plugin(relation_names[0]).get_kind();
@@ -467,7 +467,7 @@ namespace datalog {
             family_id rel_kind;           // the aggregate kind of non-table plugins
             for (unsigned i = 0; i < relation_name_cnt; i++) {
                 relation_plugin & p = get_ordinary_relation_plugin(relation_names[i]);
-                rel_kinds.push_back(p.get_kind());
+                rel_kinds.push_back(p.get_kind());                
             }
             if (rel_kinds.size() == 1) {
                 rel_kind = rel_kinds[0];
@@ -480,7 +480,7 @@ namespace datalog {
             }
             target_kind = rel_kind;
             break;
-        }
+        }       
         }
 
         SASSERT(target_kind != null_family_id);
@@ -488,7 +488,7 @@ namespace datalog {
     }
 
     void rel_context::set_cancel(bool f) {
-        get_rmanager().set_cancel(f);
+        get_rmanager().set_cancel(f);        
     }
 
     relation_plugin & rel_context::get_ordinary_relation_plugin(symbol relation_name) {
@@ -530,7 +530,7 @@ namespace datalog {
             get_relation(pred).add_fact(fact);
         }
     }
-
+ 
     void rel_context::add_fact(func_decl* pred, relation_fact const& fact) {
         get_rmanager().reset_saturated_marks();
         get_relation(pred).add_fact(fact);
@@ -565,7 +565,7 @@ namespace datalog {
 
     void rel_context::inherit_predicate_kind(func_decl* new_pred, func_decl* orig_pred) {
         if (orig_pred) {
-            family_id target_kind = get_rmanager().get_requested_predicate_kind(orig_pred);
+            family_id target_kind = get_rmanager().get_requested_predicate_kind(orig_pred);            
             if (target_kind != null_family_id) {
                 get_rmanager().set_predicate_kind(new_pred, target_kind);
             }
@@ -582,7 +582,7 @@ namespace datalog {
 
     void rel_context::display_profile(std::ostream& out) {
         m_code.make_annotations(m_ectx);
-        m_code.process_all_costs();
+        m_code.process_all_costs();  
 
         out << "\n--------------\n";
         out << "Instructions\n";

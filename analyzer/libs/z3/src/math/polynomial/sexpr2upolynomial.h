@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     sexpr to upolynomial converter
-
+    
 Author:
 
     Leonardo (leonardo) 2011-12-28

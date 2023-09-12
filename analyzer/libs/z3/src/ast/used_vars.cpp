@@ -35,7 +35,7 @@ void used_vars::process(expr * n, unsigned delta) {
             m_todo.pop_back();
             continue;
         }
-
+        
         if (n->get_ref_count() > 1) {
             // cache only shared and non-constant nodes
             m_cache.insert(p);
@@ -43,7 +43,7 @@ void used_vars::process(expr * n, unsigned delta) {
 
         delta = p.m_delta;
         m_todo.pop_back();
-
+        
         switch (n->get_kind()) {
         case AST_APP:
             j = to_app(n)->get_num_args();

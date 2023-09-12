@@ -36,13 +36,13 @@ br_status datatype_rewriter::mk_app_core(func_decl * f, unsigned num_args, expr 
             result = m().mk_false();
         return BR_DONE;
     case OP_DT_ACCESSOR: {
-        //
+        // 
         // simplify head(cons(x,y)) -> x
-        //
+        // 
         SASSERT(num_args == 1);
         if (!is_app(args[0]) || !m_util.is_constructor(to_app(args[0])))
             return BR_FAILED;
-
+        
         app * a = to_app(args[0]);
         func_decl * c_decl = a->get_decl();
         if (c_decl != m_util.get_accessor_constructor(f))
@@ -63,7 +63,7 @@ br_status datatype_rewriter::mk_app_core(func_decl * f, unsigned num_args, expr 
     default:
         UNREACHABLE();
     }
-
+    
     return BR_FAILED;
 }
 
@@ -78,13 +78,13 @@ br_status datatype_rewriter::mk_eq_core(expr * lhs, expr * rhs, expr_ref & resul
     // Remark: In datatype_simplifier_plugin, we used
     // m_basic_simplifier to create '=' and 'and' applications in the
     // following code. This trick not guarantee that the final expression
-    // will be fully simplified.
+    // will be fully simplified. 
     //
     // Example:
-    // The assertion
+    // The assertion  
     // (assert (= (cons a1 (cons a2 (cons a3 (cons (+ a4 1) (cons (+ a5 c5) (cons a6 nil))))))
     //         (cons b1 (cons b2 (cons b3 (cons b4 (cons b5 (cons b6 nil))))))))
-    //
+    // 
     // After applying asserted_formulas::reduce(), the following formula was generated.
     //
     //   (= a1 b1)
@@ -103,7 +103,7 @@ br_status datatype_rewriter::mk_eq_core(expr * lhs, expr * rhs, expr_ref & resul
     ptr_buffer<expr> eqs;
     unsigned num = to_app(lhs)->get_num_args();
     SASSERT(num == to_app(rhs)->get_num_args());
-    for (unsigned i = 0; i < num; ++i) {
+    for (unsigned i = 0; i < num; ++i) {            
         eqs.push_back(m().mk_eq(to_app(lhs)->get_arg(i), to_app(rhs)->get_arg(i)));
     }
     result = m().mk_and(eqs.size(), eqs.c_ptr());

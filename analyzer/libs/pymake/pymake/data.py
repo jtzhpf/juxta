@@ -3,9 +3,16 @@ A representation of makefile data structures.
 """
 
 import logging, re, os, sys
+from functools import reduce
 import parserdata, parser, functions, process, util, implicit
 import globrelative
-from cStringIO import StringIO
+from pymake import errors
+
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 
 if sys.version_info[0] < 3:
     str_type = basestring
@@ -13,17 +20,6 @@ else:
     str_type = str
 
 _log = logging.getLogger('pymake.data')
-
-class DataError(util.MakeError):
-    pass
-
-class ResolutionError(DataError):
-    """
-    Raised when dependency resolution fails, either due to recursion or to missing
-    prerequisites.This is separately catchable so that implicit rule search can try things
-    without having to commit.
-    """
-    pass
 
 def withoutdups(it):
     r = set()
@@ -406,7 +402,7 @@ class Expansion(BaseExpansion, list):
         if len(a) != len(b):
             return False
 
-        for i in xrange(len(self)):
+        for i in range(len(self)):
             e1, is_func1 = a[i]
             e2, is_func2 = b[i]
 
@@ -426,7 +422,7 @@ class Expansion(BaseExpansion, list):
 
 class Variables(object):
     """
-    A mapping from variable names to variables. Variables have flavor, source, and value. The value is an
+    A mapping from variable names to variables. Variables have flavor, source, and value. The value is an 
     expansion object.
     """
 
@@ -448,7 +444,7 @@ class Variables(object):
         self.parent = parent
 
     def readfromenvironment(self, env):
-        for k, v in env.iteritems():
+        for k, v in env.items():
             self.set(k, self.FLAVOR_RECURSIVE, self.SOURCE_ENVIRONMENT, v)
 
     def get(self, name, expand=True):
@@ -489,7 +485,7 @@ class Variables(object):
                     pvalue.concat(valueexp)
 
                     return pflavor, psource, pvalue
-
+                    
             if not expand:
                 return flavor, source, valuestr
 
@@ -548,7 +544,7 @@ class Variables(object):
             self.set(k, flavor, source, value)
 
     def __iter__(self):
-        for k, (flavor, source, value, valueexp) in self._map.iteritems():
+        for k, (flavor, source, value, valueexp) in self._map.items():
             yield k, flavor, source, value
 
     def __contains__(self, item):
@@ -659,7 +655,7 @@ class Pattern(object):
         stem = self.match(word)
         if stem is None:
             if mustmatch:
-                raise DataError("target '%s' doesn't match pattern" % (word,))
+                raise errors.DataError("target '%s' doesn't match pattern" % (word,))
             return word
 
         if not self.ispattern():
@@ -833,7 +829,7 @@ class RemakeRuleContext(object):
             if not self.makefile.keepgoing:
                 self.resolvecb(error=True, didanything=self.didanything)
                 return
-
+        
         if len(self.resolvelist):
             dep, weak = self.resolvelist.pop(0)
             self.makefile.context.defer(dep.make,
@@ -865,7 +861,7 @@ class RemakeRuleContext(object):
         assert error in (True, False)
 
         if error:
-            print "<%s>: Found error" % self.target.target
+            print("<%s>: Found error" % self.target.target)
             self.error = True
         if didanything:
             self.didanything = True
@@ -950,8 +946,8 @@ class RemakeRuleContext(object):
             self.target.didanything = True
             try:
                 self.commands = [c for c in self.rule.getcommands(self.target, self.makefile)]
-            except util.MakeError, e:
-                print e
+            except errors.MakeError as e:
+                print(e)
                 sys.stdout.flush()
                 cb(error=True)
                 return
@@ -989,13 +985,13 @@ class Target(object):
     def addrule(self, rule):
         assert isinstance(rule, (Rule, PatternRuleInstance))
         if len(self.rules) and rule.doublecolon != self.rules[0].doublecolon:
-            raise DataError("Cannot have single- and double-colon rules for the same target. Prior rule location: %s" % self.rules[0].loc, rule.loc)
+            raise errors.DataError("Cannot have single- and double-colon rules for the same target. Prior rule location: %s" % self.rules[0].loc, rule.loc)
 
         if isinstance(rule, PatternRuleInstance):
             if len(rule.prule.targetpatterns) != 1:
-                raise DataError("Static pattern rules must only have one target pattern", rule.prule.loc)
+                raise errors.DataError("Static pattern rules must only have one target pattern", rule.prule.loc)
             if rule.prule.targetpatterns[0].match(self.target) is None:
-                raise DataError("Static pattern rule doesn't match target '%s'" % self.target, rule.loc)
+                raise errors.DataError("Static pattern rule doesn't match target '%s'" % self.target, rule.loc)
 
         self.rules.append(rule)
 
@@ -1040,7 +1036,7 @@ class Target(object):
 
             for ri in r.matchesfor(dir, file, hasmatch):
                 candidates.append(ri)
-
+            
         newcandidates = []
 
         for r in candidates:
@@ -1073,7 +1069,7 @@ class Target(object):
                 t = makefile.gettarget(p)
                 try:
                     t.resolvedeps(makefile, targetstack, newrulestack, True)
-                except ResolutionError:
+                except errors.ResolutionError:
                     depfailed = p
                     break
 
@@ -1110,11 +1106,11 @@ class Target(object):
         assert makefile.parsingfinished
 
         if self.target in targetstack:
-            raise ResolutionError("Recursive dependency: %s -> %s" % (
+            raise errors.ResolutionError("Recursive dependency: %s -> %s" % (
                     " -> ".join(targetstack), self.target))
 
         targetstack = targetstack + [self.target]
-
+        
         indent = getindent(targetstack)
 
         _log.info("%sConsidering target '%s'", indent, self.target)
@@ -1127,7 +1123,7 @@ class Target(object):
             if ruleswithcommands > 1:
                 # In GNU make this is a warning, not an error. I'm going to be stricter.
                 # TODO: provide locations
-                raise DataError("Target '%s' has multiple rules with commands." % self.target)
+                raise errors.DataError("Target '%s' has multiple rules with commands." % self.target)
 
         if ruleswithcommands == 0:
             self.resolveimplicitrule(makefile, targetstack, rulestack)
@@ -1139,7 +1135,7 @@ class Target(object):
         # Otherwise, we don't know how to make it.
         if not len(self.rules) and self.mtime is None and not util.any((len(rule.prerequisites) > 0
                                                                         for rule in self.rules)):
-            raise ResolutionError("No rule to make target '%s' needed by %r" % (self.target,
+            raise errors.ResolutionError("No rule to make target '%s' needed by %r" % (self.target,
                                                                                 targetstack))
 
         if recursive:
@@ -1175,7 +1171,7 @@ class Target(object):
 
                     for lp in libpatterns:
                         if not lp.ispattern():
-                            raise DataError('.LIBPATTERNS contains a non-pattern')
+                            raise errors.DataError('.LIBPATTERNS contains a non-pattern')
 
                         libname = lp.resolve('', stem)
 
@@ -1219,7 +1215,7 @@ class Target(object):
                 return (t, mtime)
 
         return None
-
+        
     def beingremade(self):
         """
         When we remake ourself, we have to drop any vpath prefixes.
@@ -1240,7 +1236,7 @@ class Target(object):
         self._state = MAKESTATE_FINISHED
         for cb in self._callbacks:
             makefile.context.defer(cb, error=self.error, didanything=self.didanything)
-        del self._callbacks
+        del self._callbacks 
 
     def make(self, makefile, targetstack, cb, avoidremakeloop=False, printerror=True):
         """
@@ -1263,11 +1259,11 @@ class Target(object):
         """
 
         serial = makefile.context.jcount == 1
-
+        
         if self._state == MAKESTATE_FINISHED:
             cb(error=self.error, didanything=self.didanything)
             return
-
+            
         if self._state == MAKESTATE_WORKING:
             assert not serial
             self._callbacks.append(cb)
@@ -1284,9 +1280,9 @@ class Target(object):
 
         try:
             self.resolvedeps(makefile, targetstack, [], False)
-        except util.MakeError, e:
+        except errors.MakeError as e:
             if printerror:
-                print e
+                print(e)
             self.error = True
             self.notifydone(makefile)
             return
@@ -1343,7 +1339,7 @@ def setautomaticvariables(v, makefile, target, prerequisites):
     prall = [pt.vpathtarget for pt in prtargets]
     proutofdate = [pt.vpathtarget for pt in withoutdups(prtargets)
                    if target.mtime is None or mtimeislater(pt.mtime, target.mtime)]
-
+    
     setautomatic(v, '@', [target.vpathtarget])
     if len(prall):
         setautomatic(v, '<', [prall[0]])
@@ -1398,7 +1394,7 @@ class _CommandWrapper(object):
 
     def _cb(self, res):
         if res != 0 and not self.ignoreErrors:
-            print "%s: command '%s' failed, return code %i" % (self.loc, self.cline, res)
+            print("%s: command '%s' failed, return code %i" % (self.loc, self.cline, res))
             self.usercb(error=True)
         else:
             self.usercb(error=False)
@@ -1422,9 +1418,9 @@ class _NativeWrapper(_CommandWrapper):
         # get the module and method to call
         parts, badchar = process.clinetoargv(self.cline, self.kwargs['cwd'])
         if parts is None:
-            raise DataError("native command '%s': shell metacharacter '%s' in command line" % (self.cline, badchar), self.loc)
+            raise errors.DataError("native command '%s': shell metacharacter '%s' in command line" % (self.cline, badchar), self.loc)
         if len(parts) < 2:
-            raise DataError("native command '%s': no method name specified" % self.cline, self.loc)
+            raise errors.DataError("native command '%s': no method name specified" % self.cline, self.loc)
         module = parts[0]
         method = parts[1]
         cline_list = parts[2:]
@@ -1593,11 +1589,11 @@ class _RemakeContext(object):
 
         if error:
             if self.required:
-                self.cb(remade=False, error=util.MakeError(
+                self.cb(remade=False, error=errors.MakeError(
                     'Error remaking required makefiles'))
                 return
             else:
-                print 'Error remaking makefiles (ignored)'
+                print('Error remaking makefiles (ignored)')
 
         if len(self.toremake):
             target, self.required = self.toremake.pop(0)
@@ -1609,7 +1605,7 @@ class _RemakeContext(object):
                     self.cb(remade=True)
                     return
                 elif required and t.mtime is None:
-                    self.cb(remade=False, error=DataError("No rule to remake missing include file %s" % t.target))
+                    self.cb(remade=False, error=errors.DataError("No rule to remake missing include file %s" % t.target))
                     return
 
             self.cb(remade=False)
@@ -1684,7 +1680,7 @@ class Makefile(object):
         self.variables.set('MAKECMDGOALS', Variables.FLAVOR_SIMPLE,
                            Variables.SOURCE_AUTOMATIC, ' '.join(targets))
 
-        for vname, val in implicit.variables.iteritems():
+        for vname, val in implicit.variables.items():
             self.variables.set(vname,
                                Variables.FLAVOR_SIMPLE,
                                Variables.SOURCE_IMPLICIT, val)
@@ -1750,17 +1746,18 @@ class Makefile(object):
 
         flavor, source, value = self.variables.get('GPATH')
         if value is not None and value.resolvestr(self, self.variables, ['GPATH']).strip() != '':
-            raise DataError('GPATH was set: pymake does not support GPATH semantics')
+            raise errors.DataError('GPATH was set: pymake does not support GPATH semantics')
 
         flavor, source, value = self.variables.get('VPATH')
         if value is None:
             self._vpath = []
         else:
-            self._vpath = filter(lambda e: e != '',
-                                 re.split('[%s\s]+' % os.pathsep,
-                                          value.resolvestr(self, self.variables, ['VPATH'])))
+            self._vpath = [e for e in re.split('[%s\s]+' % os.pathsep,
+                                          value.resolvestr(self, self.variables, ['VPATH'])) if e != '']
 
-        targets = list(self._targets.itervalues())
+        # Must materialize target values because
+        # gettarget() modifies self._targets.
+        targets = list(self._targets.values())
         for t in targets:
             t.explicit = True
             for r in t.rules:
@@ -1836,7 +1833,7 @@ class Makefile(object):
 
     def getsubenvironment(self, variables):
         env = dict(self.env)
-        for vname, v in self.exportedvars.iteritems():
+        for vname, v in self.exportedvars.items():
             if v:
                 flavor, source, val = variables.get(vname)
                 if val is None:

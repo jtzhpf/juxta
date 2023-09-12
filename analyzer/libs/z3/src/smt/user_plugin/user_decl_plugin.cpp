@@ -21,7 +21,7 @@ Revision History:
 
 user_decl_plugin::user_decl_plugin() {
 }
-
+    
 void user_decl_plugin::finalize() {
     m_manager->dec_array_ref(m_kind2func.size(), m_kind2func.c_ptr());
     m_manager->dec_array_ref(m_kind2sort.size(), m_kind2sort.c_ptr());
@@ -43,7 +43,7 @@ sort * user_decl_plugin::mk_sort(symbol const & name) {
     }
     return s;
 }
-
+    
 func_decl * user_decl_plugin::mk_func_decl(symbol const & name, unsigned arity, sort * const * domain, sort * range) {
     unsigned kind = m_kind2func.size();
     func_decl * f = m_manager->mk_func_decl(name, arity, domain, range, func_decl_info(m_family_id, kind));
@@ -54,13 +54,13 @@ func_decl * user_decl_plugin::mk_func_decl(symbol const & name, unsigned arity, 
     }
     return f;
 }
-
+    
 func_decl * user_decl_plugin::mk_value_decl(symbol const & name, sort * s) {
     func_decl * f = mk_func_decl(name, 0, 0, s);
     m_values.insert(f);
     return f;
 }
-
+    
 sort * user_decl_plugin::mk_sort(decl_kind k, unsigned num_parameters, parameter const * parameters) {
     if (num_parameters > 0) {
         throw default_exception("invalid user theory sort");
@@ -68,8 +68,8 @@ sort * user_decl_plugin::mk_sort(decl_kind k, unsigned num_parameters, parameter
     }
     return m_kind2sort.get(k, 0);
 }
-
-func_decl * user_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+    
+func_decl * user_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                            unsigned arity, sort * const * domain, sort * range) {
     func_decl * f = m_kind2func.get(k, 0);
     if (num_parameters > 0 || f == 0) {
@@ -78,19 +78,19 @@ func_decl * user_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters,
     }
     return f;
 }
-
+    
 bool user_decl_plugin::is_value(app * v) const {
-    return m_values.contains(v->get_decl());
+    return m_values.contains(v->get_decl()); 
 }
 
 bool user_decl_plugin::is_value(func_decl * f) const {
-    return m_values.contains(f);
+    return m_values.contains(f); 
 }
-
+    
 void user_decl_plugin::get_op_names(svector<builtin_name> & op_names, symbol const & logic) {
     op_names.append(m_op_names);
 }
-
+    
 void user_decl_plugin::get_sort_names(svector<builtin_name> & sort_names, symbol const & logic) {
     sort_names.append(m_sort_names);
 }

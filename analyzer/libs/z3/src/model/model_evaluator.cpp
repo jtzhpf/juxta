@@ -45,9 +45,9 @@ struct evaluator_cfg : public default_rewriter_cfg {
     evaluator_cfg(ast_manager & m, model & md, params_ref const & p):
         m_model(md),
         m_b_rw(m),
-        // We must allow customers to set parameters for arithmetic rewriter/evaluator.
+        // We must allow customers to set parameters for arithmetic rewriter/evaluator. 
         // In particular, the maximum degree of algebraic numbers that will be evaluated.
-        m_a_rw(m, p),
+        m_a_rw(m, p), 
         m_bv_rw(m),
         // See comment above. We want to allow customers to set :sort-store
         m_ar_rw(m, p),
@@ -67,7 +67,7 @@ struct evaluator_cfg : public default_rewriter_cfg {
         m_model_completion = p.completion();
         m_cache            = p.cache();
     }
-
+        
     ast_manager & m() const { return m_model.get_manager(); }
 
     // Try to use the entries to quickly evaluate the fi
@@ -78,11 +78,11 @@ struct evaluator_cfg : public default_rewriter_cfg {
         SASSERT(fi->get_arity() == num);
 
         bool actuals_are_values = true;
-
+    
         for (unsigned i = 0; actuals_are_values && i < num; i++) {
             actuals_are_values = m().is_value(args[i]);
         }
-
+        
         if (!actuals_are_values)
             return false; // let get_macro handle it
 
@@ -105,7 +105,7 @@ struct evaluator_cfg : public default_rewriter_cfg {
                     result = val;
                     return BR_DONE;
                 }
-
+                
                 if (m_model_completion) {
                     sort * s   = f->get_range();
                     expr * val = m_model.get_some_value(s);
@@ -149,7 +149,7 @@ struct evaluator_cfg : public default_rewriter_cfg {
             return m_a_rw.mk_app_core(f, num, args, result);
         if (fid == m_bv_rw.get_fid())
             return m_bv_rw.mk_app_core(f, num, args, result);
-        if (fid == m_ar_rw.get_fid())
+        if (fid == m_ar_rw.get_fid()) 
             return m_ar_rw.mk_app_core(f, num, args, result);
         if (fid == m_dt_rw.get_fid())
             return m_dt_rw.mk_app_core(f, num, args, result);
@@ -158,10 +158,10 @@ struct evaluator_cfg : public default_rewriter_cfg {
         return BR_FAILED;
     }
 
-    bool get_macro(func_decl * f, expr * & def, quantifier * & q, proof * & def_pr) {
+    bool get_macro(func_decl * f, expr * & def, quantifier * & q, proof * & def_pr) { 
         if (f->get_family_id() == null_family_id) {
             func_interp * fi = m_model.get_func_interp(f);
-
+            
             if (fi != 0) {
                 if (fi->is_partial()) {
                     if (m_model_completion) {
@@ -173,12 +173,12 @@ struct evaluator_cfg : public default_rewriter_cfg {
                         return false;
                     }
                 }
-
+                
                 def    = fi->get_interp();
                 SASSERT(def != 0);
                 return true;
             }
-
+            
             if (m_model_completion) {
                 sort * s   = f->get_range();
                 expr * val = m_model.get_some_value(s);
@@ -191,8 +191,8 @@ struct evaluator_cfg : public default_rewriter_cfg {
         }
         return false;
     }
-
-    bool max_steps_exceeded(unsigned num_steps) const {
+    
+    bool max_steps_exceeded(unsigned num_steps) const { 
         cooperate("model evaluator");
         if (memory::get_allocation_size() > m_max_memory)
             throw rewriter_exception(Z3_MAX_MEMORY_MSG);
@@ -208,7 +208,7 @@ template class rewriter_tpl<evaluator_cfg>;
 struct model_evaluator::imp : public rewriter_tpl<evaluator_cfg> {
     evaluator_cfg m_cfg;
     imp(model & md, params_ref const & p):
-        rewriter_tpl<evaluator_cfg>(md.get_manager(),
+        rewriter_tpl<evaluator_cfg>(md.get_manager(), 
                                     false, // no proofs for evaluator
                                     m_cfg),
         m_cfg(md.get_manager(), md, p) {

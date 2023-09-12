@@ -86,7 +86,7 @@ namespace polynomial {
     struct factor_params {
         unsigned m_max_p;              //!< factor in GF_p using primes p <= m_max_p (default UINT_MAX)
         unsigned m_p_trials;           //!< Number of different finite factorizations: G_p1 ... G_pk, where k < m_p_trials
-        unsigned m_max_search_size;    //!< Threshold on the search space.
+        unsigned m_max_search_size;    //!< Threshold on the search space. 
         factor_params();
         factor_params(unsigned max_p, unsigned p_trials, unsigned max_search_size);
         void updt_params(params_ref const & p);
@@ -114,7 +114,7 @@ namespace polynomial {
         typedef svector<numeral>                        numeral_vector;
         typedef _scoped_numeral<numeral_manager>        scoped_numeral;
         typedef _scoped_numeral_vector<numeral_manager> scoped_numeral_vector;
-
+        
         /**
            \brief Contains a factorization of a polynomial of the form c * (f_1)^k_1 * ... (f_n)^k_n
         */
@@ -127,12 +127,12 @@ namespace polynomial {
         public:
             factors(manager & m);
             ~factors();
-
+            
             /**
                \brief Numer of distinct factors (not counting multiplicities).
             */
             unsigned distinct_factors() const { return m_factors.size(); }
-
+            
             /**
                \brief Numer of distinct factors (counting multiplicities).
             */
@@ -140,39 +140,39 @@ namespace polynomial {
 
             /**
                \brief Returns the factor at given position.
-            */
+            */    
             polynomial_ref operator[](unsigned i) const;
-
+            
             /**
                \brief Returns the constant (c above).
             */
             numeral const & get_constant() const { return m_constant; }
-
+            
             /**
                \brief Sets the constant.
             */
             void set_constant(numeral const & constant);
-
+            
             /**
                \brief Returns the degree of a factor (k_i above).
             */
             unsigned get_degree(unsigned i) const { return m_degrees[i]; }
-
+            
             /**
                \brief Sets the degree of a factor.
             */
             void set_degree(unsigned i, unsigned degree);
-
+            
             /**
                \brief Adds a polynomial to the factorization.
             */
             void push_back(polynomial * p, unsigned degree);
-
+            
             /**
                \brief Returns the polynomial that this factorization represents.
             */
-            void multiply(polynomial_ref & out) const;
-
+            void multiply(polynomial_ref & out) const; 
+            
             manager & m() const { return m_manager; }
             manager & pm() const { return m_manager; }
 
@@ -185,7 +185,7 @@ namespace polynomial {
                 return out;
             }
         };
-
+        
         struct imp;
     private:
         imp * m_imp;
@@ -207,7 +207,7 @@ namespace polynomial {
            \pre modular
         */
         numeral const & p() const;
-
+        
         /**
            \brief Set manager as Z[X1, ..., Xn]
         */
@@ -261,7 +261,7 @@ namespace polynomial {
         */
         void inc_ref(polynomial * p);
         void inc_ref(monomial * m);
-
+        
         /**
            \brief Decrement reference counter.
         */
@@ -274,12 +274,12 @@ namespace polynomial {
         */
         static unsigned id(monomial const * m);
 
-        /**
+        /**        
            \brief Return an unique id associated with \c m.
            This id can be used to implement efficient mappings from polynomial to data.
         */
         static unsigned id(polynomial const * p);
-
+        
         /**
            \brief Return true if \c m is the unit monomial.
         */
@@ -289,7 +289,7 @@ namespace polynomial {
            \brief Return true if \c p is the zero polynomial.
         */
         static bool is_zero(polynomial const * p);
-
+        
         /**
            \brief Return true if \c p is the constant polynomial.
         */
@@ -309,7 +309,7 @@ namespace polynomial {
            \brief Return true if m is linear (i.e., it is of the form 1 or x).
         */
         static bool is_linear(monomial const * m);
-
+        
         /**
            \brief Return true if all monomials in p are linear.
         */
@@ -319,37 +319,37 @@ namespace polynomial {
            \brief Return the degree of variable x in p.
         */
         static unsigned degree(polynomial const * p, var x);
-
+        
         /**
            \brief Return the polynomial total degree. That is,
            the degree of the monomial of maximal degree in p.
         */
         static unsigned total_degree(polynomial const * p);
-
+        
         /**
            \brief Return the number of monomials in p.
         */
         static unsigned size(polynomial const * p);
-
+        
         /**
            \brief Return the maximal variable occurring in p.
-
+           
            Return null_var if p is a constant polynomial.
         */
         static var max_var(polynomial const * p);
-
+        
         /**
            \brief Return the coefficient of the i-th monomial in p.
-
+           
            \pre i < size(p)
         */
         static numeral const & coeff(polynomial const * p, unsigned i);
-
+        
         /**
            \brief Given an univariate polynomial, return the coefficient of x_k
         */
-        static numeral const & univ_coeff(polynomial const * p, unsigned k);
-
+        static numeral const & univ_coeff(polynomial const * p, unsigned k); 
+        
         /**
            \brief Return a polynomial h that is the coefficient of x^k in p.
            if p does not contain any monomial containing x^k, then return 0.
@@ -357,7 +357,7 @@ namespace polynomial {
         polynomial * coeff(polynomial const * p, var x, unsigned k);
 
         polynomial * coeff(polynomial const * p, var x, unsigned k, polynomial_ref & reduct);
-
+        
         /**
            \brief Return true if the coefficient of x^k in p is an integer != 0.
         */
@@ -400,11 +400,11 @@ namespace polynomial {
            If p is a polynomial in Z[y_1, ..., y_k, x], then pp is a polynomial in Z[y_1, ..., y_k, x]
         */
         void primitive(polynomial const * p, var x, polynomial_ref & pp);
-
+        
         /**
            \brief Return the integer content, content, and primitive polynomials of p with respect to x.
            i*c*pp = p
-           If p is a polynomial in Z[y_1, ..., y_k, x], then
+           If p is a polynomial in Z[y_1, ..., y_k, x], then 
                c is a polynomial in Z[y_1, ..., y_k]
                pp is a polynomial in Z[y_1, ..., y_k, x]
         */
@@ -421,17 +421,17 @@ namespace polynomial {
            \brief Return the i-th monomial of p.
         */
         static monomial * get_monomial(polynomial const * p, unsigned i);
-
+        
         /**
            \brief Return the total degree of the given monomial.
         */
         static unsigned total_degree(monomial const * m);
-
+        
         /**
            \brief Return the size (number of variables) of the given monomial.
         */
         static unsigned size(monomial const * m);
-
+        
         /**
            \brief Convert a monomial created in a different manager.
         */
@@ -443,7 +443,7 @@ namespace polynomial {
            \pre i < size(m)
         */
         static var get_var(monomial const * m, unsigned i);
-
+        
         /**
            \brief Return the degree of the i-th variable in the given monomial.
 
@@ -465,7 +465,7 @@ namespace polynomial {
            \brief Return hash code for the given polynomial.
         */
         unsigned hash(polynomial const * p);
-
+        
         /**
            \brief Create the unit monomial. That is, the monomial of size zero.
         */
@@ -474,20 +474,20 @@ namespace polynomial {
         /**
            \brief Create the zero polynomial. That is, the polynomial of size zero.
         */
-        polynomial * mk_zero();
-
+        polynomial * mk_zero(); 
+        
         /**
            \brief Create the constant polynomial \c r.
-
+           
            \warning r is a number managed by the numeral_manager in the polynomial manager
 
            \warning r is reset.
         */
         polynomial * mk_const(numeral & r);
-
+        
         /**
            \brief Create the constant polynomial \c r.
-
+           
            \pre r must be an integer
         */
         polynomial * mk_const(rational const & r);
@@ -501,18 +501,18 @@ namespace polynomial {
            \brief Create an univariate monomial.
         */
         monomial * mk_monomial(var x, unsigned k);
-
+        
         /**
            \brief Create the monomial
-
+           
            xs[0]*...*xs[sz-1]
-
+           
            Remark: xs may contain duplicate variables.
-
+           
            \warning The elements of xs will be reordered.
         */
         monomial * mk_monomial(unsigned sz, var * xs);
-
+        
         /**
            \brief Create the polynomial x^k
         */
@@ -531,7 +531,7 @@ namespace polynomial {
            \brief Create the polynomial
 
            as[0]*ms[0] + ... + as[sz-1]*ms[sz - 1]
-
+           
            \warning as's are numbers managed by mpq_manager in the polynomial manager
 
            \warning the numerals in as are reset.
@@ -540,7 +540,7 @@ namespace polynomial {
 
         /**
            \brief Create the linear polynomial
-
+           
            as[0]*xs[0] + ... + as[sz-1]*xs[sz-1] + c
 
            \pre as's must be integers
@@ -549,18 +549,18 @@ namespace polynomial {
 
         /**
            \brief Create the linear polynomial
-
+           
            as[0]*xs[0] + ... + as[sz-1]*xs[sz-1] + c
-
+           
            \warning as's are numbers managed by mpq_manager in the polynomial manager
 
            \warning the numerals in as are reset.
         */
         polynomial * mk_linear(unsigned sz, numeral * as, var const * xs, numeral & c);
-
+        
         /**
            \brief Create an univariate polynomial of degree n
-
+           
            as[0] + as[1]*x + as[2]*x^2 + ... + as[n]*x^n
 
            \warning \c as must contain n+1 elements.
@@ -575,18 +575,18 @@ namespace polynomial {
         /**
            \brief Return p1 + p2
         */
-        polynomial * add(polynomial const * p1, polynomial const * p2);
+        polynomial * add(polynomial const * p1, polynomial const * p2);    
 
         /**
            \brief Return p1 - p2
         */
-        polynomial * sub(polynomial const * p1, polynomial const * p2);
+        polynomial * sub(polynomial const * p1, polynomial const * p2);    
 
         /**
            \brief Return a1*m1*p1 + a2*m2*p2
         */
         polynomial * addmul(numeral const & a1, monomial const * m1, polynomial const * p1, numeral const & a2, monomial const * m2, polynomial const * p2);
-
+        
         /**
            \brief Return p1 + a2*m2*p2
         */
@@ -596,17 +596,17 @@ namespace polynomial {
            \brief Return p1 + a2*p2
         */
         polynomial * addmul(polynomial const * p1, numeral const & a2, polynomial const * p2);
-
+            
         /**
            \brief Return a * p
         */
-        polynomial * mul(numeral const & a, polynomial const * p);
-        polynomial * mul(rational const & a, polynomial const * p);
-
+        polynomial * mul(numeral const & a, polynomial const * p);    
+        polynomial * mul(rational const & a, polynomial const * p);    
+        
         /**
            \brief Return p1 * p2
         */
-        polynomial * mul(polynomial const * p1, polynomial const * p2);
+        polynomial * mul(polynomial const * p1, polynomial const * p2);    
 
         /**
            \brief Return m1 * m2
@@ -622,7 +622,7 @@ namespace polynomial {
            \brief Return m * p
         */
         polynomial * mul(monomial const * m, polynomial const * p);
-
+        
         /**
            \brief Return true if m2 divides m1
         */
@@ -658,12 +658,12 @@ namespace polynomial {
            \brief Return m^k
         */
         monomial * pw(monomial const * m, unsigned k);
-
+        
         /**
            \brief Return the polynomial p^k
         */
         void pw(polynomial const * p, unsigned k, polynomial_ref & r);
-
+       
         /**
            \brief Return dp/dx
         */
@@ -680,7 +680,7 @@ namespace polynomial {
         bool is_square_free(polynomial const * p, var x);
 
         /**
-           \brief r := square free part of p
+           \brief r := square free part of p 
         */
         void square_free(polynomial const * p, polynomial_ref & r);
 
@@ -688,7 +688,7 @@ namespace polynomial {
            \brief Return true if p is square free
         */
         bool is_square_free(polynomial const * p);
-
+        
         /**
            \brief Return true if p1 == p2.
         */
@@ -702,15 +702,15 @@ namespace polynomial {
         void rename(unsigned sz, var const * xs);
 
         /**
-           \brief Given an univariate polynomial p(x),
+           \brief Given an univariate polynomial p(x), 
            return the polynomial  x^n * p(1/x), where n = degree(p)
-
+           
            If u is a nonzero root of p, then 1/u is a root the resultant polynomial.
         */
         polynomial * compose_1_div_x(polynomial const * p);
 
         /**
-           \brief Given an univariate polynomial p(x),
+           \brief Given an univariate polynomial p(x), 
            return the polynomial  y^n * p(x/y), where n = degree(p)
         */
         polynomial * compose_x_div_y(polynomial const * p, var y);
@@ -719,7 +719,7 @@ namespace polynomial {
            \brief Given an univariate polynomial p(x), return p(-x)
         */
         polynomial * compose_minus_x(polynomial const * p);
-
+        
         /**
            \brief Given an univariate polynomial p(x) and a polynomial q(y_1, ..., y_n),
            return a polynomial r(y_1, ..., y_n) = p(q(y_1, ..., y_n)).
@@ -748,10 +748,10 @@ namespace polynomial {
            The result is stored in r.
         */
         void compose_x_minus_c(polynomial const * p, numeral const & c, polynomial_ref & r);
-
+        
         /**
            \brief Return the exact pseudo remainder of p by q, assuming x is the maximal variable.
-
+           
            See comments at pseudo_division_core at polynomial.cpp for a description of exact pseudo division.
         */
         void exact_pseudo_remainder(polynomial const * p, polynomial const * q, var x, polynomial_ref & R);
@@ -762,7 +762,7 @@ namespace polynomial {
 
         /**
            \brief Return the pseudo remainder of p by q, assuming x is the maximal variable.
-
+           
            See comments at pseudo_division_core at polynomial.cpp for a description of exact pseudo division.
         */
         void pseudo_remainder(polynomial const * p, polynomial const * q, var x, unsigned & d, polynomial_ref & R);
@@ -773,7 +773,7 @@ namespace polynomial {
 
         /**
            \brief Return the exact pseudo division quotient and remainder.
-
+           
            See comments at pseudo_division_core at polynomial.cpp for a description of exact pseudo division.
         */
         void exact_pseudo_division(polynomial const * p, polynomial const * q, var x, polynomial_ref & Q, polynomial_ref & R);
@@ -784,11 +784,11 @@ namespace polynomial {
 
         /**
            \brief Return the pseudo division quotient and remainder.
-
+           
            See comments at pseudo_division_core at polynomial.cpp for a description of exact pseudo division.
         */
         void pseudo_division(polynomial const * p, polynomial const * q, var x, unsigned & d, polynomial_ref & Q, polynomial_ref & R);
-
+        
         void pseudo_division(polynomial const * p, polynomial const * q, unsigned & d, polynomial_ref & Q, polynomial_ref & R) {
             pseudo_division(p, q, max_var(q), d, Q, R);
         }
@@ -797,7 +797,7 @@ namespace polynomial {
            \brief Return p/q if q divides p.
 
            \pre q divides p.
-
+           
            \remark p and q may be multivariate polynomials.
         */
         polynomial * exact_div(polynomial const * p, polynomial const * q);
@@ -811,34 +811,34 @@ namespace polynomial {
            \brief Return p/c if c divides p.
 
            \pre c divides p.
-
+           
            \remark p may be multivariate polynomial.
         */
         polynomial * exact_div(polynomial const * p, numeral const & c);
 
         /**
            \brief Store in r the quasi-resultant of p and q with respect to variable x.
-
+           
            Assume p and q are polynomials in Q[y_1, ..., y_n, x].
            Then r is a polynomial in Q[y_1, ..., y_n].
-           Moreover, Forall a_1, ..., a_n, b,
+           Moreover, Forall a_1, ..., a_n, b,  
                    if p(a_1, ..., a_n, b) = q(a_1, ..., a_n, b) = 0
                    then r(a_1, ..., a_n) = 0
 
-           \pre p and q must contain x.
-
+           \pre p and q must contain x.        
+           
            \remark if r is the zero polynomial, then for any complex numbers a_1, ..., a_n,
            the univariate polynomials p(a_1, ..., a_n, x) and q(a_1, ..., a_n, x) in C[x] have
            a common root. C is the field of the complex numbers.
         */
         void quasi_resultant(polynomial const * p, polynomial const * q, var x, polynomial_ref & r);
-
+        
         /**
            \brief Store in r the resultant of p and q with respect to variable x.
            See comments in polynomial.cpp for more details
         */
         void resultant(polynomial const * p, polynomial const * q, var x, polynomial_ref & r);
-
+        
         /**
            \brief Stroe in r the discriminant of p with respect to variable x.
            discriminant(p, x, r) == resultant(p, derivative(p, x), x, r)
@@ -849,7 +849,7 @@ namespace polynomial {
            \brief Store in S the principal subresultant coefficients for p and q.
         */
         void psc_chain(polynomial const * p, polynomial const * q, var x, polynomial_ref_vector & S);
-
+        
         /**
            \brief Make sure the GCD of the coefficients is one.
 
@@ -858,15 +858,15 @@ namespace polynomial {
            one where all coefficients are in Z_p
         */
         polynomial * normalize(polynomial const * p);
-
+        
         /**
            \brief Return true if p is a square, and store its square root in r.
         */
         bool sqrt(polynomial const * p, polynomial_ref & r);
-
+        
         /**
            \brief Return true if p is always positive for any assignment of its variables.
-
+           
            This is an incomplete check. This method just check if all monomials are powers of two,
            and the coefficients are positive.
         */
@@ -874,7 +874,7 @@ namespace polynomial {
 
         /**
            \brief Return true if p is always negative for any assignment of its variables.
-
+           
            This is an incomplete check.
         */
         bool is_neg(polynomial const * p);
@@ -922,17 +922,17 @@ namespace polynomial {
         */
         polynomial * substitute(polynomial const * p, var2mpq const & x2v);
         polynomial * substitute(polynomial const * p, unsigned xs_sz, var const * xs, mpq const * vs);
-
+        
         /**
            \brief Apply substitution [x_1 -> v_1, ..., x_n -> v_n].
-           That is, given p \in Z[x_1, ..., x_n, y_1, ..., y_m] return
+           That is, given p \in Z[x_1, ..., x_n, y_1, ..., y_m] return 
            polynomial r(y_1, ..., y_m) = p(v_1, ..., v_n, y_1, ..., y_m) in Z[y_1, ..., y_m].
         */
         polynomial * substitute(polynomial const * p, unsigned xs_sz, var const * xs, numeral const * vs);
 
         /**
            \brief Apply substitution [x -> v].
-           That is, given p \in Z[x, y_1, ..., y_m] return
+           That is, given p \in Z[x, y_1, ..., y_m] return 
            polynomial r(y_1, ..., y_m) = p(v, y_1, ..., y_m) in Z[y_1, ..., y_m].
         */
         polynomial * substitute(polynomial const * p, var x, numeral const & v) {
@@ -945,16 +945,16 @@ namespace polynomial {
         void factor(polynomial const * p, factors & r, factor_params const & params = factor_params());
 
         /**
-           \brief Dense univariate polynomial to sparse polynomial.
+           \brief Dense univariate polynomial to sparse polynomial. 
         */
         polynomial * to_polynomial(unsigned sz, numeral const * p, var x);
         polynomial * to_polynomial(numeral_vector const & p, var x) {
             return to_polynomial(p.size(), p.c_ptr(), x);
         }
-
+       
         /**
            \brief Make the leading monomial (with respect to graded lexicographical order) monic.
-
+           
            \pre numeral_manager must be a field.
         */
         polynomial * mk_glex_monic(polynomial const * p);
@@ -963,7 +963,7 @@ namespace polynomial {
            \brief Return p'(y_1, ..., y_n, x) = p(y_1, ..., y_n, x + v)
         */
         polynomial * translate(polynomial const * p, var x, numeral const & v);
-
+        
         /**
            \brief Store p'(y_1, ..., y_n, x_1, ..., x_m) = p(y_1, ..., y_n, x_1 + v_1, ..., x_m + v_m)
            into r.
@@ -971,14 +971,14 @@ namespace polynomial {
         void translate(polynomial const * p, unsigned xs_sz, var const * xs, numeral const * vs, polynomial_ref & r);
         void translate(polynomial const * p, var_vector const & xs, numeral_vector const & vs, polynomial_ref & r) {
             SASSERT(xs.size() == vs.size());
-            translate(p, xs.size(), xs.c_ptr(), vs.c_ptr(), r);
+            translate(p, xs.size(), xs.c_ptr(), vs.c_ptr(), r); 
         }
 
         /**
            \brief Remove monomials m if it contains x^k and x2d[x] >= k
         */
         polynomial * mod_d(polynomial const * p, var2degree const & x2d);
-
+        
         /**
            \brief (exact) Pseudo division modulo var->degree mapping.
         */
@@ -1000,7 +1000,7 @@ namespace polynomial {
     typedef manager::numeral numeral;
     typedef manager::numeral_manager numeral_manager;
     typedef manager::scoped_numeral scoped_numeral;
-    typedef manager::scoped_numeral_vector scoped_numeral_vector;
+    typedef manager::scoped_numeral_vector scoped_numeral_vector; 
 
     class scoped_set_z {
         manager &      m;
@@ -1025,7 +1025,7 @@ namespace polynomial {
 typedef polynomial::polynomial_ref           polynomial_ref;
 typedef polynomial::polynomial_ref_vector    polynomial_ref_vector;
 
-polynomial::polynomial * convert(polynomial::manager & sm, polynomial::polynomial * p, polynomial::manager & tm,
+polynomial::polynomial * convert(polynomial::manager & sm, polynomial::polynomial * p, polynomial::manager & tm, 
                                  polynomial::var x = polynomial::null_var, unsigned max_d = UINT_MAX);
 
 inline polynomial::polynomial * convert(polynomial::manager & sm, polynomial_ref const & p, polynomial::manager & tm) {
@@ -1316,7 +1316,7 @@ inline polynomial_ref pseudo_remainder(polynomial_ref const & p, polynomial_ref 
     return pseudo_remainder(p, q, max_var(q), d);
 }
 
-inline polynomial_ref exact_pseudo_division(polynomial_ref const & p, polynomial_ref const & q, polynomial::var x,
+inline polynomial_ref exact_pseudo_division(polynomial_ref const & p, polynomial_ref const & q, polynomial::var x, 
                                              polynomial_ref & R) {
     polynomial::manager & m = p.m();
     polynomial_ref Q(m);

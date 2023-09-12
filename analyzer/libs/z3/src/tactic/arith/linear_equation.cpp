@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Basic infrastructure for managing linear equations of the form:
-
+    
     a_1 * x_1 + ... + a_n * x_n = 0
 
 Author:
@@ -58,7 +58,7 @@ void linear_equation_manager::display(std::ostream & out, linear_equation const 
 
 linear_equation * linear_equation_manager::mk(unsigned sz, mpq * as, var * xs, bool normalized) {
     SASSERT(sz > 1);
-
+    
     // compute lcm of the denominators
     mpz l;
     mpz r;
@@ -67,9 +67,9 @@ linear_equation * linear_equation_manager::mk(unsigned sz, mpq * as, var * xs, b
         m.set(r, as[i].denominator());
         m.lcm(r, l, l);
     }
-
+    
     TRACE("linear_equation_mk", tout << "lcm: " << m.to_string(l) << "\n";);
-
+    
     // copy l * as to m_int_buffer.
     m_int_buffer.reset();
     for (unsigned i = 0; i < sz; i++) {
@@ -81,7 +81,7 @@ linear_equation * linear_equation_manager::mk(unsigned sz, mpq * as, var * xs, b
     }
 
     linear_equation * new_eq = mk(sz, m_int_buffer.c_ptr(), xs, normalized);
-
+    
     m.del(r);
     m.del(l);
 
@@ -97,7 +97,7 @@ linear_equation * linear_equation_manager::mk_core(unsigned sz, mpz * as, var * 
     });
 
     TRACE("linear_equation_bug", for (unsigned i = 0; i < sz; i++) tout << m.to_string(as[i]) << "*x" << xs[i] << " "; tout << "\n";);
-
+    
     mpz g;
     m.set(g, as[0]);
     for (unsigned i = 1; i < sz; i++) {
@@ -118,7 +118,7 @@ linear_equation * linear_equation_manager::mk_core(unsigned sz, mpz * as, var * 
         }
     }
 
-    TRACE("linear_equation_bug",
+    TRACE("linear_equation_bug", 
           tout << "g: " << m.to_string(g) << "\n";
           for (unsigned i = 0; i < sz; i++) tout << m.to_string(as[i]) << "*x" << xs[i] << " "; tout << "\n";);
 
@@ -150,7 +150,7 @@ linear_equation * linear_equation_manager::mk(unsigned sz, mpz * as, var * xs, b
             var x = xs[i];
             m_mark.reserve(x+1, false);
             m_val_buffer.reserve(x+1);
-
+            
             if (m_mark[x]) {
                 m.add(m_val_buffer[x], as[i], m_val_buffer[x]);
             }
@@ -159,7 +159,7 @@ linear_equation * linear_equation_manager::mk(unsigned sz, mpz * as, var * xs, b
                 m_mark[x] = true;
             }
         }
-
+        
         unsigned j = 0;
         for (unsigned i = 0; i < sz; i++) {
             var x = xs[i];
@@ -190,7 +190,7 @@ linear_equation * linear_equation_manager::mk(unsigned sz, mpz * as, var * xs, b
             }
         });
     }
-
+    
     for (unsigned i = 0; i < sz; i++) {
         var x = xs[i];
         m_val_buffer.reserve(x+1);
@@ -201,7 +201,7 @@ linear_equation * linear_equation_manager::mk(unsigned sz, mpz * as, var * xs, b
         var x = xs[i];
         m.swap(as[i], m_val_buffer[x]);
     }
-
+    
     return mk_core(sz, as, xs);
 }
 

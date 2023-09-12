@@ -34,14 +34,14 @@ Revision History:
 In first-order theorem proving (FOTP), a demodulator is a universally quantified formula of the form:
 
 Forall X1, ..., Xn.  L[X1, ..., Xn] = R[X1, ..., Xn]
-Where L[X1, ..., Xn] contains all variables in R[X1, ..., Xn], and
+Where L[X1, ..., Xn] contains all variables in R[X1, ..., Xn], and 
 L[X1, ..., Xn] is "bigger" than R[X1, ...,Xn].
 
 The idea is to replace something big L[X1, ..., Xn] with something smaller R[X1, ..., Xn].
 In FOTP, they use term orderings to decide what does it mean to be smaller.
-We are using demodulators in a different context (pre-processing).
+We are using demodulators in a different context (pre-processing). 
 So, I suggest we have a virtual method is_smaller for comparing expressions.
-The default implementation just compares the size of the expressions.
+The default implementation just compares the size of the expressions. 
 
 Similarly, in our context, formulas using iff are also demodulators.
 Forall X1, ..., Xn.  L[X1, ..., Xn] iff R[X1, ..., Xn]
@@ -78,7 +78,7 @@ The class matcher (in matcher.h) can be use to test whether an expression is an 
 
 Finally, there is the problem when we have N demodulators (where N is big), and a big formula, and we want
 to traverse the formula only once looking for opportunities for applying these N demodulators.
-We want to efficiently find the applicable demodulars.
+We want to efficiently find the applicable demodulars. 
 We can start with a simple optimization that given a func_decl it returns the set of demodulators that start with this declaration.
 For example, suppose we have the demodulators.
    forall x, f(x, g(0)) = 10
@@ -90,7 +90,7 @@ The current implementation in Z3 is not efficient, and I think it is buggy.
 So, it would be great to replace it with a new one.
 The code in spc_rewriter.* does something like that. We cannot reuse this code directly since it is meant
 for the superposion engine in Z3, but we can adapt it for our needs in the preprocessor.
-
+   
 */
 class ufbv_rewriter {
     class rewrite_proc;
@@ -103,15 +103,15 @@ class ufbv_rewriter {
     class plugin {
         ast_manager& m_manager;
     public:
-        plugin(ast_manager& m): m_manager(m) { }
+        plugin(ast_manager& m): m_manager(m) { }        
         void ins_eh(expr* k, expr_bool_pair v) { m_manager.inc_ref(k); m_manager.inc_ref(v.first); }
         void del_eh(expr* k, expr_bool_pair v) { m_manager.dec_ref(k); m_manager.dec_ref(v.first); }
         static unsigned to_int(expr const * k) { return k->get_id(); }
     };
     typedef array_map<expr*, expr_bool_pair, plugin> expr_map;
-
+    
     typedef std::pair<expr *, expr *> expr_pair;
-    typedef obj_hashtable<expr> expr_set;
+    typedef obj_hashtable<expr> expr_set;    
     typedef obj_map<func_decl, expr_set *> back_idx_map;
     typedef obj_hashtable<quantifier> quantifier_set;
     typedef obj_map<func_decl, quantifier_set *> fwd_idx_map;
@@ -132,9 +132,9 @@ class ufbv_rewriter {
         cache                 m_cache;
         svector<expr_pair>    m_todo;
         bool                  m_all_args_eq;
-
+     
         bool match_args(app * t, expr * const * args);
-
+   
     public:
         match_subst(ast_manager & m);
         void reserve(unsigned max_vid) { m_subst.reserve(2, max_vid+1); }
@@ -146,11 +146,11 @@ class ufbv_rewriter {
            substitution s into t.
 
            Assumptions, the variables in lhs and (f args) are assumed to be distinct.
-           So, (f x y) matches (f y x).
+           So, (f x y) matches (f y x). 
            Moreover, the result should be in terms of the variables in (f args).
         */
         bool operator()(app * lhs, expr * rhs, expr * const * args, expr_ref & new_rhs);
-
+        
         /**
            \brief Return true if \c i is an instance of \c t.
         */
@@ -170,14 +170,14 @@ class ufbv_rewriter {
     expr_ref_buffer     m_rewrite_todo;
     rewrite_cache_map   m_rewrite_cache;
     expr_ref_buffer     m_new_exprs;
-
+    
     void insert_fwd_idx(expr * large, expr * small, quantifier * demodulator);
     void remove_fwd_idx(func_decl * f, quantifier * demodulator);
     bool check_fwd_idx_consistency(void);
     void show_fwd_idx(std::ostream & out);
     bool is_demodulator(expr * e, expr_ref & large, expr_ref & small) const;
     bool can_rewrite(expr * n, expr * lhs);
-
+    
     expr * rewrite(expr * n);
     bool rewrite1(func_decl * f, ptr_vector<expr> & m_new_args, expr_ref & np);
     bool rewrite_visit_children(app * a);
@@ -185,18 +185,18 @@ class ufbv_rewriter {
     void reschedule_processed(func_decl * f);
     void reschedule_demodulators(func_decl * f, expr * np);
     unsigned max_var_id(expr * e);
-
-protected:
+    
+protected:    
     // is_smaller returns -1 for e1<e2, 0 for e1==e2 and +1 for e1>e2.
-    virtual int is_smaller(expr * e1, expr * e2) const;
+    virtual int is_smaller(expr * e1, expr * e2) const; 
 
     // is_subset returns -1 for e1 subset e2, +1 for e2 subset e1, 0 else.
-    virtual int is_subset(expr * e1, expr * e2) const;
+    virtual int is_subset(expr * e1, expr * e2) const; 
 
 public:
     ufbv_rewriter(ast_manager & m, basic_simplifier_plugin & p);
     virtual ~ufbv_rewriter();
-
+    
     void operator()(unsigned n, expr * const * exprs, proof * const * prs, expr_ref_vector & new_exprs, proof_ref_vector & new_prs);
 
     /**
@@ -207,7 +207,7 @@ public:
       Forall x, f(h(x)) = x + 1
 
       The rewrite engine main loop is based on the DISCOUNT loop used in first-order theorem provers.
-
+      
       Main structures:
       - m_todo:          The todo-stack of formulas to be processed.
       - m_fwd_idx:       "Forward index" for finding efficiently which demodulators can be used to rewrite an expression.
@@ -236,7 +236,7 @@ public:
                insert p into m_todo
             }
             use m_back_idx to find all demodulators d in m_fwd_idx that contains f {
-               if n' can rewrite d {
+               if n' can rewrite d { 
                   // this is a quick check, we just traverse d and check if there is an expression in d that is an instance of lhs of n'.
                   // we cannot use the trick used for m_processed, since the main loop would not terminate.
                   remove d from m_fwd_idx
@@ -251,16 +251,16 @@ public:
      the result is the contents of m_processed + all demodulators in m_fwd_idx.
 
      Note: to remove p from m_back_idx, we need to traverse p, and for every function declartion f in p, we should remove the entry f->p from m_back_idx.
-
+     
      Note: we can implement m_back_idx for formulas as:
          typedef obj_hashtable<expr> expr_set;
          obj_map<func_decl, expr_set *> m_back_idx;
          we should represent the sets as hashtables because we want to be able to efficiently remove elements from these sets.
          ptr_vector<expr_set>           m_expr_set_to_delete; // same trick we used in macro_manager.
          we can use a similar structure for m_back_idx and m_fwd_idx for demodulators.
-
+         
      Note: m_processed should be obj_hashtable<expr> since we want to remove elements from there efficiently.
-    */
+    */    
 };
 
 #endif /* _UFBV_REWRITER_H_ */

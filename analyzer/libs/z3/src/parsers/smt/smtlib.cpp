@@ -6,7 +6,7 @@
 #ifdef _WINDOWS
 #ifdef ARRAYSIZE
 #undef ARRAYSIZE
-#endif
+#endif 
 #include <windows.h>
 #include <strsafe.h>
 #endif
@@ -71,7 +71,7 @@ void symtable::insert(symbol s, func_decl * d) {
 
 bool symtable::find1(symbol s, func_decl*& d) {
     ptr_vector<func_decl>* decls = 0;
-
+    
     if (!m_ids.find(s, decls)) {
         SASSERT(!decls);
         return false;
@@ -104,7 +104,7 @@ bool symtable::find_overload(symbol s, ptr_vector<sort> const & dom, func_decl *
         if (decl->get_arity() != dom.size()) {
             goto try_next;
         }
-        for (unsigned j = 0; j < decl->get_arity(); ++j) {
+        for (unsigned j = 0; j < decl->get_arity(); ++j) {            
             if (decl->get_domain(j) != dom[j]) {
                 goto try_next;
             }
@@ -122,7 +122,7 @@ bool symtable::find_overload(symbol s, ptr_vector<sort> const & dom, func_decl *
     return false;
 }
 
-// Store in result the func_decl that are not attached to any family id.
+// Store in result the func_decl that are not attached to any family id. 
 // That is, the uninterpreted constants and function declarations.
 void symtable::get_func_decls(ptr_vector<func_decl> & result) const {
     svector<ptr_vector<func_decl>*> tmp;
@@ -222,7 +222,7 @@ bool theory::get_const(symbol id, expr * & term) {
 }
 
 void benchmark::display_as_smt2(std::ostream & out) const {
-    if (m_logic != symbol::null)
+    if (m_logic != symbol::null) 
         out << "(set-logic " << m_logic << ")\n";
     out << "(set-info :smt-lib-version 2.0)\n";
     out << "(set-info :status ";

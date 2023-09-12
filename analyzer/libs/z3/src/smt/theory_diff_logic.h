@@ -60,7 +60,7 @@ namespace smt {
 
     template<typename Ext>
     class theory_diff_logic : public theory, private Ext {
-
+        
         typedef typename Ext::numeral numeral;
 
         class atom {
@@ -86,7 +86,7 @@ namespace smt {
 
         typedef ptr_vector<atom> atoms;
         typedef u_map<atom*>     bool_var2atom;
-
+              
 
         // Auxiliary info for propagating cheap equalities
         class eq_prop_info {
@@ -110,13 +110,13 @@ namespace smt {
                 return m_scc_id == info.m_scc_id && m_delta == info.m_delta;
             }
         };
-
+        
         struct eq_prop_info_hash_proc {
-            unsigned operator()(eq_prop_info * info) const {
+            unsigned operator()(eq_prop_info * info) const { 
                 return info->hash();
             }
         };
-
+        
         struct eq_prop_info_eq_proc {
             bool operator()(eq_prop_info * info1, eq_prop_info * info2) const {
                 return *info1 == *info2;
@@ -127,12 +127,12 @@ namespace smt {
 
 
         // Extension for diff_logic core.
-
+  
         struct GExt : public Ext {
             typedef literal explanation;
         };
-
-        // Functor used to collect the proofs for a conflict due to
+        
+        // Functor used to collect the proofs for a conflict due to 
         // a negative cycle.
         class nc_functor {
             literal_vector m_antecedents;
@@ -172,7 +172,7 @@ namespace smt {
 
         ptr_vector<atom>               m_atoms;
         ptr_vector<atom>               m_asserted_atoms;   // set of asserted atoms
-        unsigned                       m_asserted_qhead;
+        unsigned                       m_asserted_qhead;   
         bool_var2atom                  m_bool_var2atom;
         svector<scope>                 m_scopes;
 
@@ -184,18 +184,18 @@ namespace smt {
 
         arith_factory *                m_factory;
         rational                       m_delta;
-        nc_functor                     m_nc_functor;
+        nc_functor                     m_nc_functor;        
 
         // Set a conflict due to a negative cycle.
         void set_neg_cycle_conflict();
-
+               
         void new_edge(dl_var src, dl_var dst, unsigned num_edges, edge_id const* edges);
 
         // Create a new theory variable.
         virtual theory_var mk_var(enode* n);
 
         virtual theory_var mk_var(app* n);
-
+                        
         void compute_delta();
 
         void found_non_diff_logic_expr(expr * n);
@@ -204,7 +204,7 @@ namespace smt {
             return get_family_id() == n->get_family_id();
         }
 
-    public:
+    public:    
         theory_diff_logic(ast_manager& m, smt_params & params):
             theory(m.mk_family_id("arith")),
             m_params(params),
@@ -220,7 +220,7 @@ namespace smt {
             m_non_diff_logic_exprs(false),
             m_factory(0),
             m_nc_functor(*this) {
-        }
+        }            
 
         virtual ~theory_diff_logic() {
             reset_eh();
@@ -238,7 +238,7 @@ namespace smt {
         virtual void init(context * ctx);
 
         virtual bool internalize_atom(app * atom, bool gate_ctx);
-
+                                                     
         virtual bool internalize_term(app * term);
 
         virtual void internalize_eq_eh(app * atom, bool_var v);
@@ -270,13 +270,13 @@ namespace smt {
         virtual bool is_shared(theory_var v) const {
             return false;
         }
-
+    
         virtual bool can_propagate() {
             return m_asserted_qhead != m_asserted_atoms.size();
         }
-
+        
         virtual void propagate();
-
+        
         virtual justification * why_is_diseq(theory_var v1, theory_var v2) {
             NOT_IMPLEMENTED_YET();
             return 0;
@@ -287,16 +287,16 @@ namespace smt {
         virtual void reset_eh();
 
         virtual void init_model(model_generator & m);
-
+        
         virtual model_value_proc * mk_value(enode * n, model_generator & mg);
 
         virtual bool validate_eq_in_model(theory_var v1, theory_var v2, bool is_true) const;
-
+                
         virtual void display(std::ostream & out) const;
-
+        
         virtual void collect_statistics(::statistics & st) const;
 
-    private:
+    private:        
 
         virtual void new_eq_eh(theory_var v1, theory_var v2, justification& j);
 

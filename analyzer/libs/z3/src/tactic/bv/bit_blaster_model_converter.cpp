@@ -32,7 +32,7 @@ struct bit_blaster_model_converter : public model_converter {
     expr_ref_vector           m_bits;
 
     ast_manager & m() const { return m_vars.get_manager(); }
-
+    
     bit_blaster_model_converter(ast_manager & m, obj_map<func_decl, expr*> const & const2bits):m_vars(m), m_bits(m) {
         obj_map<func_decl, expr*>::iterator it  = const2bits.begin();
         obj_map<func_decl, expr*>::iterator end = const2bits.end();
@@ -45,10 +45,10 @@ struct bit_blaster_model_converter : public model_converter {
             m_bits.push_back(bits);
         }
     }
-
+    
     virtual ~bit_blaster_model_converter() {
     }
-
+    
     void collect_bits(obj_hashtable<func_decl> & bits) {
         unsigned sz = m_bits.size();
         for (unsigned i = 0; i < sz; i++) {
@@ -58,7 +58,7 @@ struct bit_blaster_model_converter : public model_converter {
             unsigned num_args = to_app(bs)->get_num_args();
             for (unsigned j = 0; j < num_args; j++) {
                 expr * bit = to_app(bs)->get_arg(j);
-                SASSERT(!TO_BOOL || m().is_bool(bit));
+                SASSERT(!TO_BOOL || m().is_bool(bit)); 
                 SASSERT(TO_BOOL ||  is_sort_of(m().get_sort(bit), m().get_family_id("bv"), BV_SORT));
                 SASSERT(is_uninterp_const(bit));
                 bits.insert(to_app(bit)->get_decl());
@@ -74,7 +74,7 @@ struct bit_blaster_model_converter : public model_converter {
               tout << "\n";);
 
     }
-
+    
     void copy_non_bits(obj_hashtable<func_decl> & bits, model * old_model, model * new_model) {
         unsigned num = old_model->get_num_constants();
         for (unsigned i = 0; i < num; i++) {
@@ -90,7 +90,7 @@ struct bit_blaster_model_converter : public model_converter {
         new_model->copy_usort_interps(*old_model);
         TRACE("blaster_mc", tout << "after copying functions and sorts:\n"; model_pp(tout, *new_model););
     }
-
+    
     void mk_bvs(model * old_model, model * new_model) {
         bv_util util(m());
         rational val;
@@ -150,7 +150,7 @@ struct bit_blaster_model_converter : public model_converter {
     virtual void operator()(model_ref & md) {
         operator()(md, 0);
     }
-
+    
     virtual void display(std::ostream & out) {
         out << "(bit-blaster-model-converter";
         unsigned sz = m_vars.size();
@@ -158,7 +158,7 @@ struct bit_blaster_model_converter : public model_converter {
             out << "\n  (" << m_vars.get(i)->get_name() << " ";
             unsigned indent = m_vars.get(i)->get_name().size() + 4;
             out << mk_ismt2_pp(m_bits.get(i), m(), indent) << ")";
-        }
+        }   
         out << ")" << std::endl;
     }
 

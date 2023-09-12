@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2013-01-15
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -24,11 +24,11 @@ using System.Diagnostics.Contracts;
 namespace Microsoft.Z3
 {
     /// <summary>
-    /// Global functions for Z3.
+    /// Global functions for Z3. 
     /// </summary>
     /// <remarks>
     /// This (static) class contains functions that effect the behaviour of Z3
-    /// globally across contexts, etc.
+    /// globally across contexts, etc. 
     /// </remarks>
     public static class Global
     {
@@ -38,7 +38,7 @@ namespace Microsoft.Z3
         /// <remarks>
         /// When a Z3 module is initialized it will use the value of these parameters
         /// when Z3_params objects are not provided.
-        /// The name of parameter can be composed of characters [a-z][A-Z], digits [0-9], '-' and '_'.
+        /// The name of parameter can be composed of characters [a-z][A-Z], digits [0-9], '-' and '_'. 
         /// The character '.' is a delimiter (more later).
         /// The parameter names are case-insensitive. The character '-' should be viewed as an "alias" for '_'.
         /// Thus, the following parameter names are considered equivalent: "pp.decimal-precision"  and "PP.DECIMAL_PRECISION".
@@ -56,7 +56,7 @@ namespace Microsoft.Z3
         /// <summary>
         /// Get a global (or module) parameter.
         /// </summary>
-        /// <remarks>
+        /// <remarks>               
         /// Returns null if the parameter <param name="id"/> does not exist.
         /// The caller must invoke #Z3_global_param_del_value to delete the value returned at \c param_value.
         /// This function cannot be invoked simultaneously from different threads without synchronization.
@@ -69,7 +69,7 @@ namespace Microsoft.Z3
                 return null;
             else
                 return Marshal.PtrToStringAnsi(t);
-        }
+        }    
 
 
         /// <summary>
@@ -82,6 +82,6 @@ namespace Microsoft.Z3
         public static void ResetParameters()
         {
             Native.Z3_global_param_reset_all();
-        }
+        }   
     }
 }

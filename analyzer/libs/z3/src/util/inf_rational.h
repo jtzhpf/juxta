@@ -34,7 +34,7 @@ class inf_rational {
     rational m_second;
  public:
 
-    unsigned hash() const {
+    unsigned hash() const { 
         return m_first.hash() ^ (m_second.hash()+1);
     }
 
@@ -42,7 +42,7 @@ class inf_rational {
 
 	struct eq_proc { bool operator()(inf_rational const& r1, inf_rational const& r2) const { return r1 == r2; } };
 
-    void swap(inf_rational & n) {
+    void swap(inf_rational & n) { 
         m_first.swap(n.m_first);
         m_second.swap(n.m_second);
     }
@@ -68,7 +68,7 @@ class inf_rational {
         m_second(rational())
      {}
 
-    inf_rational(const inf_rational & r):
+    inf_rational(const inf_rational & r): 
         m_first(r.m_first),
         m_second(r.m_second)
      {}
@@ -109,15 +109,15 @@ class inf_rational {
         m_second.reset();
     }
 
-    bool is_int() const {
+    bool is_int() const { 
         return m_first.is_int() && m_second.is_zero();
     }
 
-    bool is_int64() const {
+    bool is_int64() const { 
         return m_first.is_int64() && m_second.is_zero();
     }
 
-    bool is_uint64() const {
+    bool is_uint64() const { 
         return m_first.is_uint64() && m_second.is_zero();
     }
 
@@ -165,26 +165,26 @@ class inf_rational {
         return inf_rational(denominator(r.m_first));
     }
 
-    inf_rational & operator+=(const inf_rational & r) {
+    inf_rational & operator+=(const inf_rational & r) { 
         m_first  += r.m_first;
         m_second += r.m_second;
-	return *this;
+	return *this; 
     }
 
-    inf_rational & operator-=(const inf_rational & r) {
+    inf_rational & operator-=(const inf_rational & r) { 
         m_first  -= r.m_first;
         m_second -= r.m_second;
-	return *this;
+	return *this; 
     }
 
-    inf_rational & operator+=(const rational & r) {
+    inf_rational & operator+=(const rational & r) { 
         m_first  += r;
-	return *this;
+	return *this; 
     }
 
-    inf_rational & operator-=(const rational & r) {
+    inf_rational & operator-=(const rational & r) { 
         m_first  -= r;
-	return *this;
+	return *this; 
     }
 
     inf_rational & operator*=(const rational & r1) {
@@ -203,7 +203,7 @@ class inf_rational {
     // friend inline inf_rational div(const inf_rational & r1, const inf_rational & r2)
     // inf_rational expt(int n)
     // instead, we define operators that approximate some of these operations from above and below.
-
+    
     friend inf_rational inf_mult(inf_rational const& r1, inf_rational const& r2);
     friend inf_rational sup_mult(inf_rational const& r1, inf_rational const& r2);
 
@@ -232,7 +232,7 @@ class inf_rational {
     }
 
     const inf_rational operator++(int) { inf_rational tmp(*this); ++(*this); return tmp; }
-
+  
     inf_rational & operator--() {
         --m_first;
         return *this;
@@ -252,20 +252,20 @@ class inf_rational {
         return r1.m_first == r2 && r1.m_second.is_zero();
     }
 
-    friend inline bool operator<(const inf_rational & r1, const inf_rational & r2) {
-        return
+    friend inline bool operator<(const inf_rational & r1, const inf_rational & r2) { 
+        return 
             (r1.m_first < r2.m_first) ||
             (r1.m_first == r2.m_first && r1.m_second < r2.m_second);
     }
 
-    friend inline bool operator<(const rational & r1, const inf_rational & r2) {
-        return
+    friend inline bool operator<(const rational & r1, const inf_rational & r2) { 
+        return 
             (r1 < r2.m_first) ||
             (r1 == r2.m_first && r2.m_second.is_pos());
     }
 
-    friend inline bool operator<(const inf_rational & r1, const rational & r2) {
-        return
+    friend inline bool operator<(const inf_rational & r1, const rational & r2) { 
+        return 
             (r1.m_first < r2) ||
             (r1.m_first == r2 && r1.m_second.is_neg());
     }
@@ -288,25 +288,25 @@ class inf_rational {
     }
 
     bool is_neg() const {
-        return
-            m_first.is_neg() ||
+        return 
+            m_first.is_neg() || 
             (m_first.is_zero() && m_second.is_neg());
     }
-
+    
     bool is_pos() const {
-        return
-            m_first.is_pos() ||
+        return 
+            m_first.is_pos() || 
             (m_first.is_zero() && m_second.is_pos());
     }
 
     bool is_nonneg() const {
-        return
+        return 
             m_first.is_pos() ||
             (m_first.is_zero() && m_second.is_nonneg());
     }
 
     bool is_nonpos() const {
-        return
+        return 
             m_first.is_neg() ||
             (m_first.is_zero() && m_second.is_nonpos());
     }
@@ -318,7 +318,7 @@ class inf_rational {
             }
             return r.m_first - rational(1);
         }
-
+        
         return floor(r.m_first);
     }
 
@@ -329,7 +329,7 @@ class inf_rational {
             }
             return r.m_first + rational(1);
         }
-
+        
         return ceil(r.m_first);
     }
 
@@ -358,66 +358,66 @@ class inf_rational {
     }
 };
 
-inline bool operator!=(const inf_rational & r1, const inf_rational & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const inf_rational & r1, const inf_rational & r2) { 
+    return !operator==(r1, r2); 
 }
 
-inline bool operator!=(const rational & r1, const inf_rational & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const rational & r1, const inf_rational & r2) { 
+    return !operator==(r1, r2); 
 }
 
-inline bool operator!=(const inf_rational & r1, const rational & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const inf_rational & r1, const rational & r2) { 
+    return !operator==(r1, r2); 
 }
 
-inline bool operator>(const inf_rational & r1, const inf_rational & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const inf_rational & r1, const inf_rational & r2) { 
+    return operator<(r2, r1); 
 }
 
-inline bool operator>(const inf_rational & r1, const rational & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const inf_rational & r1, const rational & r2) { 
+    return operator<(r2, r1); 
 }
 
-inline bool operator>(const rational & r1, const inf_rational & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const rational & r1, const inf_rational & r2) { 
+    return operator<(r2, r1); 
 }
 
-inline bool operator<=(const inf_rational & r1, const inf_rational & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const inf_rational & r1, const inf_rational & r2) { 
+    return !operator>(r1, r2); 
 }
 
-inline bool operator<=(const rational & r1, const inf_rational & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const rational & r1, const inf_rational & r2) { 
+    return !operator>(r1, r2); 
 }
 
-inline bool operator<=(const inf_rational & r1, const rational & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const inf_rational & r1, const rational & r2) { 
+    return !operator>(r1, r2); 
 }
 
-inline bool operator>=(const inf_rational & r1, const inf_rational & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const inf_rational & r1, const inf_rational & r2) { 
+    return !operator<(r1, r2); 
 }
 
-inline bool operator>=(const rational & r1, const inf_rational & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const rational & r1, const inf_rational & r2) { 
+    return !operator<(r1, r2); 
 }
 
-inline bool operator>=(const inf_rational & r1, const rational & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const inf_rational & r1, const rational & r2) { 
+    return !operator<(r1, r2); 
 }
 
-inline inf_rational operator+(const inf_rational & r1, const inf_rational & r2) {
-    return inf_rational(r1) += r2;
+inline inf_rational operator+(const inf_rational & r1, const inf_rational & r2) { 
+    return inf_rational(r1) += r2; 
 }
 
-inline inf_rational operator-(const inf_rational & r1, const inf_rational & r2) {
-    return inf_rational(r1) -= r2;
+inline inf_rational operator-(const inf_rational & r1, const inf_rational & r2) { 
+    return inf_rational(r1) -= r2; 
 }
 
-inline inf_rational operator-(const inf_rational & r) {
-    inf_rational result(r);
-    result.neg();
-    return result;
+inline inf_rational operator-(const inf_rational & r) { 
+    inf_rational result(r); 
+    result.neg(); 
+    return result; 
 }
 
 inline inf_rational operator*(const rational & r1, const inf_rational & r2) {

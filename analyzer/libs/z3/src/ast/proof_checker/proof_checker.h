@@ -32,7 +32,7 @@ class proof_checker {
     // family_id        m_spc_fid;
     app_ref          m_nil;
     bool             m_dump_lemmas;
-    std::string      m_logic;
+    std::string      m_logic; 
     unsigned         m_proof_lemma_id;
     enum hyp_decl_kind {
         OP_CONS,
@@ -56,20 +56,20 @@ class proof_checker {
         virtual ~hyp_decl_plugin() {}
 
         virtual void finalize();
-
+        
         virtual decl_plugin * mk_fresh() { return alloc(hyp_decl_plugin); }
 
         virtual sort * mk_sort(decl_kind k, unsigned num_parameters, parameter const* parameters);
-        virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+        virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                          unsigned arity, sort * const * domain, sort * range);
-        virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+        virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                          unsigned num_args, expr * const * args, sort * range);
         virtual void get_op_names(svector<builtin_name> & op_names, symbol const & logic);
         virtual void get_sort_names(svector<builtin_name> & sort_names, symbol const & logic);
     };
 public:
     proof_checker(ast_manager& m);
-    void set_dump_lemmas(char const * logic = "AUFLIA") { m_dump_lemmas = true; m_logic = logic; }
+    void set_dump_lemmas(char const * logic = "AUFLIA") { m_dump_lemmas = true; m_logic = logic; } 
     bool check(proof* p, expr_ref_vector& side_conditions);
 private:
     bool check1(proof* p, expr_ref_vector& side_conditions);

@@ -31,13 +31,13 @@ static std::pair<unsigned, bool> space_upto_line_break(ast_manager & m, format *
     }
     case OP_CHOICE:
         return space_upto_line_break(m, to_app(f->get_arg(0)));
-    case OP_COMPOSE:
+    case OP_COMPOSE: 
         r = 0;
         for (unsigned i = 0; i < f->get_num_args(); i++) {
             std::pair<unsigned, bool> pair = space_upto_line_break(m, to_app(f->get_arg(i)));
             r += pair.first;
             if (pair.second)
-                return std::make_pair(r, true);
+                return std::make_pair(r, true); 
         }
         return std::make_pair(r, false);
     case OP_INDENT:
@@ -59,7 +59,7 @@ inline bool fits(ast_manager & m, format * f, unsigned space_left) {
 void pp(std::ostream & out, format * f, ast_manager & m, params_ref const & _p) {
     pp_params p(_p);
     unsigned max_width     = p.max_width();
-    unsigned max_ribbon    = p.max_ribbon();
+    unsigned max_ribbon    = p.max_ribbon(); 
     unsigned max_num_lines = p.max_num_lines();
     unsigned max_indent    = p.max_indent();
     bool     bounded       = p.bounded();
@@ -96,7 +96,7 @@ void pp(std::ostream & out, format * f, ast_manager & m, params_ref const & _p) 
             out << f->get_decl()->get_parameter(0).get_symbol();
             break;
         case OP_INDENT:
-            todo.push_back(std::make_pair(to_app(f->get_arg(0)),
+            todo.push_back(std::make_pair(to_app(f->get_arg(0)), 
                                           std::min(indent + f->get_decl()->get_parameter(0).get_int(),
                                                    max_indent)));
             break;
@@ -109,7 +109,7 @@ void pp(std::ostream & out, format * f, ast_manager & m, params_ref const & _p) 
             break;
         case OP_CHOICE:
             space_left = std::min(max_width - pos, max_ribbon - pos);
-            if (space_left > 0 && fits(m, to_app(f->get_arg(0)), space_left))
+            if (space_left > 0 && fits(m, to_app(f->get_arg(0)), space_left)) 
                 todo.push_back(std::make_pair(to_app(f->get_arg(0)), indent));
             else
                 todo.push_back(std::make_pair(to_app(f->get_arg(1)), indent));
@@ -125,7 +125,7 @@ void pp(std::ostream & out, format * f, ast_manager & m, params_ref const & _p) 
             line++;
             if (line < max_num_lines) {
                 out << "\n";
-                for (unsigned i = 0; i < indent; i++)
+                for (unsigned i = 0; i < indent; i++) 
                     out << " ";
             }
             else

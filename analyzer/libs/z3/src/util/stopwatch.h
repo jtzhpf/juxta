@@ -38,31 +38,31 @@ private:
 
 public:
     stopwatch() {
-        QueryPerformanceFrequency(&m_frequency);
-        reset();
+        QueryPerformanceFrequency(&m_frequency); 
+        reset(); 
     }
 
     ~stopwatch() {};
 
     void reset() { m_elapsed.QuadPart = 0; }
-
-    void start() {
-        QueryPerformanceCounter(&m_last_start_time);
+    
+    void start() { 
+        QueryPerformanceCounter(&m_last_start_time); 
     }
-
-    void stop() {
+    
+    void stop() { 
         QueryPerformanceCounter(&m_last_stop_time);
         m_elapsed.QuadPart += m_last_stop_time.QuadPart - m_last_start_time.QuadPart;
     }
 
-    double get_seconds() const {
+    double get_seconds() const { 
         return static_cast<double>(m_elapsed.QuadPart / static_cast<double>(m_frequency.QuadPart)) ;
     }
 
     double get_current_seconds() const {
         LARGE_INTEGER t;
         QueryPerformanceCounter(&t);
-        return static_cast<double>( (t.QuadPart - m_last_start_time.QuadPart) / static_cast<double>(m_frequency.QuadPart));
+        return static_cast<double>( (t.QuadPart - m_last_start_time.QuadPart) / static_cast<double>(m_frequency.QuadPart)); 
     }
 };
 
@@ -81,18 +81,18 @@ class stopwatch {
     bool               m_running;
     clock_serv_t       m_host_clock;
     mach_timespec_t    m_start;
-
+    
 public:
     stopwatch():m_time(0), m_running(false) {
         host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &m_host_clock);
     }
 
     ~stopwatch() {}
-
+    
     void reset() {
         m_time = 0ull;
     }
-
+    
     void start() {
         if (!m_running) {
             clock_get_time(m_host_clock, &m_start);
@@ -110,22 +110,22 @@ public:
         }
     }
 
-    double get_seconds() const {
+    double get_seconds() const { 
         if (m_running) {
-            const_cast<stopwatch*>(this)->stop();
-            /* update m_time */
+            const_cast<stopwatch*>(this)->stop(); 
+            /* update m_time */ 
             const_cast<stopwatch*>(this)->start();
         }
-        return static_cast<double>(m_time)/static_cast<double>(1000000000ull);
+        return static_cast<double>(m_time)/static_cast<double>(1000000000ull); 
     }
 
-    double get_current_seconds() const {
-        return get_seconds();
+    double get_current_seconds() const { 
+        return get_seconds(); 
     }
 };
 
 
-#else // Linux
+#else // Linux 
 
 #include<ctime>
 
@@ -133,17 +133,17 @@ class stopwatch {
     unsigned long long m_time; // elapsed time in ns
     bool               m_running;
     struct timespec    m_start;
-
+    
 public:
     stopwatch():m_time(0), m_running(false) {
     }
 
     ~stopwatch() {}
-
+    
     void reset() {
         m_time = 0ull;
     }
-
+    
     void start() {
         if (!m_running) {
             clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &m_start);
@@ -162,17 +162,17 @@ public:
         }
     }
 
-    double get_seconds() const {
+    double get_seconds() const { 
         if (m_running) {
-            const_cast<stopwatch*>(this)->stop();
-            /* update m_time */
+            const_cast<stopwatch*>(this)->stop(); 
+            /* update m_time */ 
             const_cast<stopwatch*>(this)->start();
         }
-        return static_cast<double>(m_time)/static_cast<double>(1000000000ull);
+        return static_cast<double>(m_time)/static_cast<double>(1000000000ull); 
     }
 
-    double get_current_seconds() const {
-    return get_seconds();
+    double get_current_seconds() const { 
+    return get_seconds(); 
     }
 };
 

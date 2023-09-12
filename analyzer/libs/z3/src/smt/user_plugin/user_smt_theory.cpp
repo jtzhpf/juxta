@@ -25,14 +25,14 @@ Revision History:
 
 namespace smt {
 
-    //
+    // 
     // value factory for user sorts.
-    //
+    // 
     // NB. This value factory for user theories
     //     does not address theories where model
     //     values are structured objects such as
     //     arrays, records, or data-types.
-    //
+    //     
 
     class user_smt_theory_factory : public simple_factory<unsigned> {
         app* mk_value_core(unsigned const& val, sort* s) {
@@ -157,7 +157,7 @@ namespace smt {
         context & ctx   = get_context();
         ast_manager & m = get_manager();
 
-        if (!is_app(axiom) || !to_app(axiom)->is_ground() ||
+        if (!is_app(axiom) || !to_app(axiom)->is_ground() || 
             ctx.get_fparams().m_user_theory_preprocess_axioms) {
             asserted_formulas asf(m, ctx.get_fparams());
             asf.assert_expr(to_app(axiom));
@@ -168,7 +168,7 @@ namespace smt {
                 expr * f   = asf.get_formula(qhead);
                 assert_axiom_core(to_app(f));
                 ++qhead;
-            }
+            }            
         }
         else {
             if (!m_simplify_axioms) {
@@ -184,7 +184,7 @@ namespace smt {
             axiom = s_axiom;
             m_simplifier_plugin->enable(true);
             assert_axiom_core(to_app(axiom));
-        }
+        } 
     }
 
     void user_theory::assume_eq(ast * _lhs, ast * _rhs) {
@@ -199,10 +199,10 @@ namespace smt {
             std::swap(lhs, rhs);
         }
         if (m.is_true(lhs)) {
-            theory_var v2 = mk_var(rhs);
+            theory_var v2 = mk_var(rhs);     
             if (v2 == null_theory_var) {
                 throw default_exception("invalid assume eq: lhs or rhs is not a theory term");
-            }
+            }       
             bool_var bv = ctx.get_bool_var(rhs);
             ctx.set_true_first_flag(bv);
             ctx.mark_as_relevant(get_enode(v2));
@@ -243,9 +243,9 @@ namespace smt {
             return v;
         }
         app* a = to_app(n);
-        if (a->get_family_id() == get_id() &&
+        if (a->get_family_id() == get_id() && 
             internalize_term(a)) {
-            return mk_var(get_context().get_enode(a));
+            return mk_var(get_context().get_enode(a)); 
         }
         return v;
     }
@@ -258,7 +258,7 @@ namespace smt {
         }
         return n;
     }
-
+        
     ast * user_theory::get_next(ast * n) const {
         theory_var v = get_var(n);
         if (v != null_theory_var) {
@@ -288,7 +288,7 @@ namespace smt {
         return 0;
     }
 
-
+    
     ast * user_theory::get_parent(ast * n, unsigned i) const {
         theory_var v = get_var(n);
         if (v != null_theory_var && m_use_list[v] != 0)
@@ -324,7 +324,7 @@ namespace smt {
         if (ctx.e_internalized(term))
             return true;
         m_parents.push_back(term);
-        enode * e       = ctx.mk_enode(term, false, get_manager().is_bool(term), true);
+        enode * e       = ctx.mk_enode(term, false, get_manager().is_bool(term), true); 
         if (get_manager().is_bool(term)) {
             bool_var bv = ctx.mk_bool_var(term);
             ctx.set_var_theory(bv, get_id());
@@ -393,7 +393,7 @@ namespace smt {
         unsigned new_lvl    = m_scopes.size() - num_scopes;
         scope & s           = m_scopes[new_lvl];
         m_parents.shrink(s.m_parents_old_sz);
-        unsigned curr_sz    = m_asserted_axioms.size();
+        unsigned curr_sz    = m_asserted_axioms.size(); 
         unsigned old_sz     = s.m_asserted_axioms_old_sz;
         for (unsigned i = old_sz; i < curr_sz; i++) {
             m_asserted_axiom_set.erase(m_asserted_axioms.get(i));
@@ -411,7 +411,7 @@ namespace smt {
             m_restart_fptr(this);
         }
     }
-
+    
 
     void user_theory::init_search_eh() {
         if (m_init_search_fptr != 0) {
@@ -435,11 +435,11 @@ namespace smt {
     }
 
     bool user_theory::can_propagate() {
-        return
+        return 
             (m_persisted_axioms.size() > m_persisted_axioms_qhead) ||
-            !m_new_eqs.empty() ||
-            !m_new_diseqs.empty() ||
-            !m_new_relevant_apps.empty() ||
+            !m_new_eqs.empty() || 
+            !m_new_diseqs.empty() || 
+            !m_new_relevant_apps.empty() || 
             !m_new_assignments.empty();
     }
 
@@ -501,11 +501,11 @@ namespace smt {
 
         unsigned old_sz = m_asserted_axioms.size();
         if (m_persisted_axioms_qhead < m_persisted_axioms.size()) {
-            get_context().push_trail(value_trail<context, unsigned>(m_persisted_axioms_qhead));
+            get_context().push_trail(value_trail<context, unsigned>(m_persisted_axioms_qhead));           
             for (; m_persisted_axioms_qhead < m_persisted_axioms.size(); ++m_persisted_axioms_qhead) {
                 m_asserted_axioms.push_back(m_persisted_axioms[m_persisted_axioms_qhead].get());
             }
-        }
+        }  
         do {
             for (unsigned i = 0; i < m_new_eqs.size(); i++) {
                 var_pair & p = m_new_eqs[i];
@@ -517,7 +517,7 @@ namespace smt {
                 m_find.merge(p.first, p.second);
             }
             m_new_eqs.reset();
-
+            
             if (m_new_diseq_fptr != 0) {
                 for (unsigned i = 0; i < m_new_diseqs.size(); i++) {
                     ++m_stats.m_num_diseq;
@@ -554,7 +554,7 @@ namespace smt {
         }
         while (!m_new_eqs.empty() || !m_new_diseqs.empty() || !m_new_relevant_apps.empty() || !m_new_assignments.empty());
     }
-
+    
     void user_theory::flush_eh() {
         reset(false);
     }
@@ -633,7 +633,7 @@ namespace smt {
     bool user_theory::get_value(enode * n, expr_ref & r) {
         return false;
     }
-
+    
     char const * user_theory::get_name() const {
         return m_name.c_str();
     }
@@ -641,7 +641,7 @@ namespace smt {
     void user_theory::display(std::ostream & out) const {
         out << "Theory " << get_name() << ":\n";
     }
-
+    
     user_theory * mk_user_theory(kernel & _s, void * ext_context, void * ext_data, char const * name) {
         context & ctx               = _s.get_context(); // HACK
         symbol _name(name);

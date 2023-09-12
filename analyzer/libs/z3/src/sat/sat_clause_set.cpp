@@ -31,7 +31,7 @@ namespace sat {
         CASSERT("clause_set", check_invariant());
     }
 
-    void clause_set::erase(clause & c) {
+    void clause_set::erase(clause & c) { 
         unsigned id = c.id();
         if (id >= m_id2pos.size())
             return;
@@ -42,7 +42,7 @@ namespace sat {
         unsigned last_pos = m_set.size() - 1;
         if (pos != last_pos) {
             clause * last_c = m_set[last_pos];
-            m_set[pos] = last_c;
+            m_set[pos] = last_c; 
             m_id2pos[last_c->id()] = pos;
         }
         m_set.pop_back();
@@ -51,7 +51,7 @@ namespace sat {
 
     clause & clause_set::erase() {
         SASSERT(!empty());
-        clause & c = *m_set.back();
+        clause & c = *m_set.back(); 
         m_id2pos[c.id()] = UINT_MAX;
         m_set.pop_back();
         return c;

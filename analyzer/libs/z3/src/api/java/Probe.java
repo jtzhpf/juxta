@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Probe.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -29,10 +29,10 @@ public class Probe extends Z3Object
 {
     /**
      * Execute the probe over the goal.
-     *
+     * 
      * @return A probe always produce a double value. "Boolean" probes return
      *         0.0 for false, and a value different from 0.0 for true.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public double apply(Goal g) throws Z3Exception
     {

@@ -61,7 +61,7 @@ void simple_parser::reset_vars() {
 }
 
 expr * simple_parser::parse_expr(scanner & s) {
-    builtin_op op;
+    builtin_op op; 
     var * v;
     expr * r;
     scanner::token token;
@@ -121,7 +121,7 @@ bool simple_parser::parse(std::istream & in, expr_ref & result) {
     catch (parser_error) {
         warning_msg("parser error");
         return false;
-    }
+    } 
     m_exprs.reset();
     return result.get() != 0;
 }
@@ -131,7 +131,7 @@ bool simple_parser::parse_string(char const * str, expr_ref & result) {
     std::istringstream is(s);
     return parse(is, result);
 }
-
+ 
 bool simple_parser::parse_file(char const * file, expr_ref & result) {
     if (file != 0) {
         std::ifstream stream(file);

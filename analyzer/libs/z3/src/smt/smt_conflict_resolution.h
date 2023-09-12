@@ -50,19 +50,19 @@ namespace smt {
         context &                      m_ctx;
         dyn_ack_manager &              m_dyn_ack_manager;
         literal_vector const &         m_assigned_literals;
-
+        
         unsigned                       m_conflict_lvl;
-
+        
         literal_vector                 m_lemma;
         expr_ref_vector                m_lemma_atoms;
         unsigned                       m_new_scope_lvl;
         unsigned                       m_lemma_iscope_lvl;
-
+        
         justification_vector           m_todo_js;
         unsigned                       m_todo_js_qhead;
         svector<enode_pair>            m_todo_eqs;
         enode_pair_set                 m_already_processed_eqs;
-
+        
         literal_vector *               m_antecedents;
 
         // Reference for watch lists are used to implement subsumption resolution
@@ -85,7 +85,7 @@ namespace smt {
                 JUSTIFICATION,
                 EQUALITY,
                 LITERAL
-            }                          m_kind;
+            }                          m_kind;                          
             union {
                 justification *        m_js;
                 unsigned               m_lidx;
@@ -126,7 +126,7 @@ namespace smt {
                     std::swap(n1, n2);
                 enode_pair p(n1, n2);
                 if (m_already_processed_eqs.insert_if_not_there(p)) {
-                    TRACE("conflict_detail", tout << "marking eq #" << p.first->get_owner_id() << " = #" <<
+                    TRACE("conflict_detail", tout << "marking eq #" << p.first->get_owner_id() << " = #" << 
                           p.second->get_owner_id() << "\n";);
                     m_todo_eqs.push_back(p);
                     SASSERT(m_already_processed_eqs.contains(p));
@@ -199,9 +199,9 @@ namespace smt {
 
         bool initialize_resolve(b_justification conflict, literal not_l, b_justification & js, literal & consequent);
         void finalize_resolve(b_justification conflict, literal not_l);
-
+      
     public:
-        conflict_resolution(ast_manager & m,
+        conflict_resolution(ast_manager & m, 
                             context & ctx,
                             dyn_ack_manager & dack_manager,
                             smt_params const & params,
@@ -220,8 +220,8 @@ namespace smt {
         ast_manager & get_manager() {
             return m_manager;
         }
-
-        unsigned get_new_scope_lvl() const {
+        
+        unsigned get_new_scope_lvl() const { 
             return m_new_scope_lvl;
         }
 
@@ -244,7 +244,7 @@ namespace smt {
         void release_lemma_atoms() {
             m_lemma_atoms.reset();
         }
-
+        
         proof * get_lemma_proof() {
             return m_lemma_proof;
         }
@@ -263,11 +263,11 @@ namespace smt {
             cr.mark_literal(ls[i]);
     }
 
-    conflict_resolution * mk_conflict_resolution(ast_manager & m,
+    conflict_resolution * mk_conflict_resolution(ast_manager & m, 
                                                  context & ctx,
                                                  dyn_ack_manager & dack_manager,
                                                  smt_params const & params,
-                                                 literal_vector const & assigned_literals,
+                                                 literal_vector const & assigned_literals,  
                                                  vector<watch_list> & watches
                                                  );
 

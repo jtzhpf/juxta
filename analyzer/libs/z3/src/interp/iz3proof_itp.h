@@ -31,7 +31,7 @@ Revision History:
 
     As opposed to iz3proof, this class directly computes interpolants,
     so the proof representation is just the interpolant itself.
-
+    
  */
 
 class iz3proof_itp : public iz3mgr {
@@ -79,9 +79,9 @@ class iz3proof_itp : public iz3mgr {
   virtual node make_contra(node prem, const std::vector<ast> &conclusion) = 0;
 
   /** Make a Reflexivity node. This rule produces |- x = x */
-
+  
   virtual node make_reflexivity(ast con) = 0;
-
+  
   /** Make a Symmetry node. This takes a derivation of |- x = y and
       produces | y = x */
 
@@ -91,10 +91,10 @@ class iz3proof_itp : public iz3mgr {
       and |- y = z produces | x = z */
 
   virtual node make_transitivity(const ast &x, const ast &y, const ast &z, node prem1, node prem2) = 0;
-
+  
   /** Make a congruence node. This takes a derivation of |- x_i = y_i
       and produces |- f(...x_i,...) = f(...,y_i,...) */
-
+  
   virtual node make_congruence(const ast &xi_eq_yi, const ast &con, const ast &prem1) = 0;
 
   /** Make a congruence node. This takes derivations of |- x_i1 = y_i1, |- x_i2 = y_i2,...
@@ -104,7 +104,7 @@ class iz3proof_itp : public iz3mgr {
 
   /** Make a modus-ponens node. This takes derivations of |- x
       and |- x = y and produces |- y */
-
+  
   virtual node make_mp(const ast &x_eq_y, const ast &prem1, const ast &prem2) = 0;
 
   /** Make a farkas proof node. */

@@ -35,9 +35,9 @@ Revision History:
 namespace datalog {
 
     verbose_action::verbose_action(char const* msg, unsigned lvl): m_lvl(lvl), m_sw(0) {
-        IF_VERBOSE(m_lvl,
-                   (verbose_stream() << msg << "...").flush();
-                   m_sw = alloc(stopwatch);
+        IF_VERBOSE(m_lvl, 
+                   (verbose_stream() << msg << "...").flush(); 
+                   m_sw = alloc(stopwatch); 
                    m_sw->start(););
     }
 
@@ -46,7 +46,7 @@ namespace datalog {
         if (m_sw) m_sw->stop();
         sec = m_sw?m_sw->get_seconds():0.0;
         if (sec < 0.001) sec = 0.0;
-        IF_VERBOSE(m_lvl,
+        IF_VERBOSE(m_lvl, 
                    (verbose_stream() << sec << "s\n").flush();
                    );
         dealloc(m_sw);
@@ -60,7 +60,7 @@ namespace datalog {
         ::get_free_vars(trm, vars);
         return var_idx < vars.size() && vars[var_idx] != 0;
     }
-
+    
     unsigned count_variable_arguments(app * pred)
     {
         SASSERT(is_uninterp(pred));
@@ -75,7 +75,7 @@ namespace datalog {
         return res;
     }
 
-    void mk_new_rule_tail(ast_manager & m, app * pred, var_idx_set const & non_local_vars, unsigned & next_idx, varidx2var_map & varidx2var,
+    void mk_new_rule_tail(ast_manager & m, app * pred, var_idx_set const & non_local_vars, unsigned & next_idx, varidx2var_map & varidx2var, 
                           sort_ref_buffer & new_rule_domain, expr_ref_buffer & new_rule_args, app_ref & new_pred) {
         expr_ref_buffer new_args(m);
         unsigned n  = pred->get_num_args();
@@ -168,7 +168,7 @@ namespace datalog {
             uint64 sym_num;
             SASSERT(is_app(arg));
             VERIFY( ctx.get_decl_util().is_numeral_ext(to_app(arg), sym_num) );
-            relation_sort sort = pred_decl->get_domain(i);
+            relation_sort sort = pred_decl->get_domain(i);            
             out << ctx.get_argument_name(pred_decl, i) << '=';
             ctx.print_constant_name(sort, sym_num, out);
             out << '(' << sym_num << ')';
@@ -255,7 +255,7 @@ namespace datalog {
         }
     }
 
-
+    
     void rule_counter::count_rule_vars(ast_manager & m, const rule * r, int coef) {
         reset();
         count_vars(m, r->get_head(), 1);
@@ -289,18 +289,18 @@ namespace datalog {
                     body.push_back(r.get_tail(i));
                 }
             }
-            TRACE("dl_dr",
+            TRACE("dl_dr", 
                   tout << mk_pp(r.get_head(), m) << " :- \n";
                   for (unsigned i = 0; i < body.size(); ++i) {
                       tout << mk_pp(body[i].get(), m) << "\n";
                   });
-
+                      
             mc->insert(r.get_head(), body.size(), body.c_ptr());
         }
     }
 
 
-    void resolve_rule(replace_proof_converter* pc, rule const& r1, rule const& r2, unsigned idx,
+    void resolve_rule(replace_proof_converter* pc, rule const& r1, rule const& r2, unsigned idx, 
                       expr_ref_vector const& s1, expr_ref_vector const& s2, rule const& res) {
         if (!pc) return;
         ast_manager& m = s1.get_manager();
@@ -320,7 +320,7 @@ namespace datalog {
         premises.push_back(m.mk_asserted(fml2));
         positions.push_back(std::make_pair(idx+1, 0));
 
-        TRACE("dl",
+        TRACE("dl", 
               tout << premises[0]->get_id() << " " << mk_pp(premises[0].get(), m) << "\n";
               for (unsigned i = 0; i < s1.size(); ++i) {
                   tout << mk_pp(s1[i], m) << " ";
@@ -331,13 +331,13 @@ namespace datalog {
                   tout << mk_pp(s2[i], m) << " ";
               }
               tout << "\n";
-              );
+              ); 
 
         pr = m.mk_hyper_resolve(2, premises.c_ptr(), fml3, positions, substs);
         pc->insert(pr);
     }
 
-    void resolve_rule(rule const& r1, rule const& r2, unsigned idx,
+    void resolve_rule(rule const& r1, rule const& r2, unsigned idx, 
                       expr_ref_vector const& s1, expr_ref_vector const& s2, rule& res) {
         if (!r1.get_proof()) {
             return;
@@ -358,7 +358,7 @@ namespace datalog {
         premises.push_back(r2.get_proof());
         positions.push_back(std::make_pair(idx+1, 0));
 
-        TRACE("dl",
+        TRACE("dl", 
               tout << premises[0]->get_id() << " " << mk_pp(premises[0].get(), m) << "\n";
               for (unsigned i = 0; i < s1.size(); ++i) {
                   tout << mk_pp(s1[i], m) << " ";
@@ -369,7 +369,7 @@ namespace datalog {
                   tout << mk_pp(s2[i], m) << " ";
               }
               tout << "\n";
-              );
+              ); 
 
         pr = m.mk_hyper_resolve(2, premises.c_ptr(), fml, positions, substs);
         res.set_proof(m, pr);
@@ -378,8 +378,8 @@ namespace datalog {
     class skip_model_converter : public model_converter {
     public:
         skip_model_converter() {}
-
-        virtual model_converter * translate(ast_translation & translator) {
+ 
+        virtual model_converter * translate(ast_translation & translator) { 
             return alloc(skip_model_converter);
         }
 
@@ -506,7 +506,7 @@ namespace datalog {
         }
     }
 
-    void collect_and_transform(const unsigned_vector & src, const unsigned_vector & translation,
+    void collect_and_transform(const unsigned_vector & src, const unsigned_vector & translation, 
             unsigned_vector & res) {
         unsigned n = src.size();
         for(unsigned i=0; i<n; i++) {
@@ -541,7 +541,7 @@ namespace datalog {
     //
     // -----------------------------------
 
-    void get_file_names(std::string directory, std::string extension, bool traverse_subdirs,
+    void get_file_names(std::string directory, std::string extension, bool traverse_subdirs, 
             string_vector & res) {
 
         if(directory[directory.size()-1]!='\\' && directory[directory.size()-1]!='/') {
@@ -567,7 +567,7 @@ namespace datalog {
                 }
             } while(FindNextFileA(hFind, &findFileData));
             FindClose(hFind);
-        }
+        } 
 
 
         if(traverse_subdirs) {
@@ -610,7 +610,7 @@ namespace datalog {
         size_t slash_index = name.find_last_of("\\/");
         size_t dot_index = name.rfind(".");
         size_t ofs = (slash_index==std::string::npos) ? 0 : slash_index+1;
-        size_t count = (dot_index!=std::string::npos && dot_index>ofs) ?
+        size_t count = (dot_index!=std::string::npos && dot_index>ofs) ? 
             (dot_index-ofs) : std::string::npos;
         return name.substr(ofs, count);
     }

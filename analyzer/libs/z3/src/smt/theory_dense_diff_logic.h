@@ -39,7 +39,7 @@ namespace smt {
             reset();
         }
     };
-
+    
     template<typename Ext>
     class theory_dense_diff_logic : public theory, private Ext {
     public:
@@ -54,7 +54,7 @@ namespace smt {
             theory_var                m_source;
             theory_var                m_target;
             numeral                   m_offset;
-
+            
         public:
             atom(bool_var bv, theory_var source, theory_var target, numeral const & offset):
                 m_bvar(bv),
@@ -62,7 +62,7 @@ namespace smt {
                 m_target(target),
                 m_offset(offset) {
             }
-
+            
             bool_var get_bool_var() const { return m_bvar; }
             theory_var get_source() const { return m_source; }
             theory_var get_target() const { return m_target; }
@@ -71,7 +71,7 @@ namespace smt {
 
         typedef ptr_vector<atom> atoms;
         typedef ptr_vector<atom> bool_var2atom;
-
+        
         struct edge {
             theory_var  m_source;
             theory_var  m_target;
@@ -82,21 +82,21 @@ namespace smt {
                 m_source(s), m_target(t), m_offset(offset), m_justification(js) {
             }
         };
-
+        
         typedef int edge_id;
         typedef vector<edge> edges;
         static const edge_id null_edge_id = -1;
         static const edge_id self_edge_id = 0;
-
+        
         struct cell {
             edge_id   m_edge_id;
             numeral   m_distance;
-            atoms     m_occs;
+            atoms     m_occs;   
             cell():
                 m_edge_id(null_edge_id) {
             }
         };
-
+        
         struct cell_trail {
             unsigned short m_source;
             unsigned short m_target;
@@ -105,16 +105,16 @@ namespace smt {
             cell_trail(unsigned short s, unsigned short t, edge_id old_edge_id, numeral const & old_distance):
                 m_source(s), m_target(t), m_old_edge_id(old_edge_id), m_old_distance(old_distance) {}
         };
-
+        
         typedef vector<cell> row;
         typedef vector<row>  matrix;
-
+        
         struct scope {
             unsigned  m_atoms_lim;
             unsigned  m_edges_lim;
             unsigned  m_cell_trail_lim;
         };
-
+        
         theory_arith_params & m_params;
         arith_util            m_autil;
         arith_eq_adapter      m_arith_eq_adapter;
@@ -138,7 +138,7 @@ namespace smt {
         literal_vector        m_tmp_literals;
         svector<var_pair>     m_tmp_pairs;
         f_targets             m_f_targets;
-
+    
         vector<numeral>       m_assignment;
 
         struct var_value_hash;
@@ -159,7 +159,7 @@ namespace smt {
 
         typedef int_hashtable<var_value_hash, var_value_eq> var_value_table;
         var_value_table             m_var_value_table;
-
+    
         // -----------------------------------
         //
         // Auxiliary
@@ -168,10 +168,10 @@ namespace smt {
         bool is_int(theory_var v) const { return m_is_int[v]; }
         bool is_real(theory_var v) const { return !is_int(v); }
         numeral const & get_epsilon(theory_var v) const { return is_real(v) ? this->m_real_epsilon : this->m_int_epsilon; }
-        bool is_times_minus_one(expr * n, app * & r) const {
+        bool is_times_minus_one(expr * n, app * & r) const { 
             expr * _r;
             if (m_autil.is_times_minus_one(n, _r)) { r = to_app(_r); return true; }
-            return false;
+            return false; 
         }
         app * mk_zero_for(expr * n);
         theory_var mk_var(enode * n);
@@ -192,7 +192,7 @@ namespace smt {
 #ifdef Z3DEBUG
         bool check_vector_sizes() const;
         bool check_matrix() const;
-#endif
+#endif        
     public:
         numeral const & get_distance(theory_var source, theory_var target) const {
             SASSERT(is_connected(source, target));
@@ -208,7 +208,7 @@ namespace smt {
         virtual bool internalize_term(app * term);
         virtual void internalize_eq_eh(app * atom, bool_var v);
         virtual void apply_sort_cnstr(enode * n, sort * s);
-
+        
         virtual void assign_eh(bool_var v, bool is_true);
         virtual void new_eq_eh(theory_var v1, theory_var v2);
         virtual bool use_diseqs() const;
@@ -218,17 +218,17 @@ namespace smt {
 
         virtual void push_scope_eh();
         virtual void pop_scope_eh(unsigned num_scopes);
-
+        
         virtual void restart_eh();
         virtual void init_search_eh();
         virtual final_check_status final_check_eh();
-
+        
         virtual bool can_propagate();
         virtual void propagate();
-
+        
         virtual void flush_eh();
         virtual void reset_eh();
-
+        
         virtual bool validate_eq_in_model(theory_var v1, theory_var v2, bool is_true) const;
 
         virtual void display(std::ostream & out) const;
@@ -257,7 +257,7 @@ namespace smt {
     public:
         theory_dense_diff_logic(ast_manager & m, theory_arith_params & p);
         virtual ~theory_dense_diff_logic() { reset_eh(); }
-
+        
         virtual theory * mk_fresh(context * new_ctx) { return alloc(theory_dense_diff_logic, get_manager(), m_params); }
 
         virtual char const * get_name() const { return "difference-logic"; }

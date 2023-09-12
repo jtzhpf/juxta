@@ -43,8 +43,8 @@ struct collect_boolean_interface_proc {
         obj_hashtable<expr> & m_r;
         visitor(obj_hashtable<expr> & r):m_r(r) {}
         void operator()(var * n)  {}
-        void operator()(app * n)  { if (is_uninterp_const(n)) m_r.insert(n); }
-        void operator()(quantifier * n) {}
+        void operator()(app * n)  { if (is_uninterp_const(n)) m_r.insert(n); }       
+        void operator()(quantifier * n) {} 
     };
 
     ast_manager &    m;
@@ -86,14 +86,14 @@ struct collect_boolean_interface_proc {
             }
         }
     }
-
+    
     template<typename T>
     void operator()(T const & g) {
         unsigned sz = g.size();
         for (unsigned i = 0; i < sz; i++)
             process(g.form(i));
     }
-
+    
     void operator()(unsigned sz, expr * const * fs) {
         for (unsigned i = 0; i < sz; i++)
             process(fs[i]);

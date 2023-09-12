@@ -2,7 +2,7 @@
 #include "bool_rewriter.h"
 
 namespace datalog {
-    class karr_relation : public relation_base {
+    class karr_relation : public relation_base {              
         friend class karr_relation_plugin;
         friend class karr_relation_plugin::filter_equal_fn;
 
@@ -29,7 +29,7 @@ namespace datalog {
         {
         }
 
-        virtual bool empty() const {
+        virtual bool empty() const { 
             return m_empty;
         }
 
@@ -53,7 +53,7 @@ namespace datalog {
             }
         }
 
-        virtual bool contains_fact(const relation_fact & f) const {
+        virtual bool contains_fact(const relation_fact & f) const {            
             UNREACHABLE();
             return false;
         }
@@ -123,25 +123,25 @@ namespace datalog {
                     M.b.push_back(b);
                     M.eq.push_back(true);
                 }
-                else if ((a.is_le(e, e1, e2) || a.is_ge(e, e2, e1)) &&
+                else if ((a.is_le(e, e1, e2) || a.is_ge(e, e2, e1)) && 
                          is_linear(e1, row, b, mone) && is_linear(e2, row, b, one)) {
                     M.A.push_back(row);
                     M.b.push_back(b);
                     M.eq.push_back(false);
                 }
-                else if ((a.is_lt(e, e1, e2) || a.is_gt(e, e2, e1)) &&
+                else if ((a.is_lt(e, e1, e2) || a.is_gt(e, e2, e1)) && 
                          is_linear(e1, row, b, mone) && is_linear(e2, row, b, one)) {
                     M.A.push_back(row);
                     M.b.push_back(b - rational(1));
                     M.eq.push_back(false);
                 }
-                else if (m.is_not(e, en) && (a.is_lt(en, e2, e1) || a.is_gt(en, e1, e2)) &&
+                else if (m.is_not(e, en) && (a.is_lt(en, e2, e1) || a.is_gt(en, e1, e2)) && 
                          is_linear(e1, row, b, mone) && is_linear(e2, row, b, one)) {
                     M.A.push_back(row);
                     M.b.push_back(b);
                     M.eq.push_back(false);
                 }
-                else if (m.is_not(e, en) && (a.is_le(en, e2, e1) || a.is_ge(en, e1, e2)) &&
+                else if (m.is_not(e, en) && (a.is_le(en, e2, e1) || a.is_ge(en, e1, e2)) && 
                          is_linear(e1, row, b, mone) && is_linear(e2, row, b, one)) {
                     M.A.push_back(row);
                     M.b.push_back(b - rational(1));
@@ -173,7 +173,7 @@ namespace datalog {
             TRACE("dl", display(tout););
         }
 
-        void mk_join(karr_relation const& r1, karr_relation const& r2,
+        void mk_join(karr_relation const& r1, karr_relation const& r2, 
                      unsigned col_cnt, unsigned const* cols1, unsigned const* cols2) {
             if (r1.empty() || r2.empty()) {
                 m_empty = true;
@@ -250,13 +250,13 @@ namespace datalog {
             m_ineqs_valid = false;
             m_empty = false;
             m_fn = r.m_fn;
-
-            TRACE("dl",
+            
+            TRACE("dl", 
                   for (unsigned i = 0; i < cnt; ++i) {
                       tout << cols[i] << " ";
                   }
                   tout << "\n";
-                  r.display(tout);
+                  r.display(tout); 
                   display(tout););
         }
 
@@ -304,7 +304,7 @@ namespace datalog {
             for (unsigned i = 0; i < M.size(); ++i) {
                 bool found = false;
                 for (unsigned j = 0; !found && j < N_size; ++j) {
-                    found =
+                    found = 
                         same_row(M.A[i], N.A[j]) &&
                         M.b[i] == N.b[j] &&
                         M.eq[i] == N.eq[j];
@@ -333,12 +333,12 @@ namespace datalog {
             return m_basis;
         }
 
-        matrix const& get_ineqs() const {
+        matrix const& get_ineqs() const {   
             init_ineqs();
             return m_ineqs;
         }
 
-        matrix & get_ineqs() {
+        matrix & get_ineqs() {    
             init_ineqs();
             return m_ineqs;
         }
@@ -429,7 +429,7 @@ namespace datalog {
             if (a.is_uminus(e, e1)) {
                 return is_linear(e1, row, b, -mul);
             }
-            return false;
+            return false;        
         }
 
         void init_ineqs() const {
@@ -489,7 +489,7 @@ namespace datalog {
 
     karr_relation const & karr_relation_plugin::get(relation_base const& r) {
         return dynamic_cast<karr_relation const&>(r);
-    }
+    }  
 
     void karr_relation_plugin::set_cancel(bool f) {
         m_hb.set_cancel(f);
@@ -506,15 +506,15 @@ namespace datalog {
     class karr_relation_plugin::join_fn : public convenient_relation_join_fn {
     public:
         join_fn(const relation_signature & o1_sig, const relation_signature & o2_sig, unsigned col_cnt,
-                const unsigned * cols1, const unsigned * cols2)
+                const unsigned * cols1, const unsigned * cols2) 
             : convenient_relation_join_fn(o1_sig, o2_sig, col_cnt, cols1, cols2){
         }
-
+        
         virtual relation_base * operator()(const relation_base & _r1, const relation_base & _r2) {
             karr_relation const& r1 = get(_r1);
             karr_relation const& r2 = get(_r2);
             karr_relation_plugin& p = r1.get_plugin();
-            karr_relation* result = dynamic_cast<karr_relation*>(p.mk_full(0, get_result_signature()));
+            karr_relation* result = dynamic_cast<karr_relation*>(p.mk_full(0, get_result_signature()));            
             result->mk_join(r1, r2, m_cols1.size(), m_cols1.c_ptr(), m_cols2.c_ptr());
             return result;
         }
@@ -532,27 +532,27 @@ namespace datalog {
 
     class karr_relation_plugin::project_fn : public convenient_relation_project_fn {
     public:
-        project_fn(const relation_signature & orig_sig, unsigned removed_col_cnt, const unsigned * removed_cols)
+        project_fn(const relation_signature & orig_sig, unsigned removed_col_cnt, const unsigned * removed_cols) 
             : convenient_relation_project_fn(orig_sig, removed_col_cnt, removed_cols) {
         }
 
         virtual relation_base * operator()(const relation_base & _r) {
             karr_relation const& r = get(_r);
             karr_relation_plugin& p = r.get_plugin();
-            karr_relation* result = dynamic_cast<karr_relation*>(p.mk_full(0, get_result_signature()));
+            karr_relation* result = dynamic_cast<karr_relation*>(p.mk_full(0, get_result_signature()));            
             result->mk_project(r, m_removed_cols.size(), m_removed_cols.c_ptr());
             return result;
         }
     };
 
-    relation_transformer_fn * karr_relation_plugin::mk_project_fn(const relation_base & r,
+    relation_transformer_fn * karr_relation_plugin::mk_project_fn(const relation_base & r, 
             unsigned col_cnt, const unsigned * removed_cols) {
         return alloc(project_fn, r.get_signature(), col_cnt, removed_cols);
     }
-
+   
     class karr_relation_plugin::rename_fn : public convenient_relation_rename_fn {
     public:
-        rename_fn(karr_relation_plugin& p, const relation_signature & orig_sig, unsigned cycle_len, const unsigned * cycle)
+        rename_fn(karr_relation_plugin& p, const relation_signature & orig_sig, unsigned cycle_len, const unsigned * cycle) 
             : convenient_relation_rename_fn(orig_sig, cycle_len, cycle) {}
 
         virtual relation_base * operator()(const relation_base & _r) {
@@ -564,7 +564,7 @@ namespace datalog {
         }
     };
 
-    relation_transformer_fn * karr_relation_plugin::mk_rename_fn(const relation_base & r,
+    relation_transformer_fn * karr_relation_plugin::mk_rename_fn(const relation_base & r, 
             unsigned cycle_len, const unsigned * permutation_cycle) {
         if (!check_kind(r)) {
             return 0;
@@ -684,7 +684,7 @@ namespace datalog {
             }
             else {
                 r.mk_union(src, 0);
-            }
+            }            
             TRACE("dl", r.display(tout << "result:\n"););
         }
     };
@@ -700,7 +700,7 @@ namespace datalog {
     class karr_relation_plugin::filter_identical_fn : public relation_mutator_fn {
         unsigned_vector m_identical_cols;
     public:
-        filter_identical_fn(unsigned col_cnt, const unsigned * identical_cols)
+        filter_identical_fn(unsigned col_cnt, const unsigned * identical_cols) 
             : m_identical_cols(col_cnt, identical_cols) {}
 
         virtual void operator()(relation_base & _r) {
@@ -737,7 +737,7 @@ namespace datalog {
         rational m_value;
         bool    m_valid;
     public:
-        filter_equal_fn(relation_manager & m, const relation_element & value, unsigned col)
+        filter_equal_fn(relation_manager & m, const relation_element & value, unsigned col) 
             : m_col(col) {
             arith_util arith(m.get_context().get_manager());
             m_valid = arith.is_numeral(value, m_value) && m_value.is_int();
@@ -755,11 +755,11 @@ namespace datalog {
                 r.m_ineqs.eq.push_back(true);
                 r.m_basis_valid = false;
             }
-            TRACE("dl", tout << m_value << "\n"; r.display(tout););
+            TRACE("dl", tout << m_value << "\n"; r.display(tout););            
         }
     };
 
-    relation_mutator_fn * karr_relation_plugin::mk_filter_equal_fn(const relation_base & r,
+    relation_mutator_fn * karr_relation_plugin::mk_filter_equal_fn(const relation_base & r, 
         const relation_element & value, unsigned col) {
         if (check_kind(r)) {
             return alloc(filter_equal_fn, get_manager(), value, col);

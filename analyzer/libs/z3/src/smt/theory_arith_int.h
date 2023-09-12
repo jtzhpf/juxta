@@ -33,10 +33,10 @@ namespace smt {
     // Integrality
     //
     // -----------------------------------
-
+    
     /**
        \brief Move non base variables to one of its bounds.
-       If the variable does not have bounds, it is integer, but it is not assigned to an integer value, then the
+       If the variable does not have bounds, it is integer, but it is not assigned to an integer value, then the 
        variable is set to an integer value.
     */
     template<typename Ext>
@@ -117,7 +117,7 @@ namespace smt {
             numeral const & u = upper_bound(v).get_rational();
             new_range  = u;
             new_range -= l;
-            if (new_range > small_range_thresold)
+            if (new_range > small_range_thresold) 
                 continue;
             if (result == null_theory_var) {
                 result = v;
@@ -160,7 +160,7 @@ namespace smt {
         }
         unsigned n   = 0;
         theory_var r = null_theory_var;
-
+        
 #define SELECT_VAR(VAR) if (r == null_theory_var) { n = 1; r = VAR; } else { n++; SASSERT(n >= 2); if (m_random() % n == 0) r = VAR; }
 
         typename vector<row>::const_iterator it  = m_rows.begin();
@@ -208,7 +208,7 @@ namespace smt {
         ctx.mark_as_relevant(bound);
     }
 
-
+    
     /**
        \brief Create a "cut from proof" lemma.
 
@@ -251,8 +251,8 @@ namespace smt {
                 const_coeff = u->get_value().get_rational();
             }
             if (!is_tight) {
-                TRACE("theory_arith_int",
-                      display_row(tout << "!tight: ", *it, true);
+                TRACE("theory_arith_int", 
+                      display_row(tout << "!tight: ", *it, true); 
                       display_var(tout, b);
                       );
                 continue;
@@ -314,11 +314,11 @@ namespace smt {
                   tout << "base value: " << get_value(b) << "\n";
                   display_row(tout, *it, true);
                   );
-        }
-        //
+        }    
+        // 
         // Align the sizes of rows.
         // The sizes are monotonically increasing.
-        //
+        // 
         for (unsigned i = 0; i < rows.size(); ++i) {
             unsigned sz = rows[i].size();
             SASSERT(sz <= max_row);
@@ -344,29 +344,29 @@ namespace smt {
                 }
                 pol.push_back(row_entry(c, var));
             }
-        }
+        }            
         if (pol.empty()) {
             TRACE("theory_arith_int", tout << "The witness is trivial\n";);
             return false;
         }
         expr_ref p1(get_manager()), p2(get_manager());
-
+        
         mk_polynomial_ge(pol.size(), pol.c_ptr(), -unsat_row[0]+rational(1), p1);
         for (unsigned i = 0; i < pol.size(); ++i) {
             pol[i].m_coeff.neg();
         }
         mk_polynomial_ge(pol.size(), pol.c_ptr(), unsat_row[0]+rational(1), p2);
-
+        
         context& ctx = get_context();
         ctx.internalize(p1, false);
         ctx.internalize(p2, false);
         literal l1(ctx.get_literal(p1)), l2(ctx.get_literal(p2));
         ctx.mark_as_relevant(p1.get());
         ctx.mark_as_relevant(p2.get());
-
+        
         ctx.mk_th_axiom(get_id(), l1, l2);
-
-        TRACE("theory_arith_int",
+       
+        TRACE("theory_arith_int", 
               tout << "cut: (or " << mk_pp(p1, get_manager()) << " " << mk_pp(p2, get_manager()) << ")\n";
               );
 
@@ -398,10 +398,10 @@ namespace smt {
         }
         return result;
     }
-
+   
     /**
-       \brief Return true if it is possible to apply a gomory cut on the given row.
-
+       \brief Return true if it is possible to apply a gomory cut on the given row. 
+      
        \sa constrain_free_vars
     */
     template<typename Ext>
@@ -425,15 +425,15 @@ namespace smt {
 
     template<typename Ext>
     void theory_arith<Ext>::mk_polynomial_ge(unsigned num_args, row_entry const * args, rational const& k, expr_ref & result) {
-        // Remark: the polynomials internalized by theory_arith may not satisfy poly_simplifier_plugin->wf_polynomial assertion.
+        // Remark: the polynomials internalized by theory_arith may not satisfy poly_simplifier_plugin->wf_polynomial assertion. 
         bool all_int = true;
         for (unsigned i = 0; i < num_args && all_int; ++i) {
             all_int = is_int(args[i].m_var);
         }
-
+        
         ast_manager & m = get_manager();
         expr_ref_vector _args(m);
-
+        
         for (unsigned i = 0; i < num_args; i++) {
             rational _k = args[i].m_coeff.to_rational();
             expr * x = get_enode(args[i].m_var)->get_owner();
@@ -458,14 +458,14 @@ namespace smt {
 
     class gomory_cut_justification : public ext_theory_propagation_justification {
     public:
-        gomory_cut_justification(family_id fid, region & r,
-                                 unsigned num_lits, literal const * lits,
+        gomory_cut_justification(family_id fid, region & r, 
+                                 unsigned num_lits, literal const * lits, 
                                  unsigned num_eqs, enode_pair const * eqs,
                                  literal consequent):
             ext_theory_propagation_justification(fid, r, num_lits, lits, num_eqs, eqs, consequent) {
         }
         // Remark: the assignment must be propagated back to arith
-        virtual theory_id get_from_theory() const { return null_theory_id; }
+        virtual theory_id get_from_theory() const { return null_theory_id; } 
     };
 
     /**
@@ -475,7 +475,7 @@ namespace smt {
     bool theory_arith<Ext>::mk_gomory_cut(row const & r) {
         SASSERT(!all_coeff_int(r));
         theory_var x_i = r.get_base_var();
-
+        
         SASSERT(is_int(x_i));
         // The following assertion is wrong. It may be violated in mixed-real-interger problems.
         // The check is_gomory_cut_target will discard rows where any variable contains infinitesimals.
@@ -489,7 +489,7 @@ namespace smt {
         }
 
         TRACE("gomory_cut", tout << "applying cut at:\n"; display_row_info(tout, r););
-
+        
         antecedents& ante = get_antecedents();
 
         m_stats.m_gomory_cuts++;
@@ -497,10 +497,10 @@ namespace smt {
         // gomory will be   pol >= k
         numeral k(1);
         buffer<row_entry> pol;
-
+        
         numeral f_0  = Ext::fractional_part(m_value[x_i]);
-        numeral one_minus_f_0 = numeral(1) - f_0;
-
+        numeral one_minus_f_0 = numeral(1) - f_0; 
+        
         numeral lcm_den(1);
         unsigned num_ints = 0;
 
@@ -531,13 +531,13 @@ namespace smt {
                         SASSERT(at_upper(x_j));
                         if (a_ij.is_pos()) {
                             TRUSTME(!f_0.is_zero());
-                            new_a_ij =   a_ij / f_0;
+                            new_a_ij =   a_ij / f_0; 
                             new_a_ij.neg(); // the upper terms are inverted.
                         }
                         else {
                             // new_a_ij = - a_ij / one_minus_f_0
                             // new_a_ij.neg() // the upper terms are inverted
-                            new_a_ij =   a_ij / one_minus_f_0;
+                            new_a_ij =   a_ij / one_minus_f_0;  
                         }
                         // k += new_a_ij * upper_bound(x_j).get_rational();
                         k.addmul(new_a_ij, upper_bound(x_j).get_rational());
@@ -549,7 +549,7 @@ namespace smt {
                     ++num_ints;
                     SASSERT(is_int(x_j));
                     numeral f_j = Ext::fractional_part(a_ij);
-                    TRACE("gomory_cut_detail",
+                    TRACE("gomory_cut_detail", 
                           tout << a_ij << "*v" << x_j << "\n";
                           tout << "fractional_part: " << Ext::fractional_part(a_ij) << "\n";
                           tout << "f_j: " << f_j << "\n";
@@ -611,7 +611,7 @@ namespace smt {
             else
                 bound = m_util.mk_le(get_enode(v)->get_owner(), m_util.mk_numeral(_k, is_int(v)));
         }
-        else {
+        else { 
             if (num_ints > 0) {
                 lcm_den = lcm(lcm_den, denominator(k));
                 TRACE("gomory_cut_detail", tout << "k: " << k << " lcm_den: " << lcm_den << "\n";
@@ -635,7 +635,7 @@ namespace smt {
                       }
                       tout << "k: " << k << "\n";);
             }
-            mk_polynomial_ge(pol.size(), pol.c_ptr(), k.to_rational(), bound);
+            mk_polynomial_ge(pol.size(), pol.c_ptr(), k.to_rational(), bound);            
         }
         TRACE("gomory_cut", tout << "new cut:\n" << mk_pp(bound, get_manager()) << "\n";);
         literal l     = null_literal;
@@ -645,15 +645,15 @@ namespace smt {
         ctx.mark_as_relevant(l);
         ctx.assign(l, ctx.mk_justification(
                        gomory_cut_justification(
-                           get_id(), ctx.get_region(),
-                           ante.lits().size(), ante.lits().c_ptr(),
+                           get_id(), ctx.get_region(), 
+                           ante.lits().size(), ante.lits().c_ptr(), 
                            ante.eqs().size(), ante.eqs().c_ptr(), l)));
         return true;
     }
-
+    
     /**
        \brief Return false if the row failed the GCD test, that is, a conflict was detected.
-
+       
        \remark if the variables with the least coefficient are bounded,
        then the ext_gcd_test is invoked.
     */
@@ -699,7 +699,7 @@ namespace smt {
                 }
                 SASSERT(gcds.is_int());
                 SASSERT(least_coeff.is_int());
-                TRACE("gcd_test_bug", tout << "coeff: " << it->m_coeff << ", gcds: " << gcds
+                TRACE("gcd_test_bug", tout << "coeff: " << it->m_coeff << ", gcds: " << gcds 
                       << " least_coeff: " << least_coeff << " consts: " << consts << "\n";);
             }
         }
@@ -719,17 +719,17 @@ namespace smt {
             ctx.set_conflict(
                 ctx.mk_justification(
                     ext_theory_conflict_justification(
-                        get_id(), ctx.get_region(), ante.lits().size(), ante.lits().c_ptr(),
-                        ante.eqs().size(), ante.eqs().c_ptr(),
+                        get_id(), ctx.get_region(), ante.lits().size(), ante.lits().c_ptr(), 
+                        ante.eqs().size(), ante.eqs().c_ptr(), 
                         ante.num_params(), ante.params("gcd-test"))));
             return false;
         }
-
+        
         if (least_coeff.is_one() && !least_coeff_is_bounded) {
             SASSERT(gcds.is_one());
             return true;
         }
-
+        
         if (least_coeff_is_bounded) {
             return ext_gcd_test(r, least_coeff, lcm_den, consts);
         }
@@ -740,7 +740,7 @@ namespace smt {
        \brief Auxiliary method for gcd_test.
     */
     template<typename Ext>
-    bool theory_arith<Ext>::ext_gcd_test(row const & r, numeral const & least_coeff,
+    bool theory_arith<Ext>::ext_gcd_test(row const & r, numeral const & least_coeff, 
                                          numeral const & lcm_den, numeral const & consts) {
         numeral gcds(0);
         numeral l(consts);
@@ -776,7 +776,7 @@ namespace smt {
                     upper(v)->push_justification(ante, numeral::zero(), proofs_enabled());
                 }
                 else if (gcds.is_zero()) {
-                    gcds = abs_ncoeff;
+                    gcds = abs_ncoeff; 
                 }
                 else {
                     gcds = gcd(gcds, abs_ncoeff);
@@ -784,14 +784,14 @@ namespace smt {
                 SASSERT(gcds.is_int());
             }
         }
-
+        
         if (gcds.is_zero()) {
             return true;
         }
-
+        
         numeral l1 = ceil(l/gcds);
         numeral u1 = floor(u/gcds);
-
+        
         if (u1 < l1) {
             TRACE("gcd_test", tout << "row failed the extended GCD test:\n"; display_row_info(tout, r););
             collect_fixed_var_justifications(r, ante);
@@ -799,12 +799,12 @@ namespace smt {
             ctx.set_conflict(
                 ctx.mk_justification(
                     ext_theory_conflict_justification(
-                        get_id(), ctx.get_region(),
+                        get_id(), ctx.get_region(), 
                         ante.lits().size(), ante.lits().c_ptr(), ante.eqs().size(), ante.eqs().c_ptr(),
                         ante.num_params(), ante.params("gcd-test"))));
             return false;
         }
-
+        
         return true;
     }
 
@@ -869,7 +869,7 @@ namespace smt {
         inf_numeral l, u;
         numeral m;
         for (theory_var v = 0; v < num; v++) {
-            if (!is_non_base(v))
+            if (!is_non_base(v)) 
                 continue;
             get_freedom_interval(v, inf_l, l, inf_u, u, m);
             if (m.is_one() && get_value(v).is_int())
@@ -900,7 +900,7 @@ namespace smt {
                 set_value(v, l);
             else if (!inf_u)
                 set_value(v, u);
-            else
+            else 
                 set_value(v, inf_numeral(0));
         }
         SASSERT(m_to_patch.empty());
@@ -913,7 +913,7 @@ namespace smt {
     void theory_arith<Ext>::fix_non_base_vars() {
         int num = get_num_vars();
         for (theory_var v = 0; v < num; v++) {
-            if (!is_non_base(v))
+            if (!is_non_base(v)) 
                 continue;
             if (!is_int(v))
                 continue;
@@ -933,7 +933,7 @@ namespace smt {
         euclidean_solver              m_solver;
         unsigned_vector               m_tv2v; // theory var to euclidean solver var
         svector<theory_var>           m_j2v;  // justification to theory var
-
+        
         // aux fields
         unsigned_vector               m_xs;
         mpz_buffer                    m_as;
@@ -942,7 +942,7 @@ namespace smt {
         typedef euclidean_solver::var            evar;
         typedef euclidean_solver::justification  ejustification;
         euclidean_solver_bridge(theory_arith & _t):t(_t), m_solver(&t.m_es_num_manager), m_as(m_solver.m()) {}
-
+        
         evar mk_var(theory_var v) {
             m_tv2v.reserve(v+1, UINT_MAX);
             if (m_tv2v[v] == UINT_MAX)
@@ -986,7 +986,7 @@ namespace smt {
                 return UINT_MAX;
             return mk_var(v);
         }
-
+        
         /**
            \brief Return the euclidean_solver variable associated with the given
            power product. Return UINT_MAX, if it doesn't have one.
@@ -997,7 +997,7 @@ namespace smt {
                 return UINT_MAX;
             return m_tv2v[v];
         }
-
+        
         void assert_eqs() {
             // traverse definitions looking for equalities
             mpz c, a;
@@ -1008,7 +1008,7 @@ namespace smt {
             unsigned_vector & xs = m_xs;
             int num = t.get_num_vars();
             for (theory_var v = 0; v < num; v++) {
-                if (!t.is_fixed(v))
+                if (!t.is_fixed(v)) 
                     continue;
                 if (!t.is_int(v))
                     continue; // only integer variables
@@ -1048,7 +1048,7 @@ namespace smt {
                     evar x = mk_var(pp);
                     if (x == UINT_MAX) {
                         failed = true;
-                        break;
+                        break; 
                     }
                     m.set(a, a_val.to_mpq().numerator());
                     as.push_back(a);
@@ -1071,7 +1071,7 @@ namespace smt {
             t.m_tmp_lit_set.reset();
             t.m_tmp_eq_set.reset();
             if (old_bound != 0) {
-                t.accumulate_justification(*old_bound, *new_bound, numeral(0) /* refine for proof gen */, t.m_tmp_lit_set, t.m_tmp_eq_set);
+                t.accumulate_justification(*old_bound, *new_bound, numeral(0) /* refine for proof gen */, t.m_tmp_lit_set, t.m_tmp_eq_set); 
             }
             unsigned_vector::const_iterator it  = js.begin();
             unsigned_vector::const_iterator end = js.end();
@@ -1079,8 +1079,8 @@ namespace smt {
                 ejustification    j = *it;
                 theory_var fixed_v = m_j2v[j];
                 SASSERT(fixed_v != null_theory_var);
-                t.accumulate_justification(*(t.lower(fixed_v)), *new_bound, numeral(0) /* refine for proof gen */, t.m_tmp_lit_set, t.m_tmp_eq_set);
-                t.accumulate_justification(*(t.upper(fixed_v)), *new_bound, numeral(0) /* refine for proof gen */, t.m_tmp_lit_set, t.m_tmp_eq_set);
+                t.accumulate_justification(*(t.lower(fixed_v)), *new_bound, numeral(0) /* refine for proof gen */, t.m_tmp_lit_set, t.m_tmp_eq_set); 
+                t.accumulate_justification(*(t.upper(fixed_v)), *new_bound, numeral(0) /* refine for proof gen */, t.m_tmp_lit_set, t.m_tmp_eq_set); 
             }
             t.m_bounds_to_delete.push_back(new_bound);
             t.m_asserted_bounds.push_back(new_bound);
@@ -1093,7 +1093,7 @@ namespace smt {
         void mk_upper(theory_var v, rational k, bound * old_bound, unsigned_vector const & js) {
             mk_bound(v, k, false, old_bound, js);
         }
-
+        
         bool tight_bounds(theory_var v) {
             SASSERT(!t.is_fixed(v));
             euclidean_solver::numeral_manager & m = m_solver.m();
@@ -1165,7 +1165,7 @@ namespace smt {
                    m_solver.display(tout););
             if (g.is_zero()) {
                 // The definition of v is equal to (0 + c).
-                // That is, v is fixed at c.
+                // That is, v is fixed at c. 
                 // The justification is just m_js, the existing bounds of v are not needed for justifying the new bounds for v.
                 c2 = rational(c);
                 TRACE("euclidean_solver_new", tout << "new fixed: " << c2 << "\n";);
@@ -1178,7 +1178,7 @@ namespace smt {
                 // Let l and u be the current lower and upper bounds.
                 // Then, the following new bounds can be generated:
                 //
-                // l' := g*ceil((l - c)/g) + c
+                // l' := g*ceil((l - c)/g) + c 
                 // u' := g*floor((l - c)/g) + c
                 bound * l = t.lower(v);
                 bound * u = t.upper(v);
@@ -1214,7 +1214,7 @@ namespace smt {
             // try to apply solution set to every definition
             int num = t.get_num_vars();
             for (theory_var v = 0; v < num; v++) {
-                if (t.is_fixed(v))
+                if (t.is_fixed(v)) 
                     continue; // skip equations...
                 if (!t.is_int(v))
                     continue; // skip non integer definitions...
@@ -1304,7 +1304,7 @@ namespace smt {
 
         if (m_params.m_arith_euclidean_solver)
             apply_euclidean_solver();
-
+        
         if (get_context().inconsistent())
             return FC_CONTINUE;
 
@@ -1331,10 +1331,10 @@ namespace smt {
 
         patch_int_infeasible_vars();
         fix_non_base_vars();
-
+        
         if (get_context().inconsistent())
             return FC_CONTINUE;
-
+        
         TRACE("arith_int_inf",
               int num = get_num_vars();
               for (theory_var v = 0; v < num; v++) {
@@ -1358,13 +1358,13 @@ namespace smt {
                   }
               }
               tout << "num infeasible: " << num << "\n";);
-
+        
         theory_var int_var = find_infeasible_int_base_var();
         if (int_var == null_theory_var) {
             TRACE("arith_int_incomp", tout << "FC_DONE 2...\n"; display(tout););
             return m_liberal_final_check || !m_changed_assignment ? FC_DONE : FC_CONTINUE;
         }
-
+        
 #if 0
         if (find_bounded_infeasible_int_base_var() == null_theory_var) {
             // TODO: this is too expensive... I should replace it by a procedure
@@ -1374,7 +1374,7 @@ namespace smt {
             if (!gcd_test())
                 return FC_CONTINUE;
         }
-#endif
+#endif 
 
         m_branch_cut_counter++;
         // TODO: add giveup code
@@ -1401,7 +1401,7 @@ namespace smt {
             theory_var int_var = find_infeasible_int_base_var();
             if (int_var != null_theory_var) {
                 TRACE("arith_int", tout << "v" << int_var << " does not have and integer assignment: " << get_value(int_var) << "\n";);
-                // apply branching
+                // apply branching 
                 branch_infeasible_int_var(int_var);
                 return FC_CONTINUE;
             }

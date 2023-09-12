@@ -53,7 +53,7 @@ namespace datalog {
         typedef unsigned reg_idx;
 
         /**
-           \brief A register number that should never be referenced to. Can stand e.g. for a tail
+           \brief A register number that should never be referenced to. Can stand e.g. for a tail 
            table in a rule with no tail.
         */
         static const reg_idx void_register = UINT_MAX;
@@ -93,7 +93,7 @@ namespace datalog {
 
            If register contains zero, it should be treated as if it contains an empty relation.
         */
-        reg_type reg(reg_idx i) const {
+        reg_type reg(reg_idx i) const { 
             if (i >= m_registers.size()) {
                 return 0;
             }
@@ -172,10 +172,10 @@ namespace datalog {
 
         inline static unsigned encode_kind(family_id k)
         { SASSERT(k<rk_encode_base); return k; }
-        inline static unsigned encode_kinds(family_id k1, family_id k2)
+        inline static unsigned encode_kinds(family_id k1, family_id k2) 
         { SASSERT(k1<rk_encode_base && k2<rk_encode_base); return (k1+1)*rk_encode_base + k2; }
-        inline static unsigned encode_kinds(family_id k1, family_id k2, family_id k3) {
-            SASSERT(k1<rk_encode_base && k2<rk_encode_base && k3<rk_encode_base);
+        inline static unsigned encode_kinds(family_id k1, family_id k2, family_id k3) { 
+            SASSERT(k1<rk_encode_base && k2<rk_encode_base && k3<rk_encode_base); 
             return ((k1+1)*rk_encode_base + k2)*rk_encode_base + k3;
         }
 
@@ -198,7 +198,7 @@ namespace datalog {
         { m_fn_cache.insert(encode_kind(r.get_kind()), fn); }
         void store_fn(const relation_base & r1, const relation_base & r2, base_relation_fn * fn)
         { m_fn_cache.insert(encode_kinds(r1.get_kind(), r2.get_kind()), fn); }
-        void store_fn(const relation_base & r1, const relation_base & r2, const relation_base & r3,
+        void store_fn(const relation_base & r1, const relation_base & r2, const relation_base & r3, 
             base_relation_fn * fn)
         { m_fn_cache.insert(encode_kinds(r1.get_kind(), r2.get_kind(), r3.get_kind()), fn); }
 
@@ -253,7 +253,7 @@ namespace datalog {
 
            The instruction object takes over the ownership of the \c body object.
         */
-        static instruction * mk_while_loop(unsigned control_reg_cnt, const reg_idx * control_regs,
+        static instruction * mk_while_loop(unsigned control_reg_cnt, const reg_idx * control_regs, 
             instruction_block * body);
 
         static instruction * mk_join(reg_idx rel1, reg_idx rel2, unsigned col_cnt,
@@ -265,18 +265,18 @@ namespace datalog {
             unsigned col_cnt, const unsigned * removed_cols, reg_idx result);
         static instruction * mk_union(reg_idx src, reg_idx tgt, reg_idx delta);
         static instruction * mk_widen(reg_idx src, reg_idx tgt, reg_idx delta);
-        static instruction * mk_projection(reg_idx src, unsigned col_cnt, const unsigned * removed_cols,
+        static instruction * mk_projection(reg_idx src, unsigned col_cnt, const unsigned * removed_cols, 
             reg_idx tgt);
         static instruction * mk_join_project(reg_idx rel1, reg_idx rel2, unsigned joined_col_cnt,
-            const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
+            const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
             const unsigned * removed_cols, reg_idx result);
-        static instruction * mk_rename(reg_idx src, unsigned cycle_len, const unsigned * permutation_cycle,
+        static instruction * mk_rename(reg_idx src, unsigned cycle_len, const unsigned * permutation_cycle, 
             reg_idx tgt);
         static instruction * mk_filter_by_negation(reg_idx tgt, reg_idx neg_rel, unsigned col_cnt,
             const unsigned * cols1, const unsigned * cols2);
-        static instruction * mk_select_equal_and_project(ast_manager & m, reg_idx src,
+        static instruction * mk_select_equal_and_project(ast_manager & m, reg_idx src, 
             const relation_element & value, unsigned col, reg_idx result);
-
+        
         static instruction * mk_unary_singleton(ast_manager & m, func_decl* pred, const relation_sort & s, const relation_element & val, reg_idx tgt);
         static instruction * mk_total(const relation_signature & sig, func_decl* pred, reg_idx tgt);
 
@@ -312,13 +312,13 @@ namespace datalog {
         ~instruction_block();
         void reset();
 
-        void push_back(instruction * i) {
+        void push_back(instruction * i) { 
             m_data.push_back(i);
             if(m_observer) {
                 m_observer->notify(i);
             }
         }
-        void set_observer(instruction_observer * o) {
+        void set_observer(instruction_observer * o) { 
             SASSERT(o==0 || m_observer==0);
             m_observer = o;
         }
@@ -327,7 +327,7 @@ namespace datalog {
            \brief Perform instructions in the block. If the run was interrupted before completion,
            return false; otherwise return true.
 
-           The execution can terminate before completion if the function
+           The execution can terminate before completion if the function 
            \c execution_context::should_terminate() returns true.
         */
         bool perform(execution_context & ctx) const;

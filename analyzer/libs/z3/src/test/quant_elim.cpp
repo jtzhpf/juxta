@@ -95,7 +95,7 @@ void tst_quant_elim() {
 
     test_formula(l_undef, "(exists (u U) (= (f u) u))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 3 u) (* 7 v))))))))");
 
@@ -114,7 +114,7 @@ void tst_quant_elim() {
 
 
 
-    test_formula(l_false,
+    test_formula(l_false, 
                  "(forall (x Int) (q1 Int) (q2 Int) (r1 Int) (r2 Int) "
                  "  (implies "
                  "    (and (< x 4699) "
@@ -130,7 +130,7 @@ void tst_quant_elim() {
 
 
 
-    test_formula(l_undef,
+    test_formula(l_undef, 
                  "(forall (l list) (or (= l nil) (exists (x Int) (ll list) (= l (cons x ll)))))");
 
 
@@ -162,7 +162,7 @@ void tst_quant_elim() {
 
 
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 3 u) (* 5 v))))))))");
 
@@ -174,7 +174,7 @@ void tst_quant_elim() {
     test_formula(l_true, "(forall (y Int) (implies (exists (d Int) (= y (* 65 d))) (exists (d Int) (= y (* 5 d)))))");
 
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (z Int) (forall (w Int) (exists (x Int) (y Int) "
                  "  (or (and (< (+ (* 3 x) w) 2) (< 1 (- (+ (* 2 x) z) w))) "
                  "      (and (< z (* 2 y)) (> z y))))))");
@@ -183,13 +183,13 @@ void tst_quant_elim() {
     test_formula(l_true, "(exists (x Int) (y Int) (and (> x 0) (>= y 0) (= 1 (- (* 3 x) (* 5 y)))))");
 
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (a Int) (b Int) "
                  "  (and (not (= a 1)) (= a b) (or (= a (* 2 b)) (= (* 2 b) (+ 1 (* 3 a))))))");
 
 
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(forall (x Int) (iff (and (not (= 0 (mod x 2))) (= 0 (mod (- x 1) 3))) "
                  "                        (or (= 0 (mod (- x 1) 12)) (= 0 (mod (- x 7) 12)))))");
 
@@ -205,7 +205,7 @@ void tst_quant_elim() {
 
 
     test_formula(l_false, "(forall (x Int) (exists (y Int) (= x (* 2 y))))");
-    test_formula(l_false,
+    test_formula(l_false, 
                  "(forall (x Int) "
                  "  (implies (not (= 0 (mod x 2))) "
                  "       (or (= 0 (mod (- x 1) 4)) "
@@ -218,14 +218,14 @@ void tst_quant_elim() {
                  "           (= 0 (mod (- x 5) 24)) "
                  "           (= 0 (mod (- x 11) 24))))) ");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(forall (x Int) (iff (and (not (= 0 (mod x 2))) (= 0 (mod (- x 1) 3))) "
                  "                        (or (= 0 (mod (- x 1) 12)) (= 0 (mod (- x 7) 12)))))");
+    
 
 
 
-
-    test_formula(l_false,
+    test_formula(l_false, 
                  "(forall (d Int) (c Int) (b Int) "
                  "     (and (= c 0) (= d (* b c)) (= d 0)))");
 
@@ -241,13 +241,13 @@ void tst_quant_elim() {
 
 
 
-    test_formula(l_false,
+    test_formula(l_false, 
                  "(forall (a Int) (b Int) (x Int) (y Int) (z Int) "
                  "  (implies (and (= (+ a 2) b) (= x (+ 1 (- b a))) (= y (- b 2)) (= z 3)) false))");
 
 
 
-    test_formula(l_false,
+    test_formula(l_false, 
                  "(exists (a Int) (b Int) "
                  "  (and (> a 1) (> b 1) (= a b) (or (= a (* 2 b)) (= (* 2 b) (+ 1 (* 3 a))))))");
 
@@ -260,18 +260,18 @@ void tst_quant_elim() {
 
     test_formula(l_true, "(forall (d Int) (implies (>= d 0) (exists (x Int) (y Int) (and (>= x 0) (>= y 0) (= d (- (* 3 x) (* 5 y)))))))");
 
-
+    
     test_formula(l_false, "(exists (x Int) (y Int) (z Int) (= 1 (- (* 4 x) (* 6 y))))");
 
     //return;
 
 
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 3 u) (* 8 v))))))))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 3 u) (* 8 v))))))))");
 
@@ -279,7 +279,7 @@ void tst_quant_elim() {
 
     // too slow.
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 7 u) (* 8 v))))))))");
 
@@ -299,31 +299,31 @@ void tst_quant_elim() {
     test_formula(l_false, "(exists (x Int) (and (< (+ (* 3 x) 1) 10) (> (- (* 7 x) 6) 7) (= 0 (mod x 3))))");
 
 
-    test_formula(l_false, "(exists (x Int) (y Int) (and (< (- 1 (* 5 y)) x) (< (+ 1 y) (* 13 x)) (< (+ x 2) 0) (> y 0)))");
-
+    test_formula(l_false, "(exists (x Int) (y Int) (and (< (- 1 (* 5 y)) x) (< (+ 1 y) (* 13 x)) (< (+ x 2) 0) (> y 0)))");    
+    
     test_formula(l_false, "(exists (x Int) (y Int) (and (< (- 1 (* 5 y)) x) (< (+ 1 y) (* 13 x)) (< x -2)))");
-
+    
     test_formula(l_true, "(exists (w Int) (z Int) (y Int) (x Int) (and (< (- 1 (* 5 y)) (+ x (* 2 z))) (< (+ 1 y w (* -4 z)) (* 13 x)) (< x -2) (> z 0)))");
 
-
-
-    test_formula(l_true,
+    
+    
+    test_formula(l_true, 
                  "(forall (w Int) "
                  "  (exists (z Int) (y Int) (x Int) "
                  "    (and (< (- 1 (* 5 y)) (+ x (* 2 z))) "
                  "         (< (- (+ 1 y) (* 4 z)) (* 13 x)) "
                  "         (< x -2) (> z 0) (< x 10))))     ");
-
-
-    test_formula(l_false,
+    
+    
+    test_formula(l_false, 
                  "(forall (d Int) (c Int) (b Int) "
                  "     (and (= c 0) (= d (* b c)) (= d 4)))");
 
-    test_formula(l_undef,
+    test_formula(l_undef, 
                  "(exists (d Int) (c Int) (b Int) "
                  "     (and (= c 0) (= d (* b c)) (= d 0)))");
-
-    test_formula(l_undef,
+    
+    test_formula(l_undef, 
                  "(exists (d Int) (c Int) (b Int) "
                  "     (and (= c 0) (= d (* b c)) (= d 4)))");
 
@@ -352,17 +352,17 @@ void tst_quant_elim() {
     test_formula(l_true, "(forall (d Int) (implies (>= d 0) (exists (x Int) (y Int) (and (>= x 0) (>= y 0) (= d (- (* 3 x) (* 5 y)))))))");
 
     test_formula(l_true, "(exists (x Int) (y Int) (and (> x 0) (>= y 0) (= 1 (- (* 3 x) (* 5 y)))))");
-
+    
     test_formula(l_false, "(exists (x Int) (y Int) (z Int) (= 1 (- (* 4 x) (* 6 y))))");
 
     // "(forall (x Int) (implies (< b (* 3 x)) (a < (* 3 x))))"
 
     test_formula(l_false, "(forall (x Int) (y Int) (implies (<= x y) (< (+ 1 (* 2 x)) (* 2 y))))");
 
-
+    
     test_formula(l_true, "(forall (x Int) (y Int) (z Int) (implies (= (+ 1 (* 2 x)) (* 2 y)) (> (+ x y z) 129)))");
-
-    // Formula examples from Cooper's paper.
+    
+    // Formula examples from Cooper's paper.                                    
 
 
     test_formula(l_true, "(forall (a Int) (exists (b Int) (or (< a (+ (* 4 b) (* 3 a))) (and (not (< a b)) (> a (+ b 1))))))");
@@ -395,21 +395,21 @@ void tst_quant_elim() {
     test_formula(l_false,"(forall (x Int) (y Int) (or                                (not (= (* 6 x) (* 5 y)))))");
 
 
-
+   
     // Positive variant of the Bezout theorem (see the exercise).                *)
 
     test_formula(l_true, "(forall (z Int) (implies (> z 7) (exists (x Int) (y Int) (and (>= x 0) (>= y 0) (= (+ (* 3 x) (* 5 y)) z)))))");
 
     test_formula(l_false,"(forall (z Int) (implies (> z 2) (exists (x Int) (y Int) (and (>= x 0) (>= y 0) (= (+ (* 3 x) (* 5 y)) z)))))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(forall (z Int) (implies (<= z 7) "
                  "    (iff      (exists (x Int) (y Int) (and (>= x 0) (>= y 0) (= z (+ (* 3 x) (* 5 y))))) "
                  "         (not (exists (x Int) (y Int) (and (>= x 0) (>= y 0) (= (- 7 z) (+ (* 3 x) (* 5 y))))))))) ");
 
-    // Basic result about congruences.
+    // Basic result about congruences.                                          
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(forall (x Int) "
                  "  (iff (and (not (exists (m Int) (= x (* 2 m)))) (exists (m Int) (= x (+ (* 3 m) 1)))) "
                  "       (or  (exists (m Int) (= x (+ (* 12 m) 1))) (exists (m Int) (= x (+ (* 12 m) 7))))))");
@@ -418,22 +418,22 @@ void tst_quant_elim() {
 
 
 
-    // Inspired by the Collatz conjecture.
+    // Inspired by the Collatz conjecture.                                      
 
-    test_formula(l_false,
+    test_formula(l_false, 
                  "(forall (a Int) (b Int) (x Int) (y Int) (z Int) "
                  "  (implies (and (= (+ a 2) b) (= x (+ 1 (- b a))) (= y (- b 2)) (= z 3)) false))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (a Int) (b Int) "
                  "  (and (not (= a 1)) (= a b) (or (= a (* 2 b)) (= (* 2 b) (+ 1 (* 3 a))))))");
 
 
-    test_formula(l_false,
+    test_formula(l_false, 
                  "(exists (a Int) (b Int) "
                  "  (and (> a 1) (> b 1) (= a b) (or (= a (* 2 b)) (= (* 2 b) (+ 1 (* 3 a))))))");
 
-    test_formula(l_false,
+    test_formula(l_false, 
                  "(exists (a Int) (b Int) "
                  "  (and (> a 1) (> b 1)  "
                  "    (or (= a (* 2 b)) (= (* 2 b) (+ 1 (* 3 a)))) "
@@ -442,36 +442,36 @@ void tst_quant_elim() {
 #if 0
     // Bob Constable's "stamp problem".
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(forall (x Int) (implies (>= x 8) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 3 u) (* 5 v)))))))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 3 u) (* 5 v))))))))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 3 u) (* 7 v))))))))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 3 u) (* 8 v))))))))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(exists (l Int) (forall (x Int) (implies (>= x l) "
                  "       (exists (u Int) (v Int) (and (>= u 0) (>= v 0) (= x (+ (* 7 u) (* 8 v))))))))");
 #endif
 
-    // Example from reciprocal mult: (2622 * x)>>16 = x/100 within a range.
+    // Example from reciprocal mult: (2622 * x)>>16 = x/100 within a range.     
 
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(forall (x Int) (y Int) "
                  "  (iff (exists (d Int) (= (+ x y) (* 2 d))) "
                  "       (iff (exists (d Int) (= x (* 2 d))) (exists (d Int) (= y (* 2 d))))))");
 
-    test_formula(l_true,
+    test_formula(l_true, 
                  "(forall (n Int) "
                  " (implies (and (< 0 n) (< n 2400)) "
                  "     (or (and (<= n 2) (<= 2 (* 2 n))) "
@@ -489,7 +489,7 @@ void tst_quant_elim() {
                  "         (and (<= n 2503) (<= 2503 (* 2 n)))))) ");
 
 
-
+   
 
     memory::finalize();
 #ifdef _WINDOWS

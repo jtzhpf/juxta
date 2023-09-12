@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-   An interface class for foci2.
+   An interface class for foci2.   
 
 Author:
 
@@ -40,7 +40,7 @@ class foci2 {
   enum ops {
     And = 0, Or, Not, Iff, Ite, Equal, Plus, Times, Floor, Leq, Div, Bool, Int, Array, Tsym, Fsym, Forall, Exists, Distinct, LastOp
   };
-
+  
   virtual symb mk_func(const std::string &s) = 0;
   virtual symb mk_pred(const std::string &s) = 0;
   virtual ast mk_op(ops op, const std::vector<ast> args) = 0;
@@ -52,7 +52,7 @@ class foci2 {
   virtual ast mk_true() = 0;
   virtual ast mk_false() = 0;
   virtual ast mk_app(symb,const std::vector<ast> args) = 0;
-
+  
   virtual bool get_func(ast, symb &) = 0;
   virtual bool get_pred(ast, symb &) = 0;
   virtual bool get_op(ast, ops &) = 0;
@@ -61,12 +61,12 @@ class foci2 {
   virtual bool get_int(ast id, std::string &res) = 0;
   virtual bool get_rat(ast id, std::string &res) = 0;
   virtual const std::string &get_symb(symb) = 0;
-
+  
   virtual int get_num_args(ast) = 0;
   virtual ast get_arg(ast, int) = 0;
-
+  
   virtual void show_ast(ast) = 0;
-
+  
   virtual bool interpolate(const std::vector<ast> &frames, std::vector<ast> &itps, std::vector<int> parents) = 0;
 
   FOCI2_EXPORT static foci2 *create(const std::string &);

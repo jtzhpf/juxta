@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Params.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 
 package com.microsoft.z3;
@@ -40,7 +40,7 @@ public class Params extends Z3Object
         Native.paramsSetDouble(getContext().nCtx(), getNativeObject(),
                 name.getNativeObject(), value);
     }
-
+    
     /**
      * Adds a parameter setting.
      **/
@@ -48,7 +48,7 @@ public class Params extends Z3Object
     {
 
         Native.paramsSetSymbol(getContext().nCtx(), getNativeObject(),
-                name.getNativeObject(),
+                name.getNativeObject(), 
                 getContext().mkSymbol(value).getNativeObject());
     }
 
@@ -67,7 +67,7 @@ public class Params extends Z3Object
      **/
     public void add(String name, boolean value) throws Z3Exception
     {
-        Native.paramsSetBool(getContext().nCtx(), getNativeObject(),
+        Native.paramsSetBool(getContext().nCtx(), getNativeObject(), 
                 getContext().mkSymbol(name).getNativeObject(), value);
     }
 
@@ -108,7 +108,7 @@ public class Params extends Z3Object
                 getContext().mkSymbol(name).getNativeObject(),
                 getContext().mkSymbol(value).getNativeObject());
     }
-
+    
     /**
      * A string representation of the parameter set.
      **/

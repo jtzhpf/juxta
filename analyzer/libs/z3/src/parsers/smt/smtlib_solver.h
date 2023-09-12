@@ -25,7 +25,7 @@ Revision History:
 
 class cmd_context;
 
-namespace smtlib  {
+namespace smtlib  {    
     class solver {
         context_params      m_params;
         ast_manager         m_ast_manager;
@@ -34,7 +34,7 @@ namespace smtlib  {
         unsigned            m_error_code;
     public:
         solver();
-        ~solver();
+        ~solver(); 
         bool solve_smt(char const * benchmark_file);
         bool solve_smt_string(char const * benchmark_string);
         void display_statistics();

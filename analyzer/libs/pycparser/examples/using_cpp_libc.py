@@ -1,11 +1,11 @@
 #-----------------------------------------------------------------
-# pycparser: using_cpp_libc.py
+# pycparser: use_cpp_libc.py
 #
 # Shows how to use the provided 'cpp' (on Windows, substitute for
 # the 'real' cpp if you're on Linux/Unix) and "fake" libc includes
 # to parse a file that includes standard C headers.
 #
-# Copyright (C) 2008-2014, Eli Bendersky
+# Copyright (C) 2008-2011, Eli Bendersky
 # License: BSD
 #-----------------------------------------------------------------
 import sys
@@ -28,7 +28,8 @@ if __name__ == "__main__":
         filename = 'c_files/year.c'
 
     ast = parse_file(filename, use_cpp=True,
-            cpp_path=CPPPATH,
+            cpp_path=CPPPATH, 
             cpp_args=r'-I../utils/fake_libc_include')
-
+    
     ast.show()
+

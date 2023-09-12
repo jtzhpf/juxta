@@ -24,7 +24,7 @@ Revision History:
 #include "map.h"
 #include "arith_decl_plugin.h"
 
-namespace smtlib {
+namespace smtlib {    
 
     class sort_builder {
     public:
@@ -82,7 +82,7 @@ namespace smtlib {
         bool find(symbol s, sort * & d) {
             return m_sorts1.find(s, d);
         }
-
+        
         void insert(symbol s, sort_builder* sb);
 
         bool lookup(symbol s, sort_builder*& sb);
@@ -99,10 +99,10 @@ namespace smtlib {
     class theory {
     public:
         typedef ptr_vector<expr>::const_iterator expr_iterator;
-
-        theory(ast_manager & ast_manager, symbol const& name):
-            m_name(name),
-            m_ast_manager(ast_manager),
+        
+        theory(ast_manager & ast_manager, symbol const& name): 
+            m_name(name), 
+            m_ast_manager(ast_manager), 
             m_symtable(ast_manager),
             m_asts(ast_manager)
         {}
@@ -115,18 +115,18 @@ namespace smtlib {
 
         void insert(func_decl * c) { m_symtable.insert(c->get_name(), c); }
 
-        func_decl * declare_func(symbol const & id, sort_ref_buffer & domain, sort * range,
+        func_decl * declare_func(symbol const & id, sort_ref_buffer & domain, sort * range, 
                                  bool is_assoc, bool is_comm, bool  is_inj);
-
+        
         sort * declare_sort(symbol const & id);
 
-        void add_axiom(expr * axiom) {
+        void add_axiom(expr * axiom) { 
             m_asts.push_back(axiom);
-            m_axioms.push_back(axiom);
+            m_axioms.push_back(axiom); 
         }
 
-        expr_iterator begin_axioms() const {
-            return m_axioms.begin();
+        expr_iterator begin_axioms() const { 
+            return m_axioms.begin(); 
         }
 
         unsigned get_num_axioms() const {
@@ -137,13 +137,13 @@ namespace smtlib {
             return m_axioms.c_ptr();
         }
 
-        expr_iterator end_axioms() const {
-            return m_axioms.end();
+        expr_iterator end_axioms() const { 
+            return m_axioms.end(); 
         }
 
-        void add_assumption(expr * axiom) {
+        void add_assumption(expr * axiom) { 
             m_asts.push_back(axiom);
-            m_assumptions.push_back(axiom);
+            m_assumptions.push_back(axiom); 
         }
 
         unsigned get_num_assumptions() const {
@@ -166,7 +166,7 @@ namespace smtlib {
     protected:
         symbol m_name;
         ast_manager&           m_ast_manager;
-        ptr_vector<expr>       m_axioms;
+        ptr_vector<expr>       m_axioms;       
         ptr_vector<expr>       m_assumptions;
         symtable               m_symtable;
         ast_ref_vector         m_asts;
@@ -176,17 +176,17 @@ namespace smtlib {
 
         theory(theory const&);
     };
-
-    class benchmark : public theory {
+        
+    class benchmark : public theory {        
     public:
         enum status {
-            UNKNOWN,
-            SAT,
+            UNKNOWN, 
+            SAT, 
             UNSAT
         };
 
-        benchmark(ast_manager & ast_manager, symbol const & name) :
-            theory(ast_manager, name),
+        benchmark(ast_manager & ast_manager, symbol const & name) : 
+            theory(ast_manager, name), 
             m_status(UNKNOWN) {}
 
         virtual ~benchmark() {}
@@ -194,11 +194,11 @@ namespace smtlib {
         status get_status() const { return m_status; }
         void   set_status(status status) { m_status = status; }
 
-        symbol get_logic() const {
+        symbol get_logic() const { 
             if (m_logic == symbol::null) {
                 return symbol("ALL");
             }
-            return m_logic;
+            return m_logic; 
         }
 
         void set_logic(symbol const & s) { m_logic = s; }
@@ -207,17 +207,17 @@ namespace smtlib {
             return m_formulas.size();
         }
 
-        expr_iterator begin_formulas() const {
-            return m_formulas.begin();
+        expr_iterator begin_formulas() const { 
+            return m_formulas.begin(); 
         }
 
-        expr_iterator end_formulas() const {
-            return m_formulas.end();
+        expr_iterator end_formulas() const { 
+            return m_formulas.end(); 
         }
 
-        void add_formula(expr * formula) {
+        void add_formula(expr * formula) { 
             m_asts.push_back(formula);
-            m_formulas.push_back(formula);
+            m_formulas.push_back(formula); 
         }
 
         void display_as_smt2(std::ostream & out) const;

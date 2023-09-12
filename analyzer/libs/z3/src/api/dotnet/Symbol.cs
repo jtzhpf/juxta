@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-16
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -39,7 +39,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Indicates whether the symbol is of Int kind
-        /// </summary>
+        /// </summary>    
         public bool IsIntSymbol()
         {
             return Kind == Z3_symbol_kind.Z3_INT_SYMBOL;
@@ -70,7 +70,7 @@ namespace Microsoft.Z3
         /// <summary>
         /// Symbol constructor
         /// </summary>
-        internal protected Symbol(Context ctx, IntPtr obj) : base(ctx, obj)
+        internal protected Symbol(Context ctx, IntPtr obj) : base(ctx, obj) 
         {
             Contract.Requires(ctx != null);
         }

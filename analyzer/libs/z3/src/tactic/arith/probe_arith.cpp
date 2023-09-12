@@ -46,7 +46,7 @@ class arith_degree_probe : public probe {
             m_acc_degree += deg;
             m_counter++;
         }
-
+        
         void process(app * n) {
             expr * lhs = n->get_arg(0);
             expr * rhs = n->get_arg(1);
@@ -97,7 +97,7 @@ class arith_bw_probe : public probe {
             m_acc_bw  = 0;
             m_counter = 0;
         }
-
+        
         void operator()(var * n) {}
         void operator()(quantifier * n) {}
         void operator()(app * n) {
@@ -116,7 +116,7 @@ class arith_bw_probe : public probe {
     bool m_avg;
 public:
     arith_bw_probe(bool avg):m_avg(avg) {}
-
+        
     virtual result operator()(goal const & g) {
         proc p(g.m());
         for_each_expr_at(p, g);
@@ -153,9 +153,9 @@ struct is_non_qflira_functor {
     is_non_qflira_functor(ast_manager & _m, bool _int, bool _real):m(_m), u(m), m_int(_int), m_real(_real) {}
 
     void operator()(var *) { throw found();  }
-
+    
     void operator()(quantifier *) { throw found(); }
-
+    
     bool compatible_sort(app * n) const {
         if (m.is_bool(n))
             return true;
@@ -171,7 +171,7 @@ struct is_non_qflira_functor {
             throw found();
         family_id fid = n->get_family_id();
         if (fid == m.get_basic_family_id())
-            return;
+            return; 
         if (fid == u.get_family_id()) {
             switch (n->get_decl_kind()) {
             case OP_LE:  case OP_GE: case OP_LT: case OP_GT:
@@ -331,12 +331,12 @@ struct is_non_nira_functor {
             return;
         throw_found();
     }
-
-    void operator()(quantifier *) {
+    
+    void operator()(quantifier *) { 
         if (!m_quant)
-            throw_found();
+            throw_found(); 
     }
-
+    
     bool compatible_sort(app * n) const {
         if (m.is_bool(n))
             return true;
@@ -352,11 +352,11 @@ struct is_non_nira_functor {
             throw_found();
         family_id fid = n->get_family_id();
         if (fid == m.get_basic_family_id())
-            return;
+            return; 
         if (fid == u.get_family_id()) {
             switch (n->get_decl_kind()) {
             case OP_LE:  case OP_GE: case OP_LT: case OP_GT:
-            case OP_ADD: case OP_UMINUS: case OP_SUB: case OP_ABS:
+            case OP_ADD: case OP_UMINUS: case OP_SUB: case OP_ABS: 
             case OP_NUM:
                 return;
             case OP_MUL:

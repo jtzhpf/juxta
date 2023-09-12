@@ -39,7 +39,7 @@ Revision History:
    There is no guarantee that the optimal expression will be produced.
 */
 class maximise_ac_sharing {
-
+    
     struct entry {
         func_decl * m_decl;
         expr *      m_arg1;
@@ -98,7 +98,7 @@ private:
         }
     }
 protected:
-    virtual void init_core() = 0;
+    virtual void init_core() = 0; 
     virtual bool is_numeral(expr * n) const = 0;
     void register_plugin(ac_plugin * p) { m_simplifier.register_plugin(p); }
 public:

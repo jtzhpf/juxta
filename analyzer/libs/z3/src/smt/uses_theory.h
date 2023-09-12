@@ -28,7 +28,7 @@ bool uses_theory(expr * n, family_id fid);
 
 /**
     \brief Return true if the given expression contains a symbol of the given theory.
-    Only the expressions not marked as visited are checked. The set visited is updated
+    Only the expressions not marked as visited are checked. The set visited is updated 
     with the new checked expressions.
 */
 bool uses_theory(expr * n, family_id fid, expr_mark & visited);

@@ -10,8 +10,8 @@ Abstract:
     Extract integer linear invariants.
 
     The linear invariants are extracted according to Karr's method.
-    A short description is in
-    Nikolaj Bjorner, Anca Browne and Zohar Manna. Automatic Generation
+    A short description is in 
+    Nikolaj Bjorner, Anca Browne and Zohar Manna. Automatic Generation 
     of Invariants and Intermediate Assertions, in CP 95.
 
     The algorithm is here adapted to Horn clauses.
@@ -20,7 +20,7 @@ Abstract:
     - R  - set of linear congruences that are true of R.
     - RD - the dual basis of of solutions for R.
 
-    RD is updated by accumulating basis vectors for solutions
+    RD is updated by accumulating basis vectors for solutions 
     to R (the homogeneous dual of R)
     R is updated from the inhomogeneous dual of RD.
 
@@ -29,7 +29,7 @@ Author:
     Nikolaj Bjorner (nbjorner) 2013-03-09
 
 Revision History:
-
+           
 --*/
 
 #include"expr_safe_replace.h"
@@ -46,7 +46,7 @@ namespace datalog {
     mk_karr_invariants::mk_karr_invariants(context & ctx, unsigned priority):
         rule_transformer::plugin(priority, false),
         m_ctx(ctx),
-        m(ctx.get_manager()),
+        m(ctx.get_manager()), 
         rm(ctx.get_rule_manager()),
         m_inner_ctx(m, ctx.get_register_engine(), ctx.get_fparams()),
         a(m),
@@ -72,7 +72,7 @@ namespace datalog {
         for (unsigned j = 0; j < row.size(); ++j) {
             out << row[j] << " ";
         }
-        out << (is_eq?" = ":" >= ") << -b << "\n";
+        out << (is_eq?" = ":" >= ") << -b << "\n";        
     }
 
     void matrix::display_ineq(
@@ -93,7 +93,7 @@ namespace datalog {
                 first = false;
             }
         }
-        out << (is_eq?"= ":">= ") << -b << "\n";
+        out << (is_eq?"= ":">= ") << -b << "\n";        
     }
 
     void matrix::display(std::ostream& out) const {
@@ -101,7 +101,7 @@ namespace datalog {
             display_row(out, A[i], b[i], eq[i]);
         }
     }
-
+    
 
     class mk_karr_invariants::add_invariant_model_converter : public model_converter {
         ast_manager&          m;
@@ -109,7 +109,7 @@ namespace datalog {
         func_decl_ref_vector  m_funcs;
         expr_ref_vector       m_invs;
     public:
-
+        
         add_invariant_model_converter(ast_manager& m): m(m), a(m), m_funcs(m), m_invs(m) {}
 
         virtual ~add_invariant_model_converter() { }
@@ -125,7 +125,7 @@ namespace datalog {
             for (unsigned i = 0; i < m_funcs.size(); ++i) {
                 func_decl* p = m_funcs[i].get();
                 func_interp* f = mr->get_func_interp(p);
-                expr_ref body(m);
+                expr_ref body(m);                
                 unsigned arity = p->get_arity();
                 SASSERT(0 < arity);
                 if (f) {
@@ -140,9 +140,9 @@ namespace datalog {
                     body = m.mk_false();  // fragile: assume that relation was pruned by being infeasible.
                 }
                 f->set_else(body);
-            }
+            }            
         }
-
+    
         virtual model_converter * translate(ast_translation & translator) {
             add_invariant_model_converter* mc = alloc(add_invariant_model_converter, m);
             for (unsigned i = 0; i < m_funcs.size(); ++i) {
@@ -194,7 +194,7 @@ namespace datalog {
         m_cancel = true;
         m_inner_ctx.cancel();
     }
-
+    
     rule_set * mk_karr_invariants::operator()(rule_set const & source) {
         if (!m_ctx.karr()) {
             return 0;
@@ -220,7 +220,7 @@ namespace datalog {
 
         // figure out whether to update same rules as used for saturation.
         scoped_ptr<rule_set> rev_source = bwd(*src_loop);
-        get_invariants(*rev_source);
+        get_invariants(*rev_source);        
         scoped_ptr<rule_set> src_annot = update_rules(*src_loop);
         rule_set* rules = lc.revert(*src_annot);
         rules->inherit_predicates(source);
@@ -262,7 +262,7 @@ namespace datalog {
                 m_fun2inv.insert(p, fml);
             }
         }
-    }
+    }        
 
     rule_set* mk_karr_invariants::update_rules(rule_set const& src) {
         scoped_ptr<rule_set> dst = alloc(rule_set, m_ctx);
@@ -278,7 +278,7 @@ namespace datalog {
                 func_decl* p = git->m_key;
                 expr* fml = 0;
                 if (m_fun2inv.find(p, fml)) {
-                    kmc->add(p, fml);
+                    kmc->add(p, fml);                    
                 }
             }
             m_ctx.add_model_converter(kmc);
@@ -288,7 +288,7 @@ namespace datalog {
         return dst.detach();
     }
 
-    void mk_karr_invariants::update_body(rule_set& rules, rule& r) {
+    void mk_karr_invariants::update_body(rule_set& rules, rule& r) { 
         unsigned utsz = r.get_uninterpreted_tail_size();
         unsigned tsz  = r.get_tail_size();
         app_ref_vector tail(m);
@@ -297,12 +297,12 @@ namespace datalog {
             tail.push_back(r.get_tail(i));
         }
         for (unsigned i = 0; i < utsz; ++i) {
-            func_decl* q = r.get_decl(i);
+            func_decl* q = r.get_decl(i); 
             expr* fml = 0;
             if (m_fun2inv.find(q, fml)) {
                 expr_safe_replace rep(m);
                 for (unsigned j = 0; j < q->get_arity(); ++j) {
-                    rep.insert(m.mk_var(j, q->get_domain(j)),
+                    rep.insert(m.mk_var(j, q->get_domain(j)), 
                                r.get_tail(i)->get_arg(j));
                 }
                 expr_ref tmp(fml, m);
@@ -315,7 +315,7 @@ namespace datalog {
             new_rule = rm.mk(r.get_head(), tail.size(), tail.c_ptr(), 0, r.name());
         }
         rules.add_rule(new_rule);
-        rm.mk_rule_rewrite_proof(r, *new_rule); // should be weakening rule.
+        rm.mk_rule_rewrite_proof(r, *new_rule); // should be weakening rule.        
     }
 
 

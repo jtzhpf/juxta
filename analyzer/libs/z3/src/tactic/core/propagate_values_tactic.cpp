@@ -34,7 +34,7 @@ class propagate_values_tactic : public tactic {
         unsigned                      m_idx;
         unsigned                      m_max_rounds;
         bool                          m_modified;
-
+        
         imp(ast_manager & m, params_ref const & p):
             m_manager(m),
             m_r(m, p),
@@ -46,22 +46,22 @@ class propagate_values_tactic : public tactic {
         void updt_params_core(params_ref const & p) {
             m_max_rounds = p.get_uint("max_rounds", 4);
         }
-
+        
         void updt_params(params_ref const & p) {
             m_r.updt_params(p);
             updt_params_core(p);
         }
 
         ast_manager & m() const { return m_manager; }
-
+        
         void set_cancel(bool f) {
             m_r.set_cancel(f);
         }
-
+        
         bool is_shared(expr * t) {
             return m_occs.is_shared(t);
         }
-
+        
         bool is_shared_neg(expr * t, expr * & atom) {
             if (!m().is_not(t))
                 return false;
@@ -86,13 +86,13 @@ class propagate_values_tactic : public tactic {
             }
             return false;
         }
-
+        
         void push_result(expr * new_curr, proof * new_pr) {
             if (m_goal->proofs_enabled()) {
                 proof * pr = m_goal->pr(m_idx);
                 new_pr     = m().mk_modus_ponens(pr, new_pr);
             }
-
+            
             expr_dependency_ref new_d(m());
             if (m_goal->unsat_core_enabled()) {
                 new_d = m_goal->dep(m_idx);
@@ -102,9 +102,9 @@ class propagate_values_tactic : public tactic {
                     m_r.reset_used_dependencies();
                 }
             }
-
+            
             m_goal->update(m_idx, new_curr, new_pr, new_d);
-
+        
             if (is_shared(new_curr)) {
                 m_subst->insert(new_curr, m().mk_true(), m().mk_iff_true(new_pr), new_d);
             }
@@ -118,12 +118,12 @@ class propagate_values_tactic : public tactic {
                 m_subst->insert(lhs, value, new_pr, new_d);
             }
         }
-
+        
         void process_current() {
             expr * curr = m_goal->form(m_idx);
             expr_ref   new_curr(m());
             proof_ref  new_pr(m());
-
+            
             if (!m_subst->empty()) {
                 m_r(curr, new_curr, new_pr);
             }
@@ -139,9 +139,9 @@ class propagate_values_tactic : public tactic {
                 m_modified = true;
         }
 
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -169,7 +169,7 @@ class propagate_values_tactic : public tactic {
                 if (forward) {
                     for (; m_idx < size; m_idx++) {
                         process_current();
-                        if (m_goal->inconsistent())
+                        if (m_goal->inconsistent()) 
                             goto end;
                     }
                     if (m_subst->empty() && !m_modified)
@@ -184,7 +184,7 @@ class propagate_values_tactic : public tactic {
                     while (m_idx > 0) {
                         m_idx--;
                         process_current();
-                        if (m_goal->inconsistent())
+                        if (m_goal->inconsistent()) 
                             goto end;
                     }
                     if (!m_modified)
@@ -213,7 +213,7 @@ class propagate_values_tactic : public tactic {
             m_goal = 0;
         }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
 public:
@@ -225,7 +225,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(propagate_values_tactic, m, m_params);
     }
-
+    
     virtual ~propagate_values_tactic() {
         dealloc(m_imp);
     }
@@ -239,10 +239,10 @@ public:
         th_rewriter::get_param_descrs(r);
         r.insert("max_rounds", CPK_UINT, "(default: 2) maximum number of rounds.");
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         try {
@@ -252,7 +252,7 @@ public:
             throw tactic_exception(ex.msg());
         }
     }
-
+    
     virtual void cleanup() {
         ast_manager & m = m_imp->m();
         imp * d = alloc(imp, m, m_params);
@@ -262,7 +262,7 @@ public:
         }
         dealloc(d);
     }
-
+    
 protected:
     virtual void set_cancel(bool f) {
         if (m_imp)

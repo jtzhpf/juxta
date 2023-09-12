@@ -139,7 +139,7 @@ public:
 
   typedef ast Zproof;   // type of non-interpolating proofs
   typedef iz3proof Iproof; // type of interpolating proofs
-
+  
   /* Here we have lots of hash tables for memoizing various methods and
      other such global data structures.
    */
@@ -157,7 +157,7 @@ public:
 
   typedef std::pair<hash_map<ast,Iproof::node>, hash_map<ast,Iproof::node> > AstToIpf;
   AstToIpf translation;                     // Zproof nodes to Iproof nodes
-
+  
   AstHashSet antes_added;                   // Z3 proof terms whose antecedents have been added to the list
   std::vector<std::pair<ast,int> > antes;   // list of antecedent/frame pairs
   std::vector<ast> local_antes;                       // list of local antecedents
@@ -198,7 +198,7 @@ public:
 
  public:
 
-
+ 
 #define from_ast(x) (x)
 
   // determine locality of a proof term
@@ -245,7 +245,7 @@ public:
 	for(unsigned i = 0; i < lits.size(); i++)
 	  rng = range_glb(rng,ast_scope(lits[i]));
       }
-
+      
       if(!range_is_empty(rng)){
 	AstSet &hyps = get_hyps(proof);
 	for(AstSet::iterator it = hyps.begin(), en = hyps.end(); it != en; ++it){
@@ -293,7 +293,7 @@ public:
 	    ast neglit = mk_not(arg(con,i));
 	    res.erase(neglit);
 	  }
-	}
+	}	    
       }
     }
 #if 0
@@ -380,14 +380,14 @@ public:
       resolve(mk_not(unit[0]),lits,unit);
     }
   }
-
+  
 
   // clear the localization variables
   void clear_localization(){
     localization_vars.clear();
     localization_map.clear();
   }
-
+  
   // create a fresh variable for localization
   ast fresh_localization_var(ast term, int frame){
     std::ostringstream s;
@@ -397,9 +397,9 @@ public:
     localization_vars.push_back(LocVar(var,term,frame));
     return var;
   }
+  
 
-
-  // "localize" a term to a given frame range by
+  // "localize" a term to a given frame range by 
   // creating new symbols to represent non-local subterms
 
   ast localize_term(ast e, const range &rng){
@@ -411,7 +411,7 @@ public:
 
     // if is is non-local, we must first localize the arguments to
     // the range of its function symbol
-
+    
     int nargs = num_args(e);
     if(nargs > 0 /*  && (!is_local(e) || flo <= hi || fhi >= lo) */){
       range frng = rng;
@@ -471,13 +471,13 @@ public:
   // an axiom instance (e.g., an array axiom instance).
   // if so, add it to "antes" in an appropriate frame.
   // this may require "localization"
-
+  
   void get_axiom_instance(ast e){
 
     // "store" axiom
     // (or (= w q) (= (select (store a1 w y) q) (select a1 q)))
     // std::cout << "ax: "; show(e);
-    ast lits[2],eq_ops_l[2],eq_ops_r[2],sel_ops[2], sto_ops[3], sel_ops2[2] ;
+    ast lits[2],eq_ops_l[2],eq_ops_r[2],sel_ops[2], sto_ops[3], sel_ops2[2] ; 
     if(match_or(e,lits,2))
       if(match_op(lits[0],Equal,eq_ops_l,2))
 	if(match_op(lits[1],Equal,eq_ops_r,2))
@@ -491,7 +491,7 @@ public:
                     && eq_ops_l[1] == sel_ops2[1]
                     && sto_ops[0] == sel_ops2[0])
                       if(is_local(sel_ops[0])) // store term must be local
-                      {
+                      {    
                         ast sto = sel_ops[0];
                         ast addr = localize_term(eq_ops_l[1],ast_scope(sto));
                         ast res = make(Or,
@@ -566,7 +566,7 @@ public:
     for(unsigned i = 0; i < nprems; i++){
       ast arg = prem(proof,i);
       add_antes(arg);
-    }
+    }    
   }
 
 
@@ -576,7 +576,7 @@ public:
   ast add_quants(ast e, int lo, int hi){
     for(int i = localization_vars.size() - 1; i >= 0; i--){
       LocVar &lv = localization_vars[i];
-      opr quantifier = (lv.frame >= lo && lv.frame <= hi) ? Exists : Forall;
+      opr quantifier = (lv.frame >= lo && lv.frame <= hi) ? Exists : Forall; 
       e = apply_quant(quantifier,lv.var,e);
     }
     return e;
@@ -605,7 +605,7 @@ public:
   // use the secondary prover
 
   int prove_lemma(std::vector<ast> &lits){
-
+    
 
     // first try localization
     if(antes.size() == 0){
@@ -633,7 +633,7 @@ public:
 	frame = range_min(ast_scope(lits[i]));
 	if(frame < 0){
 	  frame = range_max(ast_scope(lits[i])); // could happen if contains no symbols
-          if(frame >= frames) frame = frames-1;
+          if(frame >= frames) frame = frames-1; 
         }
       }
       preds[frame] = mk_and(preds[frame],mk_not(lits[i]));
@@ -660,7 +660,7 @@ public:
     std::cout << "\nLemma:\n";
     for(unsigned i = 0; i < lits.size(); i++)
       show_lit(lits[i]);
-#endif
+#endif 
 
     // interpolate using secondary prover
     profiling::timer_start("foci");
@@ -683,7 +683,7 @@ public:
     // quantifiy the localization vars
     for(unsigned i = 0; i < itps.size(); i++)
       itps[i] = add_quants(itps[i],0,i);
-
+    
     // Make a lemma, storing interpolants
     Iproof::node res = iproof->make_lemma(lits,itps);
 
@@ -691,7 +691,7 @@ public:
     std::cout << "Lemma interps\n";
     for(unsigned i = 0; i < itps.size(); i++)
       show(itps[i]);
-#endif
+#endif    
 
     // Reset state for the next lemma
     antes.clear();
@@ -842,7 +842,7 @@ public:
 	n += num_lits(arg(ast,i));
       return n;
     }
-    else
+    else 
       return 1;
   }
 
@@ -893,7 +893,7 @@ public:
       get_axiom_instance(conc(proof));
     }
 
-    // #define SIMPLE_PROOFS
+    // #define SIMPLE_PROOFS    
 #ifdef SIMPLE_PROOFS
     if(!(dk == PR_TRANSITIVITY
 	 || dk == PR_MONOTONICITY))
@@ -962,7 +962,7 @@ public:
       }
     }
   }
-
+  
   ast traced_lit;
 
   int trace_lit(const ast &lit, const ast &proof){
@@ -1014,7 +1014,7 @@ public:
     std::cout << "\n";
   }
 
-
+  
   void show_con(const ast &proof, bool brief){
     if(!traced_lit.null() && proof_has_lit(proof,traced_lit))
       std::cout << "(*) ";
@@ -1066,7 +1066,7 @@ public:
 
   std::vector<ast> pfhist;
   int pfhist_pos;
-
+  
   void pfgoto(const ast &proof){
     if(pfhist.size() == 0)
       pfhist_pos = 0;
@@ -1086,7 +1086,7 @@ public:
        std::cout << std::endl;
      }
   }
-
+  
   void pfback(){
     if(pfhist_pos > 0){
       pfhist_pos--;
@@ -1180,7 +1180,7 @@ public:
     hash_set<ast> leaves;
     for(unsigned i = 0; i < la.size(); i++)
       leaves.insert(la[i]);
-
+    
     Iproof::node ipf = extract_simple_proof(proof,leaves);
     ast con = from_ast(conc(proof));
     Iproof::node hyp = iproof->make_hypothesis(mk_not(con));
@@ -1262,7 +1262,7 @@ public:
       for(ResolventAppSet::iterator it = nll->proofs.begin(), en = nll->proofs.end(); it != en; ++it){
 	Z3_resolvent *res = *it;
         ast arg = res->proof;
-        std::set<ast> loc_hyps; get_local_hyps(arg,loc_hyps);
+        std::set<ast> loc_hyps; get_local_hyps(arg,loc_hyps); 
         if(!add_local_antes(arg,loc_hyps)){
 	  local_antes.clear();  // clear antecedents for next lemma
 	  antes_added.clear();
@@ -1300,7 +1300,7 @@ public:
       throw invalid_lemma();
     }
 #endif
-
+    
     return res;
 #else
 #ifdef SIMPLE_PROOFS
@@ -1378,7 +1378,7 @@ public:
     if(proofs.empty())
       return (non_local_lits *)0;
     std::pair<non_local_lits,non_local_lits *> foo(non_local_lits(proofs),(non_local_lits *)0);
-    std::pair<hash_map<non_local_lits, non_local_lits *>::iterator,bool> bar =
+    std::pair<hash_map<non_local_lits, non_local_lits *>::iterator,bool> bar = 
       non_local_lits_unique.insert(foo);
     non_local_lits *&res = bar.first->second;
     if(bar.second)
@@ -1388,7 +1388,7 @@ public:
 
   Z3_resolvent *find_resolvent(ast proof, bool unit, ast pivot){
     std::pair<Z3_resolvent,Z3_resolvent *> foo(Z3_resolvent(proof,unit,pivot),(Z3_resolvent *)0);
-    std::pair<hash_map<Z3_resolvent, Z3_resolvent *>::iterator,bool> bar =
+    std::pair<hash_map<Z3_resolvent, Z3_resolvent *>::iterator,bool> bar = 
       Z3_resolvent_unique.insert(foo);
     Z3_resolvent *&res = bar.first->second;
     if(bar.second)
@@ -1426,7 +1426,7 @@ public:
         pfrule dk = pr(ante);
 	non_local_lits *old_nll = nll;
         if(dk == PR_HYPOTHESIS)
-	  ; //std::cout << "non-local hyp!\n";  // resolving with a hyp is a no-op
+	  ; //std::cout << "non-local hyp!\n";  // resolving with a hyp is a no-op 
         else {
           ResolventAppSet new_proofs;
 	  if(nll) new_proofs = nll->proofs;
@@ -1481,7 +1481,7 @@ public:
 	AstSet dummy;
 	collect_resolvent_lits(nll->proofs[i],dummy,reslits);
 	litset.insert(reslits.begin(),reslits.end());
-      }
+      }	
     }
     if(to_keep.size() == nll->proofs.size()) return nll;
     ResolventAppSet new_proofs;
@@ -1495,7 +1495,7 @@ public:
   Iproof::node translate_main(ast proof, non_local_lits *nll, bool expect_clause = true){
     non_local_lits *old_nll = nll;
     if(nll) nll = update_nll(proof,expect_clause,nll);
-    AstToIpf &tr = nll ? non_local_translation[nll] : translation;
+    AstToIpf &tr = nll ? non_local_translation[nll] : translation; 
     hash_map<ast,Iproof::node> &trc = expect_clause ? tr.first : tr.second;
     std::pair<ast,int> foo(proof,INT_MAX);
     std::pair<AstToInt::iterator, bool> bar = trc.insert(foo);
@@ -1680,7 +1680,7 @@ void iz3translation_direct_show_z3_lit(iz3translation_direct *p, iz3mgr::ast a){
 void iz3translation_direct_pfgoto(iz3translation_direct *p, iz3mgr::ast proof){
   p->pfgoto(proof);
 }
-
+  
 void iz3translation_direct_show_nll(iz3translation_direct *p, non_local_lits *nll){
   p->show_nll(nll);
 }

@@ -27,17 +27,17 @@ class stream_buffer {
     std::istream & m_stream;
     int            m_val;
 public:
-
+    
     stream_buffer(std::istream & s):
         m_stream(s) {
         m_val = m_stream.get();
     }
 
-    int  operator *() const {
+    int  operator *() const { 
         return m_val;
     }
 
-    void operator ++() {
+    void operator ++() { 
         m_val = m_stream.get();
     }
 };

@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -26,7 +26,7 @@ namespace Microsoft.Z3
     /// Interaction logging for Z3.
     /// </summary>
     /// <remarks>
-    /// Note that this is a global, static log and if multiple Context
+    /// Note that this is a global, static log and if multiple Context 
     /// objects are created, it logs the interaction with all of them.
     /// </remarks>
     [ContractVerification(true)]
@@ -56,7 +56,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Appends the user-provided string <paramref name="s"/> to the interaction log.
-        /// </summary>
+        /// </summary>    
         public static void Append(string s)
         {
             Contract.Requires(isOpen());

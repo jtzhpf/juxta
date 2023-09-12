@@ -75,17 +75,17 @@ namespace datalog {
     protected:
         virtual relation_join_fn * mk_join_fn(const relation_base & t1, const relation_base & t2,
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2);
-        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
-        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len,
+        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle);
-        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src,
+        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
-        virtual relation_union_fn * mk_widen_fn(const relation_base & tgt, const relation_base & src,
+        virtual relation_union_fn * mk_widen_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
-        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * identical_cols);
-        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value,
+        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value, 
             unsigned col);
         virtual relation_mutator_fn * mk_filter_interpreted_fn(const relation_base & t, app * condition);
 
@@ -93,18 +93,18 @@ namespace datalog {
 
     private:
         static product_relation& get(relation_base& r);
-        static product_relation const & get(relation_base const& r);
+        static product_relation const & get(relation_base const& r);   
         static product_relation* get(relation_base* r);
         static product_relation const* get(relation_base const* r);
 
-        relation_union_fn * mk_union_w_fn(const relation_base & tgt, const relation_base & src,
+        relation_union_fn * mk_union_w_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta, bool is_widen);
 
         bool are_aligned(const product_relation& r1, const product_relation& r2);
         static void get_common_spec(const ptr_vector<const product_relation> & rels, rel_spec & res);
     };
 
-
+    
     class product_relation : public relation_base {
         friend class product_relation_plugin;
 
@@ -134,7 +134,7 @@ namespace datalog {
 
         /**
            Array of kinds of inner relations.
-
+           
            If two product relations have equal signature and specification, their
            m_relations arrays contain corresponding relations at the same indexes.
 
@@ -163,19 +163,19 @@ namespace datalog {
         virtual product_relation * complement(func_decl* p) const;
         virtual void display(std::ostream & out) const;
         virtual void to_formula(expr_ref& fml) const;
-        product_relation_plugin& get_plugin() const;
+        product_relation_plugin& get_plugin() const; 
 
         unsigned size() const { return m_relations.size(); }
         relation_base& operator[](unsigned i) const { return *m_relations[i]; }
 
         /**
            If all relations except one are sieve_relations with no inner columns,
-           return true and into \c idx assign index of that relation. Otherwise return
+           return true and into \c idx assign index of that relation. Otherwise return 
            false.
         */
         bool try_get_single_non_transparent(unsigned & idx) const;
 
-        virtual bool is_precise() const {
+        virtual bool is_precise() const { 
             for (unsigned i = 0; i < m_relations.size(); ++i) {
                 if (!m_relations[i]->is_precise()) {
                     return false;
@@ -184,8 +184,8 @@ namespace datalog {
             return true;
         }
     };
-
+        
 };
 
-#endif
+#endif 
 

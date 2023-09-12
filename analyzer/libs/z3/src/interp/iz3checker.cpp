@@ -39,7 +39,7 @@ Revision History:
 using namespace stl_ext;
 
 struct iz3checker : iz3base {
-
+  
   /* HACK: for tree interpolants, we assume that uninterpreted functions
      are global. This is because in the current state of the tree interpolation
      code, symbols that appear in sibling sub-trees have to be global, and
@@ -51,11 +51,11 @@ struct iz3checker : iz3base {
   void support(const ast &t, std::set<std::string> &res, hash_set<ast> &memo){
     if(memo.find(t) != memo.end()) return;
     memo.insert(t);
-
+    
     int nargs = num_args(t);
     for(int i = 0; i < nargs; i++)
       support(arg(t,i),res,memo);
-
+    
     switch(op(t)){
     case Uninterpreted:
       if(nargs == 0 || !is_tree) {
@@ -80,11 +80,11 @@ struct iz3checker : iz3base {
     is_tree = !parents.empty();
     int num = cnsts.size();
     std::vector<std::vector<int> > children(num);
-
+  
     for(int i = 0; i < num-1; i++){
       if(parents.size())
 	children[parents[i]].push_back(i);
-      else
+      else 
 	children[i+1].push_back(i);
     }
 
@@ -144,7 +144,7 @@ struct iz3checker : iz3base {
 	hash_set<ast> tmemo;
 	for(unsigned j = 0; j < theory.size(); j++)
 	  support(theory[j],common,tmemo);                // all theory symbols allowed in interps
-      }
+      }	
       hash_set<ast> memo;
       support(itp[i],Isup,memo);
       std::set_difference(Isup.begin(),Isup.end(),common.begin(),common.end(),std::inserter(bad,bad.begin()));
@@ -156,18 +156,18 @@ struct iz3checker : iz3base {
     }
     return true;
   }
-
+  
   bool check(solver *s, std::ostream &err,
 	     const std::vector<ast> &_cnsts,
 	     const ast &tree,
 	     const std::vector<ast> &itp){
 
     std::vector<int> pos_map;
-
+    
     // convert to the parents vector representation
-
+    
     to_parents_vec_representation(_cnsts, tree, cnsts, parents, theory, pos_map);
-
+    
     //use the parents vector representation to compute interpolant
     return check(s,err,cnsts,parents,itp,theory);
   }
@@ -180,7 +180,7 @@ struct iz3checker : iz3base {
     : iz3base(_m) {
   }
 
-};
+};  
 
 template <class T>
 std::vector<T> to_std_vector(const ::vector<T> &v){

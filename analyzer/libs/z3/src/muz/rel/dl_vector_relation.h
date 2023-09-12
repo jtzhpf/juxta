@@ -24,7 +24,7 @@ Revision History:
 #include "union_find.h"
 
 namespace datalog {
-
+   
     typedef std::pair<unsigned, unsigned> u_pair;
 
     template<typename T>
@@ -33,8 +33,8 @@ namespace datalog {
         static void mk_project_t(T& t, unsigned_vector const& renaming) {}
     };
 
-    template<typename T, typename Helper = vector_relation_helper<T> >
-    class vector_relation : public relation_base {
+    template<typename T, typename Helper = vector_relation_helper<T> > 
+    class vector_relation : public relation_base {       
     protected:
         T                  m_default;
         vector<T>*         m_elems;
@@ -49,7 +49,7 @@ namespace datalog {
             relation_base(p, s),
             m_default(t),
             m_elems(alloc(vector<T>)),
-            m_empty(is_empty),
+            m_empty(is_empty), 
             m_eqs(alloc(union_find<>, m_ctx)) {
             m_elems->resize(s.size(), t);
             for (unsigned i = 0; i < s.size(); ++i) {
@@ -78,12 +78,12 @@ namespace datalog {
             }
             m_empty = false;
             for (unsigned i = 0; i < m_elems->size(); ++i) {
-                (*this)[i] = other[i];
+                (*this)[i] = other[i];            
                 SASSERT(find(i) == i);
             }
             for (unsigned i = 0; i < m_elems->size(); ++i) {
                 merge(i, find(i));
-            }
+            }        
         }
 
 
@@ -122,9 +122,9 @@ namespace datalog {
             return true;
         }
 
-        void set_empty() {
+        void set_empty() { 
             unsigned sz = m_elems->size();
-            m_empty = true;
+            m_empty = true; 
             m_elems->reset();
             m_elems->resize(sz, m_default);
             dealloc(m_eqs);
@@ -167,7 +167,7 @@ namespace datalog {
             }
         }
 
-        bool is_full() const {
+        bool is_full() const { 
             for (unsigned i = 0; i < m_elems->size(); ++i) {
                 if (!is_full((*this)[i])) {
                     return false;
@@ -179,13 +179,13 @@ namespace datalog {
         void mk_join(vector_relation const& r1, vector_relation const& r2,
                      unsigned num_cols, unsigned const* cols1, unsigned const* cols2) {
             SASSERT(is_full());
-            bool is_empty = r1.empty() || r2.empty();
+            bool is_empty = r1.empty() || r2.empty();          
             if (is_empty) {
-                m_empty = true;
+                m_empty = true;               
                 return;
             }
             unsigned sz1 = r1.get_signature().size();
-            unsigned sz2 = r2.get_signature().size();
+            unsigned sz2 = r2.get_signature().size();  
             for (unsigned i = 0; i < sz1; ++i) {
                 (*this)[i] = r1[i];
             }
@@ -194,11 +194,11 @@ namespace datalog {
             }
             for (unsigned i = 0; i < num_cols; ++i) {
                 unsigned col1 = cols1[i];
-                unsigned col2 = cols2[i];
+                unsigned col2 = cols2[i];                
                 equate(col1, sz1 + col2);
             }
 
-            TRACE("dl_relation",
+            TRACE("dl_relation",                   
                   r1.display(tout << "r1:\n");
                   r2.display(tout << "r2:\n");
                   display(tout << "dst:\n");
@@ -271,14 +271,14 @@ namespace datalog {
         void mk_rename(vector_relation const& r, unsigned col_cnt, unsigned const* cycle) {
             unsigned col1, col2;
             SASSERT(is_full());
-
+           
             // roundabout way of creating permuted relation.
             unsigned_vector classRep, repNode;
             for (unsigned i = 0; i < r.m_elems->size(); ++i) {
                 classRep.push_back(r.find(i));
                 repNode.push_back(UINT_MAX);
                 (*this)[i] = r[i];
-            }
+            }            
             for (unsigned i = 0; i + 1 < col_cnt; ++i) {
                 col1 = cycle[i];
                 col2 = cycle[i+1];
@@ -302,9 +302,9 @@ namespace datalog {
 
             for (unsigned i = 0; i < r.m_elems->size(); ++i) {
                 mk_rename_elem((*m_elems)[i], col_cnt, cycle);
-            }
+            }            
 
-            TRACE("dl_relation",
+            TRACE("dl_relation", 
                   ast_manager& m = r.get_plugin().get_ast_manager();
                   tout << "cycle: ";
                   for (unsigned i = 0; i < col_cnt; ++i) {
@@ -313,14 +313,14 @@ namespace datalog {
                   tout << "\nold_sig: ";
                   for (unsigned i = 0; i < r.get_signature().size(); ++i) {
                       tout << mk_pp(r.get_signature()[i], m) << " ";
-                  }
+                  }            
                   tout << "\nnew_sig: ";
                   for (unsigned i = 0; i < get_signature().size(); ++i) {
                         tout << mk_pp(get_signature()[i], m) << " ";
-                  }
+                  }                    
                   tout << "\n";
                   r.display(tout << "src:\n");
-                  );
+                  );         
         }
 
         void mk_union(vector_relation const& src, vector_relation* delta, bool is_widen) {
@@ -356,7 +356,7 @@ namespace datalog {
                     uf->merge(i, w);
                 }
                 else {
-                    mp.insert(p, i);
+                    mp.insert(p, i);  
                     // detect change
                     if (finds.get(find(i))) {
                         change = true;
@@ -367,7 +367,7 @@ namespace datalog {
                 }
             }
             vector<T>* elems = alloc(vector<T>);
-            for (unsigned i = 0; i < size; ++i) {
+            for (unsigned i = 0; i < size; ++i) {                
                 T t1 = mk_eq(*m_eqs, *uf, (*this)[i]);
                 T t2 = mk_eq(*src.m_eqs, *uf, src[i]);
                 if (is_widen) {
@@ -389,17 +389,17 @@ namespace datalog {
             TRACE("dl_relation", display(tout << "dst':\n"););
         }
 
-        unsigned find(unsigned i) const {
+        unsigned find(unsigned i) const { 
             return m_eqs->find(i);
         }
 
-        void merge(unsigned i, unsigned j) {
+        void merge(unsigned i, unsigned j) { 
             m_eqs->merge(i, j);
         }
 
     };
-
+        
 };
 
-#endif
+#endif 
 

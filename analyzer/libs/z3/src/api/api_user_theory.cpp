@@ -51,7 +51,7 @@ extern "C" {
         return r;
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_sort Z3_theory_mk_sort(Z3_context c, Z3_theory t, Z3_symbol s) {
         Z3_TRY;
         RESET_ERROR_CODE();
@@ -60,7 +60,7 @@ extern "C" {
         return of_sort(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_ast Z3_theory_mk_value(Z3_context c, Z3_theory t, Z3_symbol n, Z3_sort s) {
         Z3_TRY;
         RESET_ERROR_CODE();
@@ -70,7 +70,7 @@ extern "C" {
         return of_ast(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_ast Z3_theory_mk_constant(Z3_context c, Z3_theory t, Z3_symbol n, Z3_sort s) {
         Z3_TRY;
         RESET_ERROR_CODE();
@@ -80,7 +80,7 @@ extern "C" {
         return of_ast(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_func_decl Z3_theory_mk_func_decl(Z3_context c, Z3_theory t, Z3_symbol n,
                                         unsigned domain_size, Z3_sort const domain[],
                                         Z3_sort range) {
@@ -123,7 +123,7 @@ extern "C" {
     }
 
     void Z3_set_reduce_distinct_callback(Z3_theory t, Z3_reduce_distinct_callback_fptr f) {
-        Z3_context c = Z3_theory_get_context(t);
+        Z3_context c = Z3_theory_get_context(t); 
         Z3_TRY;
         RESET_ERROR_CODE();
         mk_t(t)->set_reduce_distinct_fptr(reinterpret_cast<reduce_distinct_fptr>(f));
@@ -132,7 +132,7 @@ extern "C" {
 
     void Z3_set_new_app_callback(Z3_theory t, Z3_theory_ast_callback_fptr f) {
         Z3_context c = Z3_theory_get_context(t);
-        Z3_TRY;
+        Z3_TRY; 
         RESET_ERROR_CODE();
         mk_t(t)->set_new_app_fptr(reinterpret_cast<smt::theory_app_callback_fptr>(f));
         Z3_CATCH;
@@ -153,7 +153,7 @@ extern "C" {
         mk_t(t)->set_init_search_fptr(reinterpret_cast<smt::theory_callback_fptr>(f));
         Z3_CATCH;
     }
-
+        
     void Z3_set_push_callback(Z3_theory t, Z3_theory_callback_fptr f) {
         Z3_context c = Z3_theory_get_context(t);
         Z3_TRY;
@@ -161,7 +161,7 @@ extern "C" {
         mk_t(t)->set_push_fptr(reinterpret_cast<smt::theory_callback_fptr>(f));
         Z3_CATCH;
     }
-
+ 
     void Z3_set_pop_callback(Z3_theory t, Z3_theory_callback_fptr f) {
         Z3_context c = Z3_theory_get_context(t);
         Z3_TRY;
@@ -185,7 +185,7 @@ extern "C" {
         mk_t(t)->set_reset_fptr(reinterpret_cast<smt::theory_callback_fptr>(f));
         Z3_CATCH;
     }
-
+    
     void Z3_set_final_check_callback(Z3_theory t, Z3_theory_final_check_callback_fptr f) {
         Z3_context c = Z3_theory_get_context(t);
         Z3_TRY;
@@ -193,7 +193,7 @@ extern "C" {
         mk_t(t)->set_final_check_fptr(reinterpret_cast<smt::theory_final_check_callback_fptr>(f));
         Z3_CATCH;
     }
-
+        
     void Z3_set_new_eq_callback(Z3_theory t, Z3_theory_ast_ast_callback_fptr f) {
         Z3_context c = Z3_theory_get_context(t);
         Z3_TRY;
@@ -209,7 +209,7 @@ extern "C" {
         mk_t(t)->set_new_diseq_fptr(reinterpret_cast<smt::theory_app_app_callback_fptr>(f));
         Z3_CATCH;
     }
-
+    
     void Z3_set_new_assignment_callback(Z3_theory t, Z3_theory_ast_bool_callback_fptr f) {
         Z3_context c = Z3_theory_get_context(t);
         Z3_TRY;
@@ -225,7 +225,7 @@ extern "C" {
         mk_t(t)->set_new_relevant_fptr(reinterpret_cast<smt::theory_app_callback_fptr>(f));
         Z3_CATCH;
     }
-
+    
     void Z3_theory_assert_axiom(Z3_theory t, Z3_ast ax) {
         Z3_context c = Z3_theory_get_context(t);
         Z3_TRY;
@@ -244,7 +244,7 @@ extern "C" {
 
     void Z3_theory_enable_axiom_simplification(Z3_theory t, Z3_bool flag) {
         Z3_context c = Z3_theory_get_context(t);
-        Z3_TRY;
+        Z3_TRY; 
         RESET_ERROR_CODE();
         mk_t(t)->enable_axiom_simplification(flag == Z3_TRUE);
         Z3_CATCH;
@@ -273,7 +273,7 @@ extern "C" {
         return mk_t(t)->get_num_parents(to_ast(n));
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_ast Z3_theory_get_parent(Z3_theory t, Z3_ast n, unsigned i) {
         Z3_context c = Z3_theory_get_context(t);
         Z3_TRY;

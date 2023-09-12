@@ -20,7 +20,7 @@ Revision History:
 #include"str_hashtable.h"
 
 #ifdef _TRACE
-std::ofstream tout(".z3-trace");
+std::ofstream tout(".z3-trace"); 
 #endif
 
 bool g_enable_all_trace_tags = false;
@@ -51,7 +51,7 @@ void disable_trace(const char * tag) {
 }
 
 bool is_trace_enabled(const char * tag) {
-    return g_enable_all_trace_tags ||
+    return g_enable_all_trace_tags || 
 		(g_enabled_trace_tags && get_enabled_trace_tags().contains(const_cast<char *>(tag)));
 }
 

@@ -32,7 +32,7 @@ enum arith_solver_id {
 
 enum bound_prop_mode {
     BP_NONE,
-    BP_SIMPLE, // only used for implying literals
+    BP_SIMPLE, // only used for implying literals   
     BP_REFINE  // refine known bounds
 };
 
@@ -52,10 +52,10 @@ struct theory_arith_params {
     bool                    m_arith_auto_config_simplex; //!< force simplex solver in auto_config
     unsigned                m_arith_blands_rule_threshold;
     bool                    m_arith_propagate_eqs;
-    bound_prop_mode         m_arith_bound_prop;
+    bound_prop_mode         m_arith_bound_prop; 
     bool                    m_arith_stronger_lemmas;
     bool                    m_arith_skip_rows_with_big_coeffs;
-    unsigned                m_arith_max_lemma_size;
+    unsigned                m_arith_max_lemma_size; 
     unsigned                m_arith_small_lemma_size;
     bool                    m_arith_reflect;
     bool                    m_arith_ignore_int;
@@ -93,7 +93,7 @@ struct theory_arith_params {
     bool                    m_arith_int_only;
 
     // non linear support
-    bool                    m_nl_arith;
+    bool                    m_nl_arith;  
     bool                    m_nl_arith_gb;
     unsigned                m_nl_arith_gb_threshold;
     bool                    m_nl_arith_gb_eqs;
@@ -102,7 +102,7 @@ struct theory_arith_params {
     bool                    m_nl_arith_branching;
     unsigned                m_nl_arith_rounds;
 
-    // euclidean solver for tighting bounds
+    // euclidean solver for tighting bounds 
     bool                    m_arith_euclidean_solver;
 
 

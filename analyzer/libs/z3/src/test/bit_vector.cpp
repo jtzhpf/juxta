@@ -258,19 +258,19 @@ static void tst_crash() {
 }
 
 static void tst_bv_reset() {
-    bit_vector b;
+    bit_vector b; 
     bool bit = true;
     for (unsigned sz = 1; sz < 84; ++sz) {
         b.reset();
-        b.resize(sz, bit);
+        b.resize(sz, bit);        
         for (unsigned i = 0; i < sz; ++i) {
             SASSERT(bit == b.get(i));
         }
         for (unsigned sz2 = sz; sz2 < sz+10; ++sz2) {
-            b.resize(sz2, !bit);
+            b.resize(sz2, !bit);        
             for (unsigned i = sz; i < sz2; ++i) {
                 SASSERT(bit != b.get(i));
-            }
+            }            
         }
         bit = !bit;
     }
@@ -290,7 +290,7 @@ static void tst_eq() {
     b3.set(3, true);
     SASSERT(b1 == b3);
     SASSERT(!(b1 != b3));
-
+    
     b2.set(31, true);
     b3.set(31);
     b3.unset(3);
@@ -300,7 +300,7 @@ static void tst_eq() {
 
 void tst_bit_vector() {
     tst_crash();
-    tst_shift();
+    tst_shift(); 
     tst_or();
     tst_and();
     tst_bv_reset();

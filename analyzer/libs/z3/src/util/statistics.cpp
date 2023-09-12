@@ -49,7 +49,7 @@ static void mk_map(V const & v, M & m) {
     typename V::const_iterator end = v.end();
     for (; it != end; ++it) {
         typename V::data::second_type val;
-        if (m.find(it->first, val))
+        if (m.find(it->first, val)) 
             m.insert(it->first, it->second + val);
         else
             m.insert(it->first, it->second);
@@ -99,7 +99,7 @@ unsigned get_max_len(ptr_buffer<char> & keys) {
     return max;
 }
 
-void statistics::display_smt2(std::ostream & out) const {
+void statistics::display_smt2(std::ostream & out) const {   
 #define INIT_DISPLAY()                                  \
     key2val m_u;                                        \
     key2dval m_d;                                       \
@@ -109,7 +109,7 @@ void statistics::display_smt2(std::ostream & out) const {
     get_keys(m_u, keys);                                \
     get_keys(m_d, keys);                                \
     std::sort(keys.begin(), keys.end(), str_lt());      \
-    unsigned max = get_max_len(keys);
+    unsigned max = get_max_len(keys);                   
 
     INIT_DISPLAY();
     bool first = true;
@@ -123,11 +123,11 @@ void statistics::display_smt2(std::ostream & out) const {
             out << " ";                                         \
         first = false;                                          \
     }
-
+    
     out << "(";
     for (unsigned i = 0; i < keys.size(); i++) {
         char * k = keys.get(i);
-        unsigned val;
+        unsigned val; 
         if (m_u.find(k, val)) {
             DISPLAY_KEY();
             out << " " << val;
@@ -157,7 +157,7 @@ void statistics::display(std::ostream & out) const {
 
     for (unsigned i = 0; i < keys.size(); i++) {
         char * k = keys.get(i);
-        unsigned val;
+        unsigned val; 
         if (m_u.find(k, val)) {
             DISPLAY_KEY();
             out << " " << val << "\n";
@@ -191,10 +191,10 @@ static void display_internal(std::ostream & out, M const & m) {
 }
 
 void statistics::display_internal(std::ostream & out) const {
-    key2val m_u;
-    key2dval m_d;
-    mk_map(m_stats, m_u);
-    mk_map(m_d_stats, m_d);
+    key2val m_u;                                                
+    key2dval m_d;                                               
+    mk_map(m_stats, m_u);                                       
+    mk_map(m_d_stats, m_d);            
 
     ::display_internal(out, m_u);
     ::display_internal(out, m_d);

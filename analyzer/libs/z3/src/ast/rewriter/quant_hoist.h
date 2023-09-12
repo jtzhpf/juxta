@@ -29,8 +29,8 @@ class quantifier_hoister {
     impl* m_impl;
 public:
     quantifier_hoister(ast_manager& m);
-
-    ~quantifier_hoister();
+    
+    ~quantifier_hoister(); 
 
     /**
        \brief Pull top-most quantifier up.

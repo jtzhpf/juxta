@@ -29,12 +29,12 @@ namespace datalog {
     /**
        \brief Functor for applying a rule set transformation that creates "filters".
        A "filter" is a rule of the form:
-
+       
          Head(X_1, ..., X_n) :- Tail(...)
 
          where X_1,...,X_n are distinct, and Tail contain repeated variables and/or values.
 
-      After applying this functor only "filter" rules will contain atoms with repeated variables and/or values.
+      After applying this functor only "filter" rules will contain atoms with repeated variables and/or values.   
     */
     class mk_filter_rules : public rule_transformer::plugin {
 

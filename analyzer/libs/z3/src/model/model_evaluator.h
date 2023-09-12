@@ -46,7 +46,7 @@ public:
     void reset_cancel() { set_cancel(false); }
     void cleanup(params_ref const & p = params_ref());
     void reset(params_ref const & p = params_ref());
-
+    
     unsigned get_num_steps() const;
 };
 

@@ -8,11 +8,11 @@ Module Name:
 Abstract:
 
     Basic interval arithmetic template for precise numerals: mpz, mpq, mpbq.
-    Only basic support is provided.
+    Only basic support is provided. 
     There is no support for:
       - minus and plus infinity bounds.
       - mixed open/closed intervals such as (2, 3]
-    The main customer of this package is the algebraic_number module.
+    The main customer of this package is the algebraic_number module.  
 
 Author:
 
@@ -91,9 +91,9 @@ public:
     /**
        \brief Delete interval
     */
-    void del(interval & a) {
-        m().del(a.m_lower);
-        m().del(a.m_upper);
+    void del(interval & a) { 
+        m().del(a.m_lower); 
+        m().del(a.m_upper); 
     }
 
     /**
@@ -111,7 +111,7 @@ public:
     bound const & upper(interval const & a) {
         return a.upper();
     }
-
+    
     /**
        \brief a <- (lower, upper)
     */
@@ -129,8 +129,8 @@ public:
     }
 
     /**
-       \brief a <- (n, n)
-
+       \brief a <- (n, n)   
+      
        Manager must be configured for closed intervals.
     */
     void set(interval & a, bound const & n) {
@@ -161,7 +161,7 @@ public:
         m().neg(a.m_upper);
         m().swap(a.m_lower, a.m_upper);
     }
-
+    
     /**
        \brief Return true if a does not contain any value.  We can
        only have empty intervals if the manager is configured to used
@@ -170,7 +170,7 @@ public:
     bool is_empty(interval const & a) {
         return !closed && m().eq(a.m_lower, a.m_upper);
     }
-
+    
     /**
        \brief Return true if all values in the given interval are positive.
     */
@@ -184,28 +184,28 @@ public:
     /**
        \brief Return true if 0 is in the interval.
     */
-    bool contains_zero(interval const & a) {
-        return
+    bool contains_zero(interval const & a) { 
+        return 
             (closed  && m().is_nonpos(a.m_lower) && m().is_nonneg(a.m_upper)) ||
             (!closed && m().is_neg(a.m_lower) && m().is_pos(a.m_upper));
-    }
+    } 
 
     /**
        \brief Return true if all values in interval a are in interval b.
     */
     bool is_subset(interval const & a, interval const & b) {
         return m().le(b.m_lower, a.m_lower) && m().le(a.m_upper, b.m_upper);
-    }
+    } 
 
     /**
        \brief Return true if there is no value v s.t. v \in a and v \in b.
     */
     bool disjoint(interval const & a, interval const & b) {
-        return
+        return 
             (closed  && (m().lt(a.m_upper, b.m_lower) || m().lt(b.m_upper, a.m_lower))) ||
             (!closed && (m().le(a.m_upper, b.m_upper) || m().le(b.m_upper, a.m_lower)));
     }
-
+    
     /**
        \brief Return true if all elements in a are smaller than all elements in b.
     */
@@ -235,7 +235,7 @@ public:
 
     /**
        \brief a <- 1/a
-
+       
        \pre a.m_lower and m_upper must not be 0.
        \pre bound must be a field.
     */
@@ -255,7 +255,7 @@ public:
         m().add(a.m_lower, b.m_lower, c.m_lower);
         m().add(a.m_upper, b.m_upper, c.m_upper);
     }
-
+    
     /**
        \brief c <- a - b
     */
@@ -302,7 +302,7 @@ public:
 
     /**
        \brief c <- a/b
-
+       
        \pre b m_lower and m_upper must not be 0
        \pre bound must be a field.
     */

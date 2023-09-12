@@ -49,8 +49,8 @@ void solver_na2as::assert_expr(expr * t, expr * a) {
 struct append_assumptions {
     ptr_vector<expr> & m_assumptions;
     unsigned           m_old_sz;
-    append_assumptions(ptr_vector<expr> & _m_assumptions,
-                       unsigned num_assumptions,
+    append_assumptions(ptr_vector<expr> & _m_assumptions, 
+                       unsigned num_assumptions, 
                        expr * const * assumptions):
         m_assumptions(_m_assumptions) {
         m_old_sz = m_assumptions.size();

@@ -50,7 +50,7 @@ public:
 
     // - Return true if the limit is incremented.
     virtual bool inc_limit() = 0;
-
+    
     virtual int get_limit() const = 0;
 
     virtual void reset() = 0;
@@ -84,12 +84,12 @@ public:
         m_counter++;
         return m_counter <= m_curr_limit;
     }
-
+    
     void set_init_limit(int l) {
         m_init_limit = l;
         m_curr_limit = l;
     }
-
+    
     void set_max_limit(int l) {
         m_max_limit = l;
     }
@@ -97,7 +97,7 @@ public:
     virtual const char * get_description() const {
         return m_description;
     }
-
+    
     virtual void reset_counters() {
         m_counter = 0;
     }
@@ -162,7 +162,7 @@ public:
         return false;
     }
 };
-
+    
 
 #endif /* _RESOURCE_LIMIT_H_ */
 

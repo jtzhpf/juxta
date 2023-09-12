@@ -35,22 +35,22 @@ private:
     unsigned          m_sbits;
     numeral           m_tmp1;
     numeral           m_one;
-
+    
     void check(numeral const & n) { if (!m().is_regular(n)) throw exception(); }
 
 public:
     static bool field() { return true; }
     static bool precise() { return false; }
-
+    
     f2n(fmanager & m, unsigned ebits = 11, unsigned sbits = 53):m_manager(m), m_mode(MPF_ROUND_TOWARD_POSITIVE), m_ebits(ebits), m_sbits(sbits) {
         m_manager.set(m_one, ebits, sbits, 1);
     }
 
-    ~f2n() {
-        m().del(m_tmp1);
-        m().del(m_one);
+    ~f2n() { 
+        m().del(m_tmp1); 
+        m().del(m_one); 
     }
-
+    
     void set_rounding_mode(mpf_rounding_mode m) { m_mode = m; }
     mpf_rounding_mode rounding_mode() const { return m_mode; }
     void round_to_plus_inf() { m_mode = MPF_ROUND_TOWARD_POSITIVE; }
@@ -85,7 +85,7 @@ public:
     void set(numeral & o, mpq const & x) { m().set(o, m_ebits, m_sbits, m_mode, x); check(o); }
     void reset(numeral & o) { m().reset(o, m_ebits, m_sbits); }
     static void swap(numeral & x, numeral & y) { x.swap(y); }
-
+    
     void add(numeral const & x, numeral const & y, numeral & o) { m().add(m_mode, x, y, o); check(o); }
     void sub(numeral const & x, numeral const & y, numeral & o) { m().sub(m_mode, x, y, o); check(o); }
     void mul(numeral const & x, numeral const & y, numeral & o) { m().mul(m_mode, x, y, o); check(o); }
@@ -109,7 +109,7 @@ public:
         del(power);
         check(b);
     }
-
+    
     // Store the floor of a into b. Return true if a is an integer.
     // Throws an exception if the result cannot be computed precisely.
     void floor(numeral const & a, numeral & b) {
@@ -146,7 +146,7 @@ public:
     }
 
     unsigned prev_power_of_two(numeral const & a) { return m().prev_power_of_two(a); }
-
+    
     bool eq(numeral const & x, numeral const & y) { return m().eq(x, y); }
     bool lt(numeral const & x, numeral const & y) { return m().lt(x, y); }
     bool le(numeral const & x, numeral const & y) { return m().le(x, y); }

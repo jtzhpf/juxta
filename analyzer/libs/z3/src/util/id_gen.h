@@ -27,7 +27,7 @@ class id_gen {
     unsigned_vector m_free_ids;
 public:
     id_gen(unsigned start = 0):m_next_id(start) {}
-
+    
     unsigned mk() {
         unsigned r;
         if (m_free_ids.empty()) {
@@ -40,13 +40,13 @@ public:
         }
         return r;
     }
-
-    void recycle(unsigned id) {
+    
+    void recycle(unsigned id) { 
         if (memory::is_out_of_memory())
             return;
-        m_free_ids.push_back(id);
+        m_free_ids.push_back(id); 
     }
-
+    
     void reset(unsigned start = 0) {
         m_next_id = start;
         m_free_ids.reset();
@@ -56,7 +56,7 @@ public:
         m_next_id = start;
         m_free_ids.finalize();
     }
-
+    
     unsigned show_hash(){
       unsigned h = string_hash((char *)&m_free_ids[0],m_free_ids.size()*sizeof(unsigned),17);
       return hash_u_u(h,m_next_id);

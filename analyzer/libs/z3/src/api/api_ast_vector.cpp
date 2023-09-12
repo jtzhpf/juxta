@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
     API for creating AST vectors
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-03-09.
@@ -51,7 +51,7 @@ extern "C" {
         to_ast_vector(v)->dec_ref();
         Z3_CATCH;
     }
-
+    
     unsigned Z3_API Z3_ast_vector_size(Z3_context c, Z3_ast_vector v) {
         Z3_TRY;
         LOG_Z3_ast_vector_size(c, v);
@@ -110,7 +110,7 @@ extern "C" {
             SET_ERROR_CODE(Z3_INVALID_ARG);
             RETURN_Z3(0);
         }
-        ast_translation translator(mk_c(c)->m(), mk_c(t)->m());
+        ast_translation translator(mk_c(c)->m(), mk_c(t)->m()); 
         Z3_ast_vector_ref * new_v = alloc(Z3_ast_vector_ref, mk_c(t)->m());
         mk_c(t)->save_object(new_v);
         unsigned sz = to_ast_vector_ref(v).size();

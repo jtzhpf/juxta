@@ -32,9 +32,9 @@ namespace datalog {
 
     //
     //   P(v) :- Q(extract[1:1]v ++ 0), R(1 ++ extract[0:0]v).
-    // ->
+    // -> 
     //   P(bv(x,y)) :- Q(bv(x,0)), R(bv(1,y)) .
-    //
+    // 
     // Introduce P_bv:
     // P_bv(x,y)  :- Q_bv(x,0), R_bv(1,y)
     // P(bv(x,y)) :- P_bv(x,y)
@@ -51,7 +51,7 @@ namespace datalog {
         bit_blast_model_converter(ast_manager& m):
             m(m),
             m_bv(m),
-            m_old_funcs(m),
+            m_old_funcs(m), 
             m_new_funcs(m) {}
 
         void insert(func_decl* old_f, func_decl* new_f) {
@@ -59,7 +59,7 @@ namespace datalog {
             m_new_funcs.push_back(new_f);
         }
 
-        virtual model_converter * translate(ast_translation & translator) {
+        virtual model_converter * translate(ast_translation & translator) { 
             return alloc(bit_blast_model_converter, m);
         }
 
@@ -69,7 +69,7 @@ namespace datalog {
                 func_decl* q = m_old_funcs[i].get();
                 func_interp* f = model->get_func_interp(p);
                 if (!f) continue;
-                expr_ref body(m);
+                expr_ref body(m);                
                 unsigned arity_p = p->get_arity();
                 unsigned arity_q = q->get_arity();
                 TRACE("dl",
@@ -84,10 +84,10 @@ namespace datalog {
                 if (f) {
                     body = f->get_interp();
                     SASSERT(!f->is_partial());
-                    SASSERT(body);
+                    SASSERT(body);                    
                 }
                 else {
-                    body = m.mk_false();
+                    body = m.mk_false();  
                 }
                 unsigned idx = 0;
                 expr_ref arg(m), proj(m);
@@ -101,18 +101,18 @@ namespace datalog {
                         for (unsigned k = 0; k < sz; ++k) {
                             parameter p(k);
                             proj = m.mk_app(m_bv.get_family_id(), OP_BIT2BOOL, 1, &p, 1, &t);
-                            sub.insert(m.mk_var(idx++, m.mk_bool_sort()), proj);
+                            sub.insert(m.mk_var(idx++, m.mk_bool_sort()), proj); 
                         }
                     }
                     else {
                         sub.insert(m.mk_var(idx++, s), arg);
                     }
                 }
-                sub(body);
+                sub(body);                
                 g->set_else(body);
                 model->register_decl(q, g);
-            }
-        }
+            }                        
+        }        
     };
 
     class expand_mkbv_cfg : public default_rewriter_cfg {
@@ -131,10 +131,10 @@ namespace datalog {
     public:
 
         expand_mkbv_cfg(context& ctx):
-            m_context(ctx),
+            m_context(ctx), 
             m(ctx.get_manager()),
             m_util(m),
-            m_args(m),
+            m_args(m), 
             m_f_vars(m),
             m_g_vars(m),
             m_old_funcs(m),
@@ -149,8 +149,8 @@ namespace datalog {
         void set_dst(rule_set* dst) { m_dst = dst; }
         func_decl_ref_vector const& old_funcs() const { return m_old_funcs; }
         func_decl_ref_vector const& new_funcs() const { return m_new_funcs; }
-
-        br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) {
+        
+        br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) { 
             if (num == 0) {
                 if (m_src->is_output_predicate(f))
                     m_dst->set_output_predicate(f);
@@ -162,9 +162,9 @@ namespace datalog {
                     return BR_FAILED;
             }
 
-            //
+            // 
             // f(mk_bv(args),...)
-            //
+            // 
             m_args.reset();
             m_g_vars.reset();
             m_f_vars.reset();
@@ -188,9 +188,9 @@ namespace datalog {
                 }
             }
             func_decl* g = 0;
-
+            
             if (!m_pred2blast.find(f, g)) {
-
+                
                 ptr_vector<sort> domain;
                 for (unsigned i = 0; i < m_args.size(); ++i) {
                     domain.push_back(m.get_sort(m_args[i].get()));
@@ -225,7 +225,7 @@ namespace datalog {
         mk_interp_tail_simplifier m_simplifier;
         bit_blaster_rewriter m_blaster;
         expand_mkbv          m_rewriter;
-
+        
 
         bool blast(rule *r, expr_ref& fml) {
             proof_ref pr(m);
@@ -260,7 +260,7 @@ namespace datalog {
             m_params.set_bool("blast_quant", true);
             m_blaster.updt_params(m_params);
         }
-
+        
         rule_set * operator()(rule_set const & source) {
             // TODO pc
             if (!m_context.bit_blast()) {
@@ -268,8 +268,8 @@ namespace datalog {
             }
             rule_manager& rm = m_context.get_rule_manager();
             unsigned sz = source.get_num_rules();
-            expr_ref fml(m);
-            rule_set * result = alloc(rule_set, m_context);
+            expr_ref fml(m);            
+            rule_set * result = alloc(rule_set, m_context);   
             m_rewriter.m_cfg.set_src(&source);
             m_rewriter.m_cfg.set_dst(result);
             for (unsigned i = 0; !m_context.canceled() && i < sz; ++i) {
@@ -297,8 +297,8 @@ namespace datalog {
                 if (!source.contains(*I))
                     result->set_output_predicate(*I);
             }
-
-            if (m_context.get_model_converter()) {
+            
+            if (m_context.get_model_converter()) {               
                 filter_model_converter* fmc = alloc(filter_model_converter, m);
                 bit_blast_model_converter* bvmc = alloc(bit_blast_model_converter, m);
                 func_decl_ref_vector const& old_funcs = m_rewriter.m_cfg.old_funcs();
@@ -309,7 +309,7 @@ namespace datalog {
                 }
                 m_context.add_model_converter(concat(bvmc, fmc));
             }
-
+            
             return result;
         }
     };
@@ -324,6 +324,6 @@ namespace datalog {
 
     rule_set * mk_bit_blast::operator()(rule_set const & source) {
         return (*m_impl)(source);
-    }
+    }        
 
 };

@@ -48,7 +48,7 @@ void tst_instantiate(ast_manager & m, expr * f) {
     quantifier * q = find_quantifier(f);
     if (q) {
         expr_ref_vector cnsts(m);
-        for (unsigned i = 0; i < q->get_num_decls(); i++)
+        for (unsigned i = 0; i < q->get_num_decls(); i++) 
             cnsts.push_back(m.mk_fresh_const("a", q->get_decl_sort(i)));
         expr_ref r(m);
         instantiate(m, q, cnsts.c_ptr(), r);
@@ -73,11 +73,11 @@ void tst_subst(ast_manager& m) {
     v = m.mk_var(4, s);
     e1 = m.mk_and(m.mk_app(p, x.get(), y.get()), m.mk_app(p, z.get(), u.get()));
     e2 = m.mk_forall(1, ss, names, e1);
-    t1 = m.mk_forall(1, ss, names,
+    t1 = m.mk_forall(1, ss, names, 
                      m.mk_and(m.mk_app(p, x.get(), z.get()), m.mk_app(p, y.get(), u.get())));
-    t2 = m.mk_forall(2, ss, names,
+    t2 = m.mk_forall(2, ss, names, 
                      m.mk_and(m.mk_app(p, x.get(), y.get()), m.mk_app(p, u.get(), z.get())));
-
+    
     var_subst subst(m);
     expr_ref_vector sub1(m);
     sub1.push_back(x);

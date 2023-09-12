@@ -23,7 +23,7 @@ Revision History:
 #include"sat_types.h"
 
 namespace sat {
-
+    
     class var_queue {
         struct lt {
             svector<unsigned> & m_activity;
@@ -33,7 +33,7 @@ namespace sat {
         heap<lt>  m_queue;
     public:
         var_queue(svector<unsigned> & act):m_queue(128, lt(act)) {}
-
+        
         void activity_increased_eh(bool_var v) {
             if (m_queue.contains(v))
                 m_queue.decreased(v);

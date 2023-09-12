@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -23,7 +23,7 @@ using System.Diagnostics.Contracts;
 
 namespace Microsoft.Z3
 {
-    /// <summary>
+    /// <summary>  
     /// Probes are used to inspect a goal (aka problem) and collect information that may be used to decide
     /// which solver and/or preprocessing step will be used.
     /// The complete list of probes may be obtained using the procedures <c>Context.NumProbes</c>
@@ -34,7 +34,7 @@ namespace Microsoft.Z3
     public class Probe : Z3Object
     {
         /// <summary>
-        /// Execute the probe over the goal.
+        /// Execute the probe over the goal. 
         /// </summary>
         /// <returns>A probe always produce a double value.
         /// "Boolean" probes return 0.0 for false, and a value different from 0.0 for true.</returns>

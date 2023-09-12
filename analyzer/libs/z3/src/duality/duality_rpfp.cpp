@@ -162,7 +162,7 @@ namespace Duality {
   Z3User::Term Z3User::conjoin(const std::vector<Term> &args){
     return ctx.make(And,args);
   }
-
+  
   Z3User::Term Z3User::sum(const std::vector<Term> &args){
     return ctx.make(Plus,args);
   }
@@ -238,7 +238,7 @@ namespace Duality {
 	int nargs = t.num_args();
 	for(int i = 0; i < nargs; i++)
 	  args.push_back(LocalizeRec(e, memo, t.arg(i)));
-	hash_map<func_decl,int>::iterator rit = e->relMap.find(f);
+	hash_map<func_decl,int>::iterator rit = e->relMap.find(f);                 
 	if(rit != e->relMap.end())
 	  res = RedDualRela(e,args,(rit->second));
 	else {
@@ -442,7 +442,7 @@ namespace Duality {
       decl_kind k = lit.decl().get_decl_kind();
       if(k == Not){
 	if(IsLiteral(lit.arg(0),atom,val)){
-	  val = eq(val,ctx.bool_val(true)) ? ctx.bool_val(false) : ctx.bool_val(true);
+	  val = eq(val,ctx.bool_val(true)) ? ctx.bool_val(false) : ctx.bool_val(true); 
 	  return true;
 	}
 	return false;
@@ -491,7 +491,7 @@ namespace Duality {
   }
 
   expr Z3User::PullCommonFactors(std::vector<expr> &args, bool is_and){
-
+    
     // first check if there's anything to do...
     if(args.size() < 2)
       return FinishAndOr(args,is_and);
@@ -514,7 +514,7 @@ namespace Duality {
 	std::set_intersection(common.begin(),common.end(),v.begin(),v.end(),std::inserter(w,w.begin()),comp);
 	common.swap(w);
       }
-    }
+    }  
     if(common.empty())
       return FinishAndOr(args,is_and);
     std::set<ast> common_set(common.begin(),common.end());
@@ -527,7 +527,7 @@ namespace Duality {
 	  lits.push_back(b);
       }
       args[i] = SimplifyAndOr(lits,!is_and);
-    }
+    }  
     common.push_back(SimplifyAndOr(args,is_and));
     return SimplifyAndOr(common,!is_and);
   }
@@ -603,9 +603,9 @@ namespace Duality {
     if (t.is_app()){
       func_decl f = t.decl();
       decl_kind k = f.get_decl_kind();
-
+      
       // TODO: recur here, but how much? We don't want to be quadractic in formula size
-
+      
       if(k == And || k == Or){
 	int nargs = t.num_args();
 	std::vector<Term> args(nargs);
@@ -653,7 +653,7 @@ namespace Duality {
       }
     }
   }
-
+  
 
   Z3User::Term Z3User::RemoveRedundancyRec(hash_map<ast, Term> &memo, hash_map<ast, Term> &smemo, const Term &t)
   {
@@ -723,10 +723,10 @@ namespace Duality {
 	decl_kind k = f.get_decl_kind();
 	if(k == And){
 	  for(int i = 0; i < nargs-1; i++){
-	    if((args[i].is_app() && args[i].decl().get_decl_kind() == Geq &&
+	    if((args[i].is_app() && args[i].decl().get_decl_kind() == Geq && 
 		args[i+1].is_app() && args[i+1].decl().get_decl_kind() == Leq)
 	       ||
-	       (args[i].is_app() && args[i].decl().get_decl_kind() == Leq &&
+	       (args[i].is_app() && args[i].decl().get_decl_kind() == Leq && 
 		args[i+1].is_app() && args[i+1].decl().get_decl_kind() == Geq))
 	      if(eq(args[i].arg(0),args[i+1].arg(0)) && eq(args[i].arg(1),args[i+1].arg(1))){
 		args[i] = ctx.make(Equal,args[i].arg(0),args[i].arg(1));
@@ -809,12 +809,12 @@ namespace Duality {
     return some_diff ? SubstRec(memo,t) : t;
   }
 
-
+  
 
   RPFP::Transformer RPFP::Fuse(const std::vector<Transformer *> &trs){
     assert(!trs.empty());
     const std::vector<expr> &params = trs[0]->IndParams;
-    std::vector<expr> fmlas(trs.size());
+    std::vector<expr> fmlas(trs.size()); 
     fmlas[0] = trs[0]->Formula;
     for(unsigned i = 1; i < trs.size(); i++)
       fmlas[i] = SubstParamsNoCapture(trs[i]->IndParams,params,trs[i]->Formula);
@@ -870,7 +870,7 @@ namespace Duality {
       Z3_persist_ast(ctx,root->Annotation.Formula,persist);
 #endif
   }
-
+  
   RPFP::Term RPFP::GetUpperBound(Node *n)
   {
     // TODO: cache this
@@ -923,7 +923,7 @@ namespace Duality {
       WriteInterps(f, c);
     f.WriteLine(t.getTerm());
   }
-#endif
+#endif    
 
 
   expr RPFP::GetEdgeFormula(Edge *e, int persist, bool with_children, bool underapprox)
@@ -1012,7 +1012,7 @@ namespace Duality {
       for(unsigned i = 0; i < e->Children.size(); i++)
 	ConstrainParentCache(e,e->Children[i],lits);
   }
-
+      
   void RPFP::slvr_add(const expr &e){
     slvr().add(e);
   }
@@ -1054,7 +1054,7 @@ namespace Duality {
       alit_stack_sizes.pop_back();
     }
   }
-
+  
   void RPFP_caching::slvr_push(){
 #ifdef LIMIT_STACK_WEIGHT
     if(weight_added.val > LIMIT_STACK_WEIGHT){
@@ -1093,7 +1093,7 @@ namespace Duality {
 	std::copy(core1.begin(),core1.end(),core);
       }
     }
-    else
+    else 
       res = slvr().check(alit_stack.size(), &alit_stack[0]);
     alit_stack.resize(oldsiz);
     return res;
@@ -1168,7 +1168,7 @@ namespace Duality {
     for(unsigned i = 0; i < assumps.size(); i++)
       core.insert(assumps[i]);
   }
-
+  
   void RPFP::ComputeProofCore(){
     if(!proof_core){
       proof_core = new hash_set<ast>;
@@ -1202,13 +1202,13 @@ namespace Duality {
 
   void RPFP::ConstrainParent(Edge *parent, Node *child){
     ConstrainEdgeLocalized(parent,GetAnnotation(child));
-  }
+  } 
 
   void RPFP_caching::ConstrainParentCache(Edge *parent, Node *child, std::vector<Term> &lits){
     ConstrainEdgeLocalizedCache(parent,GetAnnotation(child),lits);
-  }
+  } 
 
-
+        
   /** For incremental solving, asserts the negation of the upper bound associated
    * with a node.
    * */
@@ -1232,7 +1232,7 @@ namespace Duality {
 	GetAssumptionLits(n->dual,lits);
       }
   }
-
+  
   /** Clone another RPFP into this one, keeping a map */
   void RPFP_caching::Clone(RPFP *other){
 #if 0
@@ -1249,16 +1249,16 @@ namespace Duality {
       EdgeCloneMap[edge] = CreateEdge(parent,edge->F,cs);
     }
   }
-
+  
   /** Get the clone of a node */
   RPFP::Node *RPFP_caching::GetNodeClone(Node *other_node){
     return NodeCloneMap[other_node];
   }
-
+  
   /** Get the clone of an edge */
   RPFP::Edge *RPFP_caching::GetEdgeClone(Edge *other_edge){
     return EdgeCloneMap[other_edge];
-  }
+  }  
 
   /** check assumption lits, and return core */
   check_result RPFP_caching::CheckCore(const std::vector<Term> &assumps, std::vector<Term> &core){
@@ -1271,9 +1271,9 @@ namespace Duality {
       core.clear();
     return res;
   }
-
-
-  /** Assert a constraint on an edge in the SMT context.
+  
+      
+  /** Assert a constraint on an edge in the SMT context. 
    */
 
   void RPFP::ConstrainEdge(Edge *e, const Term &t)
@@ -1325,36 +1325,36 @@ namespace Duality {
     slvr().RemoveInterpolationAxiom(t);
   }
 #endif
-
+  
   /** Solve an RPFP graph. This means either strengthen the annotation
    *  so that the bound at the given root node is satisfied, or
-   *  show that this cannot be done by giving a dual solution
-   *  (i.e., a counterexample).
-   *
+   *  show that this cannot be done by giving a dual solution 
+   *  (i.e., a counterexample). 
+   *  
    * In the current implementation, this only works for graphs that
    * are:
    * - tree-like
-   *
+   * 
    * - closed.
-   *
+   * 
    * In a tree-like graph, every nod has out most one incoming and one out-going edge,
    * and there are no cycles. In a closed graph, every node has exactly one out-going
    * edge. This means that the leaves of the tree are all hyper-edges with no
    * children. Such an edge represents a relation (nullary transformer) and thus
    * a lower bound on its parent. The parameter root must be the root of this tree.
-   *
+   * 
    * If Solve returns LBool.False, this indicates success. The annotation of the tree
-   * has been updated to satisfy the upper bound at the root.
-   *
+   * has been updated to satisfy the upper bound at the root. 
+   * 
    * If Solve returns LBool.True, this indicates a counterexample. For each edge,
    * you can then call Eval to determine the values of symbols in the transformer formula.
    * You can also call Empty on a node to determine if its value in the counterexample
    * is the empty relation.
-   *
+   * 
    *    \param root The root of the tree
-   *    \param persist Number of context pops through which result should persist
-   *
-   *
+   *    \param persist Number of context pops through which result should persist 
+   * 
+   * 
    */
 
   lbool RPFP::Solve(Node *root, int persist)
@@ -1369,7 +1369,7 @@ namespace Duality {
 
     // if (dualModel != null) dualModel.Dispose();
     // if (dualLabels != null) dualLabels.Dispose();
-
+    
     timer_start("interpolate_tree");
     lbool res = ls_interpolate_tree(tree, interpolant, dualModel,goals,true);
     timer_stop("interpolate_tree");
@@ -1382,11 +1382,11 @@ namespace Duality {
     delete tree;
     if(goals)
       delete goals;
-
+    
     timer_stop("Solve");
     return res;
   }
-
+  
   void RPFP::CollapseTermTreeRec(TermTree *root, TermTree *node){
     root->addTerm(node->getTerm());
     std::vector<Term> &cnsts = node->getTerms();
@@ -1407,7 +1407,7 @@ namespace Duality {
     chs.clear();
     return node;
   }
-
+    
   lbool RPFP::SolveSingleNode(Node *root, Node *node)
   {
     timer_start("Solve");
@@ -1431,19 +1431,19 @@ namespace Duality {
   }
 
   /** Get the constraint tree (but don't solve it) */
-
+  
   TermTree *RPFP::GetConstraintTree(Node *root, Node *skip_descendant)
   {
     return AddUpperBound(root, ToTermTree(root,skip_descendant));
   }
-
+  
   /** Dispose of the dual model (counterexample) if there is one. */
 
   void RPFP::DisposeDualModel()
   {
     dualModel = model(ctx,NULL);
   }
-
+  
   RPFP::Term RPFP::UnderapproxFlag(Node *n){
     expr flag = ctx.constant((std::string("@under") +  string_of_int(n->number)).c_str(), ctx.bool_sort());
     underapprox_flag_rev[flag] = n;
@@ -1458,8 +1458,8 @@ namespace Duality {
    * Solve, except no primal solution (interpolant) is generated in the unsat case.
    * The vector underapproxes gives the set of node underapproximations to be enforced
    * (assuming these were conditionally asserted by AssertEdge).
-   *
-   */
+   * 
+   */ 
 
   check_result RPFP::Check(Node *root, std::vector<Node *> underapproxes, std::vector<Node *> *underapprox_core )
         {
@@ -1508,7 +1508,7 @@ namespace Duality {
     if(!mod.null())
       dualModel = mod;;
     return res;
-  }
+  }      
 
   /** Determines the value in the counterexample of a symbol occuring in the transformer formula of
    *  a given edge. */
@@ -1521,7 +1521,7 @@ namespace Duality {
 
   /** Returns true if the given node is empty in the primal solution. For proecudure summaries,
       this means that the procedure is not called in the current counter-model. */
-
+  
   bool RPFP::Empty(Node *p)
   {
     Term b; std::vector<Term> v;
@@ -1529,7 +1529,7 @@ namespace Duality {
     // dualModel.show_internals();
     // std::cout << "b: " << b << std::endl;
     expr bv = dualModel.eval(b);
-    // std::cout << "bv: " << bv << std::endl;
+    // std::cout << "bv: " << bv << std::endl; 
     bool res = !eq(bv,ctx.bool_val(true));
     return res;
   }
@@ -1597,7 +1597,7 @@ namespace Duality {
 
   /** Compute truth values of all boolean subterms in current model.
       Assumes formulas has been simplified by Z3, so only boolean ops
-      ands and, or, not. Returns result in memo.
+      ands and, or, not. Returns result in memo. 
   */
 
   int RPFP::SubtermTruth(hash_map<ast,int> &memo, const Term &f){
@@ -1613,14 +1613,14 @@ namespace Duality {
 	goto done;
       }
       if(k == And) {
-	res = 1;
+	res = 1; 
 	for(int i = 0; i < nargs; i++){
 	  int ar = SubtermTruth(memo,f.arg(i));
 	  if(ar == 0){
 	    res = 0;
 	    goto done;
 	  }
-	  if(ar == 2)res = 2;
+	  if(ar == 2)res = 2; 
 	}
 	goto done;
       }
@@ -1632,7 +1632,7 @@ namespace Duality {
 	    res = 1;
 	    goto done;
 	  }
-	  if(ar == 2)res = 2;
+	  if(ar == 2)res = 2; 
 	}
 	goto done;
       }
@@ -1651,12 +1651,12 @@ namespace Duality {
     }
     {
       expr bv = dualModel.eval(f);
-      if(bv.is_app() && bv.decl().get_decl_kind() == Equal &&
+      if(bv.is_app() && bv.decl().get_decl_kind() == Equal && 
 	 bv.arg(0).is_array()){
 	bv = EvalArrayEquality(bv);
       }
       // Hack!!!! array equalities can occur negatively!
-      if(bv.is_app() && bv.decl().get_decl_kind() == Not &&
+      if(bv.is_app() && bv.decl().get_decl_kind() == Not && 
 	 bv.arg(0).decl().get_decl_kind() == Equal &&
 	 bv.arg(0).arg(0).is_array()){
 	bv = dualModel.eval(!EvalArrayEquality(bv.arg(0)));
@@ -1680,7 +1680,7 @@ namespace Duality {
 
   /** Compute truth values of all boolean subterms in current model.
       Assumes formulas has been simplified by Z3, so only boolean ops
-      ands and, or, not. Returns result in memo.
+      ands and, or, not. Returns result in memo. 
   */
 
 #if 0
@@ -1697,14 +1697,14 @@ namespace Duality {
 	goto done;
       }
       if(k == And) {
-	res = 1;
+	res = 1; 
 	for(int i = 0; i < nargs; i++){
 	  int ar = GetLabelsRec(memo,f.arg(i), labels, labpos);
 	  if(ar == 0){
 	    res = 0;
 	    goto done;
 	  }
-	  if(ar == 2)res = 2;
+	  if(ar == 2)res = 2; 
 	}
 	goto done;
       }
@@ -1716,7 +1716,7 @@ namespace Duality {
 	    res = 1;
 	    goto done;
 	  }
-	  if(ar == 2)res = 2;
+	  if(ar == 2)res = 2; 
 	}
 	goto done;
       }
@@ -1738,12 +1738,12 @@ namespace Duality {
     }
     {
       expr bv = dualModel.eval(f);
-      if(bv.is_app() && bv.decl().get_decl_kind() == Equal &&
+      if(bv.is_app() && bv.decl().get_decl_kind() == Equal && 
 	 bv.arg(0).is_array()){
 	bv = EvalArrayEquality(bv);
       }
       // Hack!!!! array equalities can occur negatively!
-      if(bv.is_app() && bv.decl().get_decl_kind() == Not &&
+      if(bv.is_app() && bv.decl().get_decl_kind() == Not && 
 	 bv.arg(0).decl().get_decl_kind() == Equal &&
 	 bv.arg(0).arg(0).is_array()){
 	bv = dualModel.eval(!EvalArrayEquality(bv.arg(0)));
@@ -1974,7 +1974,7 @@ namespace Duality {
     return res;
   }
 
-  RPFP::Term RPFP::ElimIteRec(hash_map<ast,expr> &memo, const Term &t, std::vector<expr> &cnsts){
+  RPFP::Term RPFP::ElimIteRec(hash_map<ast,expr> &memo, const Term &t, std::vector<expr> &cnsts){ 
     std::pair<ast,Term> foo(t,expr(ctx));
     std::pair<hash_map<ast,Term>::iterator, bool> bar = memo.insert(foo);
     Term &res = bar.first->second;
@@ -2014,7 +2014,7 @@ namespace Duality {
     return res;
   }
 
-  RPFP::Term RPFP::ElimIte(const Term &t){
+  RPFP::Term RPFP::ElimIte(const Term &t){ 
     hash_map<ast,expr> memo;
     std::vector<expr> cnsts;
     expr res = ElimIteRec(memo,t,cnsts);
@@ -2065,17 +2065,17 @@ namespace Duality {
   }
 
   struct VariableProjector : Z3User {
-
+  
     struct elim_cand {
       Term var;
       int sup;
       Term val;
     };
-
+    
     typedef expr Term;
 
     hash_set<ast> keep;
-    hash_map<ast,int> var_ord;
+    hash_map<ast,int> var_ord; 
     int num_vars;
     std::vector<elim_cand> elim_cands;
     hash_map<ast,std::vector<int> > sup_map;
@@ -2084,7 +2084,7 @@ namespace Duality {
     hash_map<ast,int> cand_map;
     params simp_params;
 
-    VariableProjector(Z3User &_user, std::vector<Term> &keep_vec) :
+    VariableProjector(Z3User &_user, std::vector<Term> &keep_vec) : 
       Z3User(_user), simp_params()
     {
       num_vars = 0;
@@ -2093,7 +2093,7 @@ namespace Duality {
 	var_ord[keep_vec[i]] = num_vars++;
       }
     }
-
+    
     int VarNum(const Term &v){
       if(var_ord.find(v) == var_ord.end())
 	var_ord[v] = num_vars++;
@@ -2103,7 +2103,7 @@ namespace Duality {
     bool IsVar(const Term &t){
       return t.is_app() && t.num_args() == 0 && t.decl().get_decl_kind() == Uninterpreted;
     }
-
+    
     bool IsPropLit(const Term &t, Term &a){
       if(IsVar(t)){
 	a = t;
@@ -2113,7 +2113,7 @@ namespace Duality {
 	return IsPropLit(t.arg(0),a);
       return false;
     }
-
+    
     void CountOtherVarsRec(hash_map<ast,int> &memo,
 			   const Term &t,
 			   int id,
@@ -2138,8 +2138,8 @@ namespace Duality {
       }
       else if (t.is_quantifier())
 	CountOtherVarsRec(memo, t.body(), id, count);
-    }
-
+    }  
+    
     void NewElimCand(const Term &lhs, const Term &rhs){
       if(debug_gauss){
 	std::cout << "mapping " << lhs << " to " << rhs << std::endl;
@@ -2204,7 +2204,7 @@ namespace Duality {
 	    MakeElimCand(FindRep(lit.arg(0)),FindRep(lit.arg(1)));
 	}
       }
-
+      
       for(unsigned i = 0; i < elim_cands.size(); i++){
 	elim_cand &cand = elim_cands[i];
 	hash_map<ast,int> memo;
@@ -2212,7 +2212,7 @@ namespace Duality {
 	if(cand.sup == 0)
 	  ready_cands.push_back(i);
       }
-
+      
       while(!ready_cands.empty()){
 	elim_cand &cand = elim_cands[ready_cands.back()];
 	ready_cands.pop_back();
@@ -2234,7 +2234,7 @@ namespace Duality {
 	    ready_cands.push_back(c);
 	}
       }
-
+      
       for(unsigned i = 0; i < lits_in.size(); i++){
 	Term lit = lits_in[i];
 	lit = SubstRec(elim_map,lit);
@@ -2254,7 +2254,7 @@ namespace Duality {
     hash_map<ast,Term> la_coeffs[2];
     std::vector<Term> la_pos_vars;
     bool fixing;
-
+    
     void IndexLAcoeff(const Term &coeff1, const Term &coeff2, Term t, int id){
       Term coeff = coeff1 * coeff2;
       coeff = coeff.simplify();
@@ -2471,8 +2471,8 @@ namespace Duality {
       timer_stop("FourierMotzkinCheap");
       return conjoin(new_lits2);
     }
-  };
-
+  }; 
+    
   void Z3User::CollectConjuncts(const Term &f, std::vector<Term> &lits, bool pos){
     if(f.is_app() && f.decl().get_decl_kind() == Not)
       CollectConjuncts(f.arg(0), lits, !pos);
@@ -2536,7 +2536,7 @@ namespace Duality {
       return args[0] + args[1];
     return sum(args);
   }
-
+  
 
   RPFP::Term RPFP::ProjectFormula(std::vector<Term> &keep_vec, const Term &f){
     VariableProjector vp(*this,keep_vec);
@@ -2636,7 +2636,7 @@ namespace Duality {
     else if (f.is_quantifier()){
 #if 0
       // treat closed quantified formula as a literal 'cause we hate nested quantifiers
-      if(under && IsClosedFormula(f))
+      if(under && IsClosedFormula(f)) 
 	res.push_back(f);
       else
 #endif
@@ -2760,7 +2760,7 @@ namespace Duality {
     if(res != unsat)
       throw "should be unsat";
     s.pop(1);
-
+	
     for(unsigned i = 0; i < conjuncts.size(); ){
       std::swap(conjuncts[i],conjuncts.back());
       expr save = conjuncts.back();
@@ -2786,7 +2786,7 @@ namespace Duality {
       lits[i] = pred();
       s.add(ctx.make(Implies,lits[i],conjuncts[i]));
     }
-
+    
     // verify
     check_result res = s.check(lits.size(),&lits[0]);
     if(res != unsat){
@@ -2883,9 +2883,9 @@ namespace Duality {
   }
 
   void RPFP_caching::GreedyReduceCache(std::vector<expr> &assumps, std::vector<expr> &core){
-    std::vector<expr> lits = assumps, full_core;
+    std::vector<expr> lits = assumps, full_core; 
     std::copy(core.begin(),core.end(),std::inserter(lits,lits.end()));
-
+    
     // verify
     check_result res = CheckCore(lits,full_core);
     if(res != unsat){
@@ -2893,9 +2893,9 @@ namespace Duality {
       const std::vector<expr> &theory = ls->get_axioms();
       for(unsigned i = 0; i < theory.size(); i++)
 	GetAssumptionLits(theory[i],assumps);
-      lits = assumps;
+      lits = assumps; 
       std::copy(core.begin(),core.end(),std::inserter(lits,lits.end()));
-
+      
       for(int k = 0; k < 100; k++) // keep trying, maybe MBQI will do something!
 	if((res = CheckCore(lits,full_core)) == unsat)
 	  goto is_unsat;
@@ -2903,7 +2903,7 @@ namespace Duality {
     }
   is_unsat:
     FilterCore(core,full_core);
-
+    
     std::vector<expr> dummy;
     if(CheckCore(full_core,dummy) != unsat)
       throw "should be unsat";
@@ -2974,7 +2974,7 @@ namespace Duality {
     std::vector<expr> assumps, namings;
     std::vector<int> assump_stack, naming_stack;
     hash_map<ast,expr> renaming, renaming_memo;
-
+    
     void add(const expr &e){
       expr t = e;
       if(!aux_solver.extensional_array_theory()){
@@ -3014,7 +3014,7 @@ namespace Duality {
     model get_model() {
       return aux_solver.get_model();
     }
-
+    
     expr get_implicant() {
       owner->dualModel = aux_solver.get_model();
       expr dual = owner->ctx.make(And,assumps);
@@ -3025,8 +3025,8 @@ namespace Duality {
 	eu = owner->SubstRec(renaming,eu);
       return eu;
     }
-
-    implicant_solver(RPFP *_owner, solver &_aux_solver)
+    
+    implicant_solver(RPFP *_owner, solver &_aux_solver) 
       : owner(_owner), aux_solver(_aux_solver)
       {}
   };
@@ -3107,7 +3107,7 @@ namespace Duality {
 
       for(unsigned i = 0; i < axioms_to_add.size(); i++)
 	is.add(axioms_to_add[i]);
-
+      
 #define TEST_BAD
 #ifdef TEST_BAD
       {
@@ -3134,7 +3134,7 @@ namespace Duality {
 	  axioms_added = true;
 	}
 	else {
-#ifdef KILL_ON_BAD_INTERPOLANT
+#ifdef KILL_ON_BAD_INTERPOLANT	  
 	  std::cout << "bad in InterpolateByCase -- core:\n";
 #if 0
 	  std::vector<expr> assumps;
@@ -3144,7 +3144,7 @@ namespace Duality {
 #endif
 	  std::cout << "checking for inconsistency\n";
 	  std::cout << "model:\n";
-	  is.get_model().show();
+	  is.get_model().show();	  
 	  expr impl = is.get_implicant();
 	  std::vector<expr> conjuncts;
 	  CollectConjuncts(impl,conjuncts,true);
@@ -3257,7 +3257,7 @@ namespace Duality {
       GetAssumptionLits(lits[i],core,&lit_map);
     GreedyReduceCache(assumps,core);
     for(unsigned i = 0; i < core.size(); i++)
-      conjuncts.push_back(lit_map[core[i]]);
+      conjuncts.push_back(lit_map[core[i]]); 
     NegateLits(conjuncts);
     SetAnnotation(node,SimplifyOr(conjuncts));
     timer_stop("Generalize");
@@ -3305,7 +3305,7 @@ namespace Duality {
 	expr fmla = GetAnnotation(node);
 	assumps.push_back(fmla.arg(0).arg(0));
 	GetAssumptionLits(!fmla.arg(1),assumps);
-	std::vector<expr> full_core;
+	std::vector<expr> full_core; 
 	check_result res = CheckCore(assumps,full_core);
 	if(res == unsat)
 	  conjuncts.push_back(candidates[i]);
@@ -3329,7 +3329,7 @@ namespace Duality {
     stack.push_back(stack_entry());
     slvr_push();
   }
-
+  
   /** Pop a scope (see Push). Note, you cannot pop axioms. */
 
   void RPFP::Pop(int num_scopes)
@@ -3347,7 +3347,7 @@ namespace Duality {
 	stack.pop_back();
       }
   }
-
+  
   /** Erase the proof by performing a Pop, Push and re-assertion of
       all the popped constraints */
 
@@ -3362,9 +3362,9 @@ namespace Duality {
     for(std::list<std::pair<Edge *,Term> >::iterator it = back.constraints.begin(), en = back.constraints.end(); it != en; ++it)
       slvr_add((*it).second);
   }
-
-
-
+  
+  
+  
   // This returns a new FuncDel with same sort as top-level function
   // of term t, but with numeric suffix appended to name.
 
@@ -3402,7 +3402,7 @@ namespace Duality {
 
   // Scan the clause body for occurrences of the predicate unknowns
 
-  RPFP::Term RPFP::ScanBody(hash_map<ast,Term> &memo,
+  RPFP::Term RPFP::ScanBody(hash_map<ast,Term> &memo, 
 		      const Term &t,
 		      hash_map<func_decl,Node *> &pmap,
 		      std::vector<func_decl> &parms,
@@ -3451,7 +3451,7 @@ namespace Duality {
       && t.num_args() == 0;
   }
 
-  RPFP::Term RPFP::RemoveLabelsRec(hash_map<ast,Term> &memo, const Term &t,
+  RPFP::Term RPFP::RemoveLabelsRec(hash_map<ast,Term> &memo, const Term &t, 
 				   std::vector<label_struct > &lbls){
     if(memo.find(t) != memo.end())
       return memo[t];
@@ -3561,7 +3561,7 @@ namespace Duality {
     else res = t;
     return res;
   }
-
+  
   Z3User::Term Z3User::DeleteBound(int level, int num, const Term &t){
     hash_map<int,hash_map<ast,Term> > memo;
     return DeleteBoundRec(memo, level, num, t);
@@ -3596,15 +3596,15 @@ namespace Duality {
     hash_map<ast,int> memo;
     return MaxIndex(memo,t) < 0;
   }
-
+  
 
   /** Convert a collection of clauses to Nodes and Edges in the RPFP.
 
       Predicate unknowns are uninterpreted predicates not
       occurring in the background theory.
-
-      Clauses are of the form
-
+            
+      Clauses are of the form 
+              
       B => P(t_1,...,t_k)
 
       where P is a predicate unknown and predicate unknowns
@@ -3626,7 +3626,7 @@ namespace Duality {
 
   */
 
-
+                
   static bool canonical_clause(const expr &clause){
     if(clause.decl().get_decl_kind() != Implies)
       return false;
@@ -3640,7 +3640,7 @@ namespace Duality {
   void RPFP::FromClauses(const std::vector<Term> &unskolemized_clauses, const std::vector<unsigned> *bounds){
     hash_map<func_decl,Node *> pmap;
     func_decl fail_pred = ctx.fresh_func_decl("@Fail", ctx.bool_sort());
-
+    
     std::vector<expr> clauses(unskolemized_clauses);
     // first, skolemize the clauses
 
@@ -3660,7 +3660,7 @@ namespace Duality {
 	}
 	t = SubstBound(subst,t.body());
       }
-    }
+    }    
 #else
     std::vector<hash_map<int,expr> > substs(clauses.size());
 #endif
@@ -3684,9 +3684,9 @@ namespace Duality {
 	}
 	clause = t.body();
       }
-
+      
 #endif
-
+      
       if(clause.is_app() && clause.decl().get_decl_kind() == Uninterpreted)
 	clause = implies(ctx.bool_val(true),clause);
       if(!canonical_clause(clause))
@@ -3809,7 +3809,7 @@ namespace Duality {
 
 
   // The following mess is used to undo hoisting of expressions outside loops by compilers
-
+  
   expr RPFP::UnhoistPullRec(hash_map<ast,expr> & memo, const expr &w, hash_map<ast,expr> & init_defs, hash_map<ast,expr> & const_params, hash_map<ast,expr> &const_params_inv, std::vector<expr> &new_params){
     if(memo.find(w) != memo.end())
       return memo[w];
@@ -3903,7 +3903,7 @@ namespace Duality {
       }
     }
   }
-
+  
   void RPFP::GetDefs(const expr &cnst, hash_map<ast,expr> &defs){
     // GetDefsRec(IneqToEq(cnst),defs);
     GetDefsRec(cnst,defs);
@@ -4127,7 +4127,7 @@ namespace Duality {
       s << asgn << std::endl;
     }
   }
-
+  
   void RPFP::WriteEdgeVars(Edge *e,  hash_map<ast,int> &memo, const Term &t, std::ostream &s)
   {
     std::pair<ast,int> foo(t,0);
@@ -4193,7 +4193,7 @@ namespace Duality {
 	int nargs = t.num_args();
 	for(int i = 0; i < nargs; i++)
 	  args.push_back(ToRuleRec(e, memo, t.arg(i),quants));
-	hash_map<func_decl,int>::iterator rit = e->relMap.find(f);
+	hash_map<func_decl,int>::iterator rit = e->relMap.find(f);                 
 	if(rit != e->relMap.end()){
 	  Node* child = e->Children[rit->second];
 	  FuncDecl op = child->Name;
@@ -4214,7 +4214,7 @@ namespace Duality {
     return res;
   }
 
-
+  
   void RPFP::ToClauses(std::vector<Term> &cnsts, FileFormat format){
     cnsts.resize(edges.size());
     for(unsigned i = 0; i < edges.size(); i++){
@@ -4237,7 +4237,7 @@ namespace Duality {
       cnsts[i] = cnst;
     }
     // int num_rules = cnsts.size();
-
+    
     for(unsigned i = 0; i < nodes.size(); i++){
       Node *node = nodes[i];
       if(!node->Bound.IsFull()){
@@ -4255,7 +4255,7 @@ namespace Duality {
 	cnsts.push_back(cnst);
       }
     }
-
+    
   }
 
 

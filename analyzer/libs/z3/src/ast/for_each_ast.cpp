@@ -22,7 +22,7 @@ Revision History:
 struct ast_counter_proc {
     unsigned m_num;
     ast_counter_proc():m_num(0) {}
-    void operator()(ast *) { m_num++; }
+    void operator()(ast *) { m_num++; } 
 };
 
 unsigned get_num_nodes(ast * n) {
@@ -41,5 +41,5 @@ bool for_each_parameter(ptr_vector<ast> & stack, ast_mark & visited, unsigned nu
             result = false;
         }
     }
-    return result;
+    return result;    
 }

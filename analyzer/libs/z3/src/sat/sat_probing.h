@@ -44,14 +44,14 @@ namespace sat {
 
         // stats
         unsigned           m_num_assigned;
-
+        
         struct cache_entry {
             bool           m_available;
-            literal_vector m_lits;
+            literal_vector m_lits; 
             cache_entry():m_available(false) {}
         };
 
-        vector<cache_entry> m_cached_bins;
+        vector<cache_entry> m_cached_bins;  
 
         struct report;
 
@@ -63,7 +63,7 @@ namespace sat {
 
     public:
         probing(solver & s, params_ref const & p);
-
+        
         bool operator()(bool force = false);
 
         void updt_params(params_ref const & p);

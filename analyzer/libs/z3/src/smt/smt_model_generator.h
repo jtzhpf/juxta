@@ -37,7 +37,7 @@ class value_factory;
 class proto_model;
 
 namespace smt {
-
+    
     // -----------------------------
     //
     // This module builds an interpretation for each relevant expression in the logical context.
@@ -49,10 +49,10 @@ namespace smt {
     //    We say this is a dependency. Moreover, some values must be fresh. That is, they should be different
     //    from all other values associated with enodes of a given sort. For example, the array theory
     //    uses fresh values to make sure that some array constants are different from each other.
-    //
+    //     
     //    So a dependency for building the interpretation of an enode N can be:
     //     a) a fresh value (stub) of sort S: it must be built after the interpretation of all enodes of sort S were assigned.
-    //
+    // 
     //     b) an enode N': the interpretation of N' must be built before the interpretation of N.
     //
     // We say a 'source' is an fresh value or an enode. Note that every dependency is a source,
@@ -69,7 +69,7 @@ namespace smt {
     //
     //  - A fresh value stub of sort S depends (implicitly) on all enodes of sort S (that are not associated with fresh values).
     //    So an enode of sort S may not have a dependency of sort S.
-    //
+    // 
     // ------------------------------
 
     /**
@@ -96,7 +96,7 @@ namespace smt {
     class model_value_dependency {
         bool m_fresh; //!< True if the dependency is a new fresh value;
         union {
-            enode *             m_enode; //!< When m_fresh == false, contains an enode depedency.
+            enode *             m_enode; //!< When m_fresh == false, contains an enode depedency. 
             extra_fresh_value * m_value; //!< When m_fresh == true, contains the sort of the fresh value
         };
     public:
@@ -128,9 +128,9 @@ namespace smt {
     typedef map<source, int, source_hash_proc, source_eq_proc> source2color;
 
     /**
-       \brief Model value builder. This functor is used to specify the dependencies
+       \brief Model value builder. This functor is used to specify the dependencies 
        needed to build a value, and to build the actual value.
-
+       
     */
     class model_value_proc {
     public:
@@ -150,7 +150,7 @@ namespace smt {
         */
         virtual bool is_fresh() const { return false; }
     };
-
+    
     /**
        \brief Simple model_value_proc. It has no dependencies, and
        just returns a given expression.
@@ -194,10 +194,10 @@ namespace smt {
         void register_existing_model_values();
         void register_macros();
 
-        bool visit_children(source const & src, ptr_vector<enode> const & roots, obj_map<enode, model_value_proc *> const & root2proc,
+        bool visit_children(source const & src, ptr_vector<enode> const & roots, obj_map<enode, model_value_proc *> const & root2proc, 
                             source2color & colors, obj_hashtable<sort> & already_traversed, svector<source> & todo);
 
-        void process_source(source const & src, ptr_vector<enode> const & roots, obj_map<enode, model_value_proc *> const & root2proc,
+        void process_source(source const & src, ptr_vector<enode> const & roots, obj_map<enode, model_value_proc *> const & root2proc, 
                             source2color & colors, obj_hashtable<sort> & already_traversed, svector<source> & todo, svector<source> & sorted_sources);
 
         void top_sort_sources(ptr_vector<enode> const & roots, obj_map<enode, model_value_proc *> const & root2proc, svector<source> & sorted_sources);

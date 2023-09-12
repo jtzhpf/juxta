@@ -42,13 +42,13 @@ namespace nlsat {
     typedef sat::literal_vector        literal_vector;
 
     inline literal to_literal(unsigned x) { return sat::to_literal(x); }
-
+    
     typedef polynomial::var            var;
     typedef polynomial::var_vector     var_vector;
     typedef polynomial::manager        pmanager;
     typedef polynomial::polynomial     poly;
     const var null_var = polynomial::null_var;
-
+    
     const var true_bool_var = 0;
     const literal true_literal(true_bool_var, false);
     const literal false_literal(true_bool_var, true);
@@ -58,8 +58,8 @@ namespace nlsat {
     class atom;
     class ineq_atom; // atoms of the form: p=0, p>0, p<0,  where p is a product of polynomials
     class root_atom; // atoms of the form: x=root[i](p), x<root[i](p), x>root[i](p), where x is a variable and p a polynomial.
-
-    class clause;
+    
+    class clause; 
     class solver;
 
     class atom {
@@ -139,7 +139,7 @@ namespace nlsat {
     };
 
     class assignment;
-
+    
     inline int normalize_sign(int s) {
         if (s < 0)  return -1;
         if (s == 0) return 0;

@@ -20,11 +20,11 @@ Revision History:
 #include"smt_enode.h"
 
 namespace smt {
-
+    
     /**
        \brief Initialize an enode in the given memory position.
     */
-    enode * enode::init(ast_manager & m, void * mem, app2enode_t const & app2enode, app * owner,
+    enode * enode::init(ast_manager & m, void * mem, app2enode_t const & app2enode, app * owner, 
                         unsigned generation, bool suppress_args, bool merge_tf, unsigned iscope_lvl,
                         bool cgc_enabled, bool update_children_parent) {
         SASSERT(m.is_bool(owner) || !merge_tf);
@@ -60,7 +60,7 @@ namespace smt {
         return n;
     }
 
-    enode * enode::mk(ast_manager & m, region & r, app2enode_t const & app2enode, app * owner,
+    enode * enode::mk(ast_manager & m, region & r, app2enode_t const & app2enode, app * owner, 
                            unsigned generation, bool suppress_args, bool merge_tf, unsigned iscope_lvl,
                            bool cgc_enabled, bool update_children_parent) {
         SASSERT(m.is_bool(owner) || !merge_tf);
@@ -89,7 +89,7 @@ namespace smt {
         }
         this->~enode();
     }
-
+    
     unsigned enode::get_num_th_vars() const {
         unsigned r = 0;
         theory_var_list const * l = get_th_var_list();
@@ -99,7 +99,7 @@ namespace smt {
         }
         return r;
     }
-
+    
     /**
        \brief Return the theory var (in theory th_id) associated with
        the enode.
@@ -118,7 +118,7 @@ namespace smt {
         }
         return null_theory_var;
     }
-
+    
     /**
        \brief Add the entry (v, id) to the list of theory variables.
     */
@@ -138,7 +138,7 @@ namespace smt {
                 SASSERT(l->get_th_id() != id);
                 l = l->get_next();
             }
-            SASSERT(l);
+            SASSERT(l); 
             SASSERT(l->get_next() == 0);
             theory_var_list * new_cell = new (r) theory_var_list(id, v);
             l->set_next(new_cell);
@@ -146,7 +146,7 @@ namespace smt {
         SASSERT(get_num_th_vars() == old_size + 1);
         SASSERT(get_th_var(id) == v);
     }
-
+    
     /**
        \brief Replace the entry (v', id) with the entry (v, id).
        The enode must have an entry (v', id)
@@ -165,7 +165,7 @@ namespace smt {
     }
 
     /**
-       \brief Delete theory variable. It assumes the
+       \brief Delete theory variable. It assumes the 
        enode is associated with a variable of the given theory.
     */
     void enode::del_th_var(theory_id id) {
@@ -198,10 +198,10 @@ namespace smt {
         }
     }
 
-
+    
     /**
        \brief Push old value of generation on the context trail stack
-       and update the generation.
+       and update the generation.       
     */
     void enode::set_generation(context & ctx, unsigned generation) {
         if (m_generation == generation)
@@ -231,7 +231,7 @@ namespace smt {
         if (m_generation == 0)
             return this;
         enode * r = this;
-        enode * curr = this;
+        enode * curr = this; 
         do {
             if (curr->m_generation < r->m_generation) {
                 r = curr;
@@ -250,9 +250,9 @@ namespace smt {
         bool     found_root = false;
         bool     found_this = false;
         bool     has_interpreted = false;
-
+        
         // "Equivalence" class structure.
-        enode const * curr = this;
+        enode const * curr = this; 
         do {
             SASSERT(curr->m_root == m_root);
             class_size++;
@@ -295,7 +295,7 @@ namespace smt {
         SASSERT(check_parent_invariant());
         return true;
     }
-
+    
     /**
        \brief Return true if the node is n or n is reached following the
        m_proof.m_target pointers
@@ -314,7 +314,7 @@ namespace smt {
     bool enode::check_parent_invariant() const {
         if (this != m_root)
             return true;
-        enode const * curr = m_root;
+        enode const * curr = m_root; 
         do {
             if (curr != m_root) {
                 enode_vector::const_iterator it  = curr->m_parents.begin();
@@ -331,7 +331,7 @@ namespace smt {
         while (curr != m_root);
         return true;
     }
-
+    
     bool enode::contains_parent_congruent_to(enode * p) const {
         enode_vector::const_iterator it  = m_parents.begin();
         enode_vector::const_iterator end = m_parents.end();
@@ -346,7 +346,7 @@ namespace smt {
 #endif
 
     void enode::display_lbls(std::ostream & out) const {
-        out << "#" << get_owner_id() << "  ->  #" << get_root()->get_owner_id() << ", lbls: " << get_lbls() << ", plbls: " << get_plbls()
+        out << "#" << get_owner_id() << "  ->  #" << get_root()->get_owner_id() << ", lbls: " << get_lbls() << ", plbls: " << get_plbls() 
             << ", root->lbls: " << get_root()->get_lbls() << ", root->plbls: " << get_root()->get_plbls();
         if (has_lbl_hash())
             out << ", lbl-hash: " << static_cast<int>(get_lbl_hash());
@@ -401,7 +401,7 @@ namespace smt {
         for (unsigned i = 0; i < num_enodes; i++)
             enodes[i]->unset_mark2();
     }
-
+    
     tmp_enode::tmp_enode():
         m_app(0),
         m_capacity(0),

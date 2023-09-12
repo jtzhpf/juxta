@@ -38,12 +38,12 @@ Revision History:
 #include"arith_eq_solver.h"
 
 namespace smt {
-
+    
     struct theory_arith_stats {
         unsigned m_conflicts, m_add_rows, m_pivots, m_diseq_cs, m_gomory_cuts, m_branches, m_gcd_tests;
         unsigned m_assert_lower, m_assert_upper, m_assert_diseq, m_core2th_eqs, m_core2th_diseqs;
         unsigned m_th2core_eqs, m_th2core_diseqs, m_bound_props, m_offset_eqs, m_fixed_eqs, m_offline_eqs;
-        unsigned m_max_min;
+        unsigned m_max_min; 
         unsigned m_gb_simplify, m_gb_superpose, m_gb_compute_basis, m_gb_num_processed;
         unsigned m_nl_branching, m_nl_linear, m_nl_bounds, m_nl_cross_nested;
 
@@ -55,28 +55,28 @@ namespace smt {
     /**
        - There are 3 kinds of variables in the tableau: base, quasi-base,
        and non-base
-
-       - Each base var and quasi-base var v owns a row R(v).
-
+       
+       - Each base var and quasi-base var v owns a row R(v). 
+       
        - If v is a base var, then R(v) contains v and other non-base variables.
-
+       
        - If v is a quasi-base var, then R(v) contains v and other base and
        non-base variables.
-
+       
        - Each quasi-base var occurs only once in the tableau (i.e., it
        occurs in R(v)).
-
+       
        - A quasi-base var does not have upper&lower bounds and distinct set.
-
+       
        - A quasi-base var v can be transformed into a base var by
        eliminating the base vars v' in R(v).  This can be accomplished by
        adding -c * R(v') where c is the coefficient of v' in R(v).
-
+       
        - A column is used to store the occurrences of a non-base var v' in
        rows R(v), where v is a base variable.
-
+       
        - An implied bound stores the linear equation that implied it.
-
+       
     */
 
     template<typename Ext>
@@ -84,13 +84,13 @@ namespace smt {
     public:
         typedef typename Ext::numeral     numeral;
         typedef typename Ext::inf_numeral inf_numeral;
-        typedef vector<numeral> numeral_vector;
+        typedef vector<numeral> numeral_vector; 
         typedef map<rational, theory_var, obj_hash<rational>, default_eq<rational> > rational2var;
 
         static const int    dead_row_id = -1;
     protected:
         bool proofs_enabled() const { return get_manager().proofs_enabled(); }
-
+        
         struct linear_monomial {
             numeral     m_coeff;
             theory_var  m_var;
@@ -111,14 +111,14 @@ namespace smt {
                 int       m_col_idx;
                 int       m_next_free_row_entry_idx;
             };
-
+            
             row_entry():m_var(0), m_col_idx(0) {}
             row_entry(numeral const & c, theory_var v): m_coeff(c), m_var(v), m_col_idx(0) {}
             bool is_dead() const { return m_var == null_theory_var; }
         };
 
         /**
-           \brief A column entry points to the row and the row_entry within the row
+           \brief A column entry points to the row and the row_entry within the row 
            that has a non-zero coefficient on the variable associated
            with the column entry.
         */
@@ -128,12 +128,12 @@ namespace smt {
                 int m_row_idx;
                 int m_next_free_row_entry_idx;
             };
-
+            
             col_entry(int r, int i): m_row_id(r), m_row_idx(i) {}
             col_entry(): m_row_id(0), m_row_idx(0) {}
             bool is_dead() const { return m_row_id == dead_row_id; }
         };
-
+     
         struct column;
 
         /**
@@ -158,7 +158,7 @@ namespace smt {
             const typename vector<row_entry>::const_iterator end_entries() const { return m_entries.end(); }
             row_entry & add_row_entry(int & pos_idx);
             void del_row_entry(unsigned idx);
-            void compress(vector<column> & cols);
+            void compress(vector<column> & cols); 
             void compress_if_needed(vector<column> & cols);
             void save_var_pos(svector<int> & result_map) const;
             void reset_var_pos(svector<int> & result_map) const;
@@ -170,7 +170,7 @@ namespace smt {
             numeral get_denominators_lcm() const;
             int get_idx_of(theory_var v) const;
         };
-
+        
         /**
            \brief A column stores in which rows a variable occurs.
            The column may have free/dead entries. The field m_first_free_idx
@@ -178,9 +178,9 @@ namespace smt {
         */
         struct column {
             svector<col_entry> m_entries;
-            unsigned           m_size;
+            unsigned           m_size; 
             int                m_first_free_idx;
-
+            
             column():m_size(0), m_first_free_idx(-1) {}
             unsigned size() const { return m_size; }
             unsigned num_entries() const { return m_entries.size(); }
@@ -198,7 +198,7 @@ namespace smt {
             col_entry & add_col_entry(int & pos_idx);
             void del_col_entry(unsigned idx);
         };
-
+        
         enum bound_kind {
             B_LOWER,
             B_UPPER
@@ -223,8 +223,8 @@ namespace smt {
             vector<parameter> m_params;
             bool m_init;
 
-            bool empty() const {
-                return m_eq_coeffs.empty() && m_lit_coeffs.empty();
+            bool empty() const { 
+                return m_eq_coeffs.empty() && m_lit_coeffs.empty(); 
             }
 
             void init();
@@ -242,11 +242,11 @@ namespace smt {
             parameter* params(char const* name);
         };
 
-        class bound {
+        class bound { 
         protected:
             theory_var  m_var;
             inf_numeral m_value;
-            unsigned    m_bound_kind:1;
+            unsigned    m_bound_kind:1; 
             unsigned    m_atom:1;
         public:
             bound(theory_var v, inf_numeral const & val, bound_kind k, bool a):
@@ -285,12 +285,12 @@ namespace smt {
             bool is_true() const { return m_is_true; }
             void assign_eh(bool is_true, inf_numeral const & epsilon);
             virtual bool has_justification() const { return true; }
-            virtual void push_justification(antecedents& a, numeral const& coeff, bool proofs_enabled) {
-                a.push_lit(literal(get_bool_var(), !m_is_true), coeff, proofs_enabled);
+            virtual void push_justification(antecedents& a, numeral const& coeff, bool proofs_enabled) { 
+                a.push_lit(literal(get_bool_var(), !m_is_true), coeff, proofs_enabled); 
             }
         };
 
-        class eq_bound : public bound {
+        class eq_bound : public bound { 
             enode * m_lhs;
             enode * m_rhs;
         public:
@@ -304,7 +304,7 @@ namespace smt {
             virtual bool has_justification() const { return true; }
             virtual void push_justification(antecedents& a, numeral const& coeff, bool proofs_enabled) {
                 SASSERT(m_lhs->get_root() == m_rhs->get_root());
-                a.push_eq(enode_pair(m_lhs, m_rhs), coeff, proofs_enabled);
+                a.push_eq(enode_pair(m_lhs, m_rhs), coeff, proofs_enabled); 
             }
         };
 
@@ -317,11 +317,11 @@ namespace smt {
             derived_bound(theory_var v, inf_numeral const & val, bound_kind k):bound(v, val, k, false) {}
             virtual ~derived_bound() {}
             virtual bool has_justification() const { return true; }
-            virtual void push_justification(antecedents& a, numeral const& coeff, bool proofs_enabled);
+            virtual void push_justification(antecedents& a, numeral const& coeff, bool proofs_enabled); 
             virtual void push_lit(literal l, numeral const&) { m_lits.push_back(l); }
             virtual void push_eq(enode_pair const& p, numeral const&) { m_eqs.push_back(p); }
         };
-
+    
         class justified_derived_bound : public derived_bound {
             vector<numeral>  m_lit_coeffs;
             vector<numeral>  m_eq_coeffs;
@@ -331,11 +331,11 @@ namespace smt {
             virtual ~justified_derived_bound() {}
             virtual bool has_justification() const { return true; }
             virtual void push_justification(antecedents& a, numeral const& coeff, bool proofs_enabled);
-            virtual void push_lit(literal l, numeral const& coeff);
+            virtual void push_lit(literal l, numeral const& coeff);               
 
             virtual void push_eq(enode_pair const& p, numeral const& coeff);
         };
-
+   
         typedef int_hashtable<int_hash, default_eq<int> > literal_idx_set;
         typedef obj_pair_hashtable<enode, enode> eq_set;
         literal_vector   m_tmp_acc_lits;
@@ -353,13 +353,13 @@ namespace smt {
         typedef u_map<atom *>    bool_var2atom;
 #else
         typedef ptr_vector<atom> bool_var2atom;
-#endif
+#endif 
         struct theory_var_lt {
             bool operator()(theory_var v1, theory_var v2) const { return v1 < v2; }
         };
 
         typedef heap<theory_var_lt> var_heap;
-
+        
         enum var_kind {
             NON_BASE,
             BASE,
@@ -368,7 +368,7 @@ namespace smt {
 
         struct var_data {
             unsigned     m_row_id:28; // row owned by the variable, irrelevant if kind() == NON_BASE
-            unsigned     m_kind:2;
+            unsigned     m_kind:2; 
             unsigned     m_is_int:1;
             unsigned     m_nl_propagated:1;
             var_data(bool is_int = false):m_row_id(0), m_kind(NON_BASE), m_is_int(is_int), m_nl_propagated(false) {}
@@ -409,7 +409,7 @@ namespace smt {
         svector<int>            m_var_pos;          // temporary array used in add_rows
         atoms                   m_atoms;            // set of theory atoms
         ptr_vector<bound>       m_asserted_bounds;  // set of asserted bounds
-        unsigned                m_asserted_qhead;
+        unsigned                m_asserted_qhead;   
         ptr_vector<atom>        m_new_atoms;        // new bound atoms that have yet to be internalized.
         svector<theory_var>     m_nl_monomials;     // non linear monomials
         svector<theory_var>     m_nl_propagated;    // non linear monomials that became linear
@@ -423,8 +423,8 @@ namespace smt {
         nat_set                 m_in_update_trail_stack; // set of variables in m_update_trail_stack
 
         svector<unsigned>       m_to_check;    // rows that should be checked for theory propagation
-        nat_set                 m_in_to_check; // set of rows in m_to_check.
-
+        nat_set                 m_in_to_check; // set of rows in m_to_check. 
+        
         inf_numeral             m_tmp;
         random_gen              m_random;
         unsigned                m_num_conflicts;
@@ -526,9 +526,9 @@ namespace smt {
         bool is_free(theory_var v) const { return lower(v) == 0 && upper(v) == 0; }
         bool is_non_free(theory_var v) const { return lower(v) != 0 || upper(v) != 0; }
         bool is_bounded(theory_var v) const { return lower(v) != 0 && upper(v) != 0; }
-        bool is_free(expr * n) const {
+        bool is_free(expr * n) const { 
             SASSERT(get_context().e_internalized(n) && get_context().get_enode(n)->get_th_var(get_id()) != null_theory_var);
-            return is_free(get_context().get_enode(n)->get_th_var(get_id()));
+            return is_free(get_context().get_enode(n)->get_th_var(get_id())); 
         }
         bool is_fixed(theory_var v) const;
         void set_bound_core(theory_var v, bound * new_bound, bool upper) { m_bounds[static_cast<unsigned>(upper)][v] = new_bound; }
@@ -573,16 +573,16 @@ namespace smt {
         void mk_bound_axioms(atom * a);
         void mk_bound_axiom(atom* a1, atom* a2);
         void flush_bound_axioms();
-        typename atoms::iterator next_sup(atom* a1, atom_kind kind,
-                                          typename atoms::iterator it,
+        typename atoms::iterator next_sup(atom* a1, atom_kind kind, 
+                                          typename atoms::iterator it, 
                                           typename atoms::iterator end,
                                           bool& found_compatible);
-        typename atoms::iterator next_inf(atom* a1, atom_kind kind,
-                                          typename atoms::iterator it,
+        typename atoms::iterator next_inf(atom* a1, atom_kind kind, 
+                                          typename atoms::iterator it, 
                                           typename atoms::iterator end,
                                           bool& found_compatible);
-        typename atoms::iterator first(atom_kind kind,
-                                       typename atoms::iterator it,
+        typename atoms::iterator first(atom_kind kind, 
+                                       typename atoms::iterator it, 
                                        typename atoms::iterator end);
         struct compare_atoms {
             bool operator()(atom* a1, atom* a2) const { return a1->get_k() < a2->get_k(); }
@@ -592,7 +592,7 @@ namespace smt {
         virtual bool internalize_term(app * term);
         virtual void internalize_eq_eh(app * atom, bool_var v);
         virtual void apply_sort_cnstr(enode * n, sort * s);
-
+        
         virtual void assign_eh(bool_var v, bool is_true);
         virtual void new_eq_eh(theory_var v1, theory_var v2);
         virtual bool use_diseqs() const;
@@ -602,7 +602,7 @@ namespace smt {
         virtual void pop_scope_eh(unsigned num_scopes);
 
         virtual void relevant_eh(app * n);
-
+        
         virtual void restart_eh();
         virtual void init_search_eh();
         /**
@@ -619,19 +619,19 @@ namespace smt {
 
            See also m_changed_assignment flag.
         */
-        bool    m_liberal_final_check;
+        bool    m_liberal_final_check; 
         final_check_status final_check_core();
         virtual final_check_status final_check_eh();
-
+        
         virtual bool can_propagate();
         virtual void propagate();
         bool propagate_core();
         void failed();
 
-
+        
         virtual void flush_eh();
         virtual void reset_eh();
-
+        
         virtual bool validate_eq_in_model(theory_var v1, theory_var v2, bool is_true) const;
 
         // -----------------------------------
@@ -646,7 +646,7 @@ namespace smt {
             m_bool_var2atom.setx(bv, a, 0);
 #endif
         }
-
+        
         void erase_bv2a(bool_var bv) {
 #ifdef SPARSE_MAP
             m_bool_var2atom.erase(bv);
@@ -737,7 +737,7 @@ namespace smt {
         void is_row_useful_for_bound_prop(row const & r, int & lower_idx, int & upper_idx) const;
         void imply_bound_for_monomial(row const & r, int idx, bool lower);
         void imply_bound_for_all_monomials(row const & r, bool lower);
-        void explain_bound(row const & r, int idx, bool lower, inf_numeral & delta,
+        void explain_bound(row const & r, int idx, bool lower, inf_numeral & delta, 
                            antecedents & antecedents);
         void mk_implied_bound(row const & r, unsigned idx, bool lower, theory_var v, bound_kind kind, inf_numeral const & k);
         void assign_bound_literal(literal l, row const & r, unsigned idx, bool lower, inf_numeral & delta, antecedents& antecedents);
@@ -807,7 +807,7 @@ namespace smt {
         typedef pair_hash<obj_hash<numeral>, bool_hash> value_sort_pair_hash;
         typedef map<value_sort_pair, theory_var, value_sort_pair_hash, default_eq<value_sort_pair> > value2var;
         value2var               m_fixed_var_table;
-
+        
         typedef std::pair<theory_var, numeral> var_offset;
         typedef pair_hash<int_hash, obj_hash<numeral> > var_offset_hash;
         typedef map<var_offset, int, var_offset_hash, default_eq<var_offset> > var_offset2row_id;
@@ -828,7 +828,7 @@ namespace smt {
         // -----------------------------------
         void set_conflict(unsigned num_literals, literal const * lits, unsigned num_eqs, enode_pair const * eqs, antecedents& antecedents, bool is_lia, char const* proof_rule);
         void collect_fixed_var_justifications(row const & r, antecedents& antecedents) const;
-
+        
         // -----------------------------------
         //
         // Backtracking
@@ -863,7 +863,7 @@ namespace smt {
 
         // -----------------------------------
         //
-        // Maximization/Minimization
+        // Maximization/Minimization 
         //
         // -----------------------------------
         row               m_tmp_row;
@@ -922,7 +922,7 @@ namespace smt {
         bool is_problematic_non_linear_row(row const & r);
         bool is_mixed_real_integer(row const & r) const;
         bool is_integer(row const & r) const;
-        typedef std::pair<rational, expr *> coeff_expr;
+        typedef std::pair<rational, expr *> coeff_expr; 
         void get_polynomial_info(sbuffer<coeff_expr> const & p, sbuffer<var_num_occs> & vars);
         expr * p2expr(sbuffer<coeff_expr> & p);
         expr * power(expr * var, unsigned power);
@@ -969,13 +969,13 @@ namespace smt {
 
         // -----------------------------------
         //
-        // Constructor
+        // Constructor 
         //
         // -----------------------------------
     public:
         theory_arith(ast_manager & m, theory_arith_params & params);
         virtual ~theory_arith();
-
+        
         virtual theory * mk_fresh(context * new_ctx) { return alloc(theory_arith, get_manager(), m_params); }
 
         virtual void setup();
@@ -1054,7 +1054,7 @@ namespace smt {
         bool satisfy_bounds() const;
 #endif
     };
-
+    
     class mi_ext {
     public:
         typedef rational     numeral;
@@ -1105,7 +1105,7 @@ namespace smt {
         }
         si_ext(): m_int_epsilon(s_integer(1)), m_real_epsilon(s_integer(1)) {}
     };
-
+    
     class smi_ext {
     public:
         typedef s_integer      numeral;
@@ -1125,12 +1125,12 @@ namespace smt {
         }
         smi_ext() : m_int_epsilon(s_integer(1)), m_real_epsilon(s_integer(0), true) {}
     };
-
+    
     typedef theory_arith<mi_ext> theory_mi_arith;
     typedef theory_arith<i_ext> theory_i_arith;
     // typedef theory_arith<si_ext> theory_si_arith;
     // typedef theory_arith<smi_ext> theory_smi_arith;
-
+    
 };
 
 #endif /* _THEORY_ARITH_H_ */

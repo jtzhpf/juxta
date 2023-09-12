@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Tactic for using the SAT solver and its preprocessing capabilities.
-
+    
 Author:
 
     Leonardo (leonardo) 2011-10-25
@@ -31,17 +31,17 @@ class sat_tactic : public tactic {
         sat2goal        m_sat2goal;
         sat::solver     m_solver;
         params_ref      m_params;
-
+        
         imp(ast_manager & _m, params_ref const & p):
             m(_m),
             m_solver(p, 0),
             m_params(p) {
             SASSERT(!m.proofs_enabled());
         }
-
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             mc = 0; pc = 0; core = 0;
@@ -66,7 +66,7 @@ class sat_tactic : public tactic {
             CASSERT("sat_solver", m_solver.check_invariant());
             IF_VERBOSE(TACTIC_VERBOSITY_LVL, m_solver.display_status(verbose_stream()););
             TRACE("sat_dimacs", m_solver.display_dimacs(tout););
-
+            
             lbool r = m_solver.check();
             if (r == l_false) {
                 g->assert_expr(m.mk_false(), 0, 0);
@@ -84,8 +84,8 @@ class sat_tactic : public tactic {
                         sat::bool_var v = it->m_value;
                         TRACE("sat_tactic", tout << "extracting value of " << mk_ismt2_pp(n, m) << "\nvar: " << v << "\n";);
                         switch (sat::value_at(v, ll_m)) {
-                        case l_true:
-                            md->register_decl(to_app(n)->get_decl(), m.mk_true());
+                        case l_true: 
+                            md->register_decl(to_app(n)->get_decl(), m.mk_true()); 
                             break;
                         case l_false:
                             md->register_decl(to_app(n)->get_decl(), m.mk_false());
@@ -109,16 +109,16 @@ class sat_tactic : public tactic {
             g->inc_depth();
             result.push_back(g.get());
         }
-
+        
         void set_cancel(bool f) {
             m_goal2sat.set_cancel(f);
             m_sat2goal.set_cancel(f);
             m_solver.set_cancel(f);
         }
     };
-
+    
     struct scoped_set_imp {
-        sat_tactic * m_owner;
+        sat_tactic * m_owner; 
 
         scoped_set_imp(sat_tactic * o, imp * i):m_owner(o) {
             #pragma omp critical (sat_tactic)
@@ -126,7 +126,7 @@ class sat_tactic : public tactic {
                 m_owner->m_imp = i;
             }
         }
-
+        
         ~scoped_set_imp() {
             #pragma omp critical (sat_tactic)
             {
@@ -162,10 +162,10 @@ public:
         sat2goal::collect_param_descrs(r);
         sat::solver::collect_param_descrs(r);
     }
-
-    void operator()(goal_ref const & g,
-                    goal_ref_buffer & result,
-                    model_converter_ref & mc,
+    
+    void operator()(goal_ref const & g, 
+                    goal_ref_buffer & result, 
+                    model_converter_ref & mc, 
                     proof_converter_ref & pc,
                     expr_dependency_ref & core) {
         imp proc(g->m(), m_params);

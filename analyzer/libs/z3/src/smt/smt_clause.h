@@ -41,12 +41,12 @@ namespace smt {
     enum clause_kind {
         CLS_AUX,
         CLS_LEARNED,
-        CLS_AUX_LEMMA
+        CLS_AUX_LEMMA 
     };
-
+    
     /**
        \brief A SMT clause.
-
+       
        A clause has several optional fields, I store space for them only if they are actually used.
     */
     class clause {
@@ -115,7 +115,7 @@ namespace smt {
                 addr ++;
             return reinterpret_cast<expr * const *>(addr);
         }
-
+        
         friend class context;
 
         void swap_lits(unsigned idx1, unsigned idx2) {
@@ -147,13 +147,13 @@ namespace smt {
         }
 
         void release_atoms(ast_manager & m);
-
+        
     public:
-        static clause * mk(ast_manager & m, unsigned num_lits, literal * lits, clause_kind k, justification * js = 0,
+        static clause * mk(ast_manager & m, unsigned num_lits, literal * lits, clause_kind k, justification * js = 0, 
                            clause_del_eh * del_eh = 0, bool save_atoms = false, expr * const * bool_var2expr_map = 0);
-
+        
         void deallocate(ast_manager & m);
-
+        
         clause_kind get_kind() const {
             return static_cast<clause_kind>(m_kind);
         }
@@ -170,14 +170,14 @@ namespace smt {
             return get_kind() == CLS_AUX_LEMMA;
         }
 
-        bool in_reinit_stack() const {
+        bool in_reinit_stack() const { 
             return m_reinit;
         }
 
         bool reinternalize_atoms() const {
             return m_reinternalize_atoms;
         }
-
+        
         unsigned get_num_literals() const {
             return m_num_literals;
         }
@@ -244,9 +244,9 @@ namespace smt {
         void display_compact(std::ostream & out, ast_manager & m, expr * const * bool_var2expr_map) const;
 
         unsigned hash() const {
-            return get_ptr_hash(this);
+            return get_ptr_hash(this); 
         }
-
+        
         void mark_as_deleted(ast_manager & m) {
             SASSERT(!m_deleted);
             m_deleted = true;
@@ -257,8 +257,8 @@ namespace smt {
             }
         }
 
-        bool deleted() const {
-            return m_deleted;
+        bool deleted() const { 
+            return m_deleted; 
         }
     };
 

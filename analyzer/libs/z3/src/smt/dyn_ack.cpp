@@ -31,7 +31,7 @@ namespace smt {
     public:
         dyn_ack_justification(app * n1, app * n2):
             justification(false), // dyn_ack_justifications are not stored in regions.
-            m_app1(n1),
+            m_app1(n1), 
             m_app2(n2) {
             SASSERT(m_app1->get_num_args() == m_app2->get_num_args());
             SASSERT(m_app1->get_decl() == m_app2->get_decl());
@@ -44,7 +44,7 @@ namespace smt {
         virtual void get_antecedents(conflict_resolution & cr) {
         }
 
-        virtual void display_debug_info(conflict_resolution & cr, std::ostream & out) {
+        virtual void display_debug_info(conflict_resolution & cr, std::ostream & out) { 
             ast_manager & m = cr.get_manager();
             out << "m_app1:\n" << mk_pp(m_app1, m) << "\n";
             out << "m_app2:\n" << mk_pp(m_app2, m) << "\n";
@@ -180,15 +180,15 @@ namespace smt {
         }
         if (n1->get_id() > n2->get_id())
             std::swap(n1,n2);
-        TRACE("dyn_ack",
-              tout << mk_pp(n1, m_manager) << " = " << mk_pp(n2, m_manager)
+        TRACE("dyn_ack", 
+              tout << mk_pp(n1, m_manager) << " = " << mk_pp(n2, m_manager) 
               << " = " << mk_pp(r, m_manager) << "\n";);
         app_triple tr(n1, n2, r);
         if (m_triple.m_instantiated.contains(tr))
             return;
         unsigned num_occs = 0;
         if (m_triple.m_app2num_occs.find(n1, n2, r, num_occs)) {
-            TRACE("dyn_ack", tout << mk_pp(n1, m_manager) << "\n" << mk_pp(n2, m_manager)
+            TRACE("dyn_ack", tout << mk_pp(n1, m_manager) << "\n" << mk_pp(n2, m_manager) 
                   << mk_pp(r, m_manager) << "\n" << "\nnum_occs: " << num_occs << "\n";);
             num_occs++;
         }
@@ -206,23 +206,23 @@ namespace smt {
         SASSERT(m_triple.m_app2num_occs.find(n1, n2, r, num_occs2) && num_occs == num_occs2);
 #endif
         if (num_occs == m_params.m_dack_threshold) {
-            TRACE("dyn_ack", tout << "found candidate:\n" << mk_pp(n1, m_manager) << "\n" << mk_pp(n2, m_manager)
-                  << "\n" << mk_pp(r, m_manager)
+            TRACE("dyn_ack", tout << "found candidate:\n" << mk_pp(n1, m_manager) << "\n" << mk_pp(n2, m_manager) 
+                  << "\n" << mk_pp(r, m_manager) 
                   << "\nnum_occs: " << num_occs << "\n";);
             m_triple.m_to_instantiate.push_back(tr);
         }
-
+        
     }
 
-    struct app_pair_lt {
+    struct app_pair_lt { 
         typedef std::pair<app *, app *>          app_pair;
         typedef obj_pair_map<app, app, unsigned> app_pair2num_occs;
         app_pair2num_occs &  m_app_pair2num_occs;
-
+        
         app_pair_lt(app_pair2num_occs & m):
             m_app_pair2num_occs(m) {
         }
-
+        
         bool operator()(app_pair const & p1, app_pair const & p2) const {
             unsigned n1 = 0;
             unsigned n2 = 0;
@@ -298,7 +298,7 @@ namespace smt {
     void dyn_ack_manager::del_clause_eh(clause * cls) {
         TRACE("dyn_ack", tout << "del_clause_eh: "; m_context.display_clause(tout, cls); tout << "\n";);
         m_context.m_stats.m_num_del_dyn_ack++;
-
+        
         app_pair p((app*)0,(app*)0);
         if (m_clause2app_pair.find(cls, p)) {
             SASSERT(p.first && p.second);
@@ -342,7 +342,7 @@ namespace smt {
         app * eq  = m_context.mk_eq_atom(n1, n2);
         m_context.internalize(eq, true);
         literal l = m_context.get_literal(eq);
-        TRACE("dyn_ack", tout << "eq:\n" << mk_pp(eq, m_manager) << "\nliteral: ";
+        TRACE("dyn_ack", tout << "eq:\n" << mk_pp(eq, m_manager) << "\nliteral: "; 
               m_context.display_literal(tout, l); tout << "\n";);
         return l;
     }
@@ -408,7 +408,7 @@ namespace smt {
         SASSERT(n1 != n2 && n1 != r && n2 != r);
         m_context.m_stats.m_num_dyn_ack++;
         TRACE("dyn_ack_inst", tout << "dyn_ack: " << n1->get_id() << " " << n2->get_id() << " " << r->get_id() << "\n";);
-        TRACE("dyn_ack", tout << "expanding Ackermann's rule for:\n" << mk_pp(n1, m_manager) << "\n"
+        TRACE("dyn_ack", tout << "expanding Ackermann's rule for:\n" << mk_pp(n1, m_manager) << "\n" 
               << mk_pp(n2, m_manager) << "\n"
               << mk_pp(r,  m_manager) << "\n";
               );
@@ -436,15 +436,15 @@ namespace smt {
     }
 
 
-    struct app_triple_lt {
+    struct app_triple_lt { 
         typedef triple<app *, app *, app*>          app_triple;
         typedef obj_triple_map<app, app, app, unsigned> app_triple2num_occs;
         app_triple2num_occs &  m_app_triple2num_occs;
-
+        
         app_triple_lt(app_triple2num_occs & m):
             m_app_triple2num_occs(m) {
         }
-
+        
         bool operator()(app_triple const & p1, app_triple const & p2) const {
             unsigned n1 = 0;
             unsigned n2 = 0;

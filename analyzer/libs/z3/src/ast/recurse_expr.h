@@ -32,11 +32,11 @@ class recurse_expr : public Visitor {
     bool is_cached(expr * n) const { T c; return m_cache.find(n, c); }
     T get_cached(expr * n) const { return m_cache.find(n); }
     void cache_result(expr * n, T c) { m_cache.insert(n, c); }
-
+    
     void visit(expr * n, bool & visited);
     bool visit_children(expr * n);
     void process(expr * n);
-
+    
 public:
     recurse_expr(Visitor const & v = Visitor()):Visitor(v) {}
     T operator()(expr * n);

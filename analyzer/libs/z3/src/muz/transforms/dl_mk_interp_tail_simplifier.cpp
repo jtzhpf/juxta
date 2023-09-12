@@ -44,7 +44,7 @@ namespace datalog {
     bool mk_interp_tail_simplifier::rule_substitution::unify(expr * e1, expr * e2) {
         SASSERT(m_rule);
 
-        //we need to apply the current substitution in order to ensure the unifier
+        //we need to apply the current substitution in order to ensure the unifier 
         //works in an incremental way
         expr_ref e1_s(m);
         expr_ref e2_s(m);
@@ -266,7 +266,7 @@ namespace datalog {
                     if (neq) {
                         have_pair = false;
                         v[prev_pair_idx] = neq;
-
+                        
                         read_idx++;
                         continue;
                     }
@@ -292,7 +292,7 @@ namespace datalog {
 
         //bool detect_same_variable_conj_pairs
 
-        br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result,
+        br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, 
             proof_ref & result_pr)
         {
 
@@ -313,8 +313,8 @@ namespace datalog {
                 }
                 return BR_REWRITE2;
             }
-            if (!m.is_and(f) && !m.is_or(f)) {
-                return BR_FAILED;
+            if (!m.is_and(f) && !m.is_or(f)) { 
+                return BR_FAILED; 
             }
             if (num == 0) {
                 if (m.is_and(f)) {
@@ -374,7 +374,7 @@ namespace datalog {
               m_simp(ctx.get_rewriter()),
               a(m),
               m_rule_subst(ctx),
-              m_tail(m),
+              m_tail(m), 
               m_itail_members(m),
               m_conj(m) {
         m_cfg = alloc(normalizer_cfg, m);
@@ -385,7 +385,7 @@ namespace datalog {
         dealloc(m_rw);
         dealloc(m_cfg);
     }
-
+    
 
     void mk_interp_tail_simplifier::simplify_expr(app * a, expr_ref& res)
     {
@@ -537,7 +537,7 @@ namespace datalog {
         simplify_expr(itail.get(), simp_res);
 
         modified |= itail.get() != simp_res.get();
-
+        
         if (m.is_false(simp_res)) {
             TRACE("dl", r->display(m_context, tout << "rule is infeasible\n"););
             return false;
@@ -568,7 +568,7 @@ namespace datalog {
 
         rule_ref pro_var_eq_result(m_context.get_rule_manager());
         if (propagate_variable_equivalences(res, pro_var_eq_result)) {
-            SASSERT(rule_counter().get_max_rule_var(*r.get())==0 ||
+            SASSERT(rule_counter().get_max_rule_var(*r.get())==0 || 
                     rule_counter().get_max_rule_var(*r.get()) > rule_counter().get_max_rule_var(*pro_var_eq_result.get()));
             r = pro_var_eq_result;
             goto start;
@@ -613,6 +613,6 @@ namespace datalog {
         }
         return res;
     }
-
+  
 };
 

@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     AlgebraicNum.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -27,7 +27,7 @@ public class AlgebraicNum extends ArithExpr
 	 * isolating the number is smaller than 1/10^<paramref name="precision"/>.
 	 * <seealso cref="Expr.IsAlgebraicNumber"/> <param name="precision">the
 	 * precision of the result</param>
-	 *
+	 * 
 	 * @return A numeral Expr of sort Real
 	 **/
 	public RatNum toUpper(int precision) throws Z3Exception
@@ -41,7 +41,7 @@ public class AlgebraicNum extends ArithExpr
 	 * Return a lower bound for the given real algebraic number. The interval
 	 * isolating the number is smaller than 1/10^<paramref name="precision"/>.
 	 * <seealso cref="Expr.IsAlgebraicNumber"/> <param name="precision"></param>
-	 *
+	 * 
 	 * @return A numeral Expr of sort Real
 	 **/
 	public RatNum toLower(int precision) throws Z3Exception

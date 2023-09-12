@@ -33,8 +33,8 @@ namespace datalog {
     // execution_context
     //
     // -----------------------------------
-
-    execution_context::execution_context(context & context)
+    
+    execution_context::execution_context(context & context) 
         : m_context(context),
         m_stopwatch(0),
         m_timelimit_ms(0),
@@ -59,8 +59,8 @@ namespace datalog {
         reset_timelimit();
     }
 
-    rel_context& execution_context::get_rel_context() {
-        return dynamic_cast<rel_context&>(*m_context.get_rel_context());
+    rel_context& execution_context::get_rel_context() { 
+        return dynamic_cast<rel_context&>(*m_context.get_rel_context()); 
     }
 
     struct compare_size_proc {
@@ -79,7 +79,7 @@ namespace datalog {
             total_bytes += sz;
             sizes.push_back(std::make_pair(i, sz));
         }
-        std::sort(sizes.begin(), sizes.end(), compare_size_proc());
+        std::sort(sizes.begin(), sizes.end(), compare_size_proc());        
 
         out << "bytes " << total_bytes << "\n";
         out << "bytes\trows\tannotation\n";
@@ -114,10 +114,10 @@ namespace datalog {
     }
 
     bool execution_context::should_terminate() {
-        return
+        return 
             m_context.canceled() ||
             memory::above_high_watermark() ||
-            (m_stopwatch &&
+            (m_stopwatch && 
              m_timelimit_ms != 0 &&
              m_timelimit_ms < static_cast<unsigned>(1000*m_stopwatch->get_current_seconds()));
     }
@@ -320,7 +320,7 @@ namespace datalog {
         }
     };
 
-    instruction * instruction::mk_while_loop(unsigned control_reg_cnt, const reg_idx * control_regs,
+    instruction * instruction::mk_while_loop(unsigned control_reg_cnt, const reg_idx * control_regs, 
             instruction_block * body) {
         return alloc(instr_while_loop, control_reg_cnt, control_regs, body);
     }
@@ -334,9 +334,9 @@ namespace datalog {
         column_vector m_cols2;
         reg_idx m_res;
     public:
-        instr_join(reg_idx rel1, reg_idx rel2, unsigned col_cnt, const unsigned * cols1,
+        instr_join(reg_idx rel1, reg_idx rel2, unsigned col_cnt, const unsigned * cols1, 
             const unsigned * cols2, reg_idx result)
-            : m_rel1(rel1), m_rel2(rel2), m_cols1(col_cnt, cols1),
+            : m_rel1(rel1), m_rel2(rel2), m_cols1(col_cnt, cols1), 
             m_cols2(col_cnt, cols2), m_res(result) {}
         virtual bool perform(execution_context & ctx) {
             ctx.make_empty(m_res);
@@ -363,7 +363,7 @@ namespace datalog {
 
             ctx.set_reg(m_res, (*fn)(r1, r2));
 
-            TRACE("dl",
+            TRACE("dl", 
                 ctx.reg(m_res)->get_signature().output(ctx.get_rel_context().get_manager(), tout);
                 tout<<":"<<ctx.reg(m_res)->get_size_estimate_rows()<<"\n";);
 
@@ -433,7 +433,7 @@ namespace datalog {
         }
     };
 
-    instruction * instruction::mk_filter_equal(ast_manager & m, reg_idx reg, const relation_element & value,
+    instruction * instruction::mk_filter_equal(ast_manager & m, reg_idx reg, const relation_element & value, 
             unsigned col) {
         return alloc(instr_filter_equal, m, reg, value, col);
     }
@@ -510,7 +510,7 @@ namespace datalog {
 
             if (ctx.eager_emptiness_checking() && r.empty()) {
                 ctx.make_empty(m_reg);
-            }
+            }            
             TRACE("dl_verbose", r.display(tout <<"post-filter-interpreted:\n"););
 
             return true;
@@ -601,7 +601,7 @@ namespace datalog {
         instr_union(reg_idx src, reg_idx tgt, reg_idx delta, bool widen)
             : m_src(src), m_tgt(tgt), m_delta(delta), m_widen(widen) {}
         virtual bool perform(execution_context & ctx) {
-            TRACE("dl", tout << "union " << m_src << " into " << m_tgt
+            TRACE("dl", tout << "union " << m_src << " into " << m_tgt 
                   << " " << ctx.reg(m_src) << " " << ctx.reg(m_tgt) << "\n";);
             if (!ctx.reg(m_src)) {
                 return true;
@@ -662,7 +662,7 @@ namespace datalog {
 
             (*fn)(r_tgt, r_src, r_delta);
 
-            TRACE("dl_verbose",
+            TRACE("dl_verbose", 
                 r_src.display(tout <<"src:");
                 r_tgt.display(tout <<"post-union:");
                 if (r_delta) {
@@ -683,7 +683,7 @@ namespace datalog {
             if (m_delta != execution_context::void_register) {
                 str = "delta of " + str;
             }
-            ctx.set_register_annotation(m_delta, str);
+            ctx.set_register_annotation(m_delta, str);            
         }
         virtual void display_head_impl(rel_context const& ctx, std::ostream & out) const {
             out << (m_widen ? "widen " : "union ") << m_src << " into " << m_tgt;
@@ -709,8 +709,8 @@ namespace datalog {
         column_vector m_cols;
         reg_idx m_tgt;
     public:
-        instr_project_rename(bool projection, reg_idx src, unsigned col_cnt, const unsigned * cols,
-            reg_idx tgt) : m_projection(projection), m_src(src),
+        instr_project_rename(bool projection, reg_idx src, unsigned col_cnt, const unsigned * cols, 
+            reg_idx tgt) : m_projection(projection), m_src(src), 
             m_cols(col_cnt, cols), m_tgt(tgt) {}
         virtual bool perform(execution_context & ctx) {
             ctx.make_empty(m_tgt);
@@ -753,11 +753,11 @@ namespace datalog {
         }
     };
 
-    instruction * instruction::mk_projection(reg_idx src, unsigned col_cnt, const unsigned * removed_cols,
+    instruction * instruction::mk_projection(reg_idx src, unsigned col_cnt, const unsigned * removed_cols, 
             reg_idx tgt) {
         return alloc(instr_project_rename, true, src, col_cnt, removed_cols, tgt);
     }
-    instruction * instruction::mk_rename(reg_idx src, unsigned cycle_len, const unsigned * permutation_cycle,
+    instruction * instruction::mk_rename(reg_idx src, unsigned cycle_len, const unsigned * permutation_cycle, 
             reg_idx tgt) {
         return alloc(instr_project_rename, false, src, cycle_len, permutation_cycle, tgt);
     }
@@ -772,9 +772,9 @@ namespace datalog {
         column_vector m_removed_cols;
         reg_idx m_res;
     public:
-        instr_join_project(reg_idx rel1, reg_idx rel2, unsigned joined_col_cnt, const unsigned * cols1,
+        instr_join_project(reg_idx rel1, reg_idx rel2, unsigned joined_col_cnt, const unsigned * cols1, 
             const unsigned * cols2, unsigned removed_col_cnt, const unsigned * removed_cols, reg_idx result)
-            : m_rel1(rel1), m_rel2(rel2), m_cols1(joined_col_cnt, cols1),
+            : m_rel1(rel1), m_rel2(rel2), m_cols1(joined_col_cnt, cols1), 
             m_cols2(joined_col_cnt, cols2), m_removed_cols(removed_col_cnt, removed_cols), m_res(result) {
         }
         virtual bool perform(execution_context & ctx) {
@@ -813,12 +813,12 @@ namespace datalog {
             std::string s1 = "rel1", s2 = "rel2";
             ctx.get_register_annotation(m_rel1, s1);
             ctx.get_register_annotation(m_rel2, s2);
-            ctx.set_register_annotation(m_res, "join project " + s1 + " " + s2);
+            ctx.set_register_annotation(m_res, "join project " + s1 + " " + s2);            
         }
     };
 
     instruction * instruction::mk_join_project(reg_idx rel1, reg_idx rel2, unsigned joined_col_cnt,
-        const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
+        const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
         const unsigned * removed_cols, reg_idx result) {
             return alloc(instr_join_project, rel1, rel2, joined_col_cnt, cols1, cols2, removed_col_cnt,
                 removed_cols, result);
@@ -831,7 +831,7 @@ namespace datalog {
         app_ref m_value;
         unsigned m_col;
     public:
-        instr_select_equal_and_project(ast_manager & m, reg_idx src, const relation_element & value,
+        instr_select_equal_and_project(ast_manager & m, reg_idx src, const relation_element & value, 
             unsigned col, reg_idx result)
             : m_src(src), m_result(result), m_value(value, m), m_col(col) {
             // [Leo]: does not compile on gcc
@@ -863,20 +863,20 @@ namespace datalog {
             return true;
         }
         virtual void display_head_impl(rel_context const& ctx, std::ostream & out) const {
-            out << "select_equal_and_project " << m_src <<" into " << m_result << " col: " << m_col
+            out << "select_equal_and_project " << m_src <<" into " << m_result << " col: " << m_col 
                 << " val: " << ctx.get_rmanager().to_nice_string(m_value);
         }
         virtual void make_annotations(execution_context & ctx) {
             std::stringstream s;
             std::string s1 = "src";
             ctx.get_register_annotation(m_src, s1);
-            s << "select equal project col " << m_col << " val: "
+            s << "select equal project col " << m_col << " val: " 
               << ctx.get_rel_context().get_rmanager().to_nice_string(m_value) << " " << s1;
-            ctx.set_register_annotation(m_result, s.str());
+            ctx.set_register_annotation(m_result, s.str());            
         }
     };
 
-    instruction * instruction::mk_select_equal_and_project(ast_manager & m, reg_idx src,
+    instruction * instruction::mk_select_equal_and_project(ast_manager & m, reg_idx src, 
             const relation_element & value, unsigned col, reg_idx result) {
         return alloc(instr_select_equal_and_project, m, src, value, col, result);
     }
@@ -889,7 +889,7 @@ namespace datalog {
         column_vector m_cols1;
         column_vector m_cols2;
     public:
-        instr_filter_by_negation(reg_idx tgt, reg_idx neg_rel, unsigned col_cnt, const unsigned * cols1,
+        instr_filter_by_negation(reg_idx tgt, reg_idx neg_rel, unsigned col_cnt, const unsigned * cols1, 
             const unsigned * cols2)
             : m_tgt(tgt), m_neg_rel(neg_rel), m_cols1(col_cnt, cols1), m_cols2(col_cnt, cols2) {}
         virtual bool perform(execution_context & ctx) {
@@ -926,7 +926,7 @@ namespace datalog {
         virtual void make_annotations(execution_context & ctx) {
             std::string s = "negated relation";
             ctx.get_register_annotation(m_neg_rel, s);
-            ctx.set_register_annotation(m_tgt, "filter by negation " + s);
+            ctx.set_register_annotation(m_tgt, "filter by negation " + s);            
         }
     };
 
@@ -935,14 +935,14 @@ namespace datalog {
         return alloc(instr_filter_by_negation, tgt, neg_rel, col_cnt, cols1, cols2);
     }
 
-
+        
     class instr_mk_unary_singleton : public instruction {
         relation_signature m_sig;
         func_decl* m_pred;
         reg_idx m_tgt;
         relation_fact m_fact;
     public:
-        instr_mk_unary_singleton(ast_manager & m, func_decl* head_pred, const relation_sort & s, const relation_element & val,
+        instr_mk_unary_singleton(ast_manager & m, func_decl* head_pred, const relation_sort & s, const relation_element & val, 
             reg_idx tgt) : m_pred(head_pred), m_tgt(tgt), m_fact(m) {
             m_sig.push_back(s);
             m_fact.push_back(val);
@@ -955,8 +955,8 @@ namespace datalog {
             return true;
         }
         virtual void display_head_impl(rel_context const& ctx, std::ostream & out) const {
-            out << "mk_unary_singleton into " << m_tgt << " sort:"
-                << ctx.get_rmanager().to_nice_string(m_sig[0]) << " val:"
+            out << "mk_unary_singleton into " << m_tgt << " sort:" 
+                << ctx.get_rmanager().to_nice_string(m_sig[0]) << " val:" 
                 <<  ctx.get_rmanager().to_nice_string(m_sig[0], m_fact[0]);
         }
         virtual void make_annotations(execution_context & ctx) {
@@ -967,7 +967,7 @@ namespace datalog {
         }
     };
 
-    instruction * instruction::mk_unary_singleton(ast_manager & m, func_decl* head_pred, const relation_sort & s,
+    instruction * instruction::mk_unary_singleton(ast_manager & m, func_decl* head_pred, const relation_sort & s, 
             const relation_element & val, reg_idx tgt) {
         return alloc(instr_mk_unary_singleton, m, head_pred, s, val, tgt);
     }
@@ -985,7 +985,7 @@ namespace datalog {
             return true;
         }
         virtual void display_head_impl(rel_context const& ctx, std::ostream & out) const {
-            out << "mk_total into " << m_tgt << " sort:"
+            out << "mk_total into " << m_tgt << " sort:" 
                 << ctx.get_rmanager().to_nice_string(m_sig);
         }
         virtual void make_annotations(execution_context & ctx) {
@@ -1003,7 +1003,7 @@ namespace datalog {
     class instr_mark_saturated : public instruction {
         func_decl_ref m_pred;
     public:
-        instr_mark_saturated(ast_manager & m, func_decl * pred)
+        instr_mark_saturated(ast_manager & m, func_decl * pred) 
             : m_pred(pred, m) {}
         virtual bool perform(execution_context & ctx) {
             ctx.get_rel_context().get_rmanager().mark_saturated(m_pred);
@@ -1012,7 +1012,7 @@ namespace datalog {
         virtual void display_head_impl(rel_context const& ctx, std::ostream & out) const {
             out << "mark_saturated " << m_pred->get_name().bare_str();
         }
-        virtual void make_annotations(execution_context & ctx) {
+        virtual void make_annotations(execution_context & ctx) {            
         }
     };
 
@@ -1024,7 +1024,7 @@ namespace datalog {
         relation_signature m_sig;
         reg_idx m_tgt;
     public:
-        instr_assert_signature(const relation_signature & s, reg_idx tgt)
+        instr_assert_signature(const relation_signature & s, reg_idx tgt) 
             : m_sig(s), m_tgt(tgt) {}
         virtual bool perform(execution_context & ctx) {
             if (ctx.reg(m_tgt)) {
@@ -1043,7 +1043,7 @@ namespace datalog {
             }
         }
     };
-
+    
     instruction * instruction::mk_assert_signature(const relation_signature & s, reg_idx tgt) {
         return alloc(instr_assert_signature, s, tgt);
     }
@@ -1079,7 +1079,7 @@ namespace datalog {
             instruction * instr=(*it);
             crec.start(instr); //finish is performed by the next start() or by the destructor of crec
 
-            TRACE("dl",
+            TRACE("dl",      
                 tout <<"% ";
                   instr->display_head_impl(ctx.get_rel_context(), tout);
                 tout <<"\n";);

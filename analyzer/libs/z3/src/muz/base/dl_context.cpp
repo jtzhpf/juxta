@@ -151,15 +151,15 @@ namespace datalog {
 
     class context::restore_rules : public trail<context> {
         rule_set* m_old_rules;
-        void reset() {
-            dealloc(m_old_rules);
-            m_old_rules = 0;
+        void reset() { 
+            dealloc(m_old_rules); 
+            m_old_rules = 0; 
         }
     public:
         restore_rules(rule_set& r): m_old_rules(alloc(rule_set, r)) {}
 
         virtual ~restore_rules() {}
-
+        
         virtual void undo(context& ctx) {
             ctx.replace_rules(*m_old_rules);
             reset();
@@ -191,7 +191,7 @@ namespace datalog {
 	  if(get_engine() != DUALITY_ENGINE)
 	    throw default_exception("operation is not supported by engine");
 	}
-        m_trail.pop_scope(1);
+        m_trail.pop_scope(1); 
     }
 
     // -----------------------------------
@@ -237,7 +237,7 @@ namespace datalog {
 
     context::~context() {
         reset();
-        dealloc(m_params);
+        dealloc(m_params);        
     }
 
     void context::reset() {
@@ -278,7 +278,7 @@ namespace datalog {
     bool context::use_map_names() const { return m_params->use_map_names(); }
     bool context::fix_unbound_vars() const { return m_params->fix_unbound_vars(); }
     symbol context::default_table() const { return m_params->default_table(); }
-    symbol context::default_relation() const { return m_params->default_relation(); } // external_relation_plugin::get_name());
+    symbol context::default_relation() const { return m_params->default_relation(); } // external_relation_plugin::get_name()); 
     symbol context::default_table_checker() const { return m_params->default_table_checker(); }
     bool context::default_table_checked() const { return m_params->default_table_checked(); }
     bool context::dbg_fpr_nonempty_relation_signature() const { return m_params->dbg_fpr_nonempty_relation_signature(); }
@@ -289,7 +289,7 @@ namespace datalog {
     bool context::similarity_compressor() const { return m_params->similarity_compressor(); }
     unsigned context::similarity_compressor_threshold() const { return m_params->similarity_compressor_threshold(); }
     unsigned context::soft_timeout() const { return m_fparams.m_soft_timeout; }
-    unsigned context::initial_restart_timeout() const { return m_params->initial_restart_timeout(); }
+    unsigned context::initial_restart_timeout() const { return m_params->initial_restart_timeout(); } 
     bool context::generate_explanations() const { return m_params->generate_explanations(); }
     bool context::explanations_on_relation_level() const { return m_params->explanations_on_relation_level(); }
     bool context::magic_sets_for_queries() const { return m_params->magic_sets_for_queries();  }
@@ -342,7 +342,7 @@ namespace datalog {
             else {
                 for (unsigned i = 0; i < sorts.size(); ++i) {
                     if (!sorts[i]) {
-                        if (i < vars.size()) {
+                        if (i < vars.size()) { 
                             sorts[i] = vars[i]->get_decl()->get_range();
                         }
                         else {
@@ -358,7 +358,7 @@ namespace datalog {
                 }
                 quantifier_ref q(m);
                 sorts.reverse();
-                q = m.mk_quantifier(is_forall, sorts.size(), sorts.c_ptr(), m_names.c_ptr(), result);
+                q = m.mk_quantifier(is_forall, sorts.size(), sorts.c_ptr(), m_names.c_ptr(), result); 
                 m_elim_unused_vars(q, result);
             }
         }
@@ -452,7 +452,7 @@ namespace datalog {
     }
 
 
-    void context::set_predicate_representation(func_decl * pred, unsigned relation_name_cnt,
+    void context::set_predicate_representation(func_decl * pred, unsigned relation_name_cnt, 
             symbol const * relation_names) {
         if (relation_name_cnt > 0) {
             ensure_engine();
@@ -462,9 +462,9 @@ namespace datalog {
         }
     }
 
-    func_decl * context::mk_fresh_head_predicate(symbol const & prefix, symbol const & suffix,
+    func_decl * context::mk_fresh_head_predicate(symbol const & prefix, symbol const & suffix, 
             unsigned arity, sort * const * domain, func_decl* orig_pred) {
-        func_decl* new_pred =
+        func_decl* new_pred = 
             m.mk_fresh_func_decl(prefix, suffix, arity, domain, m.mk_bool_sort());
 
         register_predicate(new_pred, true);
@@ -501,7 +501,7 @@ namespace datalog {
     //
     // Update a rule with a new.
     // It requires basic subsumption.
-    //
+    // 
     void context::update_rule(expr* rl, symbol const& name) {
         datalog::rule_manager& rm = get_rule_manager();
         proof* p = 0;
@@ -522,13 +522,13 @@ namespace datalog {
         rule* old_rule = 0;
         for (unsigned i = 0; i < size_before; ++i) {
             if (rls[i]->name() == name) {
-                if (old_rule) {
+                if (old_rule) {                    
                     std::stringstream strm;
                     strm << "Rule " << name << " occurs twice. It cannot be modified";
                     m_rule_set.del_rule(r);
                     throw default_exception(strm.str());
                 }
-                old_rule = rls[i];
+                old_rule = rls[i];                
             }
         }
         if (old_rule) {
@@ -585,8 +585,8 @@ namespace datalog {
         func_decl* f = 0;
         if (r->has_uninterpreted_non_predicates(m, f)) {
             std::stringstream stm;
-            stm << "Uninterpreted '"
-                << f->get_name()
+            stm << "Uninterpreted '" 
+                << f->get_name() 
                 << "' in ";
             r->display(*this, stm);
             throw default_exception(stm.str());
@@ -605,8 +605,8 @@ namespace datalog {
 
     void context::check_existential_tail(rule_ref& r) {
         unsigned ut_size = r->get_uninterpreted_tail_size();
-        unsigned t_size  = r->get_tail_size();
-
+        unsigned t_size  = r->get_tail_size();   
+        
         TRACE("dl", r->display_smt2(get_manager(), tout); tout << "\n";);
         for (unsigned i = ut_size; i < t_size; ++i) {
             app* t = r->get_tail(i);
@@ -623,7 +623,7 @@ namespace datalog {
         ast_mark visited;
         ptr_vector<expr> todo, tocheck;
         unsigned ut_size = r->get_uninterpreted_tail_size();
-        unsigned t_size  = r->get_tail_size();
+        unsigned t_size  = r->get_tail_size();   
         for (unsigned i = 0; i < ut_size; ++i) {
             if (r->is_neg_tail(i)) {
                 tocheck.push_back(r->get_tail(i));
@@ -655,7 +655,7 @@ namespace datalog {
             else if (is_quantifier(e)) {
                 todo.push_back(to_quantifier(e)->get_expr());
             }
-            else if ((m.is_eq(e, e1, e2) || m.is_iff(e, e1, e2)) &&
+            else if ((m.is_eq(e, e1, e2) || m.is_iff(e, e1, e2)) && 
                      m.is_true(e1)) {
                 todo.push_back(e2);
             }
@@ -684,7 +684,7 @@ namespace datalog {
         case DATALOG_ENGINE:
             check_quantifier_free(r);
             check_uninterpreted_free(r);
-            check_existential_tail(r);
+            check_existential_tail(r); 
             break;
         case PDR_ENGINE:
             check_existential_tail(r);
@@ -697,11 +697,11 @@ namespace datalog {
             break;
         case BMC_ENGINE:
             check_positive_predicates(r);
-            break;
+            break;            
         case QBMC_ENGINE:
             check_existential_tail(r);
             check_positive_predicates(r);
-            break;
+            break;         
         case TAB_ENGINE:
             check_existential_tail(r);
             check_positive_predicates(r);
@@ -767,7 +767,7 @@ namespace datalog {
             add_fact(pred, rfact);
         }
     }
-
+    
     void context::add_table_fact(func_decl * pred, unsigned num_args, unsigned args[]) {
         if (pred->get_arity() != num_args) {
             std::ostringstream out;
@@ -799,7 +799,7 @@ namespace datalog {
             reopen();
         }
     }
-
+    
     void context::reopen() {
         SASSERT(m_closed);
         m_rule_set.reopen();
@@ -811,7 +811,7 @@ namespace datalog {
         transformer.register_plugin(plugin);
         transform_rules(transformer);
     }
-
+    
     void context::transform_rules(rule_transformer& transf) {
         SASSERT(m_closed); //we must finish adding rules before we start transforming them
         TRACE("dl", display_rules(tout););
@@ -861,7 +861,7 @@ namespace datalog {
 
     void context::assert_expr(expr* e) {
         TRACE("dl", tout << mk_ismt2_pp(e, m) << "\n";);
-        m_background.push_back(e);
+        m_background.push_back(e); 
     }
 
 
@@ -909,7 +909,7 @@ namespace datalog {
 
     void context::configure_engine() {
         symbol e = m_params->engine();
-
+        
         if (e == symbol("datalog")) {
             m_engine_type = DATALOG_ENGINE;
         }
@@ -938,7 +938,7 @@ namespace datalog {
         if (m_engine_type == LAST_ENGINE) {
             expr_fast_mark1 mark;
             engine_type_proc proc(m);
-            m_engine_type = DATALOG_ENGINE;
+            m_engine_type = DATALOG_ENGINE;            
             for (unsigned i = 0; m_engine_type == DATALOG_ENGINE && i < m_rule_set.get_num_rules(); ++i) {
                 rule * r = m_rule_set.get_rule(i);
                 quick_for_each_expr(proc, mark, r->get_head());
@@ -968,8 +968,8 @@ namespace datalog {
 	  for (; it != end; ++it) {
             r = *it;
             check_rule(r);
-	  }
-        }
+	  }     
+        }   
 #endif
         m_mc = mk_skip_model_converter();
         m_last_status = OK;
@@ -1015,14 +1015,14 @@ namespace datalog {
                 m_rel = dynamic_cast<rel_context_base*>(m_engine.get());
             }
 
-        }
+        }       
     }
 
-    lbool context::rel_query(unsigned num_rels, func_decl * const* rels) {
+    lbool context::rel_query(unsigned num_rels, func_decl * const* rels) {        
         ensure_engine();
         return m_engine->query(num_rels, rels);
     }
-
+        
     expr* context::get_answer_as_formula() {
         if (m_last_answer) {
             return m_last_answer.get();
@@ -1039,7 +1039,7 @@ namespace datalog {
 
     void context::display(std::ostream & out) const {
         display_rules(out);
-        if (m_rel) m_rel->display_facts(out);
+        if (m_rel) m_rel->display_facts(out);        
     }
 
     void context::display_profile(std::ostream& out) const {
@@ -1073,17 +1073,17 @@ namespace datalog {
     bool context::result_contains_fact(relation_fact const& f) {
         return m_rel && m_rel->result_contains_fact(f);
     }
-
+    
     // NB: algebraic data-types declarations will not be printed.
     class free_func_visitor {
         ast_manager& m;
         func_decl_set m_funcs;
         obj_hashtable<sort> m_sorts;
-    public:
+    public:        
         free_func_visitor(ast_manager& m): m(m) {}
         void operator()(var * n)        { }
-        void operator()(app * n)        {
-            m_funcs.insert(n->get_decl());
+        void operator()(app * n)        { 
+            m_funcs.insert(n->get_decl()); 
             sort* s = m.get_sort(n);
             if (s->get_family_id() == null_family_id) {
                 m_sorts.insert(s);
@@ -1094,7 +1094,7 @@ namespace datalog {
         obj_hashtable<sort>& sorts() { return m_sorts; }
     };
 
-    static void collect_free_funcs(unsigned sz, expr* const* exprs,
+    static void collect_free_funcs(unsigned sz, expr* const* exprs, 
                                    expr_mark& visited, free_func_visitor& v,
                                    mk_fresh_name& fresh_names) {
         for (unsigned i = 0; i < sz; ++i) {
@@ -1106,7 +1106,7 @@ namespace datalog {
             fresh_names.add(e);
         }
     }
-
+   
   void context::get_raw_rule_formulas(expr_ref_vector& rules, svector<symbol>& names, vector<unsigned> &bounds){
         for (unsigned i = 0; i < m_rule_fmls.size(); ++i) {
 	    expr_ref r = bind_variables(m_rule_fmls[i].get(), true);
@@ -1120,7 +1120,7 @@ namespace datalog {
     void context::get_rules_as_formulas(expr_ref_vector& rules, svector<symbol>& names) {
         expr_ref fml(m);
         datalog::rule_manager& rm = get_rule_manager();
-
+        
         // ensure that rules are all using bound variables.
         for (unsigned i = m_rule_fmls_head; i < m_rule_fmls.size(); ++i) {
             ptr_vector<sort> sorts;
@@ -1143,13 +1143,13 @@ namespace datalog {
         }
         for (unsigned i = m_rule_fmls_head; i < m_rule_fmls.size(); ++i) {
             rules.push_back(m_rule_fmls[i].get());
-            names.push_back(m_rule_names[i]);
+            names.push_back(m_rule_names[i]);            
         }
     }
-
+ 
     void context::display_smt2(
-        unsigned num_queries,
-        expr* const* queries,
+        unsigned num_queries, 
+        expr* const* queries, 
         std::ostream& out) {
         ast_manager& m = get_manager();
         free_func_visitor visitor(m);
@@ -1179,7 +1179,7 @@ namespace datalog {
         for (; it != end; ++it) {
             func_decl* f = *it;
             if (f->get_family_id() != null_family_id) {
-                //
+                // 
             }
             else if (is_predicate(f) && use_fixedpoint_extensions) {
                 rels.insert(f);
@@ -1192,9 +1192,9 @@ namespace datalog {
         if (!use_fixedpoint_extensions) {
             out << "(set-logic HORN)\n";
         }
-
+        
         it = funcs.begin(), end = funcs.end();
-
+        
         obj_hashtable<sort>& sorts = visitor.sorts();
         obj_hashtable<sort>::iterator sit = sorts.begin(), send = sorts.end();
         for (; sit != send; ++sit) {
@@ -1209,7 +1209,7 @@ namespace datalog {
         for (; it != end; ++it) {
             func_decl* f = *it;
             out << "(declare-rel " << f->get_name() << " (";
-            for (unsigned i = 0; i < f->get_arity(); ++i) {
+            for (unsigned i = 0; i < f->get_arity(); ++i) {                
                 ast_smt2_pp(out, f->get_domain(i), env);
                 if (i + 1 < f->get_arity()) {
                     out << " ";
@@ -1231,7 +1231,7 @@ namespace datalog {
             PP(axioms[i]);
             out << ")\n";
         }
-        for (unsigned i = 0; i < rules.size(); ++i) {
+        for (unsigned i = 0; i < rules.size(); ++i) {            
             out << (use_fixedpoint_extensions?"(rule ":"(assert ");
             expr* r = rules[i].get();
             symbol nm = names[i];
@@ -1244,7 +1244,7 @@ namespace datalog {
                 while (fresh_names.contains(nm)) {
                     std::ostringstream s;
                     s << nm << "!";
-                    nm = symbol(s.str().c_str());
+                    nm = symbol(s.str().c_str());                    
                 }
                 fresh_names.add(nm);
                 if (is_smt2_quoted_symbol(nm)) {
@@ -1260,7 +1260,7 @@ namespace datalog {
         if (use_fixedpoint_extensions) {
             for (unsigned i = 0; i < num_queries; ++i) {
                 out << "(query ";
-                PP(queries[i]);
+                PP(queries[i]);                
                 out << ")\n";
             }
         }
@@ -1282,12 +1282,12 @@ namespace datalog {
     void context::declare_vars(expr_ref_vector& rules, mk_fresh_name& fresh_names, std::ostream& out) {
         //
         // replace bound variables in rules by 'var declarations'
-        // First remove quantifers, then replace bound variables
+        // First remove quantifers, then replace bound variables 
         // by fresh constants.
-        //
+        // 
         smt2_pp_environment_dbg env(m);
         var_subst vsubst(m, false);
-
+        
         expr_ref_vector fresh_vars(m), subst(m);
         expr_ref res(m);
         obj_map<sort, unsigned_vector> var_idxs;
@@ -1300,7 +1300,7 @@ namespace datalog {
             quantifier* q = to_quantifier(r);
             if (!q->is_forall()) {
                 continue;
-            }
+            }            
             if (has_quantifiers(q->get_expr())) {
                 continue;
             }
@@ -1330,7 +1330,7 @@ namespace datalog {
                     fresh_vars.push_back(m.mk_const(name, s));
                     out << "(declare-var " << name << " ";
                     ast_smt2_pp(out, s, env);
-                    out << ")\n";
+                    out << ")\n"; 
                 }
                 subst.push_back(fresh_vars[vars[max_var]].get());
             }

@@ -28,22 +28,22 @@ Notes:
 
    Only depth 1 simplifications are performed.
 
-   Note: there are no recursive calls.
+   Note: there are no recursive calls. 
 
    Note: arguments of AC operators are not sorted.
    Note: arguments of = and xor are also not sorted.
-
+   
    Note: By default, (AND A B) is not rewritten as (NOT (OR (NOT A) (NOT B)))
 
    Note: AND OR operators are flattened only if mk_flat_app, mk_flat_or, mk_flat_and are used.
-
+   
    The following operators are expanded:
    - => (implies)
    - xor
    - nand
    - nor
-   - iff
-
+   - iff    
+   
    All methods run in time almost linear on the number of arguments.
    Actually, this is not true when flattening is enabled.
    A better approximation is O(Sum_{t \in args} size1(t)).
@@ -80,13 +80,13 @@ public:
     ast_manager & m() const { return m_manager; }
     family_id get_fid() const { return m().get_basic_family_id(); }
     bool is_eq(expr * t) const { return m().is_eq(t) || m().is_iff(t); }
-
+    
     bool flat() const { return m_flat; }
     void set_flat(bool f) { m_flat = f; }
     bool elim_and() const { return m_elim_and; }
     void set_elim_and(bool f) { m_elim_and = f; }
     void reset_local_ctx_cost() { m_local_ctx_cost = 0; }
-
+    
     void updt_params(params_ref const & p);
 
     static void get_param_descrs(param_descrs & r);
@@ -94,13 +94,13 @@ public:
     // The core methods return true if a rewrite-step/simplification was applied
     // to the arguments, and the result is stored in 'result'. Otherwise, they return false
     // and result.get == 0.
-
+    
     br_status mk_app_core(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result);
     void mk_app(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result) {
         if (mk_app_core(f, num_args, args, result) == BR_FAILED)
             result = m().mk_app(f, num_args, args);
     }
-
+    
     br_status mk_eq_core(expr * lhs, expr * rhs, expr_ref & result);
     br_status mk_distinct_core(unsigned num_args, expr * const * args, expr_ref & result);
     br_status mk_iff_core(expr * lhs, expr * rhs, expr_ref & result) { return mk_eq_core(lhs, rhs, result); }

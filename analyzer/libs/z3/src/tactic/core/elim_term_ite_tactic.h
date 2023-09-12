@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Eliminate term if-then-else by adding
+    Eliminate term if-then-else by adding 
     new fresh auxiliary variables.
 
 Author:

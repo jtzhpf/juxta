@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
     API for creating tactics and goals.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-03-06.

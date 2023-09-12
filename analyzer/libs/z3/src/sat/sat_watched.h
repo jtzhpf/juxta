@@ -25,14 +25,14 @@ Revision History:
 namespace sat {
     /**
        A watched element can be:
-
+       
        1) A literal:               for watched binary clauses
        2) A pair of literals:      for watched ternary clauses
        3) A pair (literal, clause-offset): for watched clauses, where the first element of the pair is a literal of the clause.
        4) A external constraint-idx: for external constraints.
 
        For binary clauses: we use a bit to store whether the binary clause was learned or not.
-
+       
        Remark: there is not Clause object for binary clauses.
     */
     class watched {
@@ -42,7 +42,7 @@ namespace sat {
         };
     private:
         unsigned m_val1;
-        unsigned m_val2;
+        unsigned m_val2; 
     public:
         watched(literal l, bool learned):
             m_val1(l.to_uint()),
@@ -65,7 +65,7 @@ namespace sat {
         }
 
         watched(literal blocked_lit, clause_offset cls_off):
-            m_val1(cls_off),
+            m_val1(cls_off), 
             m_val2(static_cast<unsigned>(CLAUSE) + (blocked_lit.to_uint() << 2)) {
             SASSERT(is_clause());
             SASSERT(get_blocked_literal() == blocked_lit);
@@ -80,14 +80,14 @@ namespace sat {
         }
 
         kind get_kind() const { return static_cast<kind>(m_val2 & 3); }
-
+       
         bool is_binary_clause() const { return get_kind() == BINARY; }
         literal get_literal() const { SASSERT(is_binary_clause()); return to_literal(m_val1); }
         void set_literal(literal l) { SASSERT(is_binary_clause()); m_val1 = l.to_uint(); }
         bool is_learned() const { SASSERT(is_binary_clause()); return (m_val2 >> 2) == 1; }
         bool is_binary_non_learned_clause() const { return m_val2 == 0; }
         void mark_not_learned() { SASSERT(is_learned()); m_val2 = static_cast<unsigned>(BINARY); SASSERT(!is_learned()); }
-
+        
         bool is_ternary_clause() const { return get_kind() == TERNARY; }
         literal get_literal1() const { SASSERT(is_ternary_clause()); return to_literal(m_val1); }
         literal get_literal2() const { SASSERT(is_ternary_clause()); return to_literal(m_val2 >> 2); }
@@ -104,7 +104,7 @@ namespace sat {
 
         bool is_ext_constraint() const { return get_kind() == EXT_CONSTRAINT; }
         ext_constraint_idx get_ext_constraint_idx() const { SASSERT(is_ext_constraint()); return m_val2; }
-
+        
         bool operator==(watched const & w) const { return m_val1 == w.m_val1 && m_val2 == w.m_val2; }
         bool operator!=(watched const & w) const { return !operator==(w); }
     };

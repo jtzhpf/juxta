@@ -30,14 +30,14 @@ public:
     virtual ~converter() {}
 
     void inc_ref() { ++m_ref_count; }
-    void dec_ref() {
+    void dec_ref() { 
         --m_ref_count;
         if (m_ref_count == 0)
             dealloc(this);
     }
 
     virtual void cancel() {}
-
+    
     // for debugging purposes
     virtual void display(std::ostream & out) {}
 };
@@ -57,7 +57,7 @@ protected:
 
 public:
     concat_converter(T * c1, T * c2):m_c1(c1), m_c2(c2) {}
-
+    
     virtual ~concat_converter() {}
 
     virtual void cancel() {
@@ -66,7 +66,7 @@ public:
     }
 
     virtual char const * get_name() const = 0;
-
+    
     virtual void display(std::ostream & out) {
         out << "(" << get_name() << "\n";
         m_c1->display(out);
@@ -124,7 +124,7 @@ public:
     }
 
     virtual char const * get_name() const = 0;
-
+    
     virtual void display(std::ostream & out) {
         out << "(" << get_name() << "\n";
         if (m_c1)

@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Model.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -27,7 +27,7 @@ public class Model extends Z3Object
     /**
      * Retrieves the interpretation (the assignment) of <paramref name="a"/> in
      * the model. <param name="a">A Constant</param>
-     *
+     * 
      * @return An expression if the constant has an interpretation in the model,
      *         null otherwise.
      * @throws Z3Exception
@@ -41,7 +41,7 @@ public class Model extends Z3Object
     /**
      * Retrieves the interpretation (the assignment) of <paramref name="f"/> in
      * the model. <param name="f">A function declaration of zero arity</param>
-     *
+     * 
      * @return An expression if the function has an interpretation in the model,
      *         null otherwise.
      * @throws Z3Exception
@@ -68,7 +68,7 @@ public class Model extends Z3Object
      * Retrieves the interpretation (the assignment) of a non-constant <paramref
      * name="f"/> in the model. <param name="f">A function declaration of
      * non-zero arity</param>
-     *
+     * 
      * @return A FunctionInterpretation if the function has an interpretation in
      *         the model, null otherwise.
      * @throws Z3Exception
@@ -123,7 +123,7 @@ public class Model extends Z3Object
 
     /**
      * The function declarations of the constants in the model.
-     *
+     * 
      * @throws Z3Exception
      **/
     public FuncDecl[] getConstDecls() throws Z3Exception
@@ -146,7 +146,7 @@ public class Model extends Z3Object
 
     /**
      * The function declarations of the function interpretations in the model.
-     *
+     * 
      * @throws Z3Exception
      **/
     public FuncDecl[] getFuncDecls() throws Z3Exception
@@ -161,7 +161,7 @@ public class Model extends Z3Object
 
     /**
      * All symbols that have an interpretation in the model.
-     *
+     * 
      * @throws Z3Exception
      **/
     public FuncDecl[] getDecls() throws Z3Exception
@@ -204,7 +204,7 @@ public class Model extends Z3Object
      * name="t">An expression</param> <param name="completion"> When this flag
      * is enabled, a model value will be assigned to any constant or function
      * that does not have an interpretation in the model. </param>
-     *
+     * 
      * @return The evaluation of <paramref name="t"/> in the model.
      * @throws Z3Exception
      **/
@@ -220,7 +220,7 @@ public class Model extends Z3Object
 
     /**
      * Alias for <code>Eval</code>.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Expr evaluate(Expr t, boolean completion) throws Z3Exception
@@ -243,7 +243,7 @@ public class Model extends Z3Object
      * in a formula. The interpretation for a sort is a finite set of distinct
      * values. We say this finite set is the "universe" of the sort. </remarks>
      * <seealso cref="NumSorts"/> <seealso cref="SortUniverse"/>
-     *
+     * 
      * @throws Z3Exception
      **/
     public Sort[] getSorts() throws Z3Exception
@@ -261,7 +261,7 @@ public class Model extends Z3Object
      * The finite set of distinct values that represent the interpretation for
      * sort <paramref name="s"/>. <seealso cref="Sorts"/> <param name="s">An
      * uninterpreted sort</param>
-     *
+     * 
      * @return An array of expressions, where each is an element of the universe
      *         of <paramref name="s"/>
      * @throws Z3Exception
@@ -280,7 +280,7 @@ public class Model extends Z3Object
 
     /**
      * Conversion of models to strings.
-     *
+     * 
      * @return A string representation of the model.
      **/
     public String toString()

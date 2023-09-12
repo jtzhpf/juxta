@@ -34,15 +34,15 @@ namespace datalog {
        \brief Functor for merging groups of similar rules.
 
        A rule sequence
-
+       
        P("1",x):-Q(x).
        ...
        P("N",x):-Q(x).
 
        will be replaced by
-
+       
        P(y,x):-Q(x), Aux(y).
-
+       
        and a set of facts
 
        Aux("1").
@@ -61,14 +61,14 @@ namespace datalog {
         rule_ref_vector     m_result_rules;
         bool                m_modified;
         ast_ref_vector      m_pinned;
-
+        
         void merge_class(rule_vector::iterator first, rule_vector::iterator after_last);
         void process_class(rule_set const& source, rule_vector::iterator first, rule_vector::iterator after_last);
 
         void reset();
     public:
         mk_similarity_compressor(context & ctx);
-
+        
         rule_set * operator()(rule_set const & source);
     };
 

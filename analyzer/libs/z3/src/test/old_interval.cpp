@@ -104,7 +104,7 @@ static void tst1() {
     SASSERT(!inf.sign());
     SASSERT(ext_numeral(-10).sign());
     SASSERT(!ext_numeral(10).sign());
-
+    
     SASSERT(inf.is_infinite());
     SASSERT(minus_inf.is_infinite());
     SASSERT(!zero.is_infinite());
@@ -117,7 +117,7 @@ static void tst1() {
 
 class interval_tester {
     v_dependency_manager m;
-
+    
     interval singleton(int i) { return interval(m, rational(i)); }
     interval all() { return interval(m); }
     interval l(int i, bool o = false, int idx = 0) { return interval(m, rational(i), o, true, idx == 0 ? 0 : m.mk_leaf(reinterpret_cast<void*>(idx))); }

@@ -25,16 +25,16 @@ Revision History:
 
 namespace smt {
 
-
+        
     bool is_value_sort(ast_manager& m, sort* s) {
         arith_util arith(m);
         datatype_util data(m);
         bv_util bv(m);
-
+        
         ptr_vector<sort> sorts;
         ast_mark mark;
         sorts.push_back(s);
-
+        
         while (!sorts.empty()) {
             s = sorts.back();
             sorts.pop_back();
@@ -64,7 +64,7 @@ namespace smt {
                 return false;
             }
         }
-        return true;
+        return true;        
     }
 
     bool is_value_sort(ast_manager& m, expr* e) {

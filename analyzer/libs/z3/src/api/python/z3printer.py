@@ -1,6 +1,6 @@
 ############################################
 # Copyright (c) 2012 Microsoft Corporation
-#
+# 
 # Z3 Python interface
 #
 # Author: Leonardo de Moura (leonardo)
@@ -17,24 +17,24 @@ from z3core import *
 
 # Z3 operator names to Z3Py
 _z3_op_to_str = {
-    Z3_OP_TRUE : 'True', Z3_OP_FALSE : 'False', Z3_OP_EQ : '==', Z3_OP_DISTINCT : 'Distinct',
+    Z3_OP_TRUE : 'True', Z3_OP_FALSE : 'False', Z3_OP_EQ : '==', Z3_OP_DISTINCT : 'Distinct', 
     Z3_OP_ITE : 'If', Z3_OP_AND : 'And', Z3_OP_OR : 'Or', Z3_OP_IFF : '==', Z3_OP_XOR : 'Xor',
     Z3_OP_NOT : 'Not', Z3_OP_IMPLIES : 'Implies', Z3_OP_IDIV : '/', Z3_OP_MOD : '%',
-    Z3_OP_TO_REAL : 'ToReal', Z3_OP_TO_INT : 'ToInt', Z3_OP_POWER : '**', Z3_OP_IS_INT : 'IsInt',
+    Z3_OP_TO_REAL : 'ToReal', Z3_OP_TO_INT : 'ToInt', Z3_OP_POWER : '**', Z3_OP_IS_INT : 'IsInt', 
     Z3_OP_BADD : '+', Z3_OP_BSUB : '-', Z3_OP_BMUL : '*', Z3_OP_BOR : '|', Z3_OP_BAND : '&',
     Z3_OP_BNOT : '~', Z3_OP_BXOR : '^', Z3_OP_BNEG : '-', Z3_OP_BUDIV : 'UDiv', Z3_OP_BSDIV : '/', Z3_OP_BSMOD : '%',
     Z3_OP_BSREM : 'SRem', Z3_OP_BUREM : 'URem', Z3_OP_EXT_ROTATE_LEFT : 'RotateLeft', Z3_OP_EXT_ROTATE_RIGHT : 'RotateRight',
     Z3_OP_SLEQ : '<=', Z3_OP_SLT : '<', Z3_OP_SGEQ : '>=', Z3_OP_SGT : '>',
     Z3_OP_ULEQ : 'ULE', Z3_OP_ULT : 'ULT', Z3_OP_UGEQ : 'UGE', Z3_OP_UGT : 'UGT',
-    Z3_OP_SIGN_EXT : 'SignExt', Z3_OP_ZERO_EXT : 'ZeroExt', Z3_OP_REPEAT : 'RepeatBitVec',
-    Z3_OP_BASHR : '>>', Z3_OP_BSHL : '<<', Z3_OP_BLSHR : 'LShR',
+    Z3_OP_SIGN_EXT : 'SignExt', Z3_OP_ZERO_EXT : 'ZeroExt', Z3_OP_REPEAT : 'RepeatBitVec', 
+    Z3_OP_BASHR : '>>', Z3_OP_BSHL : '<<', Z3_OP_BLSHR : 'LShR', 
     Z3_OP_CONCAT : 'Concat', Z3_OP_EXTRACT : 'Extract', Z3_OP_BV2INT : 'BV2Int',
-    Z3_OP_ARRAY_MAP : 'Map', Z3_OP_SELECT : 'Select', Z3_OP_STORE : 'Store',
-    Z3_OP_CONST_ARRAY : 'K'
+    Z3_OP_ARRAY_MAP : 'Map', Z3_OP_SELECT : 'Select', Z3_OP_STORE : 'Store', 
+    Z3_OP_CONST_ARRAY : 'K' 
     }
 
 # List of infix operators
-_z3_infix = [
+_z3_infix = [ 
     Z3_OP_EQ, Z3_OP_IFF, Z3_OP_ADD, Z3_OP_SUB, Z3_OP_MUL, Z3_OP_DIV, Z3_OP_IDIV, Z3_OP_MOD, Z3_OP_POWER,
     Z3_OP_LE, Z3_OP_LT, Z3_OP_GE, Z3_OP_GT, Z3_OP_BADD, Z3_OP_BSUB, Z3_OP_BMUL, Z3_OP_BSDIV, Z3_OP_BSMOD, Z3_OP_BOR, Z3_OP_BAND,
     Z3_OP_BXOR, Z3_OP_BSDIV, Z3_OP_SLEQ, Z3_OP_SLT, Z3_OP_SGEQ, Z3_OP_SGT, Z3_OP_BASHR, Z3_OP_BSHL
@@ -91,13 +91,13 @@ _html_ellipses = '&hellip;'
 # Overwrite some of the operators for HTML
 _z3_pre_html_op_to_str = { Z3_OP_EQ : '=', Z3_OP_IFF : '=', Z3_OP_NOT : '&not;',
                            Z3_OP_AND : '&and;', Z3_OP_OR : '&or;', Z3_OP_IMPLIES : '&rArr;',
-                           Z3_OP_LT : '&lt;', Z3_OP_GT : '&gt;', Z3_OP_LE : '&le;', Z3_OP_GE : '&ge;',
-                           Z3_OP_MUL : '&middot;',
+                           Z3_OP_LT : '&lt;', Z3_OP_GT : '&gt;', Z3_OP_LE : '&le;', Z3_OP_GE : '&ge;', 
+                           Z3_OP_MUL : '&middot;', 
                            Z3_OP_SLEQ : '&le;', Z3_OP_SLT : '&lt;', Z3_OP_SGEQ : '&ge;', Z3_OP_SGT : '&gt;',
-                           Z3_OP_ULEQ : '&le;<sub>u</sub>', Z3_OP_ULT : '&lt;<sub>u</sub>',
+                           Z3_OP_ULEQ : '&le;<sub>u</sub>', Z3_OP_ULT : '&lt;<sub>u</sub>', 
                            Z3_OP_UGEQ : '&ge;<sub>u</sub>', Z3_OP_UGT : '&gt;<sub>u</sub>',
                            Z3_OP_BMUL : '&middot;',
-                           Z3_OP_BUDIV : '/<sub>u</sub>', Z3_OP_BUREM : '%<sub>u</sub>',
+                           Z3_OP_BUDIV : '/<sub>u</sub>', Z3_OP_BUREM : '%<sub>u</sub>', 
                            Z3_OP_BASHR : '&gt;&gt;', Z3_OP_BSHL : '&lt;&lt;',
                            Z3_OP_BLSHR : '&gt;&gt;<sub>u</sub>'
                            }
@@ -112,9 +112,9 @@ _z3_html_unary = [ Z3_OP_NOT ]
 # Extra Precedence for HTML
 _z3_pre_html_precedence = { Z3_OP_BUDIV : 2, Z3_OP_BUREM : 2,
                             Z3_OP_BLSHR : 4,
-                            Z3_OP_ULEQ : 8, Z3_OP_ULT : 8,
+                            Z3_OP_ULEQ : 8, Z3_OP_ULT : 8, 
                             Z3_OP_UGEQ : 8, Z3_OP_UGT : 8,
-                            Z3_OP_ULEQ : 8, Z3_OP_ULT : 8,
+                            Z3_OP_ULEQ : 8, Z3_OP_ULT : 8, 
                             Z3_OP_UGEQ : 8, Z3_OP_UGT : 8,
                             Z3_OP_NOT : 1,
                             Z3_OP_AND : 10,
@@ -396,7 +396,7 @@ class PP:
         self.max_width  = 60
         self.bounded    = False
         self.max_indent = 40
-
+        
     def pp_string(self, f, indent):
         if not self.bounded or self.pos <= self.max_width:
             sz = _len(f)
@@ -417,12 +417,12 @@ class PP:
             self.pp(f.children[0], indent)
         else:
             self.pp(f.children[1], indent)
-
+    
     def pp_line_break(self, f, indent):
         self.pos = indent
         self.ribbon_pos = 0
         self.line = self.line + 1
-        if self.line < self.max_lines:
+        if self.line < self.max_lines: 
             self.out.write(u('\n'))
             for i in range(indent):
                 self.out.write(u(' '))
@@ -453,7 +453,7 @@ class PP:
             self.pp(f, 0)
         except StopPPException:
             return
-
+    
 class Formatter:
     def __init__(self):
         global _ellipses
@@ -463,7 +463,7 @@ class Formatter:
         self.precision           = 10
         self.ellipses            = to_format(_ellipses)
         self.max_visited         = 10000
-
+    
     def pp_ellipses(self):
         return self.ellipses
 
@@ -472,13 +472,13 @@ class Formatter:
 
     def pp_unknown(self):
         return '<unknown>'
-
+        
     def pp_name(self, a):
         return to_format(_op_name(a))
 
     def is_infix(self, a):
         return _is_infix(a)
-
+    
     def is_unary(self, a):
         return _is_unary(a)
 
@@ -489,11 +489,11 @@ class Formatter:
         return _is_infix_compact(a)
 
     def is_infix_unary(self, a):
-        return self.is_infix(a) or self.is_unary(a)
+        return self.is_infix(a) or self.is_unary(a) 
 
     def add_paren(self, a):
         return compose(to_format('('), indent(1, a), to_format(')'))
-
+    
     def pp_sort(self, s):
         if isinstance(s, z3.ArraySortRef):
             return seq1('Array', (self.pp_sort(s.domain()), self.pp_sort(s.range())))
@@ -507,7 +507,7 @@ class Formatter:
 
     def pp_int(self, a):
         return to_format(a.as_string())
-
+        
     def pp_rational(self, a):
         if not self.rational_to_decimal:
             return to_format(a.as_string())
@@ -523,7 +523,7 @@ class Formatter:
     def pp_prefix(self, a, d, xs):
         r  = []
         sz = 0
-        for child in a.children():
+        for child in a.children(): 
             r.append(self.pp_expr(child, d+1, xs))
             sz = sz + 1
             if sz > self.max_args:
@@ -556,7 +556,7 @@ class Formatter:
                 child_p = self.get_precedence(child_k)
                 if p > child_p or (_is_add(k) and _is_sub(child_k)) or (_is_sub(k) and first and _is_add(child_k)):
                     r.append(child_pp)
-                else:
+                else: 
                     r.append(self.add_paren(child_pp))
                 sz = sz + 1
             elif z3.is_quantifier(child):
@@ -593,7 +593,7 @@ class Formatter:
         child_k  = None
         if z3.is_app(child):
             child_k = child.decl().kind()
-        child_pp = self.pp_expr(child, d+1, xs)
+        child_pp = self.pp_expr(child, d+1, xs)        
         if k != child_k and self.is_infix_unary(child_k):
             child_p = self.get_precedence(child_k)
             if p <= child_p:
@@ -661,7 +661,7 @@ class Formatter:
         sz = 0
         f  = z3.get_map_func(a)
         r.append(to_format(f.name()))
-        for child in a.children():
+        for child in a.children(): 
             r.append(self.pp_expr(child, d+1, xs))
             sz = sz + 1
             if sz > self.max_args:
@@ -716,7 +716,7 @@ class Formatter:
             return seq1('Var', (to_format(idx),))
         else:
             return to_format(xs[sz - idx - 1])
-
+        
     def pp_quantifier(self, a, d, xs):
         ys = [ to_format(a.var_name(i)) for i in range(a.num_vars()) ]
         new_xs  = xs + ys
@@ -757,7 +757,7 @@ class Formatter:
                 r.append(self.pp_ellipses())
                 break
         return seq3(r, '[', ']')
-
+        
     def pp_seq(self, a, d, xs):
         return self.pp_seq_core(self.pp_expr, a, d, xs)
 
@@ -790,7 +790,7 @@ class Formatter:
             args_pp = group(seq3(args))
         else:
             args_pp   = self.pp_expr(e.arg_value(0), 0, [])
-        value_pp = self.pp_expr(e.value(), 0, [])
+        value_pp = self.pp_expr(e.value(), 0, []) 
         return group(seq((args_pp, value_pp), self.pp_arrow()))
 
     def pp_func_interp(self, f):
@@ -868,7 +868,7 @@ class HTMLFormatter(Formatter):
 
     def pp_unknown(self):
         return '<b>unknown</b>'
-
+        
     def pp_name(self, a):
         r = _html_op_name(a)
         if r[0] == '&' or r[0] == '/' or r[0] == '%':
@@ -892,7 +892,7 @@ class HTMLFormatter(Formatter):
 
     def is_infix(self, a):
         return _is_html_infix(a)
-
+    
     def is_unary(self, a):
         return _is_html_unary(a)
 
@@ -905,7 +905,7 @@ class HTMLFormatter(Formatter):
     def pp_power(self, a, d, xs):
         arg1_pp = self.pp_power_arg(a.arg(0), d+1, xs)
         arg2_pp = self.pp_expr(a.arg(1), d+1, xs)
-        return compose(arg1_pp, to_format('<sup>', 1), arg2_pp, to_format('</sup>', 1))
+        return compose(arg1_pp, to_format('<sup>', 1), arg2_pp, to_format('</sup>', 1)) 
 
     def pp_var(self, a, d, xs):
         idx = z3.get_var_index(a)
@@ -925,7 +925,7 @@ class HTMLFormatter(Formatter):
             header = '&forall;'
         else:
             header = '&exist;'
-        return group(compose(to_format(header, 1),
+        return group(compose(to_format(header, 1), 
                              indent(1, compose(ys_pp, to_format(' :'), line_break(), body_pp))))
 
 
@@ -987,7 +987,7 @@ def print_matrix(m):
                 print('<td>%s</td>' % c)
             print('</tr>')
         print('</table>')
-
+    
 def insert_line_breaks(s, width):
     """Break s in lines of size width (approx)"""
     sz = len(s)

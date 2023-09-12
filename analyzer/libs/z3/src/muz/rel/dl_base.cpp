@@ -46,7 +46,7 @@ namespace datalog {
         }
     }
 
-    void get_renaming_args(const unsigned_vector & map, const relation_signature & orig_sig,
+    void get_renaming_args(const unsigned_vector & map, const relation_signature & orig_sig, 
             expr_ref_vector & renaming_arg) {
         ast_manager & m = renaming_arg.get_manager();
         unsigned sz = map.size();
@@ -89,7 +89,7 @@ namespace datalog {
     void relation_base::reset() {
         ast_manager & m = get_plugin().get_ast_manager();
         app_ref bottom_ref(m.mk_false(), m);
-        scoped_ptr<relation_mutator_fn> reset_fn =
+        scoped_ptr<relation_mutator_fn> reset_fn = 
             get_manager().mk_filter_interpreted_fn(static_cast<relation_base &>(*this), bottom_ref);
         if(!reset_fn) {
             NOT_IMPLEMENTED_YET();
@@ -99,7 +99,7 @@ namespace datalog {
 
 
 
-    void table_signature::from_join(const table_signature & s1, const table_signature & s2, unsigned col_cnt,
+    void table_signature::from_join(const table_signature & s1, const table_signature & s2, unsigned col_cnt, 
             const unsigned * cols1, const unsigned * cols2, table_signature & result) {
         result.reset();
 
@@ -122,7 +122,7 @@ namespace datalog {
         result.set_functional_columns(s1.functional_columns()+s2.functional_columns());
     }
 
-    void table_signature::from_project(const table_signature & src, unsigned col_cnt,
+    void table_signature::from_project(const table_signature & src, unsigned col_cnt, 
             const unsigned * removed_cols, table_signature & result) {
         signature_base::from_project(src, col_cnt, removed_cols, result);
 
@@ -145,7 +145,7 @@ namespace datalog {
         }
     }
 
-    void table_signature::from_project_with_reduce(const table_signature & src, unsigned col_cnt,
+    void table_signature::from_project_with_reduce(const table_signature & src, unsigned col_cnt, 
             const unsigned * removed_cols, table_signature & result) {
         signature_base::from_project(src, col_cnt, removed_cols, result);
 
@@ -160,8 +160,8 @@ namespace datalog {
         result.set_functional_columns(remaining_fun);
     }
 
-    void table_signature::from_join_project(const table_signature & s1, const table_signature & s2,
-            unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
+    void table_signature::from_join_project(const table_signature & s1, const table_signature & s2, 
+            unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
             const unsigned * removed_cols, table_signature & result) {
         table_signature aux;
         from_join(s1, s2, joined_col_cnt, cols1, cols2, aux);
@@ -243,7 +243,7 @@ namespace datalog {
     bool table_base::empty() const {
         return begin()==end();
     }
-
+    
     void table_base::remove_facts(unsigned fact_cnt, const table_fact * facts) {
         for(unsigned i=0; i<fact_cnt; i++) {
             remove_fact(facts[i]);
@@ -360,10 +360,10 @@ namespace datalog {
        \brief Default method for complementation.
 
        It assumes that the compiler creates only tables with
-       at most one column (0 or 1 columns).
+       at most one column (0 or 1 columns).       
        Complementation of tables with more than one columns
        is transformed into a cross product of complements and/or
-       difference.
+       difference. 
 
      */
     table_base * table_base::complement(func_decl* p, const table_element * func_columns) const {
@@ -404,7 +404,7 @@ namespace datalog {
         }
         return res;
     }
-
+    
     void table_base::display(std::ostream & out) const {
         out << "table with signature ";
         print_container(get_signature(), out);
@@ -427,7 +427,7 @@ namespace datalog {
     protected:
         virtual bool is_finished() const { return m_index==m_parent.size(); }
     public:
-        fact_row_iterator(const row_interface & row, bool finished)
+        fact_row_iterator(const row_interface & row, bool finished) 
             : m_parent(row), m_index(finished ? row.size() : 0) {}
 
         virtual table_element operator*() {
@@ -475,7 +475,7 @@ namespace datalog {
         iterator it = begin();
         iterator iend = end();
         for(; it != iend; ++it) {
-            const row_interface & r = *it;
+            const row_interface & r = *it;   
             r.get_fact(fact);
             conjs.reset();
             for (unsigned i = 0; i < fact.size(); ++i) {
@@ -484,7 +484,7 @@ namespace datalog {
             brw.mk_and(conjs.size(), conjs.c_ptr(), fml);
             disjs.push_back(fml);
         }
-        brw.mk_or(disjs.size(), disjs.c_ptr(), fml);
+        brw.mk_or(disjs.size(), disjs.c_ptr(), fml);        
     }
 
 }

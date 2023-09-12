@@ -76,13 +76,13 @@ namespace sat {
         symbol             m_random;
         symbol             m_geometric;
         symbol             m_luby;
-
+        
         symbol             m_dyn_psm;
-        symbol             m_psm;
-        symbol             m_glue;
-        symbol             m_glue_psm;
-        symbol             m_psm_glue;
-
+        symbol             m_psm;        
+        symbol             m_glue;        
+        symbol             m_glue_psm;        
+        symbol             m_psm_glue;        
+        
         config(params_ref const & p);
         void updt_params(params_ref const & p);
         static void collect_param_descrs(param_descrs & d);

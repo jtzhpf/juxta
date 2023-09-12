@@ -31,8 +31,8 @@ struct pattern_validation_functor {
     bool       m_found_a_var;
     family_id  m_bfid;
     family_id  m_lfid;
-
-    pattern_validation_functor(uint_set & found_vars, unsigned num_bindings, unsigned num_new_bindings,
+    
+    pattern_validation_functor(uint_set & found_vars, unsigned num_bindings, unsigned num_new_bindings, 
                                family_id bfid, family_id lfid):
         m_found_vars(found_vars),
         m_num_bindings(num_bindings),
@@ -51,7 +51,7 @@ struct pattern_validation_functor {
             return true;
         return false;
     }
-
+    
     void operator()(app * n) {
         func_decl * decl = to_app(n)->get_decl();
         if (is_forbidden(decl)) {
@@ -59,7 +59,7 @@ struct pattern_validation_functor {
             m_result = false;
         }
     }
-
+    
     void operator()(var * v) {
         unsigned idx = to_var(v)->get_idx();
         if (idx >= m_num_bindings) {
@@ -72,7 +72,7 @@ struct pattern_validation_functor {
             m_found_vars.insert(idx);
         }
     }
-
+    
     void operator()(quantifier * q) { m_result = false; }
 };
 

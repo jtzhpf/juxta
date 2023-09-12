@@ -27,7 +27,7 @@ Revision History:
 
 extern "C" {
 
-    void init_smtlib_parser(Z3_context c,
+    void init_smtlib_parser(Z3_context c, 
                             unsigned num_sorts,
                             Z3_symbol const sort_names[],
                             Z3_sort const types[],
@@ -45,8 +45,8 @@ extern "C" {
             table->insert(to_symbol(decl_names[i]), to_func_decl(decls[i]));
         }
     }
-
-    void Z3_API Z3_parse_smtlib_string(Z3_context c,
+    
+    void Z3_API Z3_parse_smtlib_string(Z3_context c, 
                                        const char * str,
                                        unsigned  num_sorts,
                                        Z3_symbol const sort_names[],
@@ -63,7 +63,7 @@ extern "C" {
         init_smtlib_parser(c, num_sorts, sort_names, sorts, num_decls, decl_names, decls);
         mk_c(c)->m_smtlib_parser->set_error_stream(outs);
         try {
-            ok = mk_c(c)->m_smtlib_parser->parse_string(str);
+            ok = mk_c(c)->m_smtlib_parser->parse_string(str);        
         }
         catch (...) {
             ok = false;
@@ -76,7 +76,7 @@ extern "C" {
         Z3_CATCH;
     }
 
-    void Z3_API Z3_parse_smtlib_file(Z3_context c,
+    void Z3_API Z3_parse_smtlib_file(Z3_context c, 
                                      const char * file_name,
                                      unsigned num_sorts,
                                      Z3_symbol const sort_names[],
@@ -187,7 +187,7 @@ extern "C" {
     Z3_func_decl Z3_API Z3_get_smtlib_decl(Z3_context c, unsigned i) {
         Z3_TRY;
         LOG_Z3_get_smtlib_decl(c, i);
-        RESET_ERROR_CODE();
+        RESET_ERROR_CODE(); 
         mk_c(c)->extract_smtlib_parser_decls();
         if (mk_c(c)->m_smtlib_parser) {
             if (i < mk_c(c)->m_smtlib_parser_decls.size()) {
@@ -222,7 +222,7 @@ extern "C" {
     Z3_sort Z3_API Z3_get_smtlib_sort(Z3_context c, unsigned i) {
         Z3_TRY;
         LOG_Z3_get_smtlib_sort(c, i);
-        RESET_ERROR_CODE();
+        RESET_ERROR_CODE(); 
         if (mk_c(c)->m_smtlib_parser) {
             mk_c(c)->extract_smtlib_parser_decls();
             if (i < mk_c(c)->m_smtlib_parser_sorts.size()) {
@@ -241,10 +241,10 @@ extern "C" {
         Z3_CATCH_RETURN(0);
     }
 
-    Z3_string Z3_API Z3_get_smtlib_error(Z3_context c) {
+    Z3_string Z3_API Z3_get_smtlib_error(Z3_context c) {        
         Z3_TRY;
         LOG_Z3_get_smtlib_error(c);
-        RESET_ERROR_CODE();
+        RESET_ERROR_CODE(); 
         return mk_c(c)->m_smtlib_error_buffer.c_str();
         Z3_CATCH_RETURN("");
     }

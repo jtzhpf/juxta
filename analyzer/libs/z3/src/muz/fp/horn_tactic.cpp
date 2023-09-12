@@ -74,7 +74,7 @@ class horn_tactic : public tactic {
                     f = to_quantifier(f)->get_expr();
                 }
                 else if (is_exists(f) && !is_positive) {
-                    f = to_quantifier(f)->get_expr();
+                    f = to_quantifier(f)->get_expr();                    
                 }
                 else if (m.is_not(f, e)) {
                     is_positive = !is_positive;
@@ -87,7 +87,7 @@ class horn_tactic : public tactic {
             if (!is_positive) {
                 f = m.mk_not(f);
             }
-
+            
         }
 
         bool is_predicate(expr* a) {
@@ -147,7 +147,7 @@ class horn_tactic : public tactic {
             expr* a = 0, *a1 = 0;
             qe::flatten_or(tmp, args);
             for (unsigned i = 0; i < args.size(); ++i) {
-                a = args[i].get();
+                a = args[i].get(); 
                 check_predicate(mark, a);
                 if (m.is_not(a, a1)) {
                     body.push_back(a1);
@@ -179,9 +179,9 @@ class horn_tactic : public tactic {
             return expr_ref(m.mk_implies(body, head), m);
         }
 
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -189,7 +189,7 @@ class horn_tactic : public tactic {
             tactic_report report("horn", *g);
             bool produce_proofs = g->proofs_enabled();
 
-            if (produce_proofs) {
+            if (produce_proofs) {                
                 if (!m_ctx.get_params().generate_proof_trace()) {
                     params_ref params = m_ctx.get_params().p;
                     params.set_bool("generate_proof_trace", true);
@@ -215,7 +215,7 @@ class horn_tactic : public tactic {
                 case IS_QUERY:
                     queries.push_back(f);
                     break;
-                default:
+                default: 
                     msg << "formula is not in Horn fragment: " << mk_pp(g->form(i), m) << "\n";
                     TRACE("horn", tout << msg.str(););
                     throw tactic_exception(msg.str().c_str());
@@ -245,10 +245,10 @@ class horn_tactic : public tactic {
             }
         }
 
-        void verify(expr* q,
+        void verify(expr* q, 
                     goal_ref const& g,
-                    goal_ref_buffer & result,
-                    model_converter_ref & mc,
+                    goal_ref_buffer & result, 
+                    model_converter_ref & mc, 
                     proof_converter_ref & pc) {
 
             lbool is_reachable = l_undef;
@@ -277,9 +277,9 @@ class horn_tactic : public tactic {
                 else {
                     g->assert_expr(m.mk_false());
                 }
-                break;
+                break;    
             }
-            case l_false: {
+            case l_false: {                
                 // goal is sat
                 g->reset();
                 if (produce_models) {
@@ -292,30 +292,30 @@ class horn_tactic : public tactic {
                         mc = mc2;
                     }
                 }
-                break;
+                break;    
             }
-            case l_undef:
+            case l_undef: 
                 // subgoal is unchanged.
-                break;
+                break;    
             }
             TRACE("horn", g->display(tout););
             SASSERT(g->is_well_sorted());
         }
 
-        void simplify(expr* q,
+        void simplify(expr* q, 
                     goal_ref const& g,
-                    goal_ref_buffer & result,
-                    model_converter_ref & mc,
+                    goal_ref_buffer & result, 
+                    model_converter_ref & mc, 
                     proof_converter_ref & pc) {
 
-            expr_ref fml(m);
+            expr_ref fml(m);            
 
 
             func_decl* query_pred = to_app(q)->get_decl();
             m_ctx.set_output_predicate(query_pred);
             m_ctx.get_rules(); // flush adding rules.
             apply_default_transformation(m_ctx);
-
+            
             if (m_ctx.get_params().slice()) {
                 datalog::rule_transformer transformer(m_ctx);
                 datalog::mk_slice* slice = alloc(datalog::mk_slice, m_ctx);
@@ -339,7 +339,7 @@ class horn_tactic : public tactic {
                 g->assert_expr(fml);
             }
         }
-
+        
     };
 
     bool       m_is_simplify;
@@ -356,7 +356,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(horn_tactic, m_is_simplify, m, m_params);
     }
-
+        
     virtual ~horn_tactic() {
         dealloc(m_imp);
     }
@@ -366,19 +366,19 @@ public:
         m_imp->updt_params(p);
     }
 
-
+   
     virtual void collect_param_descrs(param_descrs & r) {
         m_imp->collect_param_descrs(r);
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
+    
     virtual void collect_statistics(statistics & st) const {
         m_imp->collect_statistics(st);
         st.copy(m_stats);
@@ -388,7 +388,7 @@ public:
         m_stats.reset();
         m_imp->reset_statistics();
     }
-
+    
     virtual void cleanup() {
         ast_manager & m = m_imp->m;
         imp * d = m_imp;
@@ -404,7 +404,7 @@ public:
             m_imp = d;
         }
     }
-
+    
 protected:
     virtual void set_cancel(bool f) {
         if (m_imp)

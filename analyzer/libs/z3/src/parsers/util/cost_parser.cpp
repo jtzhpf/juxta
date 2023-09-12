@@ -63,8 +63,8 @@ unsigned cost_parser::add_var(symbol name) {
     return r;
 }
 
-void cost_parser::reset_vars() {
-    simple_parser::reset_vars();
-    m_vars.reset();
+void cost_parser::reset_vars() { 
+    simple_parser::reset_vars(); 
+    m_vars.reset(); 
 }
 

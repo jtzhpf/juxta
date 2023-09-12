@@ -31,7 +31,7 @@ typedef var_shifter shift_vars;
    \brief Variable substitution functor. It substitutes variables by expressions.
    The expressions may contain variables.
 */
-class var_subst {
+class var_subst { 
     beta_reducer   m_reducer;
     bool           m_std_order;
 public:
@@ -39,7 +39,7 @@ public:
     bool std_order() const { return m_std_order; }
 
     /**
-       When std_order() == true,
+       When std_order() == true, 
        I'm using the same standard used in quantifier instantiation.
        (VAR 0) is stored in the last position of the array.
        ...

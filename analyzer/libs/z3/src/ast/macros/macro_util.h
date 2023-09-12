@@ -76,7 +76,7 @@ private:
 
     void normalize_expr(app * head, expr * t, expr_ref & norm_t) const;
     void insert_macro(app * head, expr * def, expr * cond, bool ineq, bool satisfy_atom, bool hint, macro_candidates & r);
-    void insert_quasi_macro(app * head, unsigned num_decls, expr * def, expr * cond, bool ineq, bool satisfy_atom, bool hint,
+    void insert_quasi_macro(app * head, unsigned num_decls, expr * def, expr * cond, bool ineq, bool satisfy_atom, bool hint, 
                             macro_candidates & r);
 
     expr * m_curr_clause; // auxiliary var used in collect_macro_candidates.
@@ -105,7 +105,7 @@ public:
     bool is_left_simple_macro(expr * n, unsigned num_decls, app * & head, expr * & def) const;
     bool is_right_simple_macro(expr * n, unsigned num_decls, app * & head, expr * & def) const;
     bool is_simple_macro(expr * n, unsigned num_decls, app * & head, expr * & def) const {
-        return is_left_simple_macro(n, num_decls, head, def) || is_right_simple_macro(n, num_decls, head, def);
+        return is_left_simple_macro(n, num_decls, head, def) || is_right_simple_macro(n, num_decls, head, def); 
     }
 
     bool is_arith_macro(expr * n, unsigned num_decls, app_ref & head, expr_ref & def, bool & inv) const;
@@ -113,7 +113,7 @@ public:
         bool inv;
         return is_arith_macro(n, num_decls, head, def, inv);
     }
-
+    
     bool is_pseudo_head(expr * n, unsigned num_decls, app * & head, app * & t);
     bool is_pseudo_predicate_macro(expr * n, app * & head, app * & t, expr * & def);
 
@@ -126,7 +126,7 @@ public:
     void collect_macro_candidates(quantifier * q, macro_candidates & r);
 
     //
-    // Auxiliary goodness that allows us to manipulate BV and Arith polynomials.
+    // Auxiliary goodness that allows us to manipulate BV and Arith polynomials. 
     //
     bool is_bv(expr * n) const;
     bool is_bv_sort(sort * s) const;

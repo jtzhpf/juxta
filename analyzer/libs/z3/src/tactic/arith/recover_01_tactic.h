@@ -15,7 +15,7 @@ Abstract:
     p  or ~q or x = k2
     ~p or ~q or x = k1+k2
 
-    Then, replaces
+    Then, replaces 
     x with k1*y1 + k2*y2
     p with y1=1
     q with y2=1

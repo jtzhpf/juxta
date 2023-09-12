@@ -37,7 +37,7 @@ protected:
         unsigned m_i:26;
         unsigned m_spos;           // top of the result stack, when the frame was created.
         frame(expr * n, bool cache_res, unsigned st, unsigned max_depth, unsigned spos):
-            m_curr(n),
+            m_curr(n), 
             m_cache_result(cache_res),
             m_new_child(false),
             m_state(st),
@@ -47,7 +47,7 @@ protected:
         }
     };
     ast_manager &              m_manager;
-    bool                       m_proof_gen;
+    bool                       m_proof_gen; 
     typedef act_cache          cache;
     ptr_vector<cache>          m_cache_stack;
     cache *                    m_cache; // current cache.
@@ -55,7 +55,7 @@ protected:
     expr_ref_vector            m_result_stack;
 
     // proof generation goodness ----
-    ptr_vector<cache>          m_cache_pr_stack;
+    ptr_vector<cache>          m_cache_pr_stack; 
     cache *                    m_cache_pr;
     proof_ref_vector           m_result_pr_stack;
     // --------------------------
@@ -71,7 +71,7 @@ protected:
 
     // Return true if the rewriting result of the given expression must be cached.
     bool must_cache(expr * t) const {
-        return
+        return 
             t->get_ref_count() > 1 &&  // t must be a shared expression
             t != m_root && // t must not be the root expression
             ((is_app(t) && to_app(t)->get_num_args() > 0) || is_quantifier(t)); // t is a (non-constant) application or a quantifier.
@@ -84,16 +84,16 @@ protected:
 
     void push_frame(expr * t, unsigned st = 0) {
         push_frame_core(t, must_cache(t), st);
-    }
+    } 
 
     void init_cache_stack();
     void del_cache_stack();
     void reset_cache();
     void cache_result(expr * k, expr * v);
-    expr * get_cached(expr * k) const { return m_cache->find(k); }
+    expr * get_cached(expr * k) const { return m_cache->find(k); } 
 
     void cache_result(expr * k, expr * v, proof * pr);
-    proof * get_cached_pr(expr * k) const { return static_cast<proof*>(m_cache_pr->find(k)); }
+    proof * get_cached_pr(expr * k) const { return static_cast<proof*>(m_cache_pr->find(k)); } 
 
     void free_memory();
     void begin_scope();
@@ -106,7 +106,7 @@ protected:
             m_frame_stack.back().m_new_child = true;
     }
     void set_new_child_flag(expr * old_t, expr * new_t) { if (old_t != new_t) set_new_child_flag(old_t); }
-
+    
     void elim_reflex_prs(unsigned spos);
 public:
     rewriter_core(ast_manager & m, bool proof_gen);
@@ -139,10 +139,10 @@ public:
    1) shift(n, s) will return a new AST where all free variables (VAR i) in n,
    are replaced by (VAR (+ i s)).
 
-   2) shift(n, b, s1, s2) is a variant of the previous function such that
+   2) shift(n, b, s1, s2) is a variant of the previous function such that 
    for a each free variable (VAR i) is shifted to:
        - (VAR i + s1) if i >= b
-       - (VAR i + s2) if i < b
+       - (VAR i + s2) if i < b 
 */
 class var_shifter : public var_shifter_core {
     unsigned  m_bound;
@@ -165,16 +165,16 @@ public:
    inv_shift(f(c_1, ..., c_n), d, s) =
      f(inv_shift(c_1, d, s), ..., inv_shift(c_n, d, s))
    inv_shift(var(i), d, s) =
-     if (i < d)
+     if (i < d) 
        var(i)
      else
        assert(i - s >= d)
        var(i-s)
   inv_shift((forall (x) P), d, s) =
     (forall (x) inv_shift(P, d+1, s))
-
+   
   This functor assumes that if we are shifting an expression F by N, then F
-  does not contain free variables #0, ... #N-1
+  does not contain free variables #0, ... #N-1 
 
   See assertion above.
 */
@@ -187,14 +187,14 @@ public:
     void operator()(expr * t, unsigned shift, expr_ref & r);
 };
 
-template<typename Config>
+template<typename Config> 
 class rewriter_tpl : public rewriter_core {
 protected:
     // Rewriter maintains a stack of frames.
     // Each frame represents an expression that is being rewritten.
     // The resultant expressions are store on the Result stack.
     // Each frame is in a particular state.
-    // Let f(t_0,...,t_n) be the expression is the frame Fr. Then Fr can be is one of the
+    // Let f(t_0,...,t_n) be the expression is the frame Fr. Then Fr can be is one of the 
     // following states:
     //    PROCESS_CHILDREN(i) the children t_0, ..., t_{i-1} have already been rewritten, and the result is on the Result stack.
     //    REWRITE_BUILTIN All t_0, ..., t_n have been rewritten to t_0',...,t_n', and the builtin rewriter (or plugin) produced a new term t
@@ -218,7 +218,7 @@ protected:
     expr_ref                   m_r;
     proof_ref                  m_pr;
     proof_ref                  m_pr2;
-
+    
     svector<frame> & frame_stack() { return this->m_frame_stack; }
     svector<frame> const & frame_stack() const { return this->m_frame_stack; }
     expr_ref_vector & result_stack() { return this->m_result_stack; }
@@ -242,19 +242,19 @@ protected:
     bool flat_assoc(func_decl * f) const { return m_cfg.flat_assoc(f); }
     // rewrite patterns
     bool rewrite_patterns() const { return m_cfg.rewrite_patterns(); }
-
+   
     // check maximum number of scopes
-    void check_max_scopes() const {
+    void check_max_scopes() const { 
         if (m_cfg.max_scopes_exceeded(this->m_scopes.size()))
             throw rewriter_exception(Z3_MAX_SCOPES_MSG);
     }
     // check maximum size of the frame stack
-    void check_max_frames() const {
+    void check_max_frames() const { 
         if (m_cfg.max_frames_exceeded(frame_stack().size()))
             throw rewriter_exception(Z3_MAX_FRAMES_MSG);
     }
     // check maximum number of rewriting steps
-    void check_max_steps() const {
+    void check_max_steps() const { 
         if (m_cfg.max_steps_exceeded(m_num_steps))
             throw rewriter_exception(Z3_MAX_STEPS_MSG);
     }
@@ -271,7 +271,7 @@ protected:
         if (cache_all_results())
             return t != this->m_root && ((is_app(t) && to_app(t)->get_num_args() > 0) || is_quantifier(t));
         if (cache_results())
-            return rewriter_core::must_cache(t);
+            return rewriter_core::must_cache(t); 
         return false;
     }
 
@@ -288,7 +288,7 @@ protected:
         check_max_scopes();
         rewriter_core::begin_scope();
     }
-
+    
     template<bool ProofGen>
     void process_var(var * v);
 
@@ -338,10 +338,10 @@ public:
     void reset_cancel() { set_cancel(false); }
 
     ~rewriter_tpl();
-
+    
     void reset();
     void cleanup();
-
+    
     void set_bindings(unsigned num_bindings, expr * const * bindings);
     void set_inv_bindings(unsigned num_bindings, expr * const * bindings);
     void operator()(expr * t, expr_ref & result, proof_ref & result_pr);
@@ -370,9 +370,9 @@ struct default_rewriter_cfg {
     bool max_steps_exceeded(unsigned num_steps) const { return false; }
     bool pre_visit(expr * t) { return true; }
     br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) { return BR_FAILED; }
-    bool reduce_quantifier(quantifier * old_q,
-                           expr * new_body,
-                           expr * const * new_patterns,
+    bool reduce_quantifier(quantifier * old_q, 
+                           expr * new_body, 
+                           expr * const * new_patterns, 
                            expr * const * new_no_patterns,
                            expr_ref & result,
                            proof_ref & result_pr) {

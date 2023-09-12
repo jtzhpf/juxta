@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Generic sexpr
-
+    
 Author:
 
     Leonardo (leonardo) 2011-07-28
@@ -175,7 +175,7 @@ void sexpr::display_atom(std::ostream & out) const {
     case sexpr::STRING:
         out << "\"" << escaped(static_cast<sexpr_string const *>(this)->m_val.c_str()) << "\"";
         break;
-    case sexpr::SYMBOL:
+    case sexpr::SYMBOL: 
     case sexpr::KEYWORD:
         out << static_cast<sexpr_symbol const *>(this)->m_val;
         break;
@@ -245,7 +245,7 @@ void sexpr_manager::del(sexpr * n) {
             static_cast<sexpr_string*>(n)->~sexpr_string();
             m_allocator.deallocate(sizeof(sexpr_string), n);
             break;
-        case sexpr::SYMBOL:
+        case sexpr::SYMBOL: 
         case sexpr::KEYWORD:
             static_cast<sexpr_symbol*>(n)->~sexpr_symbol();
             m_allocator.deallocate(sizeof(sexpr_symbol), n);

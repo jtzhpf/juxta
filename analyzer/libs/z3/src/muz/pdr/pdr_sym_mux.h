@@ -65,7 +65,7 @@ private:
     mutable sym2sym m_sym2prim;
 
     /**
-       Maps prefixes passed to the create_tuple to
+       Maps prefixes passed to the create_tuple to 
        the primary symbol created from it.
     */
     sym2pred m_prefix2prim;
@@ -139,7 +139,7 @@ public:
     }
 
     /**
-    Marks symbol as non-model which means it will not appear in models collected by
+    Marks symbol as non-model which means it will not appear in models collected by 
     get_muxed_cube_from_model function.
     This is to take care of auxiliary symbols introduced by the disjunction relations
     to relativize lemmas coming from disjuncts.
@@ -149,25 +149,25 @@ public:
         m_non_model_syms.insert(get_primary(sym));
     }
 
-    func_decl * get_or_create_symbol_by_prefix(func_decl* prefix, unsigned idx,
+    func_decl * get_or_create_symbol_by_prefix(func_decl* prefix, unsigned idx, 
         unsigned arity, sort * const * domain, sort * range);
 
 
 
     bool is_muxed_lit(expr * e, unsigned idx) const;
 
-    bool is_non_model_sym(func_decl * s) const {
+    bool is_non_model_sym(func_decl * s) const { 
         return is_muxed(s) && m_non_model_syms.contains(get_primary(s));
     }
 
     /**
     Create a multiplexed tuple of propositional constants.
     Symbols may be suplied in the tuple vector,
-    those beyond the size of the array and those with corresponding positions
+    those beyond the size of the array and those with corresponding positions 
     assigned to zero will be created using prefix.
     Tuple length must be at least one.
     */
-    void create_tuple(func_decl* prefix, unsigned arity, sort * const * domain, sort * range,
+    void create_tuple(func_decl* prefix, unsigned arity, sort * const * domain, sort * range, 
         unsigned tuple_length, decl_vector & tuple);
 
     /**
@@ -201,17 +201,17 @@ public:
     */
     func_decl * conv(func_decl * sym, unsigned src_idx, unsigned tgt_idx) const;
 
-
+    
     /**
     Convert src_idx symbols in formula f variant into tgt_idx.
     If homogenous is true, formula cannot contain symbols of other variants.
     */
     void conv_formula(expr * f, unsigned src_idx, unsigned tgt_idx, expr_ref & res, bool homogenous=true) const;
-    void conv_formula_vector(const expr_ref_vector & vect, unsigned src_idx, unsigned tgt_idx,
+    void conv_formula_vector(const expr_ref_vector & vect, unsigned src_idx, unsigned tgt_idx, 
         expr_ref_vector & res) const;
 
     /**
-    Shifts the muxed symbols in f by dist. Dist can be negative, but it should never shift
+    Shifts the muxed symbols in f by dist. Dist can be negative, but it should never shift 
     symbol index to a negative value.
     */
     void shift_formula(expr * f, int dist, expr_ref & res) const;
@@ -230,7 +230,7 @@ public:
     /**
         Partition literals into o_literals and others.
     */
-    void partition_o_idx(expr_ref_vector const& lits,
+    void partition_o_idx(expr_ref_vector const& lits, 
                          expr_ref_vector& o_lits,
                          expr_ref_vector& other, unsigned idx) const;
 

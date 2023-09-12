@@ -79,7 +79,7 @@ tactic2solver::tactic2solver(ast_manager & m, tactic * t, params_ref const & p, 
     m_tactic = t;
     m_logic  = logic;
     m_params = p;
-
+    
     m_produce_models      = produce_models;
     m_produce_proofs      = produce_proofs;
     m_produce_unsat_cores = produce_unsat_cores;
@@ -139,13 +139,13 @@ lbool tactic2solver::check_sat_core(unsigned num_assumptions, expr * const * ass
     std::string         reason_unknown = "unknown";
     try {
         switch (::check_sat(*m_tactic, g, md, pr, core, reason_unknown)) {
-        case l_true:
+        case l_true: 
             m_result->set_status(l_true);
             break;
-        case l_false:
+        case l_false: 
             m_result->set_status(l_false);
             break;
-        default:
+        default: 
             m_result->set_status(l_undef);
             if (reason_unknown != "")
                 m_result->m_unknown = reason_unknown;
@@ -174,7 +174,7 @@ lbool tactic2solver::check_sat_core(unsigned num_assumptions, expr * const * ass
 
 void tactic2solver::set_cancel(bool f) {
     if (m_tactic.get()) {
-        if (f)
+        if (f) 
             m_tactic->cancel();
         else
             m_tactic->reset_cancel();
@@ -228,8 +228,8 @@ void tactic2solver::display(std::ostream & out) const {
     out << ")";
 }
 
-solver * mk_tactic2solver(ast_manager & m,
-                          tactic * t,
+solver * mk_tactic2solver(ast_manager & m, 
+                          tactic * t, 
                           params_ref const & p,
                           bool produce_proofs,
                           bool produce_models,
@@ -243,9 +243,9 @@ class tactic2solver_factory : public solver_factory {
 public:
     tactic2solver_factory(tactic * t):m_tactic(t) {
     }
-
+    
     virtual ~tactic2solver_factory() {}
-
+    
     virtual solver * operator()(ast_manager & m, params_ref const & p, bool proofs_enabled, bool models_enabled, bool unsat_core_enabled, symbol const & logic) {
         return mk_tactic2solver(m, m_tactic.get(), p, proofs_enabled, models_enabled, unsat_core_enabled, logic);
     }
@@ -256,9 +256,9 @@ class tactic_factory2solver_factory : public solver_factory {
 public:
     tactic_factory2solver_factory(tactic_factory * f):m_factory(f) {
     }
-
+    
     virtual ~tactic_factory2solver_factory() {}
-
+    
     virtual solver * operator()(ast_manager & m, params_ref const & p, bool proofs_enabled, bool models_enabled, bool unsat_core_enabled, symbol const & logic) {
         tactic * t = (*m_factory)(m, p);
         return mk_tactic2solver(m, t, p, proofs_enabled, models_enabled, unsat_core_enabled, logic);

@@ -46,11 +46,11 @@ void tst_expr_substitution() {
     subst.insert(b, d);
 
     rw.set_substitution(&subst);
-
+   
 
     enable_trace("th_rewriter_step");
     rw(a, new_a, pr);
 
     std::cout << mk_pp(new_a, m) << "\n";
-
+    
 }

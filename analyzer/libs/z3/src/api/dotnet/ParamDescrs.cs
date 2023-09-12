@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-20
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -49,9 +49,9 @@ namespace Microsoft.Z3
         /// <summary>
         /// Retrieve all names of parameters.
         /// </summary>
-        public Symbol[] Names
+        public Symbol[] Names 
         {
-            get
+            get 
             {
                   uint sz = Native.Z3_param_descrs_size(Context.nCtx, NativeObject);
                   Symbol[] names = new Symbol[sz];
@@ -71,11 +71,11 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Retrieves a string representation of the ParamDescrs.
-        /// </summary>
+        /// Retrieves a string representation of the ParamDescrs. 
+        /// </summary>    
         public override string ToString()
         {
-            return Native.Z3_param_descrs_to_string(Context.nCtx, NativeObject);
+            return Native.Z3_param_descrs_to_string(Context.nCtx, NativeObject); 
         }
 
         #region Internal
@@ -96,7 +96,7 @@ namespace Microsoft.Z3
             {
                 Native.Z3_param_descrs_dec_ref(ctx.nCtx, obj);
             }
-        };
+        };        
 
         internal override void IncRef(IntPtr o)
         {

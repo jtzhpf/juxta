@@ -151,7 +151,7 @@ public:
     void updt_params(params_ref const & p);
 
     static void get_param_descrs(param_descrs & r);
-
+    
     void set_mkbv2num(bool f) { m_mkbv2num = f; }
 
     unsigned get_bv_size(expr * t) const {return m_util.get_bv_size(t); }
@@ -160,7 +160,7 @@ public:
     bool is_bv(expr * t) const { return m_util.is_bv(t); }
     expr * mk_numeral(numeral const & v, unsigned sz) { return m_util.mk_numeral(v, sz); }
     expr * mk_numeral(unsigned v, unsigned sz) { return m_util.mk_numeral(numeral(v), sz); }
-
+    
     br_status mk_app_core(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result);
     void mk_app(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result) {
         if (mk_app_core(f, num_args, args, result) == BR_FAILED)

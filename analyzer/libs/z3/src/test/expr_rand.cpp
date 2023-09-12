@@ -14,7 +14,7 @@ void tst_expr_arith(unsigned num_files) {
     ast_manager m;
     reg_decl_plugins(m);
 
-    expr_rand er(m);
+    expr_rand er(m);    
     er.seed(rand_seed);
     er.initialize_arith(20);
 
@@ -40,16 +40,16 @@ void tst_expr_arith(unsigned num_files) {
         pp.display(file, e.get());
         file.close();
     }
-
+    
 }
 
 void tst_expr_rand(unsigned num_files) {
     ast_manager m;
-
+    
     m.register_plugin(symbol("bv"), alloc(bv_decl_plugin));
     m.register_plugin(symbol("array"), alloc(array_decl_plugin));
 
-    expr_rand er(m);
+    expr_rand er(m);    
     er.initialize_bv(20);
     er.seed(rand_seed);
     parameter p1(1);

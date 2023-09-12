@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     Leonardo de Moura (leonardo) 2006-10-10.
-    Nikolaj Bjorner   (nbjorner)
+    Nikolaj Bjorner   (nbjorner) 
 
 Revision History:
 
@@ -89,7 +89,7 @@ void display_usage() {
     std::cout << "  -T:timeout  set the timeout (in seconds).\n";
     std::cout << "  -t:timeout  set the soft timeout (in milli seconds). It only kills the current query.\n";
     std::cout << "  -memory:Megabytes  set a limit for virtual memory consumption.\n";
-    //
+    // 
     std::cout << "\nOutput:\n";
     std::cout << "  -st         display statistics.\n";
 #if defined(Z3DEBUG) || defined(_TRACE)
@@ -107,12 +107,12 @@ void display_usage() {
     std::cout << "  module_name.param_name=value  for setting module parameters.\n";
     std::cout << "Use 'z3 -p' for the complete list of global and module parameters.\n";
 }
-
+   
 void parse_cmd_line_args(int argc, char ** argv) {
     int i = 1;
     char * eq_pos = 0;
     while (i < argc) {
-        char * arg = argv[i];
+        char * arg = argv[i];    
 
         if (arg[0] == '-' && arg[1] == '-' && arg[2] == 0) {
             // Little hack used to read files with strange names such as -foo.smt2
@@ -132,8 +132,8 @@ void parse_cmd_line_args(int argc, char ** argv) {
             }
             break;
         }
-
-        if (arg[0] == '-'
+        
+        if (arg[0] == '-' 
 #ifdef _WINDOWS
             || arg[0] == '/'
 #endif
@@ -172,10 +172,10 @@ void parse_cmd_line_args(int argc, char ** argv) {
                 g_input_kind = IN_Z3_LOG;
             }
             else if (strcmp(opt_name, "st") == 0) {
-                g_display_statistics = true;
+                g_display_statistics = true; 
             }
             else if (strcmp(opt_name, "ist") == 0) {
-                g_display_istatistics = true;
+                g_display_istatistics = true; 
             }
             else if (strcmp(opt_name, "v") == 0) {
                 if (!opt_arg)
@@ -252,7 +252,7 @@ void parse_cmd_line_args(int argc, char ** argv) {
         else if (argv[i][0] != '"' && (eq_pos = strchr(argv[i], '='))) {
             char * key   = argv[i];
             *eq_pos      = 0;
-            char * value = eq_pos+1;
+            char * value = eq_pos+1; 
             gparams::set(key, value);
         }
         else {
@@ -295,7 +295,7 @@ int main(int argc, char ** argv) {
         if (!g_input_file && !g_standard_input) {
             error("input file was not specified.");
         }
-
+        
         if (g_input_kind == IN_UNSPECIFIED) {
             g_input_kind = IN_SMTLIB;
             char const * ext = get_extension(g_input_file);

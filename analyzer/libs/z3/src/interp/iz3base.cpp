@@ -221,7 +221,7 @@ void iz3base::initialize(const std::vector<std::vector<ast> > &_parts, const std
       cnsts[i] = make(And,_parts[i]);
       add_frame_range(i, _parts[i][j]);
       frame_map[_parts[i][j]] = i;
-    }
+    }  
   for(unsigned i = 0; i < _theory.size(); i++){
     add_frame_range(SHRT_MIN, _theory[i]);
     add_frame_range(SHRT_MAX, _theory[i]);
@@ -264,8 +264,8 @@ bool iz3base::is_sat(const std::vector<ast> &q, ast &_proof, std::vector<ast> &v
 
   params_ref p;
   p.set_bool("proof", true); // this is currently useless
-  p.set_bool("model", true);
-  p.set_bool("unsat_core", true);
+  p.set_bool("model", true); 
+  p.set_bool("unsat_core", true); 
   scoped_ptr<solver_factory> sf = mk_smt_solver_factory();
   ::solver *m_solver = (*sf)(m(), p, true, true, true, ::symbol::null);
   ::solver &s = *m_solver;
@@ -304,7 +304,7 @@ void iz3base::find_children(const stl_ext::hash_set<ast> &cnsts_set,
   std::vector<ast> my_conjuncts;
   if(op(tree) == Interp){ // if we've hit an interpolation position...
     find_children(cnsts_set,arg(tree,0),cnsts,parents,my_conjuncts,my_children,pos_map,merge);
-    if(my_conjuncts.empty())
+    if(my_conjuncts.empty()) 
       my_conjuncts.push_back(mk_true()); // need at least one conjunct
     int root = cnsts.size() + my_conjuncts.size() - 1;
     for(unsigned i = 0; i < my_conjuncts.size(); i++){
@@ -334,7 +334,7 @@ void iz3base::find_children(const stl_ext::hash_set<ast> &cnsts_set,
       conjuncts.push_back(my_conjuncts[i]);
   }
 }
-
+    
 void iz3base::to_parents_vec_representation(const std::vector<ast> &_cnsts,
 					    const ast &tree,
 					    std::vector<ast> &cnsts,
@@ -352,9 +352,9 @@ void iz3base::to_parents_vec_representation(const std::vector<ast> &_cnsts,
   find_children(cnsts_set,_tree,cnsts,parents,my_conjuncts,my_children,pos_map,merge);
   if(op(tree) != Interp) pos_map.pop_back();
   parents[parents.size()-1] = SHRT_MAX;
-
+    
   // rest of the constraints are the background theory
-
+    
   hash_set<ast> used_set;
   for(unsigned i = 0; i < cnsts.size(); i++)
     used_set.insert(cnsts[i]);

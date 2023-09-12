@@ -27,19 +27,19 @@ Notes:
 #include"polynomial.h"
 
 namespace rpolynomial {
-
+    
     typedef polynomial::var var;
     const var null_var = polynomial::null_var;
     typedef polynomial::var_vector var_vector;
     typedef polynomial::display_var_proc display_var_proc;
     typedef polynomial::polynomial som_polynomial;
-
+   
     class polynomial;
     class manager;
     typedef obj_ref<polynomial, manager>     polynomial_ref;
     typedef ref_vector<polynomial, manager>  polynomial_ref_vector;
     typedef ptr_vector<polynomial>           polynomial_vector;
-
+    
     class manager {
     public:
         typedef unsynch_mpz_manager                     numeral_manager;
@@ -78,7 +78,7 @@ namespace rpolynomial {
            \brief Increment reference counter.
         */
         void inc_ref(polynomial * p);
-
+        
         /**
            \brief Decrement reference counter.
         */
@@ -93,7 +93,7 @@ namespace rpolynomial {
            \brief Return true if p1 == p2.
         */
         bool eq(polynomial const * p1, polynomial const * p2);
-
+        
         /**
            \brief Return true if \c p is the constant polynomial.
         */
@@ -111,13 +111,13 @@ namespace rpolynomial {
 
         /**
            \brief Return the maximal variable occurring in p.
-
+           
            Return null_var if p is a constant polynomial.
         */
         static var max_var(polynomial const * p);
 
         /**
-           \brief Return the size of the polynomail p.
+           \brief Return the size of the polynomail p. 
            It is the degree(p) on max_var(p) + 1.
         */
         static unsigned size(polynomial const * p);
@@ -127,24 +127,24 @@ namespace rpolynomial {
            if p does not contain any monomial containing max_var(p)^k, then return 0.
         */
         polynomial * coeff(polynomial const * p, unsigned k);
-
+        
         /**
            \brief Create the zero polynomial.
         */
-        polynomial * mk_zero();
-
+        polynomial * mk_zero(); 
+        
         /**
            \brief Create the constant polynomial \c r.
-
+           
            \warning r is a number managed by the numeral_manager in the polynomial manager
 
            \warning r is reset.
         */
         polynomial * mk_const(numeral const & r);
-
+        
         /**
            \brief Create the constant polynomial \c r.
-
+           
            \pre r must be an integer
         */
         polynomial * mk_const(rational const & r);
@@ -168,9 +168,9 @@ namespace rpolynomial {
            \brief Convert the given polynomial in sum-of-monomials form into a polynomial in dense recursive form.
         */
         polynomial * translate(som_polynomial const * p);
-
+        
         void display(std::ostream & out, polynomial const * p, display_var_proc const & proc = display_var_proc(), bool use_star = false) const;
-
+        
         void display_smt2(std::ostream & out, polynomial const * p, display_var_proc const & proc = display_var_proc()) const;
 
         friend std::ostream & operator<<(std::ostream & out, polynomial_ref const & p) {

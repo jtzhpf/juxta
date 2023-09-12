@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Global.java
@@ -12,16 +12,16 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
 /**
- * Global functions for Z3.
+ * Global functions for Z3. 
  * <remarks>
  * This (static) class contains functions that effect the behaviour of Z3
- * globally across contexts, etc.
+ * globally across contexts, etc. 
  * </remarks>
  **/
 public final class Global
@@ -31,7 +31,7 @@ public final class Global
      * <remarks>
      * When a Z3 module is initialized it will use the value of these parameters
      * when Z3_params objects are not provided.
-     * The name of parameter can be composed of characters [a-z][A-Z], digits [0-9], '-' and '_'.
+     * The name of parameter can be composed of characters [a-z][A-Z], digits [0-9], '-' and '_'. 
      * The character '.' is a delimiter (more later).
      * The parameter names are case-insensitive. The character '-' should be viewed as an "alias" for '_'.
      * Thus, the following parameter names are considered equivalent: "pp.decimal-precision"  and "PP.DECIMAL_PRECISION".
@@ -46,11 +46,11 @@ public final class Global
     {
 	Native.globalParamSet(id, value);
     }
-
+    
     /**
-     * Get a global (or module) parameter.
-     * <remarks>
-     * Returns null if the parameter <param name="id">parameter id</param> does not exist.
+     * Get a global (or module) parameter.     
+     * <remarks>               
+     * Returns null if the parameter <param name="id">parameter id</param> does not exist.     
      * This function cannot be invoked simultaneously from different threads without synchronization.
      * The result string stored in param_value is stored in a shared location.
      * </remarks>
@@ -62,8 +62,8 @@ public final class Global
             return null;
         else
             return res.value;
-    }
-
+    }    
+    
     /**
      * Restore the value of all global (and module) parameters.
      * <remarks>
@@ -74,5 +74,5 @@ public final class Global
     public static void resetParameters()
     {
 	Native.globalParamResetAll();
-    }
+    }   
 }

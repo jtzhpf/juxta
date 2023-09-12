@@ -42,14 +42,14 @@ namespace datalog {
                 if (m_unify.unify_rules(r, tail_idx, r2) &&
                     m_unify.apply(r, tail_idx, r2, new_rule)) {
                     expr_ref_vector s1 = m_unify.get_rule_subst(r, true);
-                    expr_ref_vector s2 = m_unify.get_rule_subst(r2, false);
+                    expr_ref_vector s2 = m_unify.get_rule_subst(r2, false);                    
                     resolve_rule(r, r2, tail_idx, s1, s2, *new_rule.get());
                     expand_tail(*new_rule.get(), tail_idx+r2.get_uninterpreted_tail_size(), src, dst);
                 }
             }
         }
     }
-
+        
     rule_set * mk_unfold::operator()(rule_set const & source) {
         rule_set* rules = alloc(rule_set, m_ctx);
         rule_set::iterator it = source.begin(), end = source.end();

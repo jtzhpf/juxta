@@ -31,18 +31,18 @@ struct static_features {
     family_id                m_lfid;
     ast_mark                 m_already_visited;
     bool                     m_cnf;
-    unsigned                 m_num_exprs;             //
+    unsigned                 m_num_exprs;             // 
     unsigned                 m_num_roots;             //
     unsigned                 m_max_depth;
     unsigned                 m_num_quantifiers;       //
     unsigned                 m_num_quantifiers_with_patterns; //
     unsigned                 m_num_quantifiers_with_multi_patterns; //
     unsigned                 m_num_clauses;
-    unsigned                 m_num_bin_clauses;     //
+    unsigned                 m_num_bin_clauses;     // 
     unsigned                 m_num_units;           //
     unsigned                 m_sum_clause_size;
     unsigned                 m_num_nested_formulas; //
-    unsigned                 m_num_bool_exprs;      //
+    unsigned                 m_num_bool_exprs;      // 
     unsigned                 m_num_bool_constants;  //
     unsigned                 m_num_formula_trees;
     unsigned                 m_max_formula_depth;
@@ -53,9 +53,9 @@ struct static_features {
     unsigned                 m_num_ite_trees;
     unsigned                 m_max_ite_tree_depth;
     unsigned                 m_sum_ite_tree_depth;
-    unsigned                 m_num_ands;  //
+    unsigned                 m_num_ands;  //  
     unsigned                 m_num_ors;   // num nested ors
-    unsigned                 m_num_iffs;  //
+    unsigned                 m_num_iffs;  // 
     unsigned                 m_num_ite_formulas; //
     unsigned                 m_num_ite_terms;    //
     unsigned                 m_num_sharing;
@@ -84,16 +84,16 @@ struct static_features {
     unsigned_vector          m_num_theory_constants; // mapping family_id -> num_exprs
     unsigned_vector          m_num_theory_eqs;       // mapping family_id -> num_eqs
     unsigned                 m_num_aliens;            //
-    unsigned_vector          m_num_aliens_per_family; // mapping family_id -> num_alies exprs
-
+    unsigned_vector          m_num_aliens_per_family; // mapping family_id -> num_alies exprs 
+    
     unsigned_vector          m_expr2depth; // expr-id -> depth
     unsigned                 m_max_stack_depth;      // maximal depth of stack we are willing to walk.
 
-    u_map<unsigned>          m_expr2or_and_depth;
+    u_map<unsigned>          m_expr2or_and_depth; 
     u_map<unsigned>          m_expr2ite_depth;
     u_map<unsigned>          m_expr2formula_depth;
 
-    unsigned                 m_num_theories;
+    unsigned                 m_num_theories; 
     svector<bool>            m_theories;       // mapping family_id -> bool
 
     symbol                   m_label_sym;
@@ -111,22 +111,22 @@ struct static_features {
     bool is_diff_term(expr const * e, rational & r) const;
     bool is_diff_atom(expr const * e) const;
     bool is_gate(expr const * e) const;
-    void mark_theory(family_id fid) {
+    void mark_theory(family_id fid) { 
         if (fid != null_family_id && !m_manager.is_builtin_family_id(fid) && !m_theories.get(fid, false)) {
             m_theories.setx(fid, true, false);
-            m_num_theories++;
+            m_num_theories++; 
         }
     }
-
+    
     void acc_num(rational const & r) {
         if (r.is_neg())
             m_arith_k_sum -= r;
         else
             m_arith_k_sum += r;
     }
-
-    void acc_num(expr const * e) {
-        rational r;
+    
+    void acc_num(expr const * e) { 
+        rational r; 
         if (is_numeral(e, r)) {
             acc_num(r);
         }
@@ -160,8 +160,8 @@ struct static_features {
     void display(std::ostream & out) const;
     void get_feature_vector(vector<double> & result);
     bool has_uf() const;
-    unsigned num_theories() const;
-    unsigned num_non_uf_theories() const;
+    unsigned num_theories() const; 
+    unsigned num_non_uf_theories() const; 
 
 };
 

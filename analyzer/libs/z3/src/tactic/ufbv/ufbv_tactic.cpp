@@ -43,9 +43,9 @@ tactic * mk_ufbv_preprocessor_tactic(ast_manager & m, params_ref const & p) {
 		mk_trace_tactic("ufbv_pre"),
                 and_then(mk_simplify_tactic(m, p),
                          mk_propagate_values_tactic(m, p),
-                         and_then(using_params(mk_macro_finder_tactic(m, no_elim_and), no_elim_and),
+                         and_then(using_params(mk_macro_finder_tactic(m, no_elim_and), no_elim_and), 
 				  mk_simplify_tactic(m, p)),
-                         and_then(mk_snf_tactic(m, p), mk_simplify_tactic(m, p)),
+                         and_then(mk_snf_tactic(m, p), mk_simplify_tactic(m, p)),			 
                          mk_elim_and_tactic(m, p),
                          mk_solve_eqs_tactic(m, p),
                          and_then(mk_der_fp_tactic(m, p), mk_simplify_tactic(m, p)),
@@ -60,14 +60,14 @@ tactic * mk_ufbv_preprocessor_tactic(ast_manager & m, params_ref const & p) {
 }
 
 tactic * mk_ufbv_tactic(ast_manager & m, params_ref const & p) {
-    params_ref main_p(p);
+    params_ref main_p(p);    
     main_p.set_bool("mbqi", true);
     main_p.set_uint("mbqi.max_iterations", UINT_MAX);
     main_p.set_bool("elim_and", true);
 
     tactic * t = and_then(repeat(mk_ufbv_preprocessor_tactic(m, main_p), 2),
                           mk_smt_tactic_using(false, main_p));
-
+    
     t->updt_params(p);
 
     return t;

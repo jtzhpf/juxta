@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
     API for creating goals
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-03-06.
@@ -76,7 +76,7 @@ extern "C" {
         Z3_TRY;
         LOG_Z3_goal_assert(c, g, a);
         RESET_ERROR_CODE();
-        CHECK_FORMULA(a,);
+        CHECK_FORMULA(a,);        
         to_goal_ref(g)->assert_expr(to_expr(a));
         Z3_CATCH;
     }
@@ -112,7 +112,7 @@ extern "C" {
         return to_goal_ref(g)->size();
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_ast Z3_API Z3_goal_formula(Z3_context c, Z3_goal g, unsigned idx) {
         Z3_TRY;
         LOG_Z3_goal_formula(c, g, idx);
@@ -126,7 +126,7 @@ extern "C" {
         RETURN_Z3(of_ast(result));
         Z3_CATCH_RETURN(0);
     }
-
+    
     unsigned Z3_API Z3_goal_num_exprs(Z3_context c, Z3_goal g) {
         Z3_TRY;
         LOG_Z3_goal_num_exprs(c, g);
@@ -134,7 +134,7 @@ extern "C" {
         return to_goal_ref(g)->num_exprs();
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_bool Z3_API Z3_goal_is_decided_sat(Z3_context c, Z3_goal g) {
         Z3_TRY;
         LOG_Z3_goal_is_decided_sat(c, g);
@@ -142,7 +142,7 @@ extern "C" {
         return to_goal_ref(g)->is_decided_sat();
         Z3_CATCH_RETURN(Z3_FALSE);
     }
-
+    
     Z3_bool Z3_API Z3_goal_is_decided_unsat(Z3_context c, Z3_goal g) {
         Z3_TRY;
         LOG_Z3_goal_is_decided_unsat(c, g);

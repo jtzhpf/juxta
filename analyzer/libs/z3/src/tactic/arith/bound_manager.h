@@ -44,12 +44,12 @@ public:
 
     bound_manager(ast_manager & m);
     ~bound_manager();
-
+    
     ast_manager & m() const { return m_util.get_manager(); }
-
+    
     void operator()(goal const & g);
     void operator()(expr * n, expr_dependency * d = 0);
-
+    
     bool has_lower(expr * c, numeral & v, bool & strict) const {
         limit l;
         if (m_lowers.find(c, l)) {
@@ -83,7 +83,7 @@ public:
             return d;
         return 0;
     }
-
+    
     bool has_lower(expr * c) const {
         return m_lowers.contains(c);
     }
@@ -91,15 +91,15 @@ public:
     bool has_upper(expr * c) const {
         return m_uppers.contains(c);
     }
-
+    
     typedef ptr_vector<expr>::const_iterator iterator;
-
+    
     /**
        \brief Iterator for all bounded constants.
     */
     iterator begin() const { return m_bounded_vars.begin(); }
     iterator end() const { return m_bounded_vars.end(); }
-
+    
     void reset();
 
     // for debugging purposes

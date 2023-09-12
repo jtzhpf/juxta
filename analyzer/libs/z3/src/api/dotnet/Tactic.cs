@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -24,7 +24,7 @@ namespace Microsoft.Z3
 {
     /// <summary>
     /// Tactics are the basic building block for creating custom solvers for specific problem domains.
-    /// The complete list of tactics may be obtained using <c>Context.NumTactics</c>
+    /// The complete list of tactics may be obtained using <c>Context.NumTactics</c> 
     /// and <c>Context.TacticNames</c>.
     /// It may also be obtained using the command <c>(help-tactics)</c> in the SMT 2.0 front-end.
     /// </summary>
@@ -55,7 +55,7 @@ namespace Microsoft.Z3
 
 
         /// <summary>
-        /// Execute the tactic over the goal.
+        /// Execute the tactic over the goal. 
         /// </summary>
         public ApplyResult Apply(Goal g, Params p = null)
         {

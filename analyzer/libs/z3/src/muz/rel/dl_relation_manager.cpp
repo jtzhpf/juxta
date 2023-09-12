@@ -64,7 +64,7 @@ namespace datalog {
         return get_context().get_decl_util();
     }
 
-    family_id relation_manager::get_next_relation_fid(relation_plugin & claimer) {
+    family_id relation_manager::get_next_relation_fid(relation_plugin & claimer) { 
         unsigned res = m_next_relation_fid++;
         m_kind2plugin.insert(res, &claimer);
         return res;
@@ -184,17 +184,17 @@ namespace datalog {
                 m_favourite_table_plugin = checking_plugin;
             }
             if (m_favourite_relation_plugin && m_favourite_relation_plugin->from_table()) {
-                table_relation_plugin * fav_rel_plugin =
+                table_relation_plugin * fav_rel_plugin = 
                     static_cast<table_relation_plugin *>(m_favourite_relation_plugin);
                 if(&fav_rel_plugin->get_table_plugin()==plugin || plugin->get_name()==checker_name) {
                     //the plugins we need to create the checking table_relation_plugin were just added
-                    SASSERT(m_favourite_relation_plugin->get_name() ==
+                    SASSERT(m_favourite_relation_plugin->get_name() == 
                         get_context().default_relation());
                     symbol checked_name = fav_rel_plugin->get_table_plugin().get_name();
                     table_plugin * checking_plugin = alloc(check_table_plugin, *this, checker_name, checked_name);
                     register_plugin(checking_plugin);
 
-                    table_relation_plugin * checking_tr_plugin =
+                    table_relation_plugin * checking_tr_plugin = 
                         alloc(table_relation_plugin, *checking_plugin, *this);
                     register_relation_plugin_impl(checking_tr_plugin);
                     m_table_relation_plugins.insert(checking_plugin, checking_tr_plugin);
@@ -298,7 +298,7 @@ namespace datalog {
         return *res;
     }
 
-    bool relation_manager::try_get_finite_product_relation_plugin(const relation_plugin & inner,
+    bool relation_manager::try_get_finite_product_relation_plugin(const relation_plugin & inner, 
             finite_product_relation_plugin * & res) {
         return m_finite_product_relation_plugins.find(&inner, res);
     }
@@ -319,7 +319,7 @@ namespace datalog {
         return true;
     }
 
-    relation_base * relation_manager::mk_empty_relation(const relation_signature & s, func_decl* pred) {
+    relation_base * relation_manager::mk_empty_relation(const relation_signature & s, func_decl* pred) {        
         return mk_empty_relation(s, get_requested_predicate_kind(pred));
     }
 
@@ -384,25 +384,25 @@ namespace datalog {
         return mk_full_relation(s, pred, kind);
     }
 
-    void relation_manager::relation_to_table(const relation_sort & sort, const relation_element & from,
+    void relation_manager::relation_to_table(const relation_sort & sort, const relation_element & from, 
             table_element & to) {
         SASSERT(from->get_num_args()==0);
         VERIFY(get_context().get_decl_util().is_numeral_ext(from, to));
     }
 
-    void relation_manager::table_to_relation(const relation_sort & sort, const table_element & from,
+    void relation_manager::table_to_relation(const relation_sort & sort, const table_element & from, 
             relation_element & to) {
         to = get_decl_util().mk_numeral(from, sort);
     }
 
-    void relation_manager::table_to_relation(const relation_sort & sort, const table_element & from,
+    void relation_manager::table_to_relation(const relation_sort & sort, const table_element & from, 
             relation_element_ref & to) {
         relation_element rel_el;
         table_to_relation(sort, from, rel_el);
         to = rel_el;
     }
 
-    void relation_manager::table_to_relation(const relation_sort & sort, const table_element & from,
+    void relation_manager::table_to_relation(const relation_sort & sort, const table_element & from, 
             const relation_fact::el_proxy & to) {
         relation_element rel_el;
         table_to_relation(sort, from, rel_el);
@@ -439,7 +439,7 @@ namespace datalog {
         return true;
     }
 
-    void relation_manager::relation_fact_to_table(const relation_signature & s, const relation_fact & from,
+    void relation_manager::relation_fact_to_table(const relation_signature & s, const relation_fact & from, 
             table_fact & to) {
         SASSERT(s.size()==from.size());
         unsigned n=from.size();
@@ -449,7 +449,7 @@ namespace datalog {
         }
     }
 
-    void relation_manager::table_fact_to_relation(const relation_signature & s, const table_fact & from,
+    void relation_manager::table_fact_to_relation(const relation_signature & s, const table_fact & from, 
         relation_fact & to) {
             SASSERT(s.size()==from.size());
             unsigned n=from.size();
@@ -525,7 +525,7 @@ namespace datalog {
         relation_map::iterator it=m_relations.begin();
         relation_map::iterator end=m_relations.end();
         for(;it!=end;++it) {
-            out << "Relation " << it->m_key->get_name() << " has size "
+            out << "Relation " << it->m_key->get_name() << " has size " 
                 << it->m_value->get_size_estimate_rows() << "\n";
         }
     }
@@ -582,7 +582,7 @@ namespace datalog {
         relation_plugin * p2 = &t2.get_plugin();
 
         relation_join_fn * res = p1->mk_join_fn(t1, t2, col_cnt, cols1, cols2);
-
+        
         if(!res && p1!=p2) {
             res = p2->mk_join_fn(t1, t2, col_cnt, cols1, cols2);
         }
@@ -593,7 +593,7 @@ namespace datalog {
 
         finite_product_relation_plugin * fprp;
         if(!res && p1->from_table() && try_get_finite_product_relation_plugin(*p2, fprp)) {
-            //we downcast here to relation_plugin so that we don't have to declare
+            //we downcast here to relation_plugin so that we don't have to declare 
             //relation_manager as a friend class of finite_product_relation_plugin
             res = static_cast<relation_plugin *>(fprp)->mk_join_fn(t1, t2, col_cnt, cols1, cols2);
         }
@@ -609,7 +609,7 @@ namespace datalog {
         return res;
     }
 
-    relation_transformer_fn * relation_manager::mk_project_fn(const relation_base & t, unsigned col_cnt,
+    relation_transformer_fn * relation_manager::mk_project_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * removed_cols) {
         return t.get_plugin().mk_project_fn(t, col_cnt, removed_cols);
     }
@@ -627,8 +627,8 @@ namespace datalog {
             relation_mutator_fn* filter,
             unsigned removed_col_cnt,
             const unsigned * removed_cols)
-            : m_filter(filter),
-              m_project(0),
+            : m_filter(filter), 
+              m_project(0), 
               m_removed_cols(removed_col_cnt, removed_cols) {}
 
         virtual relation_base * operator()(const relation_base & t) {
@@ -649,9 +649,9 @@ namespace datalog {
         const relation_base & t, app * condition,
         unsigned removed_col_cnt, const unsigned * removed_cols) {
 
-        relation_transformer_fn* res =
+        relation_transformer_fn* res = 
             t.get_plugin().mk_filter_interpreted_and_project_fn(
-                t,
+                t, 
                 condition,
                 removed_col_cnt,
                 removed_cols);
@@ -659,7 +659,7 @@ namespace datalog {
         if (!res) {
             relation_mutator_fn* filter_fn = mk_filter_interpreted_fn(t, condition);
             if (filter_fn) {
-                res = alloc(default_relation_filter_interpreted_and_project_fn,
+                res = alloc(default_relation_filter_interpreted_and_project_fn, 
                             filter_fn,
                             removed_col_cnt,
                             removed_cols);
@@ -699,12 +699,12 @@ namespace datalog {
 
 
     relation_join_fn * relation_manager::mk_join_project_fn(const relation_base & t1, const relation_base & t2,
-            unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2,
-            unsigned removed_col_cnt, const unsigned * removed_cols, bool allow_product_relation_join) {
-        relation_join_fn * res = t1.get_plugin().mk_join_project_fn(t1, t2, joined_col_cnt, cols1, cols2,
+            unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2, 
+            unsigned removed_col_cnt, const unsigned * removed_cols, bool allow_product_relation_join) { 
+        relation_join_fn * res = t1.get_plugin().mk_join_project_fn(t1, t2, joined_col_cnt, cols1, cols2, 
             removed_col_cnt, removed_cols);
         if(!res && &t1.get_plugin()!=&t2.get_plugin()) {
-            res = t2.get_plugin().mk_join_project_fn(t1, t2, joined_col_cnt, cols1, cols2, removed_col_cnt,
+            res = t2.get_plugin().mk_join_project_fn(t1, t2, joined_col_cnt, cols1, cols2, removed_col_cnt, 
                 removed_cols);
         }
         if(!res) {
@@ -714,15 +714,15 @@ namespace datalog {
             }
         }
         return res;
-
+                
     }
 
-    relation_transformer_fn * relation_manager::mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len,
+    relation_transformer_fn * relation_manager::mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle) {
         return t.get_plugin().mk_rename_fn(t, permutation_cycle_len, permutation_cycle);
     }
 
-    relation_transformer_fn * relation_manager::mk_permutation_rename_fn(const relation_base & t,
+    relation_transformer_fn * relation_manager::mk_permutation_rename_fn(const relation_base & t, 
             const unsigned * permutation) {
         relation_transformer_fn * res = t.get_plugin().mk_permutation_rename_fn(t, permutation);
         if(!res) {
@@ -732,8 +732,8 @@ namespace datalog {
     }
 
 
-    relation_union_fn * relation_manager::mk_union_fn(const relation_base & tgt, const relation_base & src,
-            const relation_base * delta) {
+    relation_union_fn * relation_manager::mk_union_fn(const relation_base & tgt, const relation_base & src, 
+            const relation_base * delta) { 
         relation_union_fn * res = tgt.get_plugin().mk_union_fn(tgt, src, delta);
         if(!res && &tgt.get_plugin()!=&src.get_plugin()) {
             res = src.get_plugin().mk_union_fn(tgt, src, delta);
@@ -744,8 +744,8 @@ namespace datalog {
         return res;
     }
 
-    relation_union_fn * relation_manager::mk_widen_fn(const relation_base & tgt, const relation_base & src,
-            const relation_base * delta) {
+    relation_union_fn * relation_manager::mk_widen_fn(const relation_base & tgt, const relation_base & src, 
+            const relation_base * delta) { 
         relation_union_fn * res = tgt.get_plugin().mk_widen_fn(tgt, src, delta);
         if(!res && &tgt.get_plugin()!=&src.get_plugin()) {
             res = src.get_plugin().mk_widen_fn(tgt, src, delta);
@@ -759,13 +759,13 @@ namespace datalog {
         return res;
     }
 
-    relation_mutator_fn * relation_manager::mk_filter_identical_fn(const relation_base & t, unsigned col_cnt,
-            const unsigned * identical_cols) {
+    relation_mutator_fn * relation_manager::mk_filter_identical_fn(const relation_base & t, unsigned col_cnt, 
+            const unsigned * identical_cols) { 
         return t.get_plugin().mk_filter_identical_fn(t, col_cnt, identical_cols);
     }
 
-    relation_mutator_fn * relation_manager::mk_filter_equal_fn(const relation_base & t,
-            const relation_element & value, unsigned col) {
+    relation_mutator_fn * relation_manager::mk_filter_equal_fn(const relation_base & t, 
+            const relation_element & value, unsigned col) { 
 
         return t.get_plugin().mk_filter_equal_fn(t, value, col);
     }
@@ -790,15 +790,15 @@ namespace datalog {
         }
     };
 
-    relation_transformer_fn * relation_manager::mk_select_equal_and_project_fn(const relation_base & t,
-            const relation_element & value, unsigned col) {
+    relation_transformer_fn * relation_manager::mk_select_equal_and_project_fn(const relation_base & t, 
+            const relation_element & value, unsigned col) { 
         relation_transformer_fn * res = t.get_plugin().mk_select_equal_and_project_fn(t, value, col);
         if(!res) {
             relation_mutator_fn * selector = mk_filter_equal_fn(t, value, col);
             if(selector) {
                 relation_transformer_fn * projector = mk_project_fn(t, 1, &col);
                 if(projector) {
-                    res = alloc(default_relation_select_equal_and_project_fn, selector, projector);
+                    res = alloc(default_relation_select_equal_and_project_fn, selector, projector); 
                 }
                 else {
                     dealloc(selector);
@@ -814,13 +814,13 @@ namespace datalog {
         scoped_ptr<relation_union_fn> m_union_fun;
     public:
 
-        default_relation_intersection_filter_fn(relation_join_fn * join_fun, relation_union_fn * union_fun)
+        default_relation_intersection_filter_fn(relation_join_fn * join_fun, relation_union_fn * union_fun) 
             : m_join_fun(join_fun), m_union_fun(union_fun) {}
 
         virtual void operator()(relation_base & tgt, const relation_base & intersected_obj) {
             scoped_rel<relation_base> filtered_rel = (*m_join_fun)(tgt, intersected_obj);
-            TRACE("dl",
-                  tgt.display(tout << "tgt:\n");
+            TRACE("dl", 
+                  tgt.display(tout << "tgt:\n"); 
                   intersected_obj.display(tout << "intersected:\n");
                   filtered_rel->display(tout << "filtered:\n");
                   );
@@ -837,7 +837,7 @@ namespace datalog {
     };
 
     relation_intersection_filter_fn * relation_manager::try_mk_default_filter_by_intersection_fn(
-            const relation_base & tgt, const relation_base & src, unsigned joined_col_cnt,
+            const relation_base & tgt, const relation_base & src, unsigned joined_col_cnt, 
             const unsigned * tgt_cols, const unsigned * src_cols) {
         TRACE("dl_verbose", tout << tgt.get_plugin().get_name() << "\n";);
         unsigned_vector join_removed_cols;
@@ -865,10 +865,10 @@ namespace datalog {
     }
 
 
-    relation_intersection_filter_fn * relation_manager::mk_filter_by_intersection_fn(const relation_base & t,
+    relation_intersection_filter_fn * relation_manager::mk_filter_by_intersection_fn(const relation_base & t, 
             const relation_base & src, unsigned joined_col_cnt, const unsigned * t_cols, const unsigned * src_cols) {
         TRACE("dl_verbose", tout << t.get_plugin().get_name() << "\n";);
-        relation_intersection_filter_fn * res = t.get_plugin().mk_filter_by_intersection_fn(t, src, joined_col_cnt,
+        relation_intersection_filter_fn * res = t.get_plugin().mk_filter_by_intersection_fn(t, src, joined_col_cnt, 
             t_cols, src_cols);
         if(!res && &t.get_plugin()!=&src.get_plugin()) {
             res = src.get_plugin().mk_filter_by_intersection_fn(t, src, joined_col_cnt, t_cols, src_cols);
@@ -879,7 +879,7 @@ namespace datalog {
         return res;
     }
 
-    relation_intersection_filter_fn * relation_manager::mk_filter_by_intersection_fn(const relation_base & tgt,
+    relation_intersection_filter_fn * relation_manager::mk_filter_by_intersection_fn(const relation_base & tgt, 
             const relation_base & src) {
         TRACE("dl_verbose", tout << tgt.get_plugin().get_name() << "\n";);
         SASSERT(tgt.get_signature()==src.get_signature());
@@ -890,14 +890,14 @@ namespace datalog {
     }
 
 
-    relation_intersection_filter_fn * relation_manager::mk_filter_by_negation_fn(const relation_base & t,
-            const relation_base & negated_obj, unsigned joined_col_cnt,
-            const unsigned * t_cols, const unsigned * negated_cols) {
+    relation_intersection_filter_fn * relation_manager::mk_filter_by_negation_fn(const relation_base & t, 
+            const relation_base & negated_obj, unsigned joined_col_cnt, 
+            const unsigned * t_cols, const unsigned * negated_cols) { 
         TRACE("dl", tout << t.get_plugin().get_name() << "\n";);
-        relation_intersection_filter_fn * res = t.get_plugin().mk_filter_by_negation_fn(t, negated_obj, joined_col_cnt,
+        relation_intersection_filter_fn * res = t.get_plugin().mk_filter_by_negation_fn(t, negated_obj, joined_col_cnt, 
             t_cols, negated_cols);
         if(!res && &t.get_plugin()!=&negated_obj.get_plugin()) {
-            res = negated_obj.get_plugin().mk_filter_by_negation_fn(t, negated_obj, joined_col_cnt, t_cols,
+            res = negated_obj.get_plugin().mk_filter_by_negation_fn(t, negated_obj, joined_col_cnt, t_cols, 
                 negated_cols);
         }
         return res;
@@ -916,8 +916,8 @@ namespace datalog {
     class relation_manager::default_table_join_fn : public convenient_table_join_fn {
         unsigned m_col_cnt;
     public:
-        default_table_join_fn(const table_signature & t1_sig, const table_signature & t2_sig, unsigned col_cnt,
-            const unsigned * cols1, const unsigned * cols2)
+        default_table_join_fn(const table_signature & t1_sig, const table_signature & t2_sig, unsigned col_cnt, 
+            const unsigned * cols1, const unsigned * cols2) 
             : convenient_table_join_fn(t1_sig, t2_sig, col_cnt, cols1, cols2), m_col_cnt(col_cnt) {}
 
         virtual table_base * operator()(const table_base & t1, const table_base & t2) {
@@ -990,7 +990,7 @@ namespace datalog {
         }
         if(!res) {
             table_signature sig;
-            table_signature::from_join(t1.get_signature(), t2.get_signature(),
+            table_signature::from_join(t1.get_signature(), t2.get_signature(), 
                 col_cnt, cols1, cols2, sig);
             res = alloc(default_table_join_fn, t1.get_signature(), t2.get_signature(), col_cnt, cols1, cols2);
         }
@@ -1023,11 +1023,11 @@ namespace datalog {
         }
     };
 
-    class relation_manager::default_table_project_fn
+    class relation_manager::default_table_project_fn 
             : public convenient_table_project_fn, auxiliary_table_transformer_fn {
     public:
-        default_table_project_fn(const table_signature & orig_sig, unsigned removed_col_cnt,
-                const unsigned * removed_cols)
+        default_table_project_fn(const table_signature & orig_sig, unsigned removed_col_cnt, 
+                const unsigned * removed_cols) 
             : convenient_table_project_fn(orig_sig, removed_col_cnt, removed_cols) {
                 SASSERT(removed_col_cnt>0);
         }
@@ -1062,7 +1062,7 @@ namespace datalog {
 
 
 
-    table_transformer_fn * relation_manager::mk_project_fn(const table_base & t, unsigned col_cnt,
+    table_transformer_fn * relation_manager::mk_project_fn(const table_base & t, unsigned col_cnt, 
             const unsigned * removed_cols) {
         table_transformer_fn * res = t.get_plugin().mk_project_fn(t, col_cnt, removed_cols);
         if(!res && col_cnt==t.get_signature().size()) {
@@ -1082,12 +1082,12 @@ namespace datalog {
 
         unsigned_vector m_removed_cols;
     public:
-        default_table_join_project_fn(join_fn * join, const table_base & t1, const table_base & t2,
-                unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
+        default_table_join_project_fn(join_fn * join, const table_base & t1, const table_base & t2, 
+                unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
                 const unsigned * removed_cols)
-            : convenient_table_join_project_fn(t1.get_signature(), t2.get_signature(), joined_col_cnt, cols1,
-                cols2, removed_col_cnt, removed_cols),
-            m_join(join),
+            : convenient_table_join_project_fn(t1.get_signature(), t2.get_signature(), joined_col_cnt, cols1, 
+                cols2, removed_col_cnt, removed_cols), 
+            m_join(join), 
             m_removed_cols(removed_col_cnt, removed_cols) {}
 
         class unreachable_reducer : public table_row_pair_reduce_fn {
@@ -1121,30 +1121,30 @@ namespace datalog {
     };
 
     table_join_fn * relation_manager::mk_join_project_fn(const table_base & t1, const table_base & t2,
-            unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2,
-            unsigned removed_col_cnt, const unsigned * removed_cols) {
-        table_join_fn * res = t1.get_plugin().mk_join_project_fn(t1, t2, joined_col_cnt, cols1, cols2,
+            unsigned joined_col_cnt, const unsigned * cols1, const unsigned * cols2, 
+            unsigned removed_col_cnt, const unsigned * removed_cols) { 
+        table_join_fn * res = t1.get_plugin().mk_join_project_fn(t1, t2, joined_col_cnt, cols1, cols2, 
             removed_col_cnt, removed_cols);
         if(!res && &t1.get_plugin()!=&t2.get_plugin()) {
-            res = t2.get_plugin().mk_join_project_fn(t1, t2, joined_col_cnt, cols1, cols2, removed_col_cnt,
+            res = t2.get_plugin().mk_join_project_fn(t1, t2, joined_col_cnt, cols1, cols2, removed_col_cnt, 
                 removed_cols);
         }
         if(!res) {
             table_join_fn * join = mk_join_fn(t1, t2, joined_col_cnt, cols1, cols2);
             if(join) {
-                res = alloc(default_table_join_project_fn, join, t1, t2, joined_col_cnt, cols1, cols2,
+                res = alloc(default_table_join_project_fn, join, t1, t2, joined_col_cnt, cols1, cols2, 
                     removed_col_cnt, removed_cols);
             }
         }
         return res;
-
+                
     }
 
-    class relation_manager::default_table_rename_fn
+    class relation_manager::default_table_rename_fn 
             : public convenient_table_rename_fn, auxiliary_table_transformer_fn {
     public:
-        default_table_rename_fn(const table_signature & orig_sig, unsigned permutation_cycle_len,
-                    const unsigned * permutation_cycle)
+        default_table_rename_fn(const table_signature & orig_sig, unsigned permutation_cycle_len, 
+                    const unsigned * permutation_cycle) 
                 : convenient_table_rename_fn(orig_sig, permutation_cycle_len, permutation_cycle) {
             SASSERT(permutation_cycle_len>=2);
         }
@@ -1163,7 +1163,7 @@ namespace datalog {
 
     };
 
-    table_transformer_fn * relation_manager::mk_rename_fn(const table_base & t, unsigned permutation_cycle_len,
+    table_transformer_fn * relation_manager::mk_rename_fn(const table_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle) {
         table_transformer_fn * res = t.get_plugin().mk_rename_fn(t, permutation_cycle_len, permutation_cycle);
         if(!res) {
@@ -1172,7 +1172,7 @@ namespace datalog {
         return res;
     }
 
-    table_transformer_fn * relation_manager::mk_permutation_rename_fn(const table_base & t,
+    table_transformer_fn * relation_manager::mk_permutation_rename_fn(const table_base & t, 
             const unsigned * permutation) {
         table_transformer_fn * res = t.get_plugin().mk_permutation_rename_fn(t, permutation);
         if(!res) {
@@ -1206,8 +1206,8 @@ namespace datalog {
         }
     };
 
-    table_union_fn * relation_manager::mk_union_fn(const table_base & tgt, const table_base & src,
-            const table_base * delta) {
+    table_union_fn * relation_manager::mk_union_fn(const table_base & tgt, const table_base & src, 
+            const table_base * delta) { 
         table_union_fn * res = tgt.get_plugin().mk_union_fn(tgt, src, delta);
         if(!res && &tgt.get_plugin()!=&src.get_plugin()) {
             res = src.get_plugin().mk_union_fn(tgt, src, delta);
@@ -1221,8 +1221,8 @@ namespace datalog {
         return res;
     }
 
-    table_union_fn * relation_manager::mk_widen_fn(const table_base & tgt, const table_base & src,
-            const table_base * delta) {
+    table_union_fn * relation_manager::mk_widen_fn(const table_base & tgt, const table_base & src, 
+            const table_base * delta) { 
         table_union_fn * res = tgt.get_plugin().mk_widen_fn(tgt, src, delta);
         if(!res && &tgt.get_plugin()!=&src.get_plugin()) {
             res = src.get_plugin().mk_widen_fn(tgt, src, delta);
@@ -1272,7 +1272,7 @@ namespace datalog {
         const unsigned m_col_cnt;
         const unsigned_vector m_identical_cols;
     public:
-        default_table_filter_identical_fn(unsigned col_cnt, const unsigned * identical_cols)
+        default_table_filter_identical_fn(unsigned col_cnt, const unsigned * identical_cols) 
                 : m_col_cnt(col_cnt),
                 m_identical_cols(col_cnt, identical_cols) {
             SASSERT(col_cnt>=2);
@@ -1294,8 +1294,8 @@ namespace datalog {
 
     };
 
-    table_mutator_fn * relation_manager::mk_filter_identical_fn(const table_base & t, unsigned col_cnt,
-            const unsigned * identical_cols) {
+    table_mutator_fn * relation_manager::mk_filter_identical_fn(const table_base & t, unsigned col_cnt, 
+            const unsigned * identical_cols) { 
         table_mutator_fn * res = t.get_plugin().mk_filter_identical_fn(t, col_cnt, identical_cols);
         if(!res) {
             res = alloc(default_table_filter_identical_fn, col_cnt, identical_cols);
@@ -1309,7 +1309,7 @@ namespace datalog {
         const table_element m_value;
         const unsigned m_col;
     public:
-        default_table_filter_equal_fn(const table_element & value, unsigned col)
+        default_table_filter_equal_fn(const table_element & value, unsigned col) 
                 : m_value(value),
                 m_col(col) {}
 
@@ -1322,8 +1322,8 @@ namespace datalog {
         }
     };
 
-    table_mutator_fn * relation_manager::mk_filter_equal_fn(const table_base & t,
-            const table_element & value, unsigned col) {
+    table_mutator_fn * relation_manager::mk_filter_equal_fn(const table_base & t, 
+            const table_element & value, unsigned col) { 
         table_mutator_fn * res = t.get_plugin().mk_filter_equal_fn(t, value, col);
         if(!res) {
             res = alloc(default_table_filter_equal_fn, value, col);
@@ -1331,13 +1331,13 @@ namespace datalog {
         return res;
     }
 
-    class relation_manager::default_table_filter_not_equal_fn
+    class relation_manager::default_table_filter_not_equal_fn 
             : public table_mutator_fn, auxiliary_table_filter_fn {
         unsigned      m_column;
         uint64        m_value;
     public:
         default_table_filter_not_equal_fn(context & ctx, unsigned column, uint64 value)
-            : m_column(column),
+            : m_column(column), 
               m_value(value) {
         }
 
@@ -1377,7 +1377,7 @@ namespace datalog {
 
 
 
-    class relation_manager::default_table_filter_interpreted_fn
+    class relation_manager::default_table_filter_interpreted_fn 
             : public table_mutator_fn, auxiliary_table_filter_fn {
         ast_manager & m_ast_manager;
         var_subst & m_vs;
@@ -1387,7 +1387,7 @@ namespace datalog {
         ptr_vector<sort> m_var_sorts;
         expr_ref_vector m_args;
     public:
-        default_table_filter_interpreted_fn(context & ctx, unsigned col_cnt,  app* condition)
+        default_table_filter_interpreted_fn(context & ctx, unsigned col_cnt,  app* condition) 
                 : m_ast_manager(ctx.get_manager()),
                   m_vs(ctx.get_var_subst()),
                   m_decl_util(ctx.get_decl_util()),
@@ -1440,7 +1440,7 @@ namespace datalog {
     }
 
 
-    class relation_manager::default_table_filter_interpreted_and_project_fn
+    class relation_manager::default_table_filter_interpreted_and_project_fn 
             : public table_transformer_fn {
         scoped_ptr<table_mutator_fn> m_filter;
         scoped_ptr<table_transformer_fn> m_project;
@@ -1448,7 +1448,7 @@ namespace datalog {
         unsigned_vector m_removed_cols;
     public:
         default_table_filter_interpreted_and_project_fn(context & ctx, table_mutator_fn * filter,
-            app * condition, unsigned removed_col_cnt, const unsigned * removed_cols)
+            app * condition, unsigned removed_col_cnt, const unsigned * removed_cols) 
                 : m_filter(filter), m_condition(condition, ctx.get_manager()),
                 m_removed_cols(removed_col_cnt, removed_cols) {}
 
@@ -1479,25 +1479,25 @@ namespace datalog {
     }
 
 
-    table_intersection_filter_fn * relation_manager::mk_filter_by_intersection_fn(const table_base & t,
+    table_intersection_filter_fn * relation_manager::mk_filter_by_intersection_fn(const table_base & t, 
         const table_base & src, unsigned joined_col_cnt, const unsigned * t_cols, const unsigned * src_cols) {
-        table_intersection_filter_fn * res = t.get_plugin().mk_filter_by_negation_fn(t, src, joined_col_cnt,
+        table_intersection_filter_fn * res = t.get_plugin().mk_filter_by_negation_fn(t, src, joined_col_cnt, 
             t_cols, src_cols);
         if(!res && &t.get_plugin()!=&src.get_plugin()) {
             res = src.get_plugin().mk_filter_by_negation_fn(t, src, joined_col_cnt, t_cols, src_cols);
         }
         return res;
     }
+    
 
 
-
-    class relation_manager::default_table_negation_filter_fn : public convenient_table_negation_filter_fn,
+    class relation_manager::default_table_negation_filter_fn : public convenient_table_negation_filter_fn, 
                                              auxiliary_table_filter_fn {
         const table_base * m_negated_table;
         mutable table_fact m_aux_fact;
     public:
-        default_table_negation_filter_fn(const table_base & tgt, const table_base & neg_t,
-                    unsigned joined_col_cnt, const unsigned * t_cols, const unsigned * negated_cols)
+        default_table_negation_filter_fn(const table_base & tgt, const table_base & neg_t, 
+                    unsigned joined_col_cnt, const unsigned * t_cols, const unsigned * negated_cols) 
                 : convenient_table_negation_filter_fn(tgt, neg_t, joined_col_cnt, t_cols, negated_cols),
                 m_negated_table(0) {
             m_aux_fact.resize(neg_t.get_signature().size());
@@ -1529,13 +1529,13 @@ namespace datalog {
 
     };
 
-    table_intersection_filter_fn * relation_manager::mk_filter_by_negation_fn(const table_base & t,
-            const table_base & negated_obj, unsigned joined_col_cnt,
-            const unsigned * t_cols, const unsigned * negated_cols) {
-        table_intersection_filter_fn * res = t.get_plugin().mk_filter_by_negation_fn(t, negated_obj, joined_col_cnt,
+    table_intersection_filter_fn * relation_manager::mk_filter_by_negation_fn(const table_base & t, 
+            const table_base & negated_obj, unsigned joined_col_cnt, 
+            const unsigned * t_cols, const unsigned * negated_cols) { 
+        table_intersection_filter_fn * res = t.get_plugin().mk_filter_by_negation_fn(t, negated_obj, joined_col_cnt, 
             t_cols, negated_cols);
         if(!res && &t.get_plugin()!=&negated_obj.get_plugin()) {
-            res = negated_obj.get_plugin().mk_filter_by_negation_fn(t, negated_obj, joined_col_cnt, t_cols,
+            res = negated_obj.get_plugin().mk_filter_by_negation_fn(t, negated_obj, joined_col_cnt, t_cols, 
                 negated_cols);
         }
         if(!res) {
@@ -1544,11 +1544,11 @@ namespace datalog {
         return res;
     }
 
-
+    
     table_intersection_join_filter_fn* relation_manager::mk_filter_by_negated_join_fn(
-        const table_base & t,
-        const table_base & src1,
-        const table_base & src2,
+        const table_base & t, 
+        const table_base & src1, 
+        const table_base & src2, 
         unsigned_vector const& t_cols,
         unsigned_vector const& src_cols,
         unsigned_vector const& src1_cols,
@@ -1574,15 +1574,15 @@ namespace datalog {
         }
     };
 
-    table_transformer_fn * relation_manager::mk_select_equal_and_project_fn(const table_base & t,
-            const table_element & value, unsigned col) {
+    table_transformer_fn * relation_manager::mk_select_equal_and_project_fn(const table_base & t, 
+            const table_element & value, unsigned col) { 
         table_transformer_fn * res = t.get_plugin().mk_select_equal_and_project_fn(t, value, col);
         if(!res) {
             table_mutator_fn * selector = mk_filter_equal_fn(t, value, col);
             SASSERT(selector);
             table_transformer_fn * projector = mk_project_fn(t, 1, &col);
             SASSERT(projector);
-            res = alloc(default_table_select_equal_and_project_fn, selector, projector);
+            res = alloc(default_table_select_equal_and_project_fn, selector, projector); 
         }
         return res;
     }
@@ -1595,7 +1595,7 @@ namespace datalog {
         scoped_ptr<table_union_fn> m_union_fn;
         table_fact m_curr_fact;
     public:
-        default_table_map_fn(const table_base & t, table_row_mutator_fn * mapper)
+        default_table_map_fn(const table_base & t, table_row_mutator_fn * mapper) 
                 : m_mapper(mapper), m_first_functional(t.get_signature().first_functional()) {
             SASSERT(t.get_signature().functional_columns()>0);
             table_plugin & plugin = t.get_plugin();
@@ -1618,7 +1618,7 @@ namespace datalog {
                     m_aux_table->add_fact(m_curr_fact);
                 }
             }
-
+            
             t.reset();
             (*m_union_fn)(t, *m_aux_table, static_cast<table_base *>(0));
         }
@@ -1644,15 +1644,15 @@ namespace datalog {
         table_fact m_row;
         table_fact m_former_row;
     public:
-        default_table_project_with_reduce_fn(const table_signature & orig_sig, unsigned removed_col_cnt,
-                    const unsigned * removed_cols, table_row_pair_reduce_fn * reducer)
+        default_table_project_with_reduce_fn(const table_signature & orig_sig, unsigned removed_col_cnt, 
+                    const unsigned * removed_cols, table_row_pair_reduce_fn * reducer) 
                 : m_removed_cols(removed_col_cnt, removed_cols),
                 m_inp_col_cnt(orig_sig.size()),
                 m_removed_col_cnt(removed_col_cnt),
-                m_result_col_cnt(orig_sig.size()-removed_col_cnt),
+                m_result_col_cnt(orig_sig.size()-removed_col_cnt), 
                 m_reducer(reducer) {
             SASSERT(removed_col_cnt>0);
-            table_signature::from_project_with_reduce(orig_sig, removed_col_cnt, removed_cols,
+            table_signature::from_project_with_reduce(orig_sig, removed_col_cnt, removed_cols, 
                 get_result_signature());
             m_res_first_functional = get_result_signature().first_functional();
             m_row.resize(get_result_signature().size());
@@ -1707,7 +1707,7 @@ namespace datalog {
         }
     };
 
-    table_transformer_fn * relation_manager::mk_project_with_reduce_fn(const table_base & t, unsigned col_cnt,
+    table_transformer_fn * relation_manager::mk_project_with_reduce_fn(const table_base & t, unsigned col_cnt, 
             const unsigned * removed_cols, table_row_pair_reduce_fn * reducer) {
         SASSERT(t.get_signature().functional_columns()>0);
         table_transformer_fn * res = t.get_plugin().mk_project_with_reduce_fn(t, col_cnt, removed_cols, reducer);

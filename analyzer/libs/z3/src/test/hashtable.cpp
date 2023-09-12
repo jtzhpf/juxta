@@ -62,7 +62,7 @@ static void tst1() {
     std::cout << "step3\n"; std::cout.flush();
     for (int i = 1; i < N; i += 2) {
         h1.insert(vals[i]);
-    }
+    }  
     std::cout << "step4\n"; std::cout.flush();
     for (int i = 1; i < N; i ++) {
         SASSERT(contains(h1, vals[i]));
@@ -86,7 +86,7 @@ static void tst2() {
             SASSERT(contains(h1, v));
         }
     }
-    {
+    { 
         safe_int_set::iterator it  = h2.begin();
         safe_int_set::iterator end = h2.end();
         for(; it != end; ++it) {
@@ -125,7 +125,7 @@ static void tst3() {
 
 void tst_hashtable() {
     tst3();
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 100; i++) 
         tst2();
     tst1();
 }

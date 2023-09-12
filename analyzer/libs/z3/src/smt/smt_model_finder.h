@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Model finding goodies for universally quantified formulas.
-
+    
     During the search, the finder store information about the quantifiers
     that are internalized. In an ideal world, quantifiers are only internalized
     at base level.
@@ -21,7 +21,7 @@ Abstract:
     During model construction, the model finder will complete the interpretation
     of uninterpreted functions by propagating basic constraints induced by the
     body of universally quantified formulas.
-
+    
     More information can be found in the following papers:
 
     - Complete instantiation for quantified SMT formulas, Yeting Ge
@@ -53,7 +53,7 @@ Revision History:
 
 namespace smt {
     class context;
-
+    
     namespace mf {
         class quantifier_info;
         class quantifier_analyzer;
@@ -63,7 +63,7 @@ namespace smt {
         class non_auf_macro_solver;
         class instantiation_set;
     };
-
+        
     class model_finder {
         typedef mf::quantifier_analyzer        quantifier_analyzer;
         typedef mf::quantifier_info            quantifier_info;
@@ -83,13 +83,13 @@ namespace smt {
         scoped_ptr<simple_macro_solver>        m_sm_solver;
         scoped_ptr<hint_solver>                m_hint_solver;
         scoped_ptr<non_auf_macro_solver>       m_nm_solver;
-
+        
         struct scope {
             unsigned                           m_quantifiers_lim;
         };
-
+        
         svector<scope>                         m_scopes;
-
+        
         expr_ref_vector                        m_new_constraints; // new constraints for fresh constants created by the model finder
 
         void restore_quantifiers(unsigned old_size);
@@ -106,7 +106,7 @@ namespace smt {
         model_finder(ast_manager & m, simplifier & s);
         ~model_finder();
         void set_context(context * ctx);
-
+        
         void register_quantifier(quantifier * q);
         void push_scope();
         void pop_scope(unsigned num_scopes);

@@ -10,13 +10,13 @@ using namespace z3;
 */
 void demorgan() {
     std::cout << "de-Morgan example\n";
-
+    
     context c;
 
     expr x = c.bool_const("x");
     expr y = c.bool_const("y");
     expr conjecture = !(x && y) == (!x || !y);
-
+    
     solver s(c);
     // adding the negation of the conjecture as a constraint.
     s.add(!conjecture);
@@ -48,7 +48,7 @@ void find_model_example1() {
     for (unsigned i = 0; i < m.size(); i++) {
         func_decl v = m[i];
         // this problem contains only constants
-        assert(v.arity() == 0);
+        assert(v.arity() == 0); 
         std::cout << v.name() << " = " << m.get_const_interp(v) << "\n";
     }
     // we can evaluate expressions in the model.
@@ -65,18 +65,18 @@ void find_model_example1() {
 */
 void prove_example1() {
     std::cout << "prove_example1\n";
-
+    
     context c;
     expr x      = c.int_const("x");
     expr y      = c.int_const("y");
     sort I      = c.int_sort();
     func_decl g = function("g", I, I);
-
+    
     solver s(c);
     expr conjecture1 = implies(x == y, g(x) == g(y));
     std::cout << "conjecture 1\n" << conjecture1 << "\n";
     s.add(!conjecture1);
-    if (s.check() == unsat)
+    if (s.check() == unsat) 
         std::cout << "proved" << "\n";
     else
         std::cout << "failed to prove" << "\n";
@@ -106,21 +106,21 @@ void prove_example1() {
 */
 void prove_example2() {
     std::cout << "prove_example1\n";
-
+    
     context c;
     expr x      = c.int_const("x");
     expr y      = c.int_const("y");
     expr z      = c.int_const("z");
     sort I      = c.int_sort();
     func_decl g = function("g", I, I);
-
+    
     expr conjecture1 = implies(g(g(x) - g(y)) != g(z) && x + z <= y && y <= x,
                                z < 0);
 
     solver s(c);
     s.add(!conjecture1);
     std::cout << "conjecture 1:\n" << conjecture1 << "\n";
-    if (s.check() == unsat)
+    if (s.check() == unsat) 
         std::cout << "proved" << "\n";
     else
         std::cout << "failed to prove" << "\n";
@@ -151,7 +151,7 @@ void nonlinear_example1() {
     expr x = c.real_const("x");
     expr y = c.real_const("y");
     expr z = c.real_const("z");
-
+                     
     solver s(c);
 
     s.add(x*x + y*y == 1);                     // x^2 + y^2 == 1
@@ -196,7 +196,7 @@ void bitvector_example1() {
     std::cout << "bitvector example 1\n";
     context c;
     expr x = c.bv_const("x", 32);
-
+    
     // using signed <=
     prove((x - 10 <= 0) == (x <= 10));
 
@@ -247,9 +247,9 @@ void eval_example1() {
     s.add(x < y);
     /* assert x > 2 */
     s.add(x > 2);
-
+    
     std::cout << s.check() << "\n";
-
+    
     model m = s.get_model();
     std::cout << "Model:\n" << m << "\n";
     std::cout << "x+y = " << m.eval(x+y) << "\n";
@@ -261,7 +261,7 @@ void eval_example1() {
 void two_contexts_example1() {
     std::cout << "two contexts example 1\n";
     context c1, c2;
-
+    
     expr x = c1.int_const("x");
     expr n = x + 1;
     // We cannot mix expressions from different contexts, but we can copy
@@ -311,13 +311,13 @@ void error_example() {
 void numeral_example() {
     std::cout << "numeral example\n";
     context c;
-
+    
     expr n1 = c.real_val("1/2");
     expr n2 = c.real_val("0.5");
     expr n3 = c.real_val(1, 2);
     std::cout << n1 << " " << n2 << " " << n3 << "\n";
     prove(n1 == n2 && n1 == n3);
-
+    
     n1 = c.real_val("-1/3");
     n2 = c.real_val("-0.3333333333333333333333333333333333");
     std::cout << n1 << " " << n2 << "\n";
@@ -330,7 +330,7 @@ void numeral_example() {
 void ite_example() {
     std::cout << "if-then-else example\n";
     context c;
-
+    
     expr f    = c.bool_val(false);
     expr one  = c.int_val(1);
     expr zero = c.int_val(0);
@@ -354,14 +354,14 @@ void ite_example2() {
 void quantifier_example() {
     std::cout << "quantifier example\n";
     context c;
-
+    
     expr x = c.int_const("x");
     expr y = c.int_const("y");
     sort I = c.int_sort();
     func_decl f = function("f", I, I, I);
-
+    
     solver s(c);
-
+    
     // making sure model based quantifier instantiation is enabled.
     params p(c);
     p.set("mbqi", true);
@@ -386,7 +386,7 @@ void unsat_core_example1() {
     // We use answer literals to track assertions.
     // An answer literal is essentially a fresh Boolean marker
     // that is used to track an assertion.
-    // For example, if we want to track assertion F, we
+    // For example, if we want to track assertion F, we 
     // create a fresh Boolean variable p and assert (p => F)
     // Then we provide p as an argument for the check method.
     expr p1 = c.bool_const("p1");
@@ -505,15 +505,15 @@ void tactic_example1() {
       using combinators known as tacticals. Tactics process sets of formulas called Goals.
 
       When a tactic is applied to some goal G, four different outcomes are possible. The tactic succeeds
-      in showing G to be satisfiable (i.e., feasible); succeeds in showing G to be unsatisfiable (i.e., infeasible);
-      produces a sequence of subgoals; or fails. When reducing a goal G to a sequence of subgoals G1, ..., Gn,
+      in showing G to be satisfiable (i.e., feasible); succeeds in showing G to be unsatisfiable (i.e., infeasible); 
+      produces a sequence of subgoals; or fails. When reducing a goal G to a sequence of subgoals G1, ..., Gn, 
       we face the problem of model conversion. A model converter construct a model for G using a model for some subgoal Gi.
 
-      In this example, we create a goal g consisting of three formulas, and a tactic t composed of two built-in tactics:
-      simplify and solve-eqs. The tactic simplify apply transformations equivalent to the ones found in the command simplify.
-      The tactic solver-eqs eliminate variables using Gaussian elimination. Actually, solve-eqs is not restricted
-      only to linear arithmetic. It can also eliminate arbitrary variables.
-      Then, sequential composition combinator & applies simplify to the input goal and solve-eqs to each subgoal produced by simplify.
+      In this example, we create a goal g consisting of three formulas, and a tactic t composed of two built-in tactics: 
+      simplify and solve-eqs. The tactic simplify apply transformations equivalent to the ones found in the command simplify. 
+      The tactic solver-eqs eliminate variables using Gaussian elimination. Actually, solve-eqs is not restricted 
+      only to linear arithmetic. It can also eliminate arbitrary variables. 
+      Then, sequential composition combinator & applies simplify to the input goal and solve-eqs to each subgoal produced by simplify. 
       In this example, only one subgoal is produced.
     */
     std::cout << "tactic example 1\n";
@@ -534,8 +534,8 @@ void tactic_example1() {
 
 void tactic_example2() {
     /*
-      In Z3, we say a clause is any constraint of the form (f_1 || ... || f_n).
-      The tactic split-clause will select a clause in the input goal, and split it n subgoals.
+      In Z3, we say a clause is any constraint of the form (f_1 || ... || f_n). 
+      The tactic split-clause will select a clause in the input goal, and split it n subgoals. 
       One for each subformula f_i.
     */
     std::cout << "tactic example 2\n";
@@ -555,11 +555,11 @@ void tactic_example2() {
 
 void tactic_example3() {
     /*
-      - The choice combinator t | s first applies t to the given goal, if it fails then returns the result of s applied to the given goal.
+      - The choice combinator t | s first applies t to the given goal, if it fails then returns the result of s applied to the given goal.      
       - repeat(t) Keep applying the given tactic until no subgoal is modified by it.
       - repeat(t, n) Keep applying the given tactic until no subgoal is modified by it, or the number of iterations is greater than n.
       - try_for(t, ms) Apply tactic t to the input goal, if it does not return in ms millisenconds, it fails.
-      - with(t, params) Apply the given tactic using the given parameters.
+      - with(t, params) Apply the given tactic using the given parameters.      
     */
     std::cout << "tactic example 3\n";
     context c;
@@ -576,7 +576,7 @@ void tactic_example3() {
     std::cout << split_all(g) << "\n";
     tactic split_at_most_2 = repeat(tactic(c, "split-clause") | tactic(c, "skip"), 1);
     std::cout << split_at_most_2(g) << "\n";
-    // In the tactic split_solver, the tactic solve-eqs discharges all but one goal.
+    // In the tactic split_solver, the tactic solve-eqs discharges all but one goal. 
     // Note that, this tactic generates one goal: the empty goal which is trivially satisfiable (i.e., feasible)
     tactic split_solve = split_all & tactic(c, "solve-eqs");
     std::cout << split_solve(g) << "\n";
@@ -584,21 +584,21 @@ void tactic_example3() {
 
 void tactic_example4() {
     /*
-      A tactic can be converted into a solver object using the method mk_solver().
-      If the tactic produces the empty goal, then the associated solver returns sat.
-      If the tactic produces a single goal containing False, then the solver returns unsat.
+      A tactic can be converted into a solver object using the method mk_solver(). 
+      If the tactic produces the empty goal, then the associated solver returns sat. 
+      If the tactic produces a single goal containing False, then the solver returns unsat. 
       Otherwise, it returns unknown.
 
-      In this example, the tactic t implements a basic bit-vector solver using equation solving,
-      bit-blasting, and a propositional SAT solver.
-      We use the combinator `with` to configure our little solver.
+      In this example, the tactic t implements a basic bit-vector solver using equation solving, 
+      bit-blasting, and a propositional SAT solver. 
+      We use the combinator `with` to configure our little solver. 
       We also include the tactic `aig` which tries to compress Boolean formulas using And-Inverted Graphs.
     */
     std::cout << "tactic example 4\n";
     context c;
     params p(c);
     p.set("mul2concat", true);
-    tactic t =
+    tactic t = 
         with(tactic(c, "simplify"), p) &
         tactic(c, "solve-eqs") &
         tactic(c, "bit-blast") &
@@ -634,15 +634,15 @@ void tactic_example5() {
 
 void tactic_example6() {
     /*
-      In this example, we show how to implement a solver for integer arithmetic using SAT.
+      In this example, we show how to implement a solver for integer arithmetic using SAT. 
       The solver is complete only for problems where every variable has a lower and upper bound.
-    */
+    */ 
     std::cout << "tactic example 6\n";
     context c;
     params p(c);
     p.set("arith_lhs", true);
     p.set("som", true); // sum-of-monomials normal form
-    solver s =
+    solver s = 
         (with(tactic(c, "simplify"), p) &
          tactic(c, "normalize-bounds") &
          tactic(c, "lia2pb") &
@@ -665,15 +665,15 @@ void tactic_example6() {
 
 void tactic_example7() {
     /*
-      Tactics can be combined with solvers.
-      For example, we can apply a tactic to a goal, produced a set of subgoals,
-      then select one of the subgoals and solve it using a solver.
-      This example demonstrates how to do that, and
+      Tactics can be combined with solvers. 
+      For example, we can apply a tactic to a goal, produced a set of subgoals, 
+      then select one of the subgoals and solve it using a solver. 
+      This example demonstrates how to do that, and 
       how to use model converters to convert a model for a subgoal into a model for the original goal.
     */
     std::cout << "tactic example 7\n";
     context c;
-    tactic t =
+    tactic t = 
         tactic(c, "simplify") &
         tactic(c, "normalize-bounds") &
         tactic(c, "solve-eqs");
@@ -700,12 +700,12 @@ void tactic_example7() {
 
 void tactic_example8() {
     /*
-      Probes (aka formula measures) are evaluated over goals.
-      Boolean expressions over them can be built using relational operators and Boolean connectives.
+      Probes (aka formula measures) are evaluated over goals. 
+      Boolean expressions over them can be built using relational operators and Boolean connectives. 
       The tactic fail_if(cond) fails if the given goal does not satisfy the condition cond.
       Many numeric and Boolean measures are available in Z3.
 
-      In this example, we build a simple tactic using fail_if.
+      In this example, we build a simple tactic using fail_if. 
       It also shows that a probe can be applied directly to a goal.
     */
     std::cout << "tactic example 8\n";
@@ -714,13 +714,13 @@ void tactic_example8() {
     expr x = c.int_const("x");
     expr y = c.int_const("y");
     expr z = c.int_const("z");
-
+    
     goal g(c);
     g.add(x + y + z > 0);
-
+    
     probe p(c, "num-consts");
     std::cout << "num-consts: " << p(g) << "\n";
-
+    
     tactic t = fail_if(p > 2);
     try {
         t(g);
@@ -737,14 +737,14 @@ void tactic_example8() {
 void tactic_example9() {
     /*
       The combinator (tactical) cond(p, t1, t2) is a shorthand for:
-
+      
       (fail_if(p) & t1) | t2
 
       The combinator when(p, t) is a shorthand for:
 
       cond(p, t, tactic(c, "skip"))
-
-      The tactic skip just returns the input goal.
+      
+      The tactic skip just returns the input goal. 
       This example demonstrates how to use the cond combinator.
     */
     std::cout << "tactic example 9\n";
@@ -770,21 +770,21 @@ void tactic_example9() {
 void tactic_qe() {
     std::cout << "tactic example using quantifier elimination\n";
     context c;
-
+    
     // Create a solver using "qe" and "smt" tactics
-    solver s =
+    solver s = 
         (tactic(c, "qe") &
          tactic(c, "smt")).mk_solver();
-
+    
     expr a = c.int_const("a");
     expr b = c.int_const("b");
     expr x = c.int_const("x");
     expr f = implies(x <= a, x < b);
-
+    
     expr qf = forall(x, f);
 
     std::cout << qf << "\n";
-
+    
     s.add(qf);
     std::cout << s.check() << "\n";
     std::cout << s.get_model() << "\n";
@@ -805,7 +805,7 @@ void visit(expr const & e) {
         visit(e.body());
         // do something
     }
-    else {
+    else { 
         assert(e.is_var());
         // do something
     }
@@ -819,7 +819,7 @@ void tst_visit() {
     expr y = c.int_const("y");
     expr z = c.int_const("z");
     expr f = x*x - y*y >= 0;
-
+    
     visit(f);
 }
 
@@ -860,7 +860,7 @@ void incremental_example2() {
 }
 
 void incremental_example3() {
-    // In this example, we show how to use assumptions to "remove"
+    // In this example, we show how to use assumptions to "remove" 
     // formulas added to a solver. Actually, we disable them.
     std::cout << "incremental example3\n";
     context c;
@@ -915,12 +915,12 @@ void expr_vector_example() {
 
     expr_vector x(c);
 
-    for (unsigned i = 0; i < N; i++) {
-        std::stringstream x_name;
+    for (unsigned i = 0; i < N; i++) { 
+        std::stringstream x_name; 
         x_name << "x_" << i;
         x.push_back(c.int_const(x_name.str().c_str()));
     }
-
+    
     solver s(c);
     for (unsigned i = 0; i < N; i++) {
         s.add(x[i] >= 1);
@@ -939,10 +939,10 @@ void exists_expr_vector_example() {
     expr_vector xs(c);
     expr x(c);
     expr b(c);
-    b = c.bool_val(true);
+    b = c.bool_val(true); 
 
-    for (unsigned i = 0; i < N; i++) {
-        std::stringstream x_name;
+    for (unsigned i = 0; i < N; i++) { 
+        std::stringstream x_name; 
         x_name << "x_" << i;
         x = c.int_const(x_name.str().c_str());
         xs.push_back(x);
@@ -970,7 +970,7 @@ void substitute_example() {
     Z3_ast to[]   = { three };
     expr new_f(c);
     new_f = to_expr(c, Z3_substitute(c, f, 1, from, to));
-
+    
     std::cout << new_f << std::endl;
 }
 

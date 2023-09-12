@@ -33,10 +33,10 @@ Revision History:
 */
 class unifier {
     typedef std::pair<expr_offset, expr_offset> entry;
-
+    
     ast_manager &                m_manager;
     substitution *               m_subst;
-
+    
     svector<entry>               m_todo;
     expr_offset_map<expr_offset> m_find;
     expr_offset_map<unsigned>    m_size;
@@ -50,15 +50,15 @@ class unifier {
     void reset(unsigned num_offsets);
 
     bool unify_core(expr_offset p1, expr_offset p2);
-
+    
 public:
     unifier(ast_manager & m):m_manager(m), m_last_call_succeeded(false) {}
 
     /**
        \brief Unify the given expressions. Return true if succeeded,
        and store the result in the given substitution.
-
-       If use_offsets is true, then the variables in the given expressions are assumed to be
+       
+       If use_offsets is true, then the variables in the given expressions are assumed to be 
        in different banks.
     */
     bool operator()(unsigned num_exprs, expr ** es, substitution & s, bool use_offsets = true);

@@ -42,7 +42,7 @@ struct mk_simplified_app::imp {
         m_dt_rw(m),
         m_f_rw(m, p) {
     }
-
+        
     br_status mk_core(func_decl * f, unsigned num, expr * const * args, expr_ref & result) {
         family_id fid = f->get_family_id();
         if (fid == null_family_id)
@@ -64,7 +64,7 @@ struct mk_simplified_app::imp {
                     st = m_f_rw.mk_eq_core(args[0], args[1], result);
                 else if (s_fid == m_ar_rw.get_fid())
                     st = m_ar_rw.mk_eq_core(args[0], args[1], result);
-
+                
                 if (st != BR_FAILED)
                     return st;
             }
@@ -100,7 +100,7 @@ br_status mk_simplified_app::mk_core(func_decl * decl, unsigned num, expr * cons
 void mk_simplified_app::operator()(func_decl * decl, unsigned num, expr * const * args, expr_ref & result) {
     result = 0;
     mk_core(decl, num, args, result);
-    if (!result)
+    if (!result) 
         result = m_imp->m.mk_app(decl, num, args);
     // TODO: if the result of mk_core is different from BR_FAILED, then the
     // result is not really simplified.

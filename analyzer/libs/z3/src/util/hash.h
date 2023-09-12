@@ -50,7 +50,7 @@ inline unsigned hash_u(unsigned a) {
 }
 
 inline unsigned hash_ull(unsigned long long a) {
-  a  = (~a) + (a << 18);
+  a  = (~a) + (a << 18); 
   a ^= (a >> 31);
   a += (a << 2) + (a << 4);
   a ^= (a >> 11);
@@ -79,7 +79,7 @@ unsigned get_composite_hash(Composite app, unsigned n, GetKindHashProc const & k
     unsigned kind_hash = khasher(app);
 
     a = b = 0x9e3779b9;
-    c = 11;
+    c = 11;    
 
     switch (n) {
     case 1:
@@ -111,7 +111,7 @@ unsigned get_composite_hash(Composite app, unsigned n, GetKindHashProc const & k
             c += chasher(app, n);
             mix(a, b, c);
         }
-
+        
         a += kind_hash;
         switch (n) {
         case 2:
@@ -156,7 +156,7 @@ struct bool_hash {
 template<typename T>
 struct obj_hash {
     typedef T data;
-    unsigned operator()(const T & e) const {
+    unsigned operator()(const T & e) const { 
         return e.hash();
     }
 };
@@ -186,7 +186,7 @@ struct triple {
     triple(T1 f, T2 s, T3 t): first(f), second(s), third(t) {}
 
     bool operator==(triple const& other) const {
-        return
+        return 
             first == other.first &&
             second == other.second &&
             third == other.third;
@@ -239,7 +239,7 @@ inline unsigned get_ptr_hash(T * ptr) {
 template<typename T>
 struct ptr_hash {
     typedef T * data;
-    unsigned operator()(T * ptr) const {
+    unsigned operator()(T * ptr) const { 
 	return get_ptr_hash(ptr);
     }
 };

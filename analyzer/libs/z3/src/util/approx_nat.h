@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Approximated natural numbers. It performs operations on the set [0, ..., 2^{n-2}, huge].
-    Where huge represents all numbers greater than 2^{n-2}.
+    Where huge represents all numbers greater than 2^{n-2}. 
 
 Author:
 

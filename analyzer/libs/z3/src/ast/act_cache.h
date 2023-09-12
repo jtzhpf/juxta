@@ -50,7 +50,7 @@ public:
     unsigned capacity() const { return m_table.capacity(); }
     bool empty() const { return m_table.empty(); }
     bool check_invariant() const;
-
+    
 };
 
 #endif

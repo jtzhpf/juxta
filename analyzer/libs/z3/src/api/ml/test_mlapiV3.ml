@@ -25,7 +25,7 @@ let exitf message = fprintf stderr "BUG: %s.\n" message; exit 1;;
    Create a logical context.  Enable model construction.
    Also enable tracing to stderr.
 *)
-let mk_context ctx =
+let mk_context ctx = 
   let ctx = Z3.mk_context_x (Array.append [|("MODEL", "true")|] ctx) in
   (* You may comment out the following line to disable tracing: *)
   (* Z3.trace_to_stderr ctx; *)
@@ -47,7 +47,7 @@ let mk_bool_var ctx name = mk_var ctx name (Z3.mk_bool_sort ctx);;
 let mk_int_var ctx name = mk_var ctx name (Z3.mk_int_sort ctx);;
 
 (**
-   Create a Z3 integer node using a C int.
+   Create a Z3 integer node using a C int. 
 *)
 let mk_int ctx v = Z3.mk_int ctx v (Z3.mk_int_sort ctx);;
 
@@ -105,7 +105,7 @@ let prove ctx f is_valid =
 
     let not_f = Z3.mk_not ctx f in
     Z3.assert_cnstr ctx not_f;
-
+    
     (match Z3.check_and_get_model ctx with
     | (Z3.L_FALSE,_) ->
         (* proved *)
@@ -132,18 +132,18 @@ let prove ctx f is_valid =
 
 (**
    Assert the axiom: function f is injective in the i-th argument.
-
+   
    The following axiom is asserted into the logical context:
 
    forall (x_1, ..., x_n) finv(f(x_1, ..., x_i, ..., x_n)) = x_i
 
    Where, {e finv } is a fresh function declaration.
 *)
-let assert_inj_axiom ctx f i =
+let assert_inj_axiom ctx f i = 
   begin
     let sz = Z3.get_domain_size ctx f in
     if i >= sz then exitf "failed to create inj axiom";
-
+    
     (* declare the i-th inverse of f: finv *)
     let finv_domain = Z3.get_range ctx f in
     let finv_range  = Z3.get_domain ctx f i in
@@ -170,7 +170,7 @@ let assert_inj_axiom ctx f i =
     printf "\n";
 
     (* create & assert quantifier *)
-    let q           = Z3.mk_forall ctx
+    let q           = Z3.mk_forall ctx 
                                    0 (* using default weight *)
                                    [|p|] (* the "array" of patterns *)
                                    types
@@ -182,14 +182,14 @@ let assert_inj_axiom ctx f i =
   end;;
 
 (**
-   Assert the axiom: function f is commutative.
-
+   Assert the axiom: function f is commutative. 
+   
    This example uses the SMT-LIB parser to simplify the axiom construction.
 *)
 let assert_comm_axiom ctx f =
   begin
     let t      = Z3.get_range ctx f in
-    if Z3.get_domain_size ctx f != 2 || not (equal_sorts ctx (Z3.get_domain ctx f 0) t) || not (equal_sorts ctx (Z3.get_domain ctx f 1) t) then
+    if Z3.get_domain_size ctx f != 2 || not (equal_sorts ctx (Z3.get_domain ctx f 0) t) || not (equal_sorts ctx (Z3.get_domain ctx f 1) t) then 
       exitf "function must be binary, and argument types must be equal to return type";
     (* Inside the parser, function f will be referenced using the symbol 'f'. *)
     let f_name = Z3.mk_string_symbol ctx "f" in
@@ -202,20 +202,20 @@ let assert_comm_axiom ctx f =
   end;;
 
 (**
-   Z3 does not support explicitly tuple updates. They can be easily implemented
-   as macros. The argument {e t } must have tuple type.
+   Z3 does not support explicitly tuple updates. They can be easily implemented 
+   as macros. The argument {e t } must have tuple type. 
    A tuple update is a new tuple where field {e i } has value {e new_val }, and all
    other fields have the value of the respective field of {e t }.
 
    {e update(t, i, new_val) } is equivalent to
-   {e mk_tuple(proj_0(t), ..., new_val, ..., proj_n(t)) }
+   {e mk_tuple(proj_0(t), ..., new_val, ..., proj_n(t)) } 
 *)
 let mk_tuple_update c t i new_val =
   begin
     let ty = Z3.get_sort c t in
     let (mk_tuple_decl,fields)=Z3.get_tuple_sort c ty in
     if i>=Array.length fields then exitf "invalid tuple update, index is too big";
-    let f j =
+    let f j = 
       if i = j then (* use new_val at position i: *) new_val
       else (* use field j of t: *) (mk_unary_app c (fields.(j)) t)
     in let new_fields = Array.init (Array.length fields) f in
@@ -236,7 +236,7 @@ let display_symbol c out s =
 *)
 let rec display_sort c out ty =
   begin
-    match Z3.sort_refine c ty with
+    match Z3.sort_refine c ty with 
     | Z3.Sort_uninterpreted s -> display_symbol c out s;
     | Z3.Sort_bool -> fprintf out "bool";
     | Z3.Sort_int -> fprintf out "int";
@@ -251,10 +251,10 @@ let rec display_sort c out ty =
       display_sort c out range;
       fprintf out "]";
     | Z3.Sort_datatype cons ->
-      Array.iter (fun (dt_con : Z3.datatype_constructor_refined) ->
+      Array.iter (fun (dt_con : Z3.datatype_constructor_refined) -> 
        let fields = dt_con.Z3.accessors in
        fprintf out "(";
-       let f i v =
+       let f i v = 
          if i>0 then fprintf out ", ";
          display_sort c out (Z3.get_range c v);
        in Array.iteri f fields;
@@ -266,29 +266,29 @@ let rec display_sort c out ty =
   end;;
 
 (**
-   Custom ast pretty printer.
+   Custom ast pretty printer. 
 
    This function demonstrates how to use the API to navigate terms.
 *)
 
-let rec display_numeral c out nm =
-   match nm with
-   | Z3.Numeral_small(n,1L) ->
+let rec display_numeral c out nm = 
+   match nm with 
+   | Z3.Numeral_small(n,1L) -> 
      Printf.fprintf out "%Ld" n
-   | Z3.Numeral_small(n,d) ->
+   | Z3.Numeral_small(n,d) -> 
      Printf.fprintf out "%Ld/%Ld" n d
-   | Z3.Numeral_large s ->
+   | Z3.Numeral_large s -> 
      Printf.fprintf out "%s" s
 
 let rec display_ast c out v =
   begin
     match Z3.term_refine c v with
-    | Z3.Term_app(k, f, args) ->
+    | Z3.Term_app(k, f, args) -> 
       let num_fields = Array.length args in
       let a = Z3.to_app c v in
       let d = Z3.get_app_decl c a in
       Printf.fprintf out "%s" (Z3.func_decl_to_string c d);
-      if num_fields > 0 then
+      if num_fields > 0 then 
          begin
            Printf.fprintf out "[";
            for i = 0 to num_fields - 1 do
@@ -297,10 +297,10 @@ let rec display_ast c out v =
            done;
            Printf.fprintf out "]"
          end
-    | Z3.Term_numeral(nm, s) ->
+    | Z3.Term_numeral(nm, s) -> 
       display_numeral c out nm;
       Printf.fprintf out ":";
-      display_sort c out s
+      display_sort c out s 
     | Z3.Term_var(idx, s) ->
 	printf "#unknown"
     | Z3.Term_quantifier(b, w, pats, bound, body) ->
@@ -308,9 +308,9 @@ let rec display_ast c out v =
   end;;
 
 (**
-   Custom function for traversing a term and replacing the constant
+   Custom function for traversing a term and replacing the constant 
    'x' by the bound variable having index 'idx'.
-   This function illustrates how to walk Z3 terms and
+   This function illustrates how to walk Z3 terms and 
    reconstruct them.
 **)
 
@@ -320,9 +320,9 @@ let rec abstract c x idx term =
     | Z3.Term_app(k, f, args) -> Z3.mk_app c f (Array.map (abstract c x idx) args)
     | Z3.Term_numeral(nm, s) -> term
     | Z3.Term_var(idx, s) -> term
-    | Z3.Term_quantifier(b, w, pats, bound, body) ->
+    | Z3.Term_quantifier(b, w, pats, bound, body) -> 
       let idx = (idx + Array.length bound) in
-      let body = abstract c x idx body in
+      let body = abstract c x idx body in 
       let is_forall = b = Z3.Forall in
       let mk_pattern terms = Z3.mk_pattern c (Array.map (abstract c x idx) terms) in
       let patterns = Array.map mk_pattern pats in
@@ -332,9 +332,9 @@ let rec abstract c x idx term =
 (**
    Example abstraction function.
 **)
+	
 
-
-let abstract_example() =
+let abstract_example() = 
   begin
     printf "\nabstract_example\n";
     let ctx          = mk_context [||] in
@@ -391,7 +391,7 @@ let display_function_interpretations c out m =
 (**
    Custom model pretty printer.
 *)
-let display_model c out m =
+let display_model c out m = 
   begin
     let constants=Z3.get_model_constants c m in
     let f i e =
@@ -466,8 +466,8 @@ let demorgan() =
     let symbol_y = Z3.mk_int_symbol ctx 1 in
     let x = Z3.mk_const ctx symbol_x bool_sort in
     let y = Z3.mk_const ctx symbol_y bool_sort in
-
-    (* De Morgan - with a negation around: *)
+  
+    (* De Morgan - with a negation around: *)  
     (* !(!(x && y) <-> (!x || !y)) *)
     let not_x = Z3.mk_not ctx x in
     let not_y = Z3.mk_not ctx y in
@@ -548,11 +548,11 @@ let prove_example1() =
     printf "\nprove_example1\n";
 
     let ctx        = mk_context [||] in
-
+    
     (* create uninterpreted type. *)
     let u_name     = Z3.mk_string_symbol ctx "U" in
     let u          = Z3.mk_uninterpreted_sort ctx u_name in
-
+    
     (* declare function g *)
     let g_name      = Z3.mk_string_symbol ctx "g" in
     let g           = Z3.mk_func_decl ctx g_name [|u|] u in
@@ -565,7 +565,7 @@ let prove_example1() =
     (* create g(x), g(y) *)
     let gx          = mk_unary_app ctx g x in
     let gy          = mk_unary_app ctx g y in
-
+    
     (* assert x = y *)
     let eq          = Z3.mk_eq ctx x y in
     Z3.assert_cnstr ctx eq;
@@ -577,7 +577,7 @@ let prove_example1() =
 
     (* create g(g(x)) *)
     let ggx         = mk_unary_app ctx g gx in
-
+    
     (* disprove g(g(x)) = g(y) *)
     let f           = Z3.mk_eq ctx ggx gy in
     printf "disprove: x = y implies g(g(x)) = g(y)\n";
@@ -595,7 +595,7 @@ let prove_example1() =
 let prove_example2() =
   begin
     printf "\nprove_example2\n";
-
+    
     let ctx        = mk_context [||] in
 
     (* declare function g *)
@@ -612,7 +612,7 @@ let prove_example2() =
     let gx          = mk_unary_app ctx g x in
     let gy          = mk_unary_app ctx g y in
     let gz          = mk_unary_app ctx g z in
-
+    
     (* create zero *)
     let zero        = mk_int ctx 0 in
 
@@ -660,7 +660,7 @@ let push_pop_example1() =
     (* create a big number *)
     let int_sort   = Z3.mk_int_sort ctx in
     let big_number = Z3.mk_numeral ctx "1000000000000000000000000000000000000000000000000000000" int_sort in
-
+    
     (* create number 3 *)
     let three      = Z3.mk_numeral ctx "3" int_sort in
 
@@ -698,7 +698,7 @@ let push_pop_example1() =
     check2 ctx Z3.L_TRUE;
 
     (* new constraints can be asserted... *)
-
+    
     (* create y *)
     let y_sym      = Z3.mk_string_symbol ctx "y" in
     let y          = Z3.mk_const ctx y_sym int_sort in
@@ -710,12 +710,12 @@ let push_pop_example1() =
 
     (* the context is still consistent. *)
     check2 ctx Z3.L_TRUE;
-
+    
     Z3.del_context ctx;
   end;;
 
 (**
-   Prove that {e f(x, y) = f(w, v) implies y = v } when
+   Prove that {e f(x, y) = f(w, v) implies y = v } when 
    {e f } is injective in the second argument.
 *)
 let quantifier_example1() =
@@ -732,10 +732,10 @@ let quantifier_example1() =
     let int_sort    = Z3.mk_int_sort ctx in
     let f_name      = Z3.mk_string_symbol ctx "f" in
     let f           = Z3.mk_func_decl ctx f_name [|int_sort; int_sort|] int_sort in
-
+  
     (* assert that f is injective in the second argument. *)
     assert_inj_axiom ctx f 1;
-
+    
     (* create x, y, v, w, fxy, fwv *)
     let x           = mk_int_var ctx "x" in
     let y           = mk_int_var ctx "y" in
@@ -743,7 +743,7 @@ let quantifier_example1() =
     let w           = mk_int_var ctx "w" in
     let fxy         = mk_binary_app ctx f x y in
     let fwv         = mk_binary_app ctx f w v in
-
+    
     (* assert f(x, y) = f(w, v) *)
     let p1          = Z3.mk_eq ctx fxy fwv in
     Z3.assert_cnstr ctx p1;
@@ -762,7 +762,7 @@ let quantifier_example1() =
     printf "that is: not(f(x, y) = f(w, v) implies x = w) is satisfiable\n";
     check2 ctx Z3.L_UNDEF;
     Printf.printf
-	"reason for last failure: %d (7 = quantifiers)\n"
+	"reason for last failure: %d (7 = quantifiers)\n" 
         (if Z3.get_search_failure(ctx) = Z3.QUANTIFIERS then 7 else -1);
 
 
@@ -771,7 +771,7 @@ let quantifier_example1() =
 
 (**
    Prove {e store(a1, i1, v1) = store(a2, i2, v2) implies (i1 = i3 or i2 = i3 or select(a1, i3) = select(a2, i3)) }.
-
+   
    This example demonstrates how to use the array theory.
 *)
 let array_example1() =
@@ -790,10 +790,10 @@ let array_example1() =
     let i3          = mk_var ctx "i3" int_sort in
     let v1          = mk_var ctx "v1" int_sort in
     let v2          = mk_var ctx "v2" int_sort in
-
+    
     let st1         = Z3.mk_store ctx a1 i1 v1 in
     let st2         = Z3.mk_store ctx a2 i2 v2 in
-
+    
     let sel1        = Z3.mk_select ctx a1 i3 in
     let sel2        = Z3.mk_select ctx a2 i3 in
 
@@ -832,14 +832,14 @@ let array_example2() =
     for n = 2 to 5 do
       printf "n = %d\n" n;
       let ctx = mk_context [||] in
-
+      
       let bool_sort   = Z3.mk_bool_sort ctx in
       let array_sort  = Z3.mk_array_sort ctx bool_sort bool_sort in
-
+      
       (* create arrays *)
       let a = Array.init n
         (fun i->Z3.mk_const ctx (Z3.mk_int_symbol ctx i) array_sort) in
-
+      
       (* assert distinct(a[0], ..., a[n]) *)
       let d = Z3.mk_distinct ctx a in
       printf "%s\n" (Z3.ast_to_string ctx d);
@@ -909,7 +909,7 @@ let tuple_example1() =
       let x    = mk_real_var ctx "x" in
       let y    = mk_real_var ctx "y" in
       let app1 = mk_binary_app ctx mk_tuple_decl x y in
-      let app2 = mk_unary_app ctx get_x_decl app1 in
+      let app2 = mk_unary_app ctx get_x_decl app1 in 
       let one  = Z3.mk_numeral ctx "1" real_sort in
       let eq1  = Z3.mk_eq ctx app2 one in
       let eq2  = Z3.mk_eq ctx x one in
@@ -979,11 +979,11 @@ let tuple_example1() =
 let bitvector_example1() =
   begin
     printf "\nbitvector_example1\n";
-
+    
     let ctx       = mk_context [||] in
-
+    
     let bv_sort   = Z3.mk_bv_sort ctx 32 in
-
+    
     let x           = mk_var ctx "x" bv_sort in
     let zero        = Z3.mk_numeral ctx "0" bv_sort in
     let ten         = Z3.mk_numeral ctx "10" bv_sort in
@@ -994,7 +994,7 @@ let bitvector_example1() =
     let thm         = Z3.mk_iff ctx c1 c2 in
     printf "disprove: x - 10 <= 0 IFF x <= 10 for (32-bit) machine integers\n";
     prove ctx thm false;
-
+    
     Z3.del_context ctx;
   end;;
 
@@ -1026,12 +1026,12 @@ let bitvector_example2() =
 let eval_example1() =
   begin
     printf "\neval_example1\n";
-
+    
     let ctx        = mk_context [||] in
     let x          = mk_int_var ctx "x" in
     let y          = mk_int_var ctx "y" in
     let two        = mk_int ctx 2 in
-
+    
     (* assert x < y *)
     let c1         = Z3.mk_lt ctx x y in
     Z3.assert_cnstr ctx c1;
@@ -1053,7 +1053,7 @@ let eval_example1() =
           printf "result = ";
           display_ast ctx stdout v;
           printf "\n";
-        | _ ->
+        | _ -> 
           exitf "failed to evaluate: x+y";
         );
         (Z3.del_model ctx m);
@@ -1087,12 +1087,12 @@ let two_contexts_example1() =
 let error_code_example1() =
   begin
     printf "\nerror_code_example1\n";
-
+    
     let ctx        = mk_context [||] in
     let x          = mk_bool_var ctx "x" in
     let x_decl     = Z3.get_app_decl ctx (Z3.to_app ctx x) in
     Z3.assert_cnstr ctx x;
-
+    
     match Z3.check_and_get_model ctx with
     | (Z3.L_TRUE,m) ->
       begin
@@ -1132,7 +1132,7 @@ let error_code_example2() =
 let parser_example1() =
   begin
     printf "\nparser_example1\n";
-
+    
     let ctx          = mk_context [||] in
     let str          = "(benchmark tst :extrafuns ((x Int) (y Int)) :formula (> x y) :formula (> x 0))" in
     let (formulas,_,_) = Z3.parse_smtlib_string_x ctx str [||] [||] [||] [||] in
@@ -1150,7 +1150,7 @@ let parser_example1() =
 let parser_example2() =
   begin
     printf "\nparser_example2\n%!";
-
+    
     let ctx          = mk_context [||] in
     let x            = mk_int_var ctx "x" in
     let x_decl       = Z3.get_app_decl ctx (Z3.to_app ctx x) in
@@ -1174,7 +1174,7 @@ let parser_example2() =
 let parser_example3() =
   begin
     printf "\nparser_example3\n%!";
-
+    
     let ctx      = mk_context [| |] in
     let int_sort = Z3.mk_int_sort ctx in
     let g_name   = Z3.mk_string_symbol ctx "g" in
@@ -1193,7 +1193,7 @@ let parser_example3() =
 let parser_example4() =
   begin
     printf "\nparser_example4\n%!";
-
+    
     let ctx          = mk_context [||] in
     let str          = "(benchmark tst :extrafuns ((x Int) (y Int)) :assumption (= x 20) :formula (> x y) :formula (> x 0))" in
     (* arithmetic theory is automatically initialized, when an
@@ -1216,14 +1216,14 @@ let parser_example5() =
   begin
     printf "\nparser_example5\n";
     let ctx = mk_context [||] in
-    try
+    try 
       (* the following string has a parsing error: missing parenthesis *)
       let str = "(benchmark tst :extrafuns ((x Int (y Int)) :formula (> x y) :formula (> x 0))" in
       ignore(Z3.parse_smtlib_string_x ctx str [||] [||] [||] [||]);
     with | _ -> (printf "Z3 error: parser error.\n";
                  printf "Error message: '%s'.\n" (Z3.get_smtlib_error ctx)
                  );
-    Z3.del_context ctx;
+    Z3.del_context ctx;    
   end;;
 
 (**
@@ -1245,7 +1245,7 @@ let ite_example() =
 (**
    Create an enumeration data type.
 
-   Several more examples of creating and using data-types (lists, trees, records)
+   Several more examples of creating and using data-types (lists, trees, records) 
    are provided for the C-based API.
    The translation from the examples in C to use the OCaml API follow the same pattern
    that is used here.
@@ -1255,7 +1255,7 @@ let enum_example() =
     printf "\nenum_example\n";
     let ctx         = mk_context [||] in
     let name = Z3.mk_string_symbol ctx "fruit" in
-    let enum_names = [| Z3.mk_string_symbol ctx "apple";
+    let enum_names = [| Z3.mk_string_symbol ctx "apple"; 
                         Z3.mk_string_symbol ctx "banana";
                         Z3.mk_string_symbol ctx "orange" |] in
     let (fruit, enum_consts, enum_testers) = Z3.mk_enumeration_sort ctx name enum_names in
@@ -1265,7 +1265,7 @@ let enum_example() =
     printf "%s\n" (Z3.func_decl_to_string ctx enum_consts.(2));
     printf "%s\n" (Z3.func_decl_to_string ctx enum_testers.(0));
     printf "%s\n" (Z3.func_decl_to_string ctx enum_testers.(1));
-    printf "%s\n" (Z3.func_decl_to_string ctx enum_testers.(2));
+    printf "%s\n" (Z3.func_decl_to_string ctx enum_testers.(2));          
 
     let apple  = Z3.mk_app ctx (enum_consts.(0)) [||] in
     let banana = Z3.mk_app ctx (enum_consts.(1)) [||] in
@@ -1284,8 +1284,8 @@ let enum_example() =
     let fruity = mk_var ctx "fruity" fruit in
 
     (* If something is fruity, then it is an apple, banana, or orange *)
-    let ors = [| Z3.mk_eq ctx fruity apple;
-                 Z3.mk_eq ctx fruity banana;
+    let ors = [| Z3.mk_eq ctx fruity apple; 
+                 Z3.mk_eq ctx fruity banana; 
                  Z3.mk_eq ctx fruity orange |] in
 
     prove ctx  (Z3.mk_or ctx ors) true;
@@ -1294,10 +1294,10 @@ let enum_example() =
 
 (**
   Example for extracting unsatisfiable core and proof.
-  The example uses the function check_assumptions which allows passing in additional
-  hypotheses. The unsatisfiable core is a subset of these additional hypotheses.
+  The example uses the function check_assumptions which allows passing in additional 
+  hypotheses. The unsatisfiable core is a subset of these additional hypotheses. 
  *)
-let unsat_core_and_proof_example() =
+let unsat_core_and_proof_example() = 
   begin
     printf "\nunsat_core_and_proof_example\n%!";
     let ctx = mk_context [| ("PROOF_MODE","2") |] in
@@ -1321,11 +1321,11 @@ let unsat_core_and_proof_example() =
     Z3.assert_cnstr ctx (Z3.mk_or ctx [| f4; p4 |]);
     let result = Z3.check_assumptions ctx assumptions 4 core_dummy in
     (match result with
-    | (Z3.L_FALSE, _, proof, core_size, core) ->
+    | (Z3.L_FALSE, _, proof, core_size, core) -> 
         printf "unsat\n";
         printf "proof: %s\n" (Z3.ast_to_string ctx proof);
         printf("\ncore:\n");
-        for i = 0 to core_size - 1 do
+        for i = 0 to core_size - 1 do 
 	   printf "%s\n" (Z3.ast_to_string ctx (core.(i)));
         done;
         printf("\n")
@@ -1335,11 +1335,11 @@ let unsat_core_and_proof_example() =
     Z3.del_context(ctx);
  end
 
-(**
+(** 
 
 *)
 
-let get_implied_equalities_example() =
+let get_implied_equalities_example() = 
   begin
     printf "\nget_implied_equalities example\n%!";
     let ctx = mk_context [| |] in
@@ -1356,16 +1356,16 @@ let get_implied_equalities_example() =
     Z3.assert_cnstr ctx (Z3.mk_eq ctx a b);
     Z3.assert_cnstr ctx (Z3.mk_eq ctx b c);
     Z3.assert_cnstr ctx (Z3.mk_le ctx fc b);
-    Z3.assert_cnstr ctx (Z3.mk_le ctx b fa);
+    Z3.assert_cnstr ctx (Z3.mk_le ctx b fa);        
     let is_sat, class_ids = Z3.get_implied_equalities ctx terms in
     for i = 0 to 6 do
-       printf "Class %s |-> %d\n" (Z3.ast_to_string ctx (terms.(i))) (class_ids.(i));
+       printf "Class %s |-> %d\n" (Z3.ast_to_string ctx (terms.(i))) (class_ids.(i));       
     done;
     printf "asserting f(a) <= b\n";
     Z3.assert_cnstr ctx (Z3.mk_le ctx fa b);
     let is_sat, class_ids = Z3.get_implied_equalities ctx terms in
     for i = 0 to 6 do
-       printf "Class %s |-> %d\n" (Z3.ast_to_string ctx (terms.(i))) (class_ids.(i));
+       printf "Class %s |-> %d\n" (Z3.ast_to_string ctx (terms.(i))) (class_ids.(i));       
     done;
     (* delete logical context *)
     Z3.del_context(ctx)
@@ -1391,7 +1391,7 @@ let main() =
     bitvector_example2();
     eval_example1();
     two_contexts_example1();
-    error_code_example1();
+    error_code_example1(); 
     error_code_example2();
     parser_example1();
     parser_example2();

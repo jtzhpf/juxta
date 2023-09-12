@@ -8,10 +8,10 @@ Module Name:
 Abstract:
 
     Expression statistics (symbol count, var count, depth, ...)
-
+    
     All functions in these module assume expressions do not contain
     nested quantifiers.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2008-02-05.
@@ -46,7 +46,7 @@ void get_expr_stat(expr * n, expr_stat & r) {
             }
             break;
         case AST_VAR:
-            if (to_var(n)->get_idx() > r.m_max_var_idx)
+            if (to_var(n)->get_idx() > r.m_max_var_idx) 
                 r.m_max_var_idx = to_var(n)->get_idx();
             r.m_ground = false;
             break;

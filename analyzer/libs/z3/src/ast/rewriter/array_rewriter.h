@@ -34,7 +34,7 @@ class array_rewriter {
     bool          m_expand_store_eq;
     template<bool CHECK_DISEQ>
     lbool compare_args(unsigned num_args, expr * const * args1, expr * const * args2);
-public:
+public:    
     array_rewriter(ast_manager & m, params_ref const & p = params_ref()):
         m_util(m) {
         updt_params(p);

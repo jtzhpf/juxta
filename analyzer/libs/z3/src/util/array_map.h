@@ -32,7 +32,7 @@ Revision History:
 */
 template<typename Key, typename Data, typename Plugin, bool CallDestructors=true>
 class array_map {
-
+    
     struct entry {
         Key      m_key;
         Data     m_data;
@@ -92,9 +92,9 @@ public:
         return e->m_data;
     }
 
-    void reset() {
+    void reset() { 
         if (m_timestamp < UINT_MAX) {
-            m_timestamp++;
+            m_timestamp++; 
         }
         else {
             really_flush();
@@ -107,7 +107,7 @@ public:
         if (id >= m_map.size()) {
             m_map.resize(id + 1, optional<entry>::undef());
         }
-
+        
         m_plugin.ins_eh(k, d);
         optional<entry> & e = m_map[id];
         if (e) {
@@ -141,7 +141,7 @@ public:
             }
         }
     }
-
+    
     void flush() {
         m_garbage += m_non_garbage;
         m_non_garbage = 0;

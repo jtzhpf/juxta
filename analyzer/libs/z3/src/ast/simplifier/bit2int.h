@@ -31,7 +31,7 @@ protected:
     typedef rational numeral;
 
     enum eq_type {
-        lt,
+        lt, 
         le,
         eq
     };
@@ -40,7 +40,7 @@ protected:
         bit2int& m_super;
     public:
         expr_reduce(bit2int& s) : m_super(s) {}
-
+        
         void operator()(var* v) {
             m_super.cache_result(v, v);
         }
@@ -48,7 +48,7 @@ protected:
         void operator()(quantifier* q) {
             m_super.visit(q);
         }
-
+        
         void operator()(app* a) {
             m_super.visit(a);
         }
@@ -65,7 +65,7 @@ protected:
 
     expr_map                  m_cache;      // map: ast  -> ast    ref. counters are incremented when inserted here.
     expr_ref                  m_bit0;
-    ptr_vector<expr>  m_args;
+    ptr_vector<expr>  m_args;        
 
 
     void visit(app* n);
@@ -77,7 +77,7 @@ protected:
     bool mk_mul(expr* a, expr* b, expr_ref& result);
     bool mk_comp(eq_type ty, expr* e1, expr* e2, expr_ref& result);
     bool mk_add(expr* e1, expr* e2, expr_ref& result);
-
+	
     expr * get_cached(expr * n) const;
     bool is_cached(expr * n) const {  return get_cached(n) != 0; }
     void cache_result(expr * n, expr * r);

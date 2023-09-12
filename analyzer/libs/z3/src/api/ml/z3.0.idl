@@ -106,7 +106,7 @@ quote(c,"#define str(s) #s");
     typedef [abstract, ml2c(ml2c_Z3_ ## T), c2ml(c2ml_Z3_ ## T)] void* Z3_ ## T
 
 #else
-
+  
   // Declare pointer type with custom conversion functions.
   // Register an OCaml closure that just calls a C finalization function.
   #define DEFINE_CUST_TYPE(T) \
@@ -572,14 +572,14 @@ let _ =
 
 
 quote(mli,"
-(**
-   {2 {L Legacy V3 API}}
-*)
+(** 
+   {2 {L Legacy V3 API}} 
+*) 
 
 module V3 : sig
-(**
-   {2 {L Legacy V3 API}}
-*)
+(** 
+   {2 {L Legacy V3 API}} 
+*) 
 ");
 
 quote(ml,"

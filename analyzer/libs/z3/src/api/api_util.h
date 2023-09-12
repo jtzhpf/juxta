@@ -128,7 +128,7 @@ Z3_ast Z3_API NAME(Z3_context c, Z3_ast n) {    \
     check_sorts(c, a);                                          \
     RETURN_Z3(of_ast(a));                                       \
     Z3_CATCH_RETURN(0);
-
+ 
 #define MK_BINARY(NAME, FID, OP, EXTRA_CODE)                    \
 Z3_ast Z3_API NAME(Z3_context c, Z3_ast n1, Z3_ast n2) {        \
     LOG_ ## NAME(c, n1, n2);                                    \

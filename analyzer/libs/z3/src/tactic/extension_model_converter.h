@@ -30,14 +30,14 @@ class extension_model_converter : public model_converter {
     expr_ref_vector       m_defs;
     model_evaluator *     m_eval;
     struct set_eval;
-public:
+public:    
     extension_model_converter(ast_manager & m):m_vars(m), m_defs(m), m_eval(0) {
     }
-
+    
     virtual ~extension_model_converter();
-
+    
     ast_manager & m() const { return m_vars.get_manager(); }
-
+    
     virtual void operator()(model_ref & md, unsigned goal_idx);
 
     virtual void cancel();

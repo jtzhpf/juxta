@@ -10,7 +10,7 @@ Abstract:
     Rewriter for "blasting" bit-vectors of size n into bit-vectors of size 1.
     This rewriter only supports concat and extract operators.
     This transformation is useful for handling benchmarks that contain
-    many BV equalities.
+    many BV equalities. 
 
     Remark: other operators can be mapped into concat/extract by using
     the simplifiers.

@@ -25,7 +25,7 @@ namespace datalog {
 
     bool mk_partial_equivalence_transformer::is_symmetry(rule const* r) {
         func_decl* p = r->get_decl();
-        return
+        return 
             p->get_arity() == 2 &&
             p->get_domain(0) == p->get_domain(1) &&
             r->get_tail_size() == 1 &&
@@ -34,7 +34,7 @@ namespace datalog {
             r->get_head()->get_arg(1) == r->get_tail(0)->get_arg(0) &&
             is_var(r->get_head()->get_arg(0)) &&
             is_var(r->get_head()->get_arg(1)) &&
-            r->get_head()->get_arg(0) != r->get_head()->get_arg(1);
+            r->get_head()->get_arg(0) != r->get_head()->get_arg(1);            
     }
 
 
@@ -88,7 +88,7 @@ namespace datalog {
 
 
     rule_set * mk_partial_equivalence_transformer::operator()(rule_set const & source) {
-        // TODO mc
+        // TODO mc  
 
         if (source.get_num_rules() == 0) {
             return 0;
@@ -103,7 +103,7 @@ namespace datalog {
         rule_set::decl2rules::iterator end = source.end_grouped_rules();
 
         rule_set* res = alloc(rule_set, m_context);
-
+        
         for (; it != end; ++it) {
             func_decl* p = it->m_key;
             rule_vector const& rv = *(it->m_value);
@@ -112,7 +112,7 @@ namespace datalog {
             unsigned i_symmetry, i_transitivity;
             family_id kind = rm.get_requested_predicate_kind(p);
             for (unsigned i = 0; i < rv.size(); ++i) {
-
+                
                 if (kind != null_family_id) {
                     res->add_rule(rv[i]);
                 }

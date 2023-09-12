@@ -10,19 +10,19 @@ Abstract:
     This tactic performs the following tasks:
 
      - Propagate bounds using the bound_propagator.
-     - Eliminate subsumed inequalities.
+     - Eliminate subsumed inequalities.  
        For example:
           x - y >= 3
           can be replaced with true if we know that
           x >= 3 and y <= 0
-
+            
      - Convert inequalities of the form p <= k and p >= k into p = k,
        where p is a polynomial and k is a constant.
 
     This strategy assumes the input is in arith LHS mode.
     This can be achieved by using option :arith-lhs true in the
     simplifier.
-
+     
 Author:
 
     Leonardo (leonardo) 2012-02-19

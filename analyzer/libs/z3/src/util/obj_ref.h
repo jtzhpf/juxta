@@ -79,7 +79,7 @@ public:
         m_obj = n;
         return *this;
     }
-
+    
     obj_ref & operator=(obj_ref & n) {
         SASSERT(&m_manager == &n.m_manager);
         n.inc_ref();
@@ -100,7 +100,7 @@ public:
     /**
        \brief Steal ownership without decrementing the reference counter.
     */
-    T * steal() {
+    T * steal() { 
         T * r = m_obj;
         m_obj = 0;
         return r;

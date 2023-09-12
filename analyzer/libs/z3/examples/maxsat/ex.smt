@@ -6,5 +6,6 @@
   :assumption (or (> x 0) (< y 1))
   :assumption (> y 2)
   :assumption (> y 3)
-  :assumption (<= y -1)
+  :assumption (<= y -1) 
   :formula (= z (+ x y)))
+        

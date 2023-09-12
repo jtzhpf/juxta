@@ -23,7 +23,7 @@ Notes:
 namespace rpolynomial {
 
     typedef void poly_or_num;
-
+    
     inline bool is_poly(poly_or_num * p) { return GET_TAG(p) == 0; }
     inline bool is_num(poly_or_num * p) { return GET_TAG(p) == 1; }
     polynomial * to_poly(poly_or_num * p) { SASSERT(is_poly(p)); return UNTAG(polynomial*, p); }
@@ -39,7 +39,7 @@ namespace rpolynomial {
         unsigned      m_ref_count;
         var           m_var;
         unsigned      m_size;
-        poly_or_num * m_args[0];
+        poly_or_num * m_args[0]; 
 
     public:
         unsigned ref_count() const { return m_ref_count; }
@@ -52,14 +52,14 @@ namespace rpolynomial {
         unsigned size() const { return m_size; }
         poly_or_num * arg(unsigned i) const { SASSERT(i < size()); return m_args[i]; }
     };
-
+    
     struct manager::imp {
         manager &                        m_wrapper;
         numeral_manager &                m_manager;
         small_object_allocator *         m_allocator;
         bool                             m_own_allocator;
         volatile bool                    m_cancel;
-
+        
         imp(manager & w, numeral_manager & m, small_object_allocator * a):
             m_wrapper(w),
             m_manager(m),
@@ -77,7 +77,7 @@ namespace rpolynomial {
 
         // Remark: recursive calls should be fine since I do not expect to have polynomials with more than 100 variables.
 
-        manager & pm() const { return m_wrapper; }
+        manager & pm() const { return m_wrapper; } 
 
         numeral * mk_numeral() {
             void * mem = m_allocator->allocate(sizeof(numeral));
@@ -127,7 +127,7 @@ namespace rpolynomial {
                 m_allocator->deallocate(obj_sz, p);
             }
         }
-
+        
         void dec_ref(polynomial * p) {
             if (p) {
                 p->dec_ref();
@@ -156,7 +156,7 @@ namespace rpolynomial {
             unsigned sz = p->size();
             for (unsigned i = 0; i < sz; i++) {
                 poly_or_num * pn = p->arg(i);
-                if (pn == 0)
+                if (pn == 0) 
                     continue;
                 if (is_poly(pn))
                     return false;
@@ -183,7 +183,7 @@ namespace rpolynomial {
             SASSERT(p->size() > 0);
             return p == 0 ? 0 : p->size() - 1;
         }
-
+     
         bool eq(polynomial const * p1, polynomial const * p2) {
             if (p1 == p2)
                 return true;
@@ -440,7 +440,7 @@ namespace rpolynomial {
                 new_args.push_back(p2->arg(i));
             return mk_poly(sz, new_args.c_ptr(), p2->max_var());
         }
-
+        
         polynomial * add(polynomial const * p1, polynomial const * p2) {
             if (is_zero(p1))
                 return const_cast<polynomial*>(p2);
@@ -493,7 +493,7 @@ namespace rpolynomial {
                     }
                     else {
                         SASSERT(is_num(pn1) && is_poly(pn2));
-                        new_args.push_back(to_poly_or_num(add(to_num(pn1), to_poly(pn2))));
+                        new_args.push_back(to_poly_or_num(add(to_num(pn1), to_poly(pn2))));                        
                     }
                 }
                 else {
@@ -503,7 +503,7 @@ namespace rpolynomial {
                     }
                     else {
                         SASSERT(is_poly(pn1) && is_poly(pn2));
-                        new_args.push_back(to_poly_or_num(add(to_poly(pn1), to_poly(pn2))));
+                        new_args.push_back(to_poly_or_num(add(to_poly(pn1), to_poly(pn2))));                        
                     }
                 }
             }
@@ -530,7 +530,7 @@ namespace rpolynomial {
                 m_buffer.reset();
             }
         };
-
+        
         void acc_mul_xk(ptr_buffer<poly_or_num> & mul_buffer, unsigned k, polynomial * p) {
             if (mul_buffer[k] == 0) {
                 mul_buffer[k] = to_poly_or_num(p);
@@ -555,7 +555,7 @@ namespace rpolynomial {
         }
 
         void acc_mul_xk(ptr_buffer<poly_or_num> & mul_buffer, unsigned k, numeral & a) {
-            if (mul_buffer.get(k) == 0) {
+            if (mul_buffer.get(k) == 0) { 
                 numeral * new_arg = mk_numeral();
                 m_manager.swap(*new_arg, a);
                 mul_buffer[k] = to_poly_or_num(new_arg);
@@ -585,7 +585,7 @@ namespace rpolynomial {
 
         polynomial * mul_lt(polynomial const * p1, polynomial const * p2) {
             unsigned sz2 = p2->size();
-
+            
             // TODO
             return 0;
         }
@@ -626,7 +626,7 @@ namespace rpolynomial {
                     if (is_num(pn1)) {
                         if (is_num(pn2)) {
                             SASSERT(is_num(pn1) && is_num(pn2));
-                            scoped_numeral a(m_manager);
+                            scoped_numeral a(m_manager); 
                             m_manager.mul(to_num(pn1), to_num(pn2), a);
                             acc_mul_xk(mul_buffer, i, a);
                         }
@@ -634,7 +634,7 @@ namespace rpolynomial {
                             SASSERT(is_num(pn1) && is_poly(pn2));
                             polynomial_ref p(pm());
                             p = mul(to_num(pn1), to_poly(pn2));
-                            acc_mul_xk(mul_buffer, i, p);
+                            acc_mul_xk(mul_buffer, i, p);                        
                         }
                     }
                     else {
@@ -642,13 +642,13 @@ namespace rpolynomial {
                             SASSERT(is_poly(pn1) && is_num(pn2));
                             polynomial_ref p(pm());
                             p = mul(to_num(pn2), to_poly(pn1));
-                            acc_mul_xk(mul_buffer, i, p);
+                            acc_mul_xk(mul_buffer, i, p);                        
                         }
                         else {
                             SASSERT(is_poly(pn1) && is_poly(pn2));
                             polynomial_ref p(pm());
                             p = mul(to_poly(pn2), to_poly(pn1));
-                            acc_mul_xk(mul_buffer, i, p);
+                            acc_mul_xk(mul_buffer, i, p);                        
                         }
                     }
                 }
@@ -720,7 +720,7 @@ namespace rpolynomial {
                 }
             }
         }
-
+   
     };
 
     manager:: manager(numeral_manager & m, small_object_allocator * a) {
@@ -735,7 +735,7 @@ namespace rpolynomial {
         return p == 0;
     }
 
-#if 0
+#if 0     
     bool manager::is_const(polynomial const * p) {
         return imp::is_const(p);
     }
@@ -779,7 +779,7 @@ namespace rpolynomial {
     polynomial * manager::add(numeral const & r, polynomial const * p) {
         return m_imp->add(r, p);
     }
-
+    
     polynomial * manager::add(polynomial const * p1, polynomial const * p2) {
         return m_imp->add(p1, p2);
     }

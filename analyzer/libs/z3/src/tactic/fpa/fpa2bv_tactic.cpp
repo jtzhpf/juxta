@@ -43,16 +43,16 @@ class fpa2bv_tactic : public tactic {
             }
 
         void updt_params(params_ref const & p) {
-            m_rw.cfg().updt_params(p);
+            m_rw.cfg().updt_params(p);        
         }
-
+        
         void set_cancel(bool f) {
             m_rw.set_cancel(f);
         }
 
-        virtual void operator()(goal_ref const & g,
-                                goal_ref_buffer & result,
-                                model_converter_ref & mc,
+        virtual void operator()(goal_ref const & g, 
+                                goal_ref_buffer & result, 
+                                model_converter_ref & mc, 
                                 proof_converter_ref & pc,
                                 expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -61,10 +61,10 @@ class fpa2bv_tactic : public tactic {
             m_proofs_enabled      = g->proofs_enabled();
             m_produce_models      = g->models_enabled();
             m_produce_unsat_cores = g->unsat_core_enabled();
-
+            
             mc = 0; pc = 0; core = 0; result.reset();
             tactic_report report("fpa2bv", *g);
-            m_rw.reset();
+            m_rw.reset(); 
 
             TRACE("fpa2bv", tout << "BEFORE: " << std::endl; g->display(tout););
 
@@ -72,7 +72,7 @@ class fpa2bv_tactic : public tactic {
                 result.push_back(g.get());
                 return;
             }
-
+            
             m_num_steps = 0;
             expr_ref   new_curr(m);
             proof_ref  new_pr(m);
@@ -90,7 +90,7 @@ class fpa2bv_tactic : public tactic {
                 g->update(idx, new_curr, new_pr, g->dep(idx));
             }
 
-            if (g->models_enabled())
+            if (g->models_enabled())  
                 mc = mk_fpa2bv_model_converter(m, m_conv.const2bv(), m_conv.rm_const2bv(), m_conv.uf2bvuf(), m_conv.uf23bvuf());
 
             g->inc_depth();
@@ -100,7 +100,7 @@ class fpa2bv_tactic : public tactic {
                 result.back()->assert_expr(m_conv.extra_assertions[i].get());
 
             SASSERT(g->is_well_sorted());
-            TRACE("fpa2bv", tout << "AFTER: " << std::endl; g->display(tout);
+            TRACE("fpa2bv", tout << "AFTER: " << std::endl; g->display(tout); 
                             if (mc) mc->display(tout); tout << std::endl; );
         }
     };
@@ -127,18 +127,18 @@ public:
         m_imp->updt_params(p);
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) {        
     }
 
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
-    virtual void cleanup() {
+    
+    virtual void cleanup() {        
         imp * d = alloc(imp, m_imp->m, m_params);
         #pragma omp critical (tactic_cancel)
         {
@@ -154,6 +154,6 @@ protected:
     }
 };
 
-tactic * mk_fpa2bv_tactic(ast_manager & m, params_ref const & p) {
+tactic * mk_fpa2bv_tactic(ast_manager & m, params_ref const & p) {    
     return clean(alloc(fpa2bv_tactic, m, p));
 }

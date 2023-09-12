@@ -43,7 +43,7 @@ unsigned counter::get_positive_count() const {
     iterator eit = begin();
     iterator eend = end();
     for(; eit!=eend; ++eit) {
-        if( eit->m_value>0 ) {
+        if( eit->m_value>0 ) { 
             cnt++;
         }
     }
@@ -63,7 +63,7 @@ bool counter::get_max_positive(unsigned & res) const {
     iterator eit = begin();
     iterator eend = end();
     for(; eit!=eend; ++eit) {
-        if( eit->m_value>0 && (!found || eit->m_key>res) ) {
+        if( eit->m_value>0 && (!found || eit->m_key>res) ) { 
             found = true;
             res = eit->m_key;
         }
@@ -82,7 +82,7 @@ int counter::get_max_counter_value() const {
     iterator eit = begin();
     iterator eend = end();
     for (; eit!=eend; ++eit) {
-        if( eit->m_value>res ) {
+        if( eit->m_value>res ) { 
             res = eit->m_value;
         }
     }
@@ -119,7 +119,7 @@ unsigned var_counter::get_max_var(bool& has_var) {
         switch(e->get_kind()) {
         case AST_QUANTIFIER: {
             qs.push_back(to_quantifier(e));
-            break;
+            break;                 
         }
         case AST_VAR: {
             if (to_var(e)->get_idx() >= max_var) {
@@ -151,7 +151,7 @@ unsigned var_counter::get_max_var(bool& has_var) {
         unsigned max_v = aux_counter.get_max_var(has_var1);
         if (max_v >= max_var + q->get_num_decls()) {
             max_var = max_v - q->get_num_decls();
-            has_var = has_var || has_var1;
+            has_var = has_var || has_var1;                
         }
     }
 

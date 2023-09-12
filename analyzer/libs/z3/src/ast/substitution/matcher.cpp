@@ -64,7 +64,7 @@ bool matcher::operator()(expr * e1, expr * e2, substitution & s) {
 
         if (num_args1 == 0)
             continue;
-
+        
         // m_cache.insert(p);
         unsigned j = num_args1;
         while (j > 0) {

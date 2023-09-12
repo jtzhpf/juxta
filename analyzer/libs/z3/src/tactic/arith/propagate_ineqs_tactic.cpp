@@ -10,19 +10,19 @@ Abstract:
     This tactic performs the following tasks:
 
      - Propagate bounds using the bound_propagator.
-     - Eliminate subsumed inequalities.
+     - Eliminate subsumed inequalities.  
        For example:
           x - y >= 3
           can be replaced with true if we know that
           x >= 3 and y <= 0
-
+            
      - Convert inequalities of the form p <= k and p >= k into p = k,
        where p is a polynomial and k is a constant.
 
     This strategy assumes the input is in arith LHS mode.
     This can be achieved by using option :arith-lhs true in the
     simplifier.
-
+     
 Author:
 
     Leonardo (leonardo) 2012-02-19
@@ -53,7 +53,7 @@ public:
     virtual void collect_param_descrs(param_descrs & r) {}
 
     virtual void operator()(goal_ref const & g, goal_ref_buffer & result, model_converter_ref & mc, proof_converter_ref & pc, expr_dependency_ref & core);
-
+    
     virtual void cleanup();
 protected:
     virtual void set_cancel(bool f);
@@ -74,12 +74,12 @@ struct propagate_ineqs_tactic::imp {
     expr_ref_vector        m_var2expr;
 
     typedef numeral_buffer<mpq, unsynch_mpq_manager> mpq_buffer;
-    typedef svector<a_var> var_buffer;
-
+    typedef svector<a_var> var_buffer;                          
+    
     mpq_buffer             m_num_buffer;
     var_buffer             m_var_buffer;
     goal_ref               m_new_goal;
-
+    
     imp(ast_manager & _m, params_ref const & p):
         m(_m),
         m_allocator("ineq-simplifier"),
@@ -104,12 +104,12 @@ struct propagate_ineqs_tactic::imp {
         bool strict;
         unsigned ts;
         for (unsigned x = 0; x < sz; x++) {
-            if (bp.lower(x, k, strict, ts))
+            if (bp.lower(x, k, strict, ts)) 
                 out << nm.to_string(k) << " " << (strict ? "<" : "<=");
             else
                 out << "-oo <";
             out << " " << mk_ismt2_pp(m_var2expr.get(x), m) << " ";
-            if (bp.upper(x, k, strict, ts))
+            if (bp.upper(x, k, strict, ts)) 
                 out << (strict ? "<" : "<=") << " " << nm.to_string(k);
             else
                 out << "< oo";
@@ -173,7 +173,7 @@ struct propagate_ineqs_tactic::imp {
     }
 
     enum kind { EQ, LE, GE };
-
+    
     bool process(expr * t) {
         bool sign = false;
         while (m.is_not(t, t))
@@ -184,7 +184,7 @@ struct propagate_ineqs_tactic::imp {
             if (sign)
                 return false;
             k = EQ;
-        }
+        } 
         else if (m_util.is_le(t)) {
             if (sign) {
                 k = GE;
@@ -209,7 +209,7 @@ struct propagate_ineqs_tactic::imp {
         expr * lhs = to_app(t)->get_arg(0);
         expr * rhs = to_app(t)->get_arg(1);
         if (m_util.is_numeral(lhs)) {
-            std::swap(lhs, rhs);
+            std::swap(lhs, rhs); 
             if (k == LE)
                 k = GE;
             else if (k == GE)
@@ -258,7 +258,7 @@ struct propagate_ineqs_tactic::imp {
         expr2linear_pol(p, m_num_buffer, m_var_buffer);
         mpq  implied_k;
         bool implied_strict;
-        bool result =
+        bool result = 
             bp.lower(m_var_buffer.size(), m_num_buffer.c_ptr(), m_var_buffer.c_ptr(), implied_k, implied_strict) &&
             (nm.gt(implied_k, k) || (nm.eq(implied_k, k) && (!strict || implied_strict)));
         nm.del(implied_k);
@@ -273,13 +273,13 @@ struct propagate_ineqs_tactic::imp {
         expr2linear_pol(p, m_num_buffer, m_var_buffer);
         mpq  implied_k;
         bool implied_strict;
-        bool result =
+        bool result = 
             bp.upper(m_var_buffer.size(), m_num_buffer.c_ptr(), m_var_buffer.c_ptr(), implied_k, implied_strict) &&
             (nm.lt(implied_k, k) || (nm.eq(implied_k, k) && (!strict || implied_strict)));
         nm.del(implied_k);
         return result;
     }
-
+    
     void restore_bounds() {
         mpq l, u;
         bool strict_l, strict_u, has_l, has_u;
@@ -310,7 +310,7 @@ struct propagate_ineqs_tactic::imp {
             }
         }
     }
-
+    
     bool is_x_minus_y_eq_0(expr * t, expr * & x, expr * & y) {
         expr * lhs, * rhs, * m1, * m2;
         if (m.is_eq(t, lhs, rhs) && m_util.is_zero(rhs) && m_util.is_add(lhs, m1, m2)) {
@@ -379,19 +379,19 @@ struct propagate_ineqs_tactic::imp {
             }
 
             TRACE("find_ite_bounds_bug", tout << "x: " << mk_ismt2_pp(x, m) << ", y: " << mk_ismt2_pp(y, m) << "\n";
-                  if (target) {
+                  if (target) { 
                       tout << "target: " << mk_ismt2_pp(target, m) << "\n";
                       tout << "has_l: " << has_l << " " << nm.to_string(l_min) << " has_u: " << has_u << " " << nm.to_string(u_max) << "\n";
                   });
 
             if (is_unbounded(y))
                 std::swap(x, y);
-
+            
             if (!is_unbounded(x)) {
                 TRACE("find_ite_bounds_bug", tout << "x is already bounded\n";);
                 break;
             }
-
+            
             if (target == 0) {
                 target = x;
                 if (lower(y, curr, curr_strict)) {
@@ -439,10 +439,10 @@ struct propagate_ineqs_tactic::imp {
                     }
                 }
             }
-            else {
+            else { 
                 break;
             }
-
+            
             if (!has_l && !has_u)
                 break;
 
@@ -468,7 +468,7 @@ struct propagate_ineqs_tactic::imp {
         unsigned sz = m_new_goal->size();
         for (unsigned i = 0; i < sz; i++) {
             expr * f = m_new_goal->form(i);
-            if (m.is_ite(f))
+            if (m.is_ite(f)) 
                 find_ite_bounds(to_app(f));
         }
         bp.propagate();
@@ -486,7 +486,7 @@ struct propagate_ineqs_tactic::imp {
             r = g;
             return; // nothing to be done
         }
-
+        
         TRACE("propagate_ineqs_tactic", g->display(tout); display_bounds(tout); tout << "bound propagator:\n"; bp.display(tout););
 
         bp.propagate();
@@ -503,7 +503,7 @@ struct propagate_ineqs_tactic::imp {
         // find_ite_bounds(); // did not help
 
         restore_bounds();
-
+        
         TRACE("propagate_ineqs_tactic", tout << "after propagation:\n"; display_bounds(tout); bp.display(tout););
         TRACE("propagate_ineqs_tactic", r->display(tout););
     }
@@ -527,9 +527,9 @@ void propagate_ineqs_tactic::updt_params(params_ref const & p) {
     m_imp->updt_params(p);
 }
 
-void propagate_ineqs_tactic::operator()(goal_ref const & g,
-                                        goal_ref_buffer & result,
-                                        model_converter_ref & mc,
+void propagate_ineqs_tactic::operator()(goal_ref const & g, 
+                                        goal_ref_buffer & result, 
+                                        model_converter_ref & mc, 
                                         proof_converter_ref & pc,
                                         expr_dependency_ref & core) {
     SASSERT(g->is_well_sorted());
@@ -546,7 +546,7 @@ void propagate_ineqs_tactic::set_cancel(bool f) {
     if (m_imp)
         m_imp->set_cancel(f);
 }
-
+ 
 void propagate_ineqs_tactic::cleanup() {
     imp * d = alloc(imp, m_imp->m, m_params);
     #pragma omp critical (tactic_cancel)

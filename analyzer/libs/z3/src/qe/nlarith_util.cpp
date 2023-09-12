@@ -94,19 +94,19 @@ namespace nlarith {
         }
 
     public:
-        imp(ast_manager& m) :
-            m_manager(m), m_arith(m),
+        imp(ast_manager& m) : 
+            m_manager(m), m_arith(m), 
             m_enable_linear(false),
-            m_zero(num(0),m), m_one(num(1),m),
+            m_zero(num(0),m), m_one(num(1),m), 
             m_bs(m),
             m_rw(m, m_bs, m_params),
             m_rw1(m), m_trail(m) {
         }
-
+        
         //
         // create branches and substitutions according to case analysis.
         //
-        bool create_branches(app* x, unsigned num_lits, expr* const* lits,
+        bool create_branches(app* x, unsigned num_lits, expr* const* lits, 
                              branch_conditions& branch_conds) {
             polys polys;
             comps comps;
@@ -119,7 +119,7 @@ namespace nlarith {
             }
 
             if (!get_polys(contains_x, num_lits, lits, polys, comps, &branch_conds, 0)) {
-                TRACE("nlarith",
+                TRACE("nlarith", 
                       tout << "could not extract polynomials " << mk_pp(x, m()) << "\n";
                       for (unsigned i = 0; i < num_lits; ++i) {
                           tout << mk_pp(lits[i], m()) << " ";
@@ -129,7 +129,7 @@ namespace nlarith {
                 return false;
             }
             if (is_degree_two_plus(polys)) {
-                return false;
+                return false;                
             }
             if (!m_enable_linear && is_linear(polys)) {
                 TRACE("nlarith", tout << "this is a linear problem " << mk_pp(x,m()) << "\n"; display(tout, polys););
@@ -141,13 +141,13 @@ namespace nlarith {
                     create_branch_l(idx, i, polys, comps, branch_conds);
                 }
             }
-            else {
+            else {                
                 for (unsigned i = 0; i < polys.size(); ++i) {
                     create_branch(i, polys, comps, branch_conds);
                 }
             }
             inf_branch(polys, comps, branch_conds);
-            TRACE("nlarith",
+            TRACE("nlarith", 
                   for (unsigned i = 0; i < num_lits; ++i) {
                       tout << mk_pp(lits[i], m()) << " ";
                   }
@@ -166,12 +166,12 @@ namespace nlarith {
             }
         }
 
-        void extract_non_linear(expr* e, ptr_vector<app>& nl_vars) {
+        void extract_non_linear(expr* e, ptr_vector<app>& nl_vars) {  
             ast_mark visit;
             extract_non_linear(e, visit, nl_vars);
         }
 
-        void extract_non_linear(expr* e, ast_mark& visit, ptr_vector<app>& nl_vars) {
+        void extract_non_linear(expr* e, ast_mark& visit, ptr_vector<app>& nl_vars) {  
             if (visit.is_marked(e)) {
                 return;
             }
@@ -238,13 +238,13 @@ namespace nlarith {
             m_trail.push_back(e);
         }
 
-        app* mk_lt(expr* p) {
+        app* mk_lt(expr* p) { 
             expr_ref r(m());
             m_rw.mk_lt(p, z(), r);
             track(r);
             return to_app(r);
         }
-        app* mk_le(expr* p) {
+        app* mk_le(expr* p) { 
             expr_ref r(m());
             m_rw.mk_le(p, z(), r);
             track(r);
@@ -252,13 +252,13 @@ namespace nlarith {
         }
         app* mk_gt(expr* p) { return mk_lt(mk_uminus(p)); }
         app* mk_ge(expr* p) { return mk_le(mk_uminus(p)); }
-        app* mk_eq(expr* p) {
+        app* mk_eq(expr* p) { 
             expr_ref r(m());
             m_bs.mk_eq(p, z(), r);
             track(r);
             return to_app(r);
         }
-        app* mk_ne(expr* p) {
+        app* mk_ne(expr* p) { 
             expr_ref r(m());
             m_bs.mk_eq(p, z(), r);
             m_bs.mk_not(r, r);
@@ -352,7 +352,7 @@ namespace nlarith {
                 for (unsigned i = 0; i < bc.branches().size(); ++i) {
                     out << "Branch:\n" << mk_pp(bc.branches()[i], m()) << "\n";
                     for (unsigned j = 0; j < bc.subst()[i].size(); ++j) {
-                        out << mk_pp(bc.preds()[j], m()) << " |-> "
+                        out << mk_pp(bc.preds()[j], m()) << " |-> " 
                             << mk_pp(bc.subst(i)[j], m()) << "\n";
                     }
                     out << "Def: " << mk_pp(bc.def(i), m()) << "\n";
@@ -373,7 +373,7 @@ namespace nlarith {
             int     m_b;
             app_ref m_c;
             app_ref m_d;
-            sqrt_form(imp& I, app* a, int b, app* c, app* d) :
+            sqrt_form(imp& I, app* a, int b, app* c, app* d) : 
                 m_a(a, I.m()), m_b(b), m_c(c, I.m()), m_d(d, I.m()) {
                 SASSERT(d != I.z());
             }
@@ -383,7 +383,7 @@ namespace nlarith {
             }
         };
 
-        expr* mk_abs(expr* e) {
+        expr* mk_abs(expr* e) { 
             return m().mk_ite(mk_lt(e), mk_uminus(e), e);
         }
 
@@ -395,8 +395,8 @@ namespace nlarith {
             arith_util& A = a();
             expr* result;
             // result = (a + b*sqrt(c))/d
-            if (s.m_c == z() || s.m_b == 0) {
-                result = A.mk_div(s.m_a, s.m_d);
+            if (s.m_c == z() || s.m_b == 0) { 
+                result = A.mk_div(s.m_a, s.m_d); 
             }
             else {
                 expr* half = A.mk_numeral(rational(1,2), false);
@@ -406,24 +406,24 @@ namespace nlarith {
         }
 
 
-        //
-        //
+        // 
+        // 
         // Given p(x): ax^2 + bx + c < 0
         //   then the derivative is d p(x)/dx = 2ax + b
         // cases:
         // 1. a != 0, b != 0:
         //    zero: (- b +- sqrt(b^2 - 4ac))/ 2a
         //    then slope of x at zero is:
-        //    2a*zero + b = +- sqrt(..),
+        //    2a*zero + b = +- sqrt(..), 
         //    so the slope is given by the sign of the solution.
-        //
+        // 
         //    return zero + epsilon * (if sign > 0 then -1 else 1)
-        //
+        // 
         // 2. a = 0, b != 0:
         //    zero : -c/b
         //    slope is b.
         //    return -c/b + epsilon * (if b > 0 then -1 else 1)
-        //
+        //    
         // Given p(x): ax^2 + bx + c <= 0, ax^2 + bx + c = 0,
         //    use epsilon = 0.
         // Given p(x): ax^2 + bx + c <= 0, ax^2 + bx + c = 0,
@@ -448,42 +448,42 @@ namespace nlarith {
             return result;
         }
 
-        //
+        // 
         // TBD: Compute an espilon based on the terms
         // used in the constraints.
-        //
+        //  
         expr* mk_epsilon() {
             return a().mk_numeral(rational(1,10000), false);
         }
 
-        //
+        // 
         // TBD: Compute an inf based on the terms
         // used in the constraints. Eg., use a symbolic
         // constant for epsilon and inf and then solve for
         // it postiori.
-        //
+        // 
         expr* mk_inf() {
             return a().mk_numeral(rational(-10000), false);
         }
 
         // lower bounds for each case:
         // a*x^2 + b*x + c + eps = 0 & a = 0 & b = 0 => x < 0
-        // a*x^2 + b*x + c + eps = 0 & a = 0 & b != 0 => x < - (c / b) < - (c^2 +1) * (1 + 1/b^2)
+        // a*x^2 + b*x + c + eps = 0 & a = 0 & b != 0 => x < - (c / b) < - (c^2 +1) * (1 + 1/b^2) 
         // a*x^2 + b*x + c + eps = 0 & a != 0  => x < (-|b| - sqrt(b^2 - 4ac))/2|a| < - (b^2*(1 + 1/a^2) + (c^2+1))
 
-        app* sq(expr* e) {
+        app* sq(expr* e) {  
             return mk_mul(e,e);
         }
 
-        app* sq1(expr * e) {
-            return mk_add(num(1), sq(e));
+        app* sq1(expr * e) { 
+            return mk_add(num(1), sq(e)); 
         }
 
-        app* inv(expr * e) {
-            return a().mk_div(num(1), e);
+        app* inv(expr * e) { 
+            return a().mk_div(num(1), e); 
         }
 
-        expr* mk_inf(branch_conditions const& bc) {
+        expr* mk_inf(branch_conditions const& bc) { 
             return mk_inf();
 #if 0
             if (bc.size() > 0) {
@@ -492,7 +492,7 @@ namespace nlarith {
                     expr * a = bc.a(i);
                     expr * b = bc.b(i);
                     expr * c = bc.c(i);
-                    expr * e =
+                    expr * e = 
                         m().mk_ite(
                             mk_eq(a),
                             m().mk_ite(
@@ -509,25 +509,25 @@ namespace nlarith {
 
         void inf_branch(
             polys const& polys, comps const& comps, branch_conditions& bc) {
-            // /\_j p_j -> p_j[-oo / x]
+            // /\_j p_j -> p_j[-oo / x]            
             app_ref t1(m());
             expr_ref_vector es(m()), subst(m());
             for (unsigned j = 0; j < polys.size(); ++j) {
                 minus_inf_subst sub(*this);
-                apply_subst(sub, comps[j],  polys[j], t1);
+                apply_subst(sub, comps[j],  polys[j], t1); 
                 es.push_back(m().mk_implies(bc.preds(j), t1));
                 subst.push_back(t1);
-                TRACE("nlarith_verbose",
-                      display(tout << "inf", polys[j]);
-                      display(tout, comps[j]);
+                TRACE("nlarith_verbose", 
+                      display(tout << "inf", polys[j]); 
+                      display(tout, comps[j]); 
                       tout << " 0 [-oo] --> " << mk_pp(t1.get(), m()) << "\n";);
             }
             TRACE("nlarith", tout << "inf-branch\n";);
             bc.add_branch(mk_and(es.size(), es.c_ptr()), m().mk_true(), subst, mk_inf(bc), z(), z(), z());
         }
 
-        void create_branch_l(unsigned j, unsigned i, polys const& polys, comps const& comps,
-                            branch_conditions& bc) {
+        void create_branch_l(unsigned j, unsigned i, polys const& polys, comps const& comps, 
+                            branch_conditions& bc) {          
             comp cmp = comps[i];
             poly const& p = polys[i];
             if (i == j) cmp = LE; // non-strict to avoid epsilon substitution mode.
@@ -587,9 +587,9 @@ namespace nlarith {
             expr_ref cond(m()), t2(m()), branch(m());
             expr_ref_vector es(m()), subst(m());
             d = mk_sub(mk_mul(b,b), mk_mul(num(4), a, c));
-            a2 = mk_mul(a, num(2));
+            a2 = mk_mul(a, num(2));            
 
-            TRACE("nlarith",
+            TRACE("nlarith", 
                   display(tout, p); tout << "\n";
                   tout << "a:" << mk_pp(a, m()) << "\n";
                   tout << "b:" << mk_pp(b,m())  << "\n";
@@ -620,7 +620,7 @@ namespace nlarith {
                     subst.push_back(t2);
                 }
                 branch = mk_and(es.size(), es.c_ptr());
-                bc.add_branch(branch, cond, subst, mk_def(cmp, abc_poly(*this, z(), b, c), e0), a, b, c);
+                bc.add_branch(branch, cond, subst, mk_def(cmp, abc_poly(*this, z(), b, c), e0), a, b, c); 
             }
 
             if (a != z()) {
@@ -641,7 +641,7 @@ namespace nlarith {
                 bc.add_branch(branch, cond, subst, mk_def(cmp, abc_poly(*this, a, b, c), e1), a, b, c);
                 TRACE("nlarith", tout << mk_pp(branch,m()) << "\n";);
 
-                TRACE("nlarith",
+                TRACE("nlarith", 
                       tout << "0 <= " << mk_pp(d,m()) << "\n";
                       tout << mk_pp(mk_ge(d), m()) << "\n";);
 
@@ -656,7 +656,7 @@ namespace nlarith {
                 bc.add_branch(branch, cond, subst, mk_def(cmp, abc_poly(*this, a, b, c), e2), a, b, c);
                 TRACE("nlarith", tout << mk_pp(branch,m()) << "\n";);
             }
-        }
+        }        
 
         bool is_strict(comp c) const {
             return c == LT || c == NE;
@@ -668,14 +668,14 @@ namespace nlarith {
                 apply_subst(sub2, c, p, r);
             }
             else {
-                apply_subst(sub, c, p, r);
+                apply_subst(sub, c, p, r); 
             }
-            TRACE("nlarith_verbose",
-                  display(tout, p);
-                  display(tout, c);
-                  e.display(tout << " 0 ");
+            TRACE("nlarith_verbose", 
+                  display(tout, p); 
+                  display(tout, c); 
+                  e.display(tout << " 0 "); 
                   tout << " --> " << mk_pp(r.get(), m()) << "\n";);
-        }
+        } 
 
         void get_coefficients(poly const& p, app*& a, app*& b, app*& c) {
             a = b = c = z();
@@ -736,8 +736,8 @@ namespace nlarith {
         /**
            \brief Create branch conditions for each atomic formulI.
         */
-        bool get_polys(contains_app& contains_x, unsigned num_lits, expr* const* lits,
-                       polys& polys, comps& comps, branch_conditions* bc,
+        bool get_polys(contains_app& contains_x, unsigned num_lits, expr* const* lits, 
+                       polys& polys, comps& comps, branch_conditions* bc, 
                        app_ref_vector* literals) {
             ast_manager& M = m();
             expr* e1, *e2, *e3;
@@ -763,7 +763,7 @@ namespace nlarith {
                 else if (is_lt(lits[i], e1, e2)) {
                     t = mk_sub(e1, e2);
                     c = LT;
-                }
+                }           
                 // ! (e2 < e3) <=> e3 <= e2
                 else if (M.is_not(lits[i], e1) && is_lt(e1, e2, e3)) {
                     t = mk_sub(e3, e2);
@@ -774,7 +774,7 @@ namespace nlarith {
                     c = EQ;
                 }
                 else if (M.is_not(lits[i], e1) && M.is_eq(e1, e2, e3)) {
-                    t = mk_sub(e2, e3);
+                    t = mk_sub(e2, e3);                    
                     c = NE;
                 }
                 else {
@@ -791,10 +791,10 @@ namespace nlarith {
                 if (literals) {
                     literals->push_back(to_app(lits[i]));
                 }
-                TRACE("nlarith_verbose",
+                TRACE("nlarith_verbose", 
                       tout << mk_pp(lits[i], m()) << " -> ";
                       display(tout, p); tout << "\n"; );
-            }
+            }            
             return true;
         }
 
@@ -822,7 +822,7 @@ namespace nlarith {
             func_decl* f = e->get_decl();
             if (f->get_family_id() != m_arith.get_family_id()) {
                 return false;
-            }
+            }            
             rational m;
             switch(f->get_decl_kind()) {
             case OP_ADD:
@@ -832,7 +832,7 @@ namespace nlarith {
                 for (unsigned i = 1; i < e->get_num_args(); ++i) {      \
                     if (!is_numeral(e->get_arg(i), m)) return false;    \
                     n = n _mk_op_ m;                                    \
-                }
+                } 
                 MK_AOP(+);
                 return true;
             case OP_MUL:
@@ -853,7 +853,7 @@ namespace nlarith {
         }
         /**
            \brief Decompose polynomial into sum of powers of 'x'.
-
+           
            p = result[0] + x*result[1] + x*x*result[2] + ...
         */
         bool get_decomposition(expr* t, contains_app& contains_x, poly& result) {
@@ -875,7 +875,7 @@ namespace nlarith {
             func_decl* f = e->get_decl();
             if (f->get_family_id() != a().get_family_id()) {
                 return false;
-            }
+            }            
             poly r(m());
             switch(f->get_decl_kind()) {
             case OP_ADD:
@@ -885,7 +885,7 @@ namespace nlarith {
                 for (unsigned i = 1; i < e->get_num_args(); ++i) {                      \
                     if (!get_decomposition(e->get_arg(i), contains_x, r)) return false; \
                     _mk_op_(result, r);                                                 \
-                }
+                } 
                 MK_OP(mk_add);
                 return true;
             case OP_MUL:
@@ -968,15 +968,15 @@ namespace nlarith {
         /**
            \brief Symbolic differentiation with respect to 'x'.
 
-           result = [p[1],  2*p[2],
+           result = [p[1],  2*p[2], 
                      3*p[3],..,(num_terms-1)*p[num_terms-1]]
-
+                      
         */
 
         void mk_differentiate(poly const& p, app_ref_vector& result) {
             for (unsigned i = 1; i < p.size(); ++i) {
                 result.push_back(mk_mul(num(i), p[i]));
-            }
+            }        
         }
 
         class isubst {
@@ -986,17 +986,17 @@ namespace nlarith {
             isubst(imp& i) : m_imp(i) {}
             virtual void mk_lt(poly const& p, app_ref& r) = 0;
             virtual void mk_eq(poly const& p, app_ref& r) = 0;
-            virtual void mk_le(poly const& p, app_ref& r) {
+            virtual void mk_le(poly const& p, app_ref& r) { 
                 imp& I = m_imp;
                 app_ref r1(I.m()), r2(I.m());
                 mk_lt(p, r1);
                 mk_eq(p, r2);
-                r = I.mk_or(r1, r2);
+                r = I.mk_or(r1, r2);  
             }
-            virtual void mk_ne(poly const& p, app_ref& r) {
+            virtual void mk_ne(poly const& p, app_ref& r) {  
                 imp& I = m_imp;
                 mk_eq(p, r);
-                r = I.m().mk_not(r);
+                r = I.m().mk_not(r); 
             }
         };
 
@@ -1033,16 +1033,16 @@ namespace nlarith {
             sqrt_subst(imp& i, sqrt_form const& s): isubst(i), m_s(s) {}
 
             // p[e/x] < 0: (a*parity(d) < 0 /\ 0 < a*a - b*b*c) \/
-            //             (b*parity(d) <= 0 /\ (a*parity(d) < 0 \/ a*a - b*b*c < 0))
+            //             (b*parity(d) <= 0 /\ (a*parity(d) < 0 \/ a*a - b*b*c < 0))  
             virtual void mk_lt(poly const& p, app_ref& r) {
                 imp& I = m_imp;
                 ast_manager& m = I.m();
                 app_ref a(m), b(m), c(m_s.m_c), d(m);
                 I.mk_instantiate(p, m_s, a, b, d);
                 app_ref ad(a, m), bd(b, m), aabbc(m);
-                if (is_even(p.size())) {
-                    ad = I.mk_mul(a, d);
-                    bd = I.mk_mul(b, d);
+                if (is_even(p.size())) { 
+                    ad = I.mk_mul(a, d); 
+                    bd = I.mk_mul(b, d); 
                 }
                 if (m_s.m_b == 0) {
                    r = I.mk_lt(ad);
@@ -1077,9 +1077,9 @@ namespace nlarith {
                 app_ref a(m), b(m), c(m_s.m_c), d(m);
                 I.mk_instantiate(p, m_s, a, b, d);
                 app_ref ad(a, m), bd(b, m), aabbc(m);
-                if (is_even(p.size())) {
-                    ad = I.mk_mul(a, d);
-                    bd = I.mk_mul(b, d);
+                if (is_even(p.size())) { 
+                    ad = I.mk_mul(a, d); 
+                    bd = I.mk_mul(b, d); 
                 }
                 if (m_s.m_b == 0) {
                     r = I.mk_le(ad);
@@ -1119,7 +1119,7 @@ namespace nlarith {
 
         public:
             plus_eps_subst(imp& i, isubst& s) : isubst(i), m_s(s) {}
-
+            
             virtual void mk_lt(poly const& p, app_ref& r) { mk_nu(p, r); }
 
             // /\ p[i] = 0
@@ -1166,19 +1166,19 @@ namespace nlarith {
             }
         public:
             minus_eps_subst(imp& i, isubst& s) : isubst(i), m_s(s) {}
-
+            
             virtual void mk_lt(poly const& p, app_ref& r) { mk_nu(p, true, r); }
 
             // /\ p[i] = 0
             virtual void mk_eq(poly const& p, app_ref& r) { r = m_imp.mk_zero(p); }
         };
 
-        class minus_inf_subst : public isubst {
+        class minus_inf_subst : public isubst {  
             /**
                \brief compute mu(p) given by.
-
+               
                p = p[0] + x*p[1] + x*x*p[2] + ...
-
+               
                mu(p) = p[num_terms-1]*(-1)^(parity num_terms-1) < 0 \/
                p[num_terms-1] = 0 /\
                mu(num_terms-1, terms)
@@ -1186,7 +1186,7 @@ namespace nlarith {
 
             app* mk_lt(poly const& p, unsigned i) {
                 imp& I = m_imp;
-                ast_manager& m = I.m();
+                ast_manager& m = I.m();                
                 if (i == 0) {
                     return m.mk_false();
                 }
@@ -1198,7 +1198,7 @@ namespace nlarith {
                 }
                 else {
                     return I.mk_or(e, I.mk_and(I.mk_eq(t), mk_lt(p, i)));
-                }
+                }            
             }
         public:
             minus_inf_subst(imp& i) : isubst(i) {}
@@ -1212,7 +1212,7 @@ namespace nlarith {
         };
 
 
-        class plus_inf_subst : public isubst {
+        class plus_inf_subst : public isubst {  
 
             app* mk_lt(poly const& p, unsigned i) {
                 imp& I = m_imp;
@@ -1228,7 +1228,7 @@ namespace nlarith {
                 }
                 else {
                     return I.mk_or(e, I.mk_and(I.mk_eq(t), mk_lt(p, i)));
-                }
+                }            
             }
         public:
             plus_inf_subst(imp& i) : isubst(i) {}
@@ -1238,7 +1238,7 @@ namespace nlarith {
             // /\ p[i] = 0
             virtual void mk_eq(poly const& p, app_ref& r) { r = m_imp.mk_zero(p); }
         };
-
+        
         /**
            \brief create polynomail expression.
 
@@ -1254,7 +1254,7 @@ namespace nlarith {
             tmp.push_back(p[0]);
             for (unsigned i = 1; i < p.size(); ++i) {
                 tmp.push_back(mk_mul(xx.get(), p[i]));
-                xx = mk_mul(x, xx.get());
+                xx = mk_mul(x, xx.get());                      
             }
             result = mk_add(tmp.size(), tmp.c_ptr());
         }
@@ -1270,18 +1270,18 @@ namespace nlarith {
                 zeros.push_back(mk_eq(p[i]));
             }
         }
-
+       
 
         /**
            \brief Formal replacement of x by (a + b*sqrt(c))/d in p.
-
+           
            where:
              p = p[0] + x*p[1] + x*x*p[2] + ...
 
            The result is an expression (a' + b'*sqrt(c))/d'
         */
 
-        void mk_instantiate(poly const& p,
+        void mk_instantiate(poly const& p, 
                             sqrt_form const& s,
                             app_ref& ar, app_ref& br, app_ref& dr) {
             app* a = s.m_a, *c = s.m_c, *d = s.m_d;
@@ -1302,15 +1302,15 @@ namespace nlarith {
                 //   p[i] + (a + b*sqrt(c))/d * (ar + br*sqrt(c))/dr
                 // =
                 //   p[i] + (a*ar + b*br*c + (a*br + ar*b)*sqrt(c))/d*dr
-                // =
+                // = 
                 //   (d*dr*p[i] + a*ar + b*br*c + (a*br + ar*b)*sqrt(c))/d*dr
-                //
+                // 
                 app_ref tmp1(mk_add(mk_mul(d, dr, p[i]), mk_mul(a, ar), mk_mul(b, br, c)), m());
                 br = mk_add(mk_mul(a, br), mk_mul(ar, b));
                 dr = mk_mul(d, dr);
                 ar = tmp1;
             }
-            TRACE("nlarith_verbose",
+            TRACE("nlarith_verbose", 
                   display(tout, p);
                   s.display(tout << " ");
                   tout << " " << mk_pp(ar, m()) << " " << mk_pp(br, m()) << " " << mk_pp(dr, m()) << "\n";);
@@ -1319,12 +1319,12 @@ namespace nlarith {
         static bool is_even(unsigned n) { return 0 == (n&0x1); }
 
         bool is_variable(app* e) {
-            return
-                a().is_real(e) &&
+            return 
+                a().is_real(e) && 
                 e->get_family_id() == null_family_id &&
                 e->get_num_args() == 0;
         }
-
+        
         bool is_arithmetical(app* e) {
             if (e->get_family_id() == m().get_basic_family_id()) {
                 return true;
@@ -1334,7 +1334,7 @@ namespace nlarith {
             }
             return false;
         }
-
+        
         bool is_nonlinear(app* e) {
             if (a().is_mul(e)) {
                 unsigned n = 0;
@@ -1344,7 +1344,7 @@ namespace nlarith {
                     }
                 }
                 return n == 2;
-            }
+            }    
             return false;
         }
 
@@ -1372,7 +1372,7 @@ namespace nlarith {
 
         //
         // Compute q and r such that
-        //    u = v*q + r,
+        //    u = v*q + r, 
         // assuming the leading coefficient of v is a numeral.
         //
         void numeric_quot_rem(poly const& u, poly const& v, poly& q, poly& r) {
@@ -1402,9 +1402,9 @@ namespace nlarith {
 
         //
         // Compute q and r such that
-        //    lc(v)^{m-n+1}*u = v*q + r,
+        //    lc(v)^{m-n+1}*u = v*q + r, 
         // where lc(v) is the leading coefficient of v
-        // of degree 'n' and the most significant coefficient
+        // of degree 'n' and the most significant coefficient 
         // in u has degree 'm'.
         //
         void pseudo_quot_rem(poly const& u, poly const& v, poly& q, poly& r, unsigned& power) {
@@ -1423,15 +1423,15 @@ namespace nlarith {
             }
             for (int k = m-n+1; k > 0; ) {
                 --k;
-                q[k] = mk_mul(u[n+k], powers_v[k].get());
+                q[k] = mk_mul(u[n+k], powers_v[k].get()); 
                 for (int j = n + k; j > 0; ) {
-                    --j;
+                    --j;        
                     r[j] = mk_mul(v_n, r[j].get()); // n + k != j
                     if (j >= k) {
                         r[j] = mk_sub(r[j].get(), mk_mul(r[n+k].get(), v[j-k]));
                     }
                 }
-            }
+            }            
             DEBUG_CODE(
                 poly u1(u);
                 mk_mul(u1, powers_v[m-n+1].get());
@@ -1460,7 +1460,7 @@ namespace nlarith {
         */
 
         void mk_derivative(poly& p) {
-            if(p.empty()) {
+            if(p.empty()) { 
                 return;
             }
             if (p.size() > 1) {
@@ -1486,7 +1486,7 @@ namespace nlarith {
                 if (literals.compare(i) == EQ) {
                     continue;
                 }
-                apply_subst(sub, literals.compare(i), literals.get_poly(i), tmp);
+                apply_subst(sub, literals.compare(i), literals.get_poly(i), tmp); 
                 equivs.push_back(m().mk_implies(literals.literal(i), tmp));
                 new_atoms.push_back(tmp);
             }
@@ -1531,12 +1531,12 @@ namespace nlarith {
                 if (literals.compare(i) == EQ) {
                     continue;
                 }
-                apply_subst(sub, EQ, literals.get_poly(i), fml);
+                apply_subst(sub, EQ, literals.get_poly(i), fml); 
                 new_atoms.push_back(fml);
                 ors.push_back(fml);
             }
             if (p1) {
-                apply_subst(sub, EQ, *p1, fml);
+                apply_subst(sub, EQ, *p1, fml); 
                 new_atoms.push_back(fml);
                 ors.push_back(fml);
             }
@@ -1558,19 +1558,19 @@ namespace nlarith {
                     break;
                 case LT:
                     mk_same_sign(
-                        x, is_sup,
-                        literals.get_poly(i), literals.literal(i),
+                        x, is_sup, 
+                        literals.get_poly(i), literals.literal(i), 
                         fml, new_atoms);
-                   conjs.push_back(fml);
+                   conjs.push_back(fml);              
                    break;
                 default:
                     UNREACHABLE();
                     break;
                 }
             }
-        }
+        } 
 
-        void mk_same_sign(app* x, bool is_sup, poly const& p, app* l,
+        void mk_same_sign(app* x, bool is_sup, poly const& p, app* l, 
                           app_ref& fml, app_ref_vector& new_atoms) {
             basic_subst sub0(*this, x);
             if (is_sup) {
@@ -1629,7 +1629,7 @@ namespace nlarith {
         class ins_rem_branch : public simple_branch {
         public:
             ins_rem_branch(ast_manager& m, app* a, app* r, app* cnstr):
-              simple_branch(m, cnstr) { insert(a); remove(r); }
+              simple_branch(m, cnstr) { insert(a); remove(r); }             
             virtual ~ins_rem_branch() {}
         };
 
@@ -1638,16 +1638,16 @@ namespace nlarith {
                u has degree m, v has degree n.
                m >= n
             1. u = 0 & lc(v) = 0 & v' = 0  remove v = 0, add v' = 0
-            2. let q, r be such that, m >= n
+            2. let q, r be such that, m >= n 
                  lc(v)^{m-n+1}*u = v*q + r
                then
                v = 0 & r = 0               remove u = 0, add r = 0
-        */
+        */    
 
         void get_sign_branches_eq(util::literal_set& lits, unsigned i, unsigned j, ptr_vector<util::branch>& branches) {
             SASSERT(lits.compare(i) == EQ);
             SASSERT(lits.compare(j) == EQ);
-            poly const* u = &lits.get_poly(i);
+            poly const* u = &lits.get_poly(i); 
             poly const* v = &lits.get_poly(j);
             app* l0 = lits.literal(i);
             app* l1 = lits.literal(j);
@@ -1664,15 +1664,15 @@ namespace nlarith {
             v2.set(*v);
             v2.resize(n);
             quot_rem(*u, *v, q, r, lc_v0, power);
-            lc_v0 = mk_eq(lc);
+            lc_v0 = mk_eq(lc);            
             sub.mk_eq(v2, v2_eq);
             sub.mk_eq(r, r_eq);
 
             branches.push_back(alloc(ins_rem_branch, m(), v2_eq, l1, mk_and(lc_v0, v2_eq)));
             branches.push_back(alloc(ins_rem_branch, m(), r_eq,  l0, r_eq));
             // TBD: add constraints that coefficients to l0 are non-zero?
-            branches.push_back(alloc(simple_branch, m(), m().mk_not(l0)));
-            branches.push_back(alloc(simple_branch, m(), m().mk_not(l1)));
+            branches.push_back(alloc(simple_branch, m(), m().mk_not(l0))); 
+            branches.push_back(alloc(simple_branch, m(), m().mk_not(l1))); 
         }
 
         /**
@@ -1680,7 +1680,7 @@ namespace nlarith {
 
             p_infty \/ p_minus_infty \/ mk_bound
 
-            where mk_bound =
+            where mk_bound = 
                   z < x < y /\
                   (\/_j p_j(z) = 0) /\_j (p_j(x) < 0 -> p_j(z) < 0 \/ p_j(z) = 0 /\ p'_j(z) < 0) /\
                   (\/_j p_j(y) = 0) /\_j (p_j(x) < 0 -> p_j(y) < 0 \/ p'_j(y) = 0 /\ -p'_j(z) < 0)
@@ -1697,7 +1697,7 @@ namespace nlarith {
             mk_bound(lits, fml, new_atoms);
             simple_branch* br = alloc(simple_branch, m(), fml);
             swap_atoms(br, lits.lits(), new_atoms);
-            branches.push_back(br);
+            branches.push_back(br);            
         }
 
         util::branch* mk_inf_branch(util::literal_set& literals, bool is_pos) {
@@ -1723,19 +1723,19 @@ namespace nlarith {
             }
         }
 
-        /**
+        /** 
             \brief Compute branches where one equality holds.
 
-            p != 0        \/
-            lc(p) = 0     \/
-            p' = 0        \/
+            p != 0        \/ 
+            lc(p) = 0     \/ 
+            p' = 0        \/ 
             p_j(x) < 0 -> p_j(infty) < 0 \/
             p_j(x) < 0 -> p_j(-infty) < 0 \/
             p(z) < 0 < p(y) /\ p'(x) > 0 /\ m_bound(-p') \/
             p(y) < 0 < p(z) /\ p'(x) < 0 /\ m_bound(p')
 
-            where mk_bound(q) =
-                  z < x < y /\
+            where mk_bound(q) = 
+                  z < x < y /\             
                   /\_j p_j(x) < 0 -> r_j(x) < 0
                   (\/_j r_j(z) = 0) /\_j (p_j(x) < 0 -> r_j(x) < 0 /\ r_j(z-epsilon) < 0
                   (\/_j r_j(y) = 0) /\_j (p_j(x) < 0 -> r_j(x) < 0 /\ r_j(y+epsilon) < 0
@@ -1765,10 +1765,10 @@ namespace nlarith {
             branches.push_back(alloc(ins_rem_branch, m(), l1, lits.literal(i), lc_p0));
             branches.push_back(mk_inf_branch(lits, true));
             branches.push_back(mk_inf_branch(lits, false));
-            branches.push_back(mk_bound_ext(lits, p, p1, lits.x()));
+            branches.push_back(mk_bound_ext(lits, p, p1, lits.x()));  
         }
 
-        simple_branch* mk_bound_ext(util::literal_set& lits,
+        simple_branch* mk_bound_ext(util::literal_set& lits, 
             poly const& p, poly const& p1, app* x) {
             //
             // Assuming p(x) = 0, p'(x) != 0, lc(p) != 0
@@ -1780,10 +1780,10 @@ namespace nlarith {
             // /\_j p_j(x) < 0 -> sign_adjust(lc, parity, r_j(z-epsilon))
             // p'(x) < 0 -> r(y+epsilon) < 0 & r(z-epsilon) < 0
             // p'(x) > 0 -> r(y+epsilon) > 0 & r(z-epsilon) > 0
-            // sign_adjust(lc, even, r) = r < 0
+            // sign_adjust(lc, even, r) = r < 0 
             // sign_adjust(lc, odd,  r) = (lc > 0 -> r < 0) & (lc < 0 -> r > 0)
-            //
-
+            // 
+            
             app_ref eq(m()), fml(m()), l1(m()), l2(m()), l3(m());
             app_ref p1_lt0(m()), p1_gt0(m());
             app_ref_vector new_atoms(m());
@@ -1791,7 +1791,7 @@ namespace nlarith {
             poly p_m(p), p1_m(p1);
             mk_uminus(p_m);
             mk_uminus(p1_m);
-
+            
             mk_lt(lits.x(), lits.x_inf(), conjs, new_atoms);  // y < x < z
             mk_lt(lits.x_sup(), lits.x(), conjs, new_atoms);
             basic_subst sub_x(*this, x);
@@ -1799,17 +1799,17 @@ namespace nlarith {
             basic_subst sub_z(*this, lits.x_inf());
             apply_subst(sub_y, LT, p,  l1);                   // p(y) < 0
             apply_subst(sub_z, LT, p_m,l2);                   // 0 < p(z)
-            apply_subst(sub_x, LT, p1_m, p1_gt0);             // p1(x) > 0
-            new_atoms.push_back(l1);
-            new_atoms.push_back(l2);
-            new_atoms.push_back(p1_gt0);
+            apply_subst(sub_x, LT, p1_m, p1_gt0);             // p1(x) > 0             
+            new_atoms.push_back(l1);            
+            new_atoms.push_back(l2);  
+            new_atoms.push_back(p1_gt0);     
             conjs.push_back(m().mk_implies(p1_gt0, mk_and(l1, l2))); // p'(x) > 0 -> p(y) < 0 < p(z)
 
             apply_subst(sub_y, LT, p_m,  l1);                 // p(y) > 0
             apply_subst(sub_z, LT, p,    l2);                 // 0 > p(z)
-            apply_subst(sub_x, LT, p1, p1_lt0);               // p1(x) < 0
-            new_atoms.push_back(l1);
-            new_atoms.push_back(l2);
+            apply_subst(sub_x, LT, p1, p1_lt0);               // p1(x) < 0 
+            new_atoms.push_back(l1);            
+            new_atoms.push_back(l2);  
             new_atoms.push_back(p1_lt0);
             conjs.push_back(m().mk_implies(p1_lt0, mk_and(l1, l2))); // p'(x) < 0 -> p(y) > 0 > p(z)
 
@@ -1845,7 +1845,7 @@ namespace nlarith {
             mk_uminus(r_m);
             lc_m = mk_uminus(lc);
             plus_eps_subst sub_ye(*this, sub_y);
-            minus_eps_subst sub_ze(*this, sub_z);
+            minus_eps_subst sub_ze(*this, sub_z);                
 
             // p_j(x) < 0 -> sign_adjust(lc, parity, r_j(y+epsilon))
             // p_j(x) < 0 -> sign_adjust(lc, parity, r_j(z-epsilon))
@@ -1868,8 +1868,8 @@ namespace nlarith {
             }
             collect_atoms(fml, new_atoms);
             fml = m().mk_implies(l_j, fml);
-            conjs.push_back(fml);
-        }
+            conjs.push_back(fml);             
+        }        
 
     public:
         /**
@@ -1879,7 +1879,7 @@ namespace nlarith {
             2. Precisely one equality is true
             3. No equality is true
         */
-        void get_sign_branches(util::literal_set& lits, util::eval& eval,
+        void get_sign_branches(util::literal_set& lits, util::eval& eval, 
                                ptr_vector<util::branch>& branches) {
             m_trail.reset();
             unsigned z1 = UINT_MAX, z2 = UINT_MAX;
@@ -1896,7 +1896,7 @@ namespace nlarith {
                 }
             }
             if (z1 == UINT_MAX) {
-                get_sign_branches_neq(lits, branches);
+                get_sign_branches_neq(lits, branches);                
             }
             else if (z2 == UINT_MAX) {
                 get_sign_branches_eq_neq(lits, z1, branches);
@@ -1931,7 +1931,7 @@ namespace nlarith {
             dealloc(lits);
             lits = 0;
             return false;
-        }
+        }                  
 
         // Sign matrix algorithm (Cohen-Hormander)
     public:
@@ -1940,7 +1940,7 @@ namespace nlarith {
         typedef vector<sign_vector> sign_matrix;
         void mk_sign_matrix(vector<poly> const& polys, sign_matrix& result) {
 
-        }
+        }                            
     private:
         // remove points that don't contain Zero
         void condense(sign_matrix& mat) {
@@ -1979,7 +1979,7 @@ namespace nlarith {
             }
             v.push_back(s);
         }
-
+        
         // Deduce matrix for p, p1, .., pn from p', p1, .., pn, q0, .., qn
         void deduce_matrix(sign_matrix& m) {
             for (unsigned i = 0; i < m.size(); ++i) {
@@ -1987,8 +1987,8 @@ namespace nlarith {
             }
             condense(m);
         }
-
-    };
+        
+    };        
 
     util::util(ast_manager& m) {
         m_imp = alloc(imp, m);
@@ -1996,7 +1996,7 @@ namespace nlarith {
 
     util::~util() { dealloc(m_imp); }
 
-
+    
     bool util::create_branches(app* x, unsigned num_lits, expr* const* lits, branch_conditions& bc) {
         return m_imp->create_branches(x, num_lits, lits, bc);
     }

@@ -42,9 +42,9 @@ namespace datalog {
         unsigned       m_deltas[2];
     public:
         rule_unifier(context& ctx)
-            : m(ctx.get_manager()), m_rm(ctx.get_rule_manager()), m_context(ctx),
+            : m(ctx.get_manager()), m_rm(ctx.get_rule_manager()), m_context(ctx), 
             m_interp_simplifier(ctx), m_subst(m), m_unif(m), m_ready(false), m_normalize(true) {}
-
+            
         /** Reset subtitution and unify tail tgt_idx of the target rule and the head of the src rule */
         bool unify_rules(rule const& tgt, unsigned tgt_idx, rule const& src);
 
@@ -63,7 +63,7 @@ namespace datalog {
 
         /**
            Control if bound variables are normalized after unification.
-           The default is 'true': bound variables are re-mapped to an
+           The default is 'true': bound variables are re-mapped to an 
            initial segment of de-Bruijn indices.
          */
         void set_normalize(bool n) { m_normalize = n; }
@@ -72,12 +72,12 @@ namespace datalog {
         void apply(app * a, bool is_tgt, app_ref& res);
 
         /**
-           Apply substitution to a rule tail. Tail with skipped_index is skipped,
+           Apply substitution to a rule tail. Tail with skipped_index is skipped, 
            unless skipped_index is equal to UINT_MAX
-        */
-        void apply(rule const& r, bool is_tgt, unsigned skipped_index, app_ref_vector& res,
+        */        
+        void apply(rule const& r, bool is_tgt, unsigned skipped_index, app_ref_vector& res, 
                    svector<bool>& res_neg);
-
+        
     };
 
     class mk_rule_inliner : public rule_transformer::plugin {
@@ -144,13 +144,13 @@ namespace datalog {
 
         /** Return true if the rule was modified */
         bool transform_rule(rule_set const& orig, rule * r, rule_set& tgt);
-
+        
         /** Return true if some transformation was performed */
         bool transform_rules(const rule_set & orig, rule_set & tgt);
 
         bool is_oriented_rewriter(rule * r, rule_stratifier const& strat);
 
-        /**
+        /** 
             Return false if nothing was done with the rule.
             res may be set to zero if we managed to prove the rule unsatisfiable.
         */
@@ -162,7 +162,7 @@ namespace datalog {
 
            The inlining is done as long as it doesn't increase the number of rules
            (i.e. when only one rule defining a predicate can replace tail atom).
-
+           
            The original rule-set must be closed before passing t this function
         */
         bool do_eager_inlining(scoped_ptr<rule_set> & rules);

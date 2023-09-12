@@ -35,7 +35,7 @@ struct arith_decl_plugin::algebraic_numbers_wrapper {
 
     ~algebraic_numbers_wrapper() {
     }
-
+    
     unsigned mk_id(algebraic_numbers::anum const & val) {
         SASSERT(!m_amanager.is_rational(val));
         unsigned new_id = m_id_gen.mk();
@@ -125,7 +125,7 @@ void arith_decl_plugin::set_manager(ast_manager * m, family_id id) {
     m_int_decl = m->mk_sort(symbol("Int"), sort_info(id, INT_SORT));
     m->inc_ref(m_int_decl);
     sort * i = m_int_decl;
-
+    
     sort * b = m->mk_bool_sort();
 
 #define MK_PRED(FIELD, NAME, KIND, SORT) {                      \
@@ -144,7 +144,7 @@ void arith_decl_plugin::set_manager(ast_manager * m, family_id id) {
     MK_PRED(m_i_ge_decl, ">=", OP_GE, i);
     MK_PRED(m_i_lt_decl, "<",  OP_LT, i);
     MK_PRED(m_i_gt_decl, ">",  OP_GT, i);
-
+    
 #define MK_AC_OP(FIELD, NAME, KIND, SORT) {                             \
         func_decl_info info(id, KIND);                                  \
         info.set_associative();                                         \
@@ -209,7 +209,7 @@ void arith_decl_plugin::set_manager(ast_manager * m, family_id id) {
     MK_UNARY(m_asinh_decl, "asinh", OP_ASINH, r);
     MK_UNARY(m_acosh_decl, "acosh", OP_ACOSH, r);
     MK_UNARY(m_atanh_decl, "atanh", OP_ATANH, r);
-
+    
     func_decl * pi_decl = m->mk_const_decl(symbol("pi"), r, func_decl_info(id, OP_PI));
     m_pi = m->mk_const(pi_decl);
     m->inc_ref(m_pi);
@@ -217,7 +217,7 @@ void arith_decl_plugin::set_manager(ast_manager * m, family_id id) {
     func_decl * e_decl  = m->mk_const_decl(symbol("euler"), r, func_decl_info(id, OP_E));
     m_e = m->mk_const(e_decl);
     m->inc_ref(m_e);
-
+    
     func_decl * z_pw_z_int = m->mk_const_decl(symbol("0^0-int"), i, func_decl_info(id, OP_0_PW_0_INT));
     m_0_pw_0_int = m->mk_const(z_pw_z_int);
     m->inc_ref(m_0_pw_0_int);
@@ -225,7 +225,7 @@ void arith_decl_plugin::set_manager(ast_manager * m, family_id id) {
     func_decl * z_pw_z_real = m->mk_const_decl(symbol("0^0-real"), r, func_decl_info(id, OP_0_PW_0_REAL));
     m_0_pw_0_real = m->mk_const(z_pw_z_real);
     m->inc_ref(m_0_pw_0_real);
-
+    
     MK_OP(m_neg_root_decl, "neg-root", OP_NEG_ROOT, r);
     MK_UNARY(m_div_0_decl, "/0", OP_DIV_0, r);
     MK_UNARY(m_idiv_0_decl, "div0", OP_IDIV_0, i);
@@ -446,7 +446,7 @@ app * arith_decl_plugin::mk_numeral(rational const & val, bool is_int) {
     }
     parameter p[2] = { parameter(val), parameter(static_cast<int>(is_int)) };
     func_decl * decl;
-    if (is_int)
+    if (is_int) 
         decl = m_manager->mk_const_decl(m_intv_sym, m_int_decl, func_decl_info(m_family_id, OP_NUM, 2, p));
     else
         decl = m_manager->mk_const_decl(m_realv_sym, m_real_decl, func_decl_info(m_family_id, OP_NUM, 2, p));
@@ -483,14 +483,14 @@ static bool has_real_arg(ast_manager * m, unsigned num_args, expr * const * args
 }
 
 static bool is_const_op(decl_kind k) {
-    return
-        k == OP_PI ||
+    return 
+        k == OP_PI || 
         k == OP_E  ||
         k == OP_0_PW_0_INT ||
         k == OP_0_PW_0_REAL;
 }
-
-func_decl * arith_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+    
+func_decl * arith_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                           unsigned arity, sort * const * domain, sort * range) {
     if (k == OP_NUM)
         return mk_num_decl(num_parameters, parameters, arity);
@@ -507,7 +507,7 @@ func_decl * arith_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters
     }
 }
 
-func_decl * arith_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+func_decl * arith_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                           unsigned num_args, expr * const * args, sort * range) {
     if (k == OP_NUM)
         return mk_num_decl(num_parameters, parameters, num_args);
@@ -567,16 +567,16 @@ void arith_decl_plugin::get_op_names(svector<builtin_name>& op_names, symbol con
 }
 
 bool arith_decl_plugin::is_value(app * e) const {
-    return
-        is_app_of(e, m_family_id, OP_NUM) ||
+    return 
+        is_app_of(e, m_family_id, OP_NUM) || 
         is_app_of(e, m_family_id, OP_IRRATIONAL_ALGEBRAIC_NUM) ||
         is_app_of(e, m_family_id, OP_PI) ||
         is_app_of(e, m_family_id, OP_E);
 }
 
 bool arith_decl_plugin::is_unique_value(app * e) const {
-    return
-        is_app_of(e, m_family_id, OP_NUM) ||
+    return 
+        is_app_of(e, m_family_id, OP_NUM) || 
         is_app_of(e, m_family_id, OP_PI) ||
         is_app_of(e, m_family_id, OP_E);
 }

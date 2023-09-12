@@ -1,6 +1,6 @@
 ############################################
 # Copyright (c) 2012 Ganesh Gopalakrishnan ganesh@cs.utah.edu
-#
+# 
 # Check if the given graph has a Hamiltonian cycle.
 #
 # Author: Ganesh Gopalakrishnan ganesh@cs.utah.edu
@@ -16,13 +16,13 @@ def gencon(gr):
     http://en.wikipedia.org/wiki/Hamiltonian_path are tested.
 
     =======================================================
-
+    
     Explanation:
-
+    
     Generate a list of Int vars. Constrain the first Int var ("Node 0") to be 0.
     Pick a node i, and attempt to number all nodes reachable from i to have a
     number one higher (mod L) than assigned to node i (use an Or constraint).
-
+    
     =======================================================
     """
     L = len(gr)
@@ -58,7 +58,7 @@ def examples():
     import pprint
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(grdodec)
-
+    
     sdodec=gencon(grdodec)
     print(sdodec.check())
     print(sdodec.model())

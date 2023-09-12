@@ -30,31 +30,31 @@ class user_decl_plugin : public decl_plugin {
     svector<builtin_name>    m_sort_names;
 public:
     user_decl_plugin();
-
+    
     virtual ~user_decl_plugin() {}
     virtual void finalize();
 
     virtual decl_plugin * mk_fresh();
 
     sort * mk_sort(symbol const & name);
-
+    
     func_decl * mk_func_decl(symbol const & name, unsigned arity, sort * const * domain, sort * range);
-
+    
     func_decl * mk_value_decl(symbol const & name, sort * s);
-
+    
     virtual sort * mk_sort(decl_kind k, unsigned num_parameters, parameter const * parameters);
-
-    virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+    
+    virtual func_decl * mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                      unsigned arity, sort * const * domain, sort * range);
-
+    
     virtual bool is_value(app*) const;
 
     virtual bool is_unique_value(app * a) const { return is_value(a); }
 
     bool is_value(func_decl *) const;
-
+    
     virtual void get_op_names(svector<builtin_name> & op_names, symbol const & logic);
-
+    
     virtual void get_sort_names(svector<builtin_name> & sort_names, symbol const & logic);
 };
 

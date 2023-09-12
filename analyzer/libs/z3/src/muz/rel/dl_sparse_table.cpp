@@ -30,7 +30,7 @@ namespace datalog {
     // entry_storage
     //
     // -----------------------------------
-
+    
     entry_storage::store_offset entry_storage::insert_or_get_reserve_content() {
         SASSERT(has_reserve());
         store_offset entry_ofs = m_data_indexer.insert_if_not_there(m_reserve);
@@ -132,7 +132,7 @@ namespace datalog {
             unsigned length = get_domain_length(dom_size);
             SASSERT(length>0);
             SASSERT(length<=64);
-
+            
             if (size() > 0 && (length > 54 || i == first_functional)) {
                 //large domains must start byte-aligned, as well as functional columns
                 make_byte_aligned_end(size()-1);
@@ -145,7 +145,7 @@ namespace datalog {
         make_byte_aligned_end(size()-1);
         SASSERT(back().next_ofs()%8 == 0);//the entries must be aligned to whole bytes
         m_entry_size = back().next_ofs()/8;
-        if (m_functional_col_cnt) {
+        if (m_functional_col_cnt) { 
             SASSERT((*this)[first_functional].m_offset%8 == 0);
             m_functional_part_size = m_entry_size - (*this)[first_functional].m_offset/8;
         }
@@ -194,8 +194,8 @@ namespace datalog {
         class our_row : public row_interface {
             const our_iterator_core & m_parent;
         public:
-            our_row(const sparse_table & t, const our_iterator_core & parent) :
-              row_interface(t),
+            our_row(const sparse_table & t, const our_iterator_core & parent) : 
+              row_interface(t), 
               m_parent(parent) {}
 
             virtual table_element operator[](unsigned col) const {
@@ -211,7 +211,7 @@ namespace datalog {
         const column_layout & m_layout;
 
     public:
-        our_iterator_core(const sparse_table & t, bool finished) :
+        our_iterator_core(const sparse_table & t, bool finished) : 
           m_end(t.m_data.after_last()),
           m_ptr(finished ? m_end : t.m_data.begin()),
           m_fact_size(t.m_fact_size),
@@ -271,7 +271,7 @@ namespace datalog {
             bool empty() const { return begin() == end(); }
         };
 
-        key_indexer(unsigned key_len, const unsigned * key_cols)
+        key_indexer(unsigned key_len, const unsigned * key_cols) 
             : m_key_cols(key_len, key_cols) {}
 
         virtual ~key_indexer() {}
@@ -307,9 +307,9 @@ namespace datalog {
             return e->get_data().m_value;
         }
     public:
-        general_key_indexer(unsigned key_len, const unsigned * key_cols)
+        general_key_indexer(unsigned key_len, const unsigned * key_cols) 
             : key_indexer(key_len, key_cols),
-            m_keys(key_len*sizeof(table_element)),
+            m_keys(key_len*sizeof(table_element)), 
             m_first_nonindexed(0) {}
 
         virtual void update(const sparse_table & t) {
@@ -339,7 +339,7 @@ namespace datalog {
                         key_modified = true;
                     }
                 }
-
+                
                 if (key_modified) {
                     index_entry = &get_matching_offset_vector(key);
                     key_modified = false;
@@ -394,11 +394,11 @@ namespace datalog {
             return true;
         }
 
-        full_signature_key_indexer(unsigned key_len, const unsigned * key_cols, const sparse_table & t)
+        full_signature_key_indexer(unsigned key_len, const unsigned * key_cols, const sparse_table & t) 
                 : key_indexer(key_len, key_cols),
                 m_table(t) {
             SASSERT(can_handle(key_len, key_cols, t));
-
+            
             m_permutation.resize(key_len);
             for (unsigned i=0; i<key_len; i++) {
                 //m_permutation[m_key_cols[i]] = i;
@@ -414,7 +414,7 @@ namespace datalog {
             for (unsigned i=0; i<key_len; i++) {
                 m_key_fact[m_permutation[i]] = key[i];
             }
-            //We will change the content of the reserve; which does not change the 'high-level'
+            //We will change the content of the reserve; which does not change the 'high-level' 
             //content of the table.
             sparse_table & t = const_cast<sparse_table&>(m_table);
             t.write_into_reserve(m_key_fact.c_ptr());
@@ -428,13 +428,13 @@ namespace datalog {
     };
 
     sparse_table::sparse_table(sparse_table_plugin & p, const table_signature & sig, unsigned init_capacity)
-            : table_base(p, sig),
+            : table_base(p, sig), 
             m_column_layout(sig),
             m_fact_size(m_column_layout.m_entry_size),
             m_data(m_fact_size, m_column_layout.m_functional_part_size, init_capacity) {}
-
+    
     sparse_table::sparse_table(const sparse_table & t)
-            : table_base(t.get_plugin(), t.get_signature()),
+            : table_base(t.get_plugin(), t.get_signature()), 
             m_column_layout(t.m_column_layout),
             m_fact_size(t.m_fact_size),
             m_data(t.m_data) {}
@@ -460,16 +460,16 @@ namespace datalog {
         return mk_iterator(alloc(our_iterator_core, *this, true));
     }
 
-    sparse_table::key_indexer& sparse_table::get_key_indexer(unsigned key_len,
+    sparse_table::key_indexer& sparse_table::get_key_indexer(unsigned key_len, 
             const unsigned * key_cols) const {
             verbose_action  _va("get_key_indexer");
 
 #if Z3DEBUG
-        //We allow indexes only on non-functional columns because we want to be able to modify them
+        //We allow indexes only on non-functional columns because we want to be able to modify them 
         //without having to worry about updating indexes.
-        //Maybe we might keep a list of indexes that contain functional columns and on an update reset
+        //Maybe we might keep a list of indexes that contain functional columns and on an update reset 
         //only those.
-        SASSERT(key_len == 0 ||
+        SASSERT(key_len == 0 || 
             counter().count(key_len, key_cols).get_max_positive()<get_signature().first_functional());
 #endif
         key_spec kspec;
@@ -604,7 +604,7 @@ namespace datalog {
     }
 
     void sparse_table::copy_columns(const column_layout & src_layout, const column_layout & dest_layout,
-            unsigned start_index, unsigned after_last, const char * src, char * dest,
+            unsigned start_index, unsigned after_last, const char * src, char * dest, 
             unsigned & dest_idx, unsigned & pre_projection_idx, const unsigned * & next_removed) {
         for (unsigned i=start_index; i<after_last; i++, pre_projection_idx++) {
             if (*next_removed == pre_projection_idx) {
@@ -635,11 +635,11 @@ namespace datalog {
     void sparse_table::garbage_collect() {
         if (memory::above_high_watermark()) {
             get_plugin().garbage_collect();
-        }
+        }       
         if (memory::above_high_watermark()) {
             IF_VERBOSE(1, verbose_stream() << "Ran out of memory while filling table of size: " << get_size_estimate_rows() << " rows " << get_size_estimate_bytes() << " bytes\n";);
             throw out_of_memory_error();
-        }
+        }       
     }
 
     void sparse_table::self_agnostic_join_project(const sparse_table & t1, const sparse_table & t2,
@@ -653,7 +653,7 @@ namespace datalog {
         size_t t1idx = 0;
         size_t t1end = t1.m_data.after_last_offset();
 
-        TRACE("dl_table_relation",
+        TRACE("dl_table_relation", 
               tout << "joined_col_cnt: " << joined_col_cnt << "\n";
               tout << "t1_entry_size:  " << t1_entry_size << "\n";
               tout << "t2_entry_size:  " << t2_entry_size << "\n";
@@ -710,7 +710,7 @@ namespace datalog {
             if (t2_offsets.empty()) {
                 continue;
             }
-
+            
             key_indexer::offset_iterator t2ofs_it  = t2_offsets.begin();
             key_indexer::offset_iterator t2ofs_end = t2_offsets.end();
             for (; t2ofs_it != t2ofs_end; ++t2ofs_it) {
@@ -739,7 +739,7 @@ namespace datalog {
     //
     // -----------------------------------
 
-    sparse_table_plugin::sparse_table_plugin(relation_manager & manager)
+    sparse_table_plugin::sparse_table_plugin(relation_manager & manager) 
         : table_plugin(symbol("sparse"), manager) {}
 
     sparse_table_plugin::~sparse_table_plugin() {
@@ -819,10 +819,10 @@ namespace datalog {
 
     class sparse_table_plugin::join_project_fn : public convenient_table_join_project_fn {
     public:
-        join_project_fn(const table_signature & t1_sig, const table_signature & t2_sig, unsigned col_cnt,
-                const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
-                const unsigned * removed_cols)
-                : convenient_table_join_project_fn(t1_sig, t2_sig, col_cnt, cols1, cols2,
+        join_project_fn(const table_signature & t1_sig, const table_signature & t2_sig, unsigned col_cnt, 
+                const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
+                const unsigned * removed_cols) 
+                : convenient_table_join_project_fn(t1_sig, t2_sig, col_cnt, cols1, cols2, 
                 removed_col_cnt, removed_cols) {
             m_removed_cols.push_back(UINT_MAX);
         }
@@ -839,14 +839,14 @@ namespace datalog {
 
             //If we join with some intersection, want to iterate over the smaller table and
             //do indexing into the bigger one. If we simply do a product, we want the bigger
-            //one to be at the outer iteration (then the small one will hopefully fit into
+            //one to be at the outer iteration (then the small one will hopefully fit into 
             //the cache)
             if ( (t1.row_count() > t2.row_count()) == (!m_cols1.empty()) ) {
-                sparse_table::self_agnostic_join_project(t2, t1, m_cols1.size(), m_cols2.c_ptr(),
+                sparse_table::self_agnostic_join_project(t2, t1, m_cols1.size(), m_cols2.c_ptr(), 
                     m_cols1.c_ptr(), m_removed_cols.c_ptr(), true, *res);
             }
             else {
-                sparse_table::self_agnostic_join_project(t1, t2, m_cols1.size(), m_cols1.c_ptr(),
+                sparse_table::self_agnostic_join_project(t1, t2, m_cols1.size(), m_cols1.c_ptr(), 
                     m_cols2.c_ptr(), m_removed_cols.c_ptr(), false, *res);
             }
             TRACE("dl_table_relation", tb1.display(tout); tb2.display(tout); res->display(tout); );
@@ -858,7 +858,7 @@ namespace datalog {
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2) {
         const table_signature & sig1 = t1.get_signature();
         const table_signature & sig2 = t2.get_signature();
-        if (t1.get_kind()!=get_kind() || t2.get_kind()!=get_kind()
+        if (t1.get_kind()!=get_kind() || t2.get_kind()!=get_kind() 
             || join_involves_functional(sig1, sig2, col_cnt, cols1, cols2)) {
             //We also don't allow indexes on functional columns (and they are needed for joins)
             return 0;
@@ -867,7 +867,7 @@ namespace datalog {
     }
 
     table_join_fn * sparse_table_plugin::mk_join_project_fn(const table_base & t1, const table_base & t2,
-            unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
+            unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
             const unsigned * removed_cols) {
         const table_signature & sig1 = t1.get_signature();
         const table_signature & sig2 = t2.get_signature();
@@ -901,11 +901,11 @@ namespace datalog {
         }
     };
 
-    table_union_fn * sparse_table_plugin::mk_union_fn(const table_base & tgt, const table_base & src,
+    table_union_fn * sparse_table_plugin::mk_union_fn(const table_base & tgt, const table_base & src, 
             const table_base * delta) {
-        if (tgt.get_kind()!=get_kind() || src.get_kind()!=get_kind()
-            || (delta && delta->get_kind()!=get_kind())
-            || tgt.get_signature()!=src.get_signature()
+        if (tgt.get_kind()!=get_kind() || src.get_kind()!=get_kind() 
+            || (delta && delta->get_kind()!=get_kind()) 
+            || tgt.get_signature()!=src.get_signature() 
             || (delta && delta->get_signature()!=tgt.get_signature())) {
             return 0;
         }
@@ -917,16 +917,16 @@ namespace datalog {
         const unsigned m_removed_col_cnt;
         const unsigned m_result_col_cnt;
     public:
-        project_fn(const table_signature & orig_sig, unsigned removed_col_cnt, const unsigned * removed_cols)
-            : convenient_table_project_fn(orig_sig, removed_col_cnt, removed_cols),
+        project_fn(const table_signature & orig_sig, unsigned removed_col_cnt, const unsigned * removed_cols) 
+            : convenient_table_project_fn(orig_sig, removed_col_cnt, removed_cols), 
             m_inp_col_cnt(orig_sig.size()),
             m_removed_col_cnt(removed_col_cnt),
             m_result_col_cnt(orig_sig.size()-removed_col_cnt) {
                 SASSERT(removed_col_cnt>0);
         }
 
-        virtual void transform_row(const char * src, char * tgt,
-            const sparse_table::column_layout & src_layout,
+        virtual void transform_row(const char * src, char * tgt, 
+            const sparse_table::column_layout & src_layout, 
             const sparse_table::column_layout & tgt_layout) {
                 unsigned r_idx=0;
                 unsigned tgt_i=0;
@@ -968,7 +968,7 @@ namespace datalog {
         }
     };
 
-    table_transformer_fn * sparse_table_plugin::mk_project_fn(const table_base & t, unsigned col_cnt,
+    table_transformer_fn * sparse_table_plugin::mk_project_fn(const table_base & t, unsigned col_cnt, 
             const unsigned * removed_cols) {
         if (col_cnt == t.get_signature().size()) {
             return 0;
@@ -981,7 +981,7 @@ namespace datalog {
         const unsigned m_col;
         sparse_table::key_value m_key;
     public:
-        select_equal_and_project_fn(const table_signature & orig_sig, table_element val, unsigned col)
+        select_equal_and_project_fn(const table_signature & orig_sig, table_element val, unsigned col) 
                 : m_col(col) {
             table_signature::from_project(orig_sig, 1, &col, get_result_signature());
             m_key.push_back(val);
@@ -1027,10 +1027,10 @@ namespace datalog {
         }
     };
 
-    table_transformer_fn * sparse_table_plugin::mk_select_equal_and_project_fn(const table_base & t,
+    table_transformer_fn * sparse_table_plugin::mk_select_equal_and_project_fn(const table_base & t, 
             const table_element & value, unsigned col) {
         if (t.get_kind()!=get_kind() || t.get_signature().size() == 1 || col>=t.get_signature().first_functional()) {
-            //We don't allow sparse tables with zero signatures (and project on a single
+            //We don't allow sparse tables with zero signatures (and project on a single 
             //column table produces one).
             //We also don't allow indexes on functional columns. And our implementation of
             //select_equal_and_project uses index on \c col.
@@ -1043,7 +1043,7 @@ namespace datalog {
     class sparse_table_plugin::rename_fn : public convenient_table_rename_fn {
         unsigned_vector m_out_of_cycle;
     public:
-        rename_fn(const table_signature & orig_sig, unsigned permutation_cycle_len, const unsigned * permutation_cycle)
+        rename_fn(const table_signature & orig_sig, unsigned permutation_cycle_len, const unsigned * permutation_cycle) 
             : convenient_table_rename_fn(orig_sig, permutation_cycle_len, permutation_cycle) {
                 SASSERT(permutation_cycle_len>=2);
                 idx_set cycle_cols;
@@ -1058,7 +1058,7 @@ namespace datalog {
         }
 
         void transform_row(const char * src, char * tgt,
-            const sparse_table::column_layout & src_layout,
+            const sparse_table::column_layout & src_layout, 
             const sparse_table::column_layout & tgt_layout) {
 
                 for (unsigned i=1; i < m_cycle.size(); ++i) {
@@ -1132,22 +1132,22 @@ namespace datalog {
            If tgt_is_first is false, contains the same items as \c res.
         */
         idx_set m_intersection_content;
-
+        
 
     public:
-        negation_filter_fn(const table_base & tgt, const table_base & neg,
-                    unsigned joined_col_cnt, const unsigned * t_cols, const unsigned * negated_cols)
+        negation_filter_fn(const table_base & tgt, const table_base & neg, 
+                    unsigned joined_col_cnt, const unsigned * t_cols, const unsigned * negated_cols) 
                 : convenient_table_negation_filter_fn(tgt, neg, joined_col_cnt, t_cols, negated_cols) {
             unsigned neg_first_func = neg.get_signature().first_functional();
             counter ctr;
             ctr.count(m_cols2);
             m_joining_neg_non_functional = ctr.get_max_counter_value() == 1
-                && ctr.get_positive_count() == neg_first_func
+                && ctr.get_positive_count() == neg_first_func 
                 && (neg_first_func == 0 || ctr.get_max_positive() == neg_first_func-1);
         }
 
         /**
-           Collect offsets of rows in \c t1 or \c t2 (depends on whether \c tgt_is_first is true or false)
+           Collect offsets of rows in \c t1 or \c t2 (depends on whether \c tgt_is_first is true or false) 
            that have a match in the other table into \c res. Offsets in \c res are in ascending order.
         */
         void collect_intersection_offsets(const sparse_table & t1, const sparse_table & t2,
@@ -1170,7 +1170,7 @@ namespace datalog {
             key_indexer::query_result t2_offsets;
             store_offset t1_after_last = t1.m_data.after_last_offset();
             for (store_offset t1_ofs=0; t1_ofs<t1_after_last; t1_ofs+=t1_entry_size) {
-
+            
                 for (unsigned i=0; i<joined_col_cnt; i++) {
                     table_element val = t1.get_cell(t1_ofs, cols1[i]);
                     if (t1_key[i]!=val) {
@@ -1215,7 +1215,7 @@ namespace datalog {
         virtual void operator()(table_base & tgt0, const table_base & neg0) {
             sparse_table & tgt = get(tgt0);
             const sparse_table & neg = get(neg0);
-
+           
             verbose_action  _va("filter_by_negation");
 
             if (m_cols1.size() == 0) {
@@ -1227,7 +1227,7 @@ namespace datalog {
 
             svector<store_offset> to_remove; //offsets here are in increasing order
 
-            //We don't do just the simple tgt.row_count()>neg.row_count() because the swapped case is
+            //We don't do just the simple tgt.row_count()>neg.row_count() because the swapped case is 
             //more expensive. The constant 4 is, however, just my guess what the ratio might be.
             if (tgt.row_count()/4>neg.row_count()) {
                 collect_intersection_offsets(neg, tgt, false, to_remove);
@@ -1248,11 +1248,11 @@ namespace datalog {
 
     };
 
-    table_intersection_filter_fn * sparse_table_plugin::mk_filter_by_negation_fn(const table_base & t,
-            const table_base & negated_obj, unsigned joined_col_cnt,
-            const unsigned * t_cols, const unsigned * negated_cols) {
+    table_intersection_filter_fn * sparse_table_plugin::mk_filter_by_negation_fn(const table_base & t, 
+            const table_base & negated_obj, unsigned joined_col_cnt, 
+            const unsigned * t_cols, const unsigned * negated_cols) { 
         if (!check_kind(t) || !check_kind(negated_obj)
-            || join_involves_functional(t.get_signature(), negated_obj.get_signature(), joined_col_cnt,
+            || join_involves_functional(t.get_signature(), negated_obj.get_signature(), joined_col_cnt, 
                 t_cols, negated_cols) ) {
             return 0;
         }
@@ -1275,7 +1275,7 @@ namespace datalog {
            columns from s2 that are equal to a column from s1 that is in s_cols:
 
            - ...
-
+           
     */
 
     class sparse_table_plugin::negated_join_fn : public table_intersection_join_filter_fn {
@@ -1288,7 +1288,7 @@ namespace datalog {
         unsigned_vector m_s2_cols;
         unsigned_vector m_src1_cols;
     public:
-        negated_join_fn(
+        negated_join_fn(        
             table_base const& src1,
             unsigned_vector const& t_cols,
             unsigned_vector const& src_cols,
@@ -1306,7 +1306,7 @@ namespace datalog {
                 }
                 else {
                     m_t2_cols.push_back(t_cols[i]);
-                    m_s2_cols.push_back(src_cols[i]);
+                    m_s2_cols.push_back(src_cols[i]);                    
                 }
             }
             m_s2_cols.append(src2_cols);
@@ -1356,8 +1356,8 @@ namespace datalog {
                         to_remove.push_back(t_ofs);
                         break;
                     }
-                }
-            }
+                }                
+            }                       
         }
 
         inline bool update_key(key_value& key, unsigned key_offset, sparse_table const& t, store_offset ofs, unsigned_vector const& cols) {
@@ -1379,20 +1379,20 @@ namespace datalog {
                 return true;
             }
         }
-
+        
     };
 
     table_intersection_join_filter_fn* sparse_table_plugin::mk_filter_by_negated_join_fn(
-        const table_base & t,
+        const table_base & t, 
 
 
-        const table_base & src1,
-        const table_base & src2,
+        const table_base & src1, 
+        const table_base & src2, 
         unsigned_vector const& t_cols,
         unsigned_vector const& src_cols,
         unsigned_vector const& src1_cols,
         unsigned_vector const& src2_cols) {
-        if (check_kind(t) && check_kind(src1) && check_kind(src2)) {
+        if (check_kind(t) && check_kind(src1) && check_kind(src2)) {            
             return alloc(negated_join_fn, src1, t_cols, src_cols, src1_cols, src2_cols);
         }
         else {

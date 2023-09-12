@@ -22,7 +22,7 @@ template<bool SYNCH>
 std::string mpq_inf_manager<SYNCH>::to_string(mpq_inf const & a) const {
     if (m.is_zero(a.second))
         return m.to_string(a.first);
-
+    
     std::string s = "(";
     s += m.to_string(a.first);
     if (m.is_neg(a.second))

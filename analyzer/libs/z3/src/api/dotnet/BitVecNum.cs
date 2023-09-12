@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-20
 
 Notes:
-
+    
 --*/
 using System;
 using System.Diagnostics.Contracts;
@@ -102,7 +102,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Returns a string representation of the numeral.
-        /// </summary>
+        /// </summary>        
         public override string ToString()
         {
             return Native.Z3_get_numeral_string(Context.nCtx, NativeObject);

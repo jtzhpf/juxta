@@ -1,4 +1,4 @@
-def_module_params('pp',
+def_module_params('pp', 
                   export=True,
                   description='pretty printer',
                   params=(('max_indent', UINT, UINT_MAX, 'max. indentation in pretty printer'),

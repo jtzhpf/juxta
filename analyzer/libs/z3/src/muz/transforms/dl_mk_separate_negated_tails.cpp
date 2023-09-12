@@ -43,7 +43,7 @@ namespace datalog {
                 get_free_vars(r.get_tail(i), m_fv);
             }
         }
-
+        
         app* p = r.get_tail(j);
         for (unsigned i = 0; i < p->get_num_args(); ++i) {
             expr* v = p->get_arg(i);
@@ -103,12 +103,12 @@ namespace datalog {
         }
         rules.add_rule(rm.mk(r.get_head(), tail.size(), tail.c_ptr(), neg.c_ptr(), r.name()));
     }
-
+    
     rule_set * mk_separate_negated_tails::operator()(rule_set const& src) {
         scoped_ptr<rule_set> result = alloc(rule_set, m_ctx);
         bool has_new_rule = false;
         unsigned sz = src.get_num_rules();
-        for (unsigned i = 0; i < sz; ++i) {
+        for (unsigned i = 0; i < sz; ++i) {            
             bool change = false;
             rule & r = *src.get_rule(i);
             unsigned utsz = r.get_uninterpreted_tail_size();

@@ -29,7 +29,7 @@ protected:
     unsigned m_pos;
     unsigned m_capacity;
     char     m_initial_buffer[INITIAL_SIZE * sizeof(T)];
-
+    
     void free_memory() {
 	if (m_buffer != reinterpret_cast<T*>(m_initial_buffer)) {
 	    memory::deallocate(m_buffer);
@@ -44,7 +44,7 @@ protected:
 	m_buffer              = new_buffer;
 	m_capacity            = new_capacity;
     }
-
+    
     void destroy_elements() {
         iterator it = begin();
         iterator e  = end();
@@ -55,9 +55,9 @@ protected:
 
     void destroy() {
 	if (CallDestructors) {
-	    destroy_elements();
+	    destroy_elements(); 
 	}
-	free_memory();
+	free_memory(); 
     }
 
 public:
@@ -95,7 +95,7 @@ public:
         destroy();
     }
 
-    void reset() {
+    void reset() { 
 	if (CallDestructors) {
 	    destroy_elements();
 	}
@@ -109,7 +109,7 @@ public:
         m_capacity = INITIAL_SIZE;
     }
 
-    unsigned size() const {
+    unsigned size() const { 
 	return m_pos;
     }
 
@@ -117,11 +117,11 @@ public:
 	return m_pos == 0;
     }
 
-    iterator begin() {
-        return m_buffer;
+    iterator begin() { 
+        return m_buffer; 
     }
 
-    iterator end() {
+    iterator end() { 
         return m_buffer + size();
     }
 
@@ -135,40 +135,40 @@ public:
 	}
     }
 
-    const_iterator begin() const {
-        return m_buffer;
+    const_iterator begin() const { 
+        return m_buffer; 
     }
 
-    const_iterator end() const {
-        return m_buffer + size();
+    const_iterator end() const { 
+        return m_buffer + size(); 
     }
-
+    
     void push_back(const T & elem) {
 	if (m_pos >= m_capacity)
 	    expand();
 	new (m_buffer + m_pos) T(elem);
 	m_pos++;
     }
-
+    
     void pop_back() {
         if (CallDestructors) {
-            back().~T();
+            back().~T(); 
 	}
         m_pos--;
     }
 
-    const T & back() const {
-        SASSERT(!empty());
+    const T & back() const { 
+        SASSERT(!empty()); 
 	SASSERT(m_pos > 0);
-        return m_buffer[m_pos - 1];
+        return m_buffer[m_pos - 1]; 
     }
 
-    T & back() {
-        SASSERT(!empty());
+    T & back() { 
+        SASSERT(!empty()); 
 	SASSERT(m_pos > 0);
-        return m_buffer[m_pos - 1];
+        return m_buffer[m_pos - 1]; 
     }
-
+    
     T * c_ptr() const {
 	return m_buffer;
     }
@@ -183,28 +183,28 @@ public:
         append(source.size(), source.c_ptr());
     }
 
-    T & operator[](unsigned idx) {
-        SASSERT(idx < size());
+    T & operator[](unsigned idx) { 
+        SASSERT(idx < size()); 
+        return m_buffer[idx]; 
+    }
+
+    const T & operator[](unsigned idx) const { 
+        SASSERT(idx < size()); 
         return m_buffer[idx];
     }
 
-    const T & operator[](unsigned idx) const {
-        SASSERT(idx < size());
+    T & get(unsigned idx) { 
+        SASSERT(idx < size()); 
+        return m_buffer[idx]; 
+    }
+
+    const T & get(unsigned idx) const { 
+        SASSERT(idx < size()); 
         return m_buffer[idx];
     }
 
-    T & get(unsigned idx) {
-        SASSERT(idx < size());
-        return m_buffer[idx];
-    }
-
-    const T & get(unsigned idx) const {
-        SASSERT(idx < size());
-        return m_buffer[idx];
-    }
-
-    void set(unsigned idx, T const & val) {
-        SASSERT(idx < size());
+    void set(unsigned idx, T const & val) { 
+        SASSERT(idx < size()); 
         m_buffer[idx] = val;
     }
 

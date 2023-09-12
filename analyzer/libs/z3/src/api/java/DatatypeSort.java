@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     DatatypeSort.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -33,7 +33,7 @@ public class DatatypeSort extends Sort
 
 	/**
 	 * The constructors.
-	 *
+	 * 
 	 * @throws Z3Exception
 	 **/
 	public FuncDecl[] getConstructors() throws Z3Exception
@@ -48,7 +48,7 @@ public class DatatypeSort extends Sort
 
 	/**
 	 * The recognizers.
-	 *
+	 * 
 	 * @throws Z3Exception
 	 **/
 	public FuncDecl[] getRecognizers() throws Z3Exception
@@ -63,7 +63,7 @@ public class DatatypeSort extends Sort
 
 	/**
 	 * The constructor accessors.
-	 *
+	 * 
 	 * @throws Z3Exception
 	 **/
 	public FuncDecl[][] getAccessors() throws Z3Exception

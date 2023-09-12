@@ -35,7 +35,7 @@ static void display_function(std::ostream & out, model_core const & md, func_dec
             out << mk_pp(arg, m);
             out << " ";
         }
-        out << "-> ";
+        out << "-> "; 
         out << mk_pp(entry->get_result(), m);
         out << "\n";
     }
@@ -69,7 +69,7 @@ static void display_constants(std::ostream & out, model_core const & md) {
         func_decl * d = md.get_constant(i);
 
         std::string name   = d->get_name().str();
-        const char * arrow = " -> ";
+        const char * arrow = " -> "; 
         out << name << arrow;
         unsigned indent = static_cast<unsigned>(name.length() + strlen(arrow));
         out << mk_pp(md.get_const_interp(d), m, indent) << "\n";

@@ -82,13 +82,13 @@ public:
     // Low level function.
     // It is the inverse of c_ptr().
     // It was made public to simplify the implementation of the C API.
-    static symbol mk_symbol_from_c_ptr(void const * ptr) {
-        symbol s(ptr);
+    static symbol mk_symbol_from_c_ptr(void const * ptr) { 
+        symbol s(ptr); 
         return s;
     }
-    unsigned hash() const {
+    unsigned hash() const { 
         if (m_data == 0) return 0x9e3779d9;
-        else if (is_numerical()) return get_num();
+        else if (is_numerical()) return get_num(); 
         else return static_cast<unsigned>(reinterpret_cast<size_t const *>(m_data)[-1]);
     }
     bool contains(char c) const;
@@ -128,7 +128,7 @@ public:
 };
 
 struct symbol_hash_proc {
-    unsigned operator()(symbol const & s) const {
+    unsigned operator()(symbol const & s) const { 
         return s.hash();
     }
 };

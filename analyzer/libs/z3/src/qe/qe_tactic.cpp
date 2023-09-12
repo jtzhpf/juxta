@@ -56,9 +56,9 @@ class qe_tactic : public tactic {
             cooperate("qe");
         }
 
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -82,7 +82,7 @@ class qe_tactic : public tactic {
                 if (produce_proofs) {
                     new_pr = m.mk_modus_ponens(g->pr(i), new_pr);
                 }
-                g->update(i, new_f, new_pr, g->dep(i));
+                g->update(i, new_f, new_pr, g->dep(i));                
             }
             g->inc_depth();
             result.push_back(g.get());
@@ -90,7 +90,7 @@ class qe_tactic : public tactic {
             SASSERT(g->is_well_sorted());
         }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
 public:
@@ -102,7 +102,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(qe_tactic, m, m_params);
     }
-
+        
     virtual ~qe_tactic() {
         dealloc(m_imp);
     }
@@ -112,20 +112,20 @@ public:
         m_imp->updt_params(p);
     }
 
-
+   
     virtual void collect_param_descrs(param_descrs & r) {
         r.insert("qe_nonlinear", CPK_BOOL, "(default: false) enable virtual term substitution.");
         m_imp->collect_param_descrs(r);
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
+    
     virtual void cleanup() {
         ast_manager & m = m_imp->m;
         imp * d = m_imp;
@@ -140,7 +140,7 @@ public:
             m_imp = d;
         }
     }
-
+    
 protected:
     virtual void set_cancel(bool f) {
         if (m_imp)

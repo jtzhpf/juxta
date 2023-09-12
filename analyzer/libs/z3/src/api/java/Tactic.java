@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Tactic.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -36,7 +36,7 @@ public class Tactic extends Z3Object
 
     /**
      * Retrieves parameter descriptions for Tactics.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public ParamDescrs getParameterDescriptions() throws Z3Exception
     {
@@ -46,16 +46,16 @@ public class Tactic extends Z3Object
 
     /**
      * Execute the tactic over the goal.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public ApplyResult apply(Goal g) throws Z3Exception
-    {
+    {	
         return apply(g, null);
     }
 
     /**
      * Execute the tactic over the goal.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public ApplyResult apply(Goal g, Params p) throws Z3Exception
     {
@@ -75,7 +75,7 @@ public class Tactic extends Z3Object
     /**
      * Creates a solver that is implemented using the given tactic. <seealso
      * cref="Context.MkSolver(Tactic)"/>
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public Solver getSolver() throws Z3Exception
     {

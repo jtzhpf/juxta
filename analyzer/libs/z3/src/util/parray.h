@@ -92,7 +92,7 @@ private:
     }
 
     void dec_ref(unsigned sz, value * vs) {
-        if (C::ref_count)
+        if (C::ref_count) 
             for (unsigned i = 0; i < sz; i++)
                 m_vmanager.dec_ref(vs[i]);
     }
@@ -152,7 +152,7 @@ private:
         size_t new_capacity  = curr_capacity == 0 ? 2 : (3 * curr_capacity + 1) >> 1;
         value * new_vs       = allocate_values(new_capacity);
         if (curr_capacity > 0) {
-            for (size_t i = 0; i < curr_capacity; i++)
+            for (size_t i = 0; i < curr_capacity; i++) 
                 new_vs[i] = vs[i];
             deallocate_values(vs);
         }
@@ -178,7 +178,7 @@ private:
         inc_ref(v);
         vs[sz] = v;
         sz++;
-    }
+    }     
 
     void rpush_back(cell * c, value const & v) {
         SASSERT(c->kind() == ROOT);
@@ -272,7 +272,7 @@ public:
     }
 
     value_manager & manager() { return m_vmanager; }
-
+    
     void mk(ref & r) {
         dec_ref(r.m_ref);
         cell * new_c = mk(ROOT);
@@ -286,12 +286,12 @@ public:
         r.m_ref          = 0;
         r.m_updt_counter = 0;
     }
-
+    
     void copy(ref const & s, ref & t) {
         inc_ref(s.m_ref);
         dec_ref(t.m_ref);
         t.m_ref = s.m_ref;
-        t.m_updt_counter = 0;
+        t.m_updt_counter = 0; 
     }
 
     unsigned size(ref const & r) const {
@@ -316,7 +316,7 @@ public:
 
     value const & get(ref const & r, unsigned i) const {
         SASSERT(i < size(r));
-
+        
         unsigned trail_sz = 0;
         cell * c = r.m_ref;
 
@@ -434,7 +434,7 @@ public:
         inc_ref(v);
         new_c->m_elem      = v;
         new_c->m_next      = r.m_ref;
-        r.m_ref            = new_c;
+        r.m_ref            = new_c; 
         SASSERT(new_c->m_ref_count == 1);
     }
 
@@ -519,7 +519,7 @@ public:
         r.m_updt_counter = 0;
         SASSERT(r.root());
     }
-
+    
     void reroot(ref & r) {
         if (r.root())
             return;

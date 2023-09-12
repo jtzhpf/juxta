@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -31,7 +31,7 @@ namespace Microsoft.Z3
     public class Goal : Z3Object
     {
         /// <summary>
-        /// The precision of the goal.
+        /// The precision of the goal. 
         /// </summary>
         /// <remarks>
         /// Goals can be transformed using over and under approximations.
@@ -75,8 +75,8 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Adds the <paramref name="constraints"/> to the given goal.
-        /// </summary>
+        /// Adds the <paramref name="constraints"/> to the given goal. 
+        /// </summary>   
         public void Assert(params BoolExpr[] constraints)
         {
             Contract.Requires(constraints != null);
@@ -92,7 +92,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Alias for Assert.
-        /// </summary>
+        /// </summary>        
         public void Add(params BoolExpr[] constraints)
         {
             Assert(constraints);
@@ -228,7 +228,7 @@ namespace Microsoft.Z3
             {
                 Native.Z3_goal_dec_ref(ctx.nCtx, obj);
             }
-        };
+        };        
 
         internal override void IncRef(IntPtr o)
         {

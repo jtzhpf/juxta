@@ -53,7 +53,7 @@ public:
 
 
   typedef iz3proof_itp Iproof;
-
+  
   Iproof *iproof;
 
   /* Here we have lots of hash tables for memoizing various methods and
@@ -72,7 +72,7 @@ public:
 
   typedef std::pair<hash_map<ast,Iproof::node>, hash_map<ast,Iproof::node> > AstToIpf;
   AstToIpf translation;                     // Z3 proof nodes to Iproof nodes
-
+  
   int frames;                               // number of frames
 
   typedef std::set<ast> AstSet;
@@ -101,7 +101,7 @@ public:
 
  public:
 
-
+ 
 #define from_ast(x) (x)
 
   // #define NEW_LOCALITY
@@ -225,7 +225,7 @@ public:
 	for(unsigned i = 0; i < lits.size(); i++)
 	  rng = range_glb(rng,ast_scope(lits[i]));
       }
-
+      
       if(!range_is_empty(rng)){
 	AstSet &hyps = get_hyps(proof);
 	for(AstSet::iterator it = hyps.begin(), en = hyps.end(); it != en; ++it){
@@ -274,7 +274,7 @@ public:
 	    ast neglit = mk_not(arg(con,i));
 	    res.erase(neglit);
 	  }
-	}
+	}	    
       }
     }
 #if 0
@@ -360,14 +360,14 @@ public:
       resolve(mk_not(unit[0]),lits,unit);
     }
   }
-
+  
 #if 0
   // clear the localization variables
   void clear_localization(){
     localization_vars.clear();
     localization_map.clear();
   }
-
+  
   // create a fresh variable for localization
   ast fresh_localization_var(ast term, int frame){
     std::ostringstream s;
@@ -377,9 +377,9 @@ public:
     localization_vars.push_back(LocVar(var,term,frame));
     return var;
   }
+  
 
-
-  // "localize" a term to a given frame range by
+  // "localize" a term to a given frame range by 
   // creating new symbols to represent non-local subterms
 
   ast localize_term(ast e, const range &rng){
@@ -391,7 +391,7 @@ public:
 
     // if is is non-local, we must first localize the arguments to
     // the range of its function symbol
-
+    
     int nargs = num_args(e);
     if(nargs > 0 /*  && (!is_local(e) || flo <= hi || fhi >= lo) */){
       range frng = rng;
@@ -451,13 +451,13 @@ public:
   // an axiom instance (e.g., an array axiom instance).
   // if so, add it to "antes" in an appropriate frame.
   // this may require "localization"
-
+  
   void get_axiom_instance(ast e){
 
     // "store" axiom
     // (or (= w q) (= (select (store a1 w y) q) (select a1 q)))
     // std::cout << "ax: "; show(e);
-    ast lits[2],eq_ops_l[2],eq_ops_r[2],sel_ops[2], sto_ops[3], sel_ops2[2] ;
+    ast lits[2],eq_ops_l[2],eq_ops_r[2],sel_ops[2], sto_ops[3], sel_ops2[2] ; 
     if(match_or(e,lits,2))
       if(match_op(lits[0],Equal,eq_ops_l,2))
 	if(match_op(lits[1],Equal,eq_ops_r,2))
@@ -471,7 +471,7 @@ public:
                     && eq_ops_l[1] == sel_ops2[1]
                     && sto_ops[0] == sel_ops2[0])
                       if(is_local(sel_ops[0])) // store term must be local
-                      {
+                      {    
                         ast sto = sel_ops[0];
                         ast addr = localize_term(eq_ops_l[1],ast_scope(sto));
                         ast res = make(Or,
@@ -533,7 +533,7 @@ public:
     occurs_in_memo.clear();
     return occurs_in1(var,e);
   }
-
+  
   // find a controlling equality for a given variable v in a term
   // a controlling equality is of the form v = t, which, being
   // false would force the formula to have the specifid truth value
@@ -559,7 +559,7 @@ public:
   }
 
   // substitute a term t for unbound occurrences of variable v in e
-
+  
   ast subst(ast var, ast t, ast e){
     if(e == var) return t;
     std::pair<ast,ast> foo(e,ast());
@@ -599,7 +599,7 @@ public:
   ast add_quants(ast e, int lo, int hi){
     for(int i = localization_vars.size() - 1; i >= 0; i--){
       LocVar &lv = localization_vars[i];
-      opr quantifier = (lv.frame >= lo && lv.frame <= hi) ? Exists : Forall;
+      opr quantifier = (lv.frame >= lo && lv.frame <= hi) ? Exists : Forall; 
       e = apply_quant(quantifier,lv.var,e);
     }
     return e;
@@ -629,7 +629,7 @@ public:
 	n += num_lits(arg(ast,i));
       return n;
     }
-    else
+    else 
       return 1;
   }
 
@@ -705,7 +705,7 @@ public:
       }
     }
   }
-
+  
   ast traced_lit;
 
   int trace_lit(const ast &lit, const ast &proof){
@@ -775,7 +775,7 @@ public:
     std::cout << "\n";
   }
 
-
+  
   void show_con(const ast &proof, bool brief){
     if(!traced_lit.null() && proof_has_lit(proof,traced_lit))
       std::cout << "(*) ";
@@ -829,7 +829,7 @@ public:
 
   std::vector<ast> pfhist;
   int pfhist_pos;
-
+  
   void pfgoto(const ast &proof){
     if(pfhist.size() == 0)
       pfhist_pos = 0;
@@ -839,7 +839,7 @@ public:
     show_step(proof);
   }
 
-
+  
   void pfback(){
     if(pfhist_pos > 0){
       pfhist_pos--;
@@ -977,7 +977,7 @@ public:
     ast nineq = normalize_inequality(ineq);
     ast lhs = arg(nineq,0);
     switch(op(lhs)){
-    case Uninterpreted:
+    case Uninterpreted: 
       lb = false;
       return lhs;
     case Times:
@@ -985,7 +985,7 @@ public:
 	lb = false;
       else if(arg(lhs,0) == make_int(rational(-1)))
 	lb = true;
-      else
+      else 
 	throw unsupported();
       return arg(lhs,1);
     default:
@@ -1170,7 +1170,7 @@ public:
       my_hyps.push_back(prems[i-1]);
     my_cons.push_back(mk_not(farkas_con));
     my_coeffs.push_back(make_int("1"));
-    my_hyps.push_back(iproof->make_hypothesis(mk_not(farkas_con)));
+    my_hyps.push_back(iproof->make_hypothesis(mk_not(farkas_con)));    
     ast res = iproof->make_farkas(mk_false(),my_hyps,my_cons,my_coeffs);
     res = iproof->make_cut_rule(farkas_con,farkas_coeffs[0],conc(proof),res);
     return res;
@@ -1253,9 +1253,9 @@ public:
       unpack_commuted(prem(proof,i),args[i],pf[i],comm_equiv[i]);
     if(!(arg(comm_equiv[0],1) == arg(comm_equiv[1],0))){
       ast tw = twist(prem(proof,1));
-      ast np = translate_main(tw,false);
+      ast np = translate_main(tw,false); 
       unpack_commuted(tw,np,pf[1],comm_equiv[1]);
-    }
+    }      
     ast con = make(Iff,arg(comm_equiv[0],0),arg(comm_equiv[1],1));
     ast res = iproof->make_transitivity(arg(comm_equiv[0],0),arg(comm_equiv[0],1),arg(comm_equiv[1],1),pf[0],pf[1]);
     res = make(commute,res,con);
@@ -1265,13 +1265,13 @@ public:
   ast commute_equality(const ast &eq){
     return make(Equal,arg(eq,1),arg(eq,0));
   }
-
+  
   ast commute_equality_iff(const ast &con){
     if(op(con) != Iff || op(arg(con,0)) != Equal)
       throw unsupported();
     return make(Iff,commute_equality(arg(con,0)),commute_equality(arg(con,1)));
   }
-
+  
   // convert a proof of a=b <-> c=d into a proof of b=a <-> d=c
   // TODO: memoize this?
   ast twist(const ast &proof){
@@ -1282,7 +1282,7 @@ public:
     if(dk == PR_MONOTONICITY){
       for(int i = 0; i < n; i++)
 	prs[i] = prem(proof,i);
-    }
+    }      
     else
       for(int i = 0; i < n; i++)
 	prs[i] = twist(prem(proof,i));
@@ -1358,7 +1358,7 @@ public:
       res = lcm(res,denominator(rats[i]));
     }
     return res;
-  }
+  } 
 
   Iproof::node reconstruct_farkas_with_dual(const std::vector<ast> &prems, const std::vector<Iproof::node> &pfs, const ast &con){
     int nprems = prems.size();
@@ -1440,7 +1440,7 @@ public:
     farkas_coeffs.push_back(make_int(the_lcd));
     my_prems.push_back(iproof->make_hypothesis(mk_not(con)));
     my_pcons.push_back(mk_not(con));
-
+    
     Iproof::node res = iproof->make_farkas(mk_false(),my_prems,my_pcons,farkas_coeffs);
     return res;
   }
@@ -1477,7 +1477,7 @@ public:
     std::vector<Iproof::node> my_prems;
     std::vector<ast> farkas_coeffs, my_pcons;
 
-    if(dk == PR_TH_LEMMA
+    if(dk == PR_TH_LEMMA 
        && get_theory_lemma_theory(new_proof) == ArithTheory
        && get_theory_lemma_kind(new_proof) == FarkasKind)
       get_farkas_coeffs(new_proof,farkas_coeffs);
@@ -1538,7 +1538,7 @@ public:
     std::vector<Iproof::node> my_prems;
     std::vector<ast> farkas_coeffs, my_pcons;
 
-    if(dk == PR_TH_LEMMA
+    if(dk == PR_TH_LEMMA 
        && get_theory_lemma_theory(new_proof) == ArithTheory
        && get_theory_lemma_kind(new_proof) == FarkasKind)
       get_farkas_coeffs(new_proof,farkas_coeffs);
@@ -1643,7 +1643,7 @@ public:
   // translate a Z3 proof term into interpolating proof system
 
   Iproof::node translate_main(ast proof, bool expect_clause = true){
-    AstToIpf &tr = translation;
+    AstToIpf &tr = translation; 
     hash_map<ast,Iproof::node> &trc = expect_clause ? tr.first : tr.second;
     std::pair<ast,Iproof::node> foo(proof,Iproof::node());
     std::pair<hash_map<ast,Iproof::node>::iterator, bool> bar = trc.insert(foo);
@@ -1717,14 +1717,14 @@ public:
 	  res = translate_main(prem(proof,0),expect_clause);
 	  return res;
 	}
-
+      
 #if 0
       if(1 && dk == PR_TRANSITIVITY && pr(prem(proof,1)) == PR_COMMUTATIVITY){
 	Iproof::node clause = translate_main(prem(proof,0),true);
 	res = make(commute,clause,conc(prem(proof,0))); // HACK -- we depend on Iproof::node being same as ast.
 	return res;
       }
-
+      
       if(1 && dk == PR_TRANSITIVITY && pr(prem(proof,0)) == PR_COMMUTATIVITY){
 	Iproof::node clause = translate_main(prem(proof,1),true);
 	res = make(commute,clause,conc(prem(proof,1))); // HACK -- we depend on Iproof::node being same as ast.
@@ -1775,7 +1775,7 @@ public:
 	  return res;
 	}
       }
-
+      
 
       // translate all the premises
       std::vector<Iproof::node> args(nprems);
@@ -1824,7 +1824,7 @@ public:
       case PR_MODUS_PONENS: {
 	if(sym(args[1]) == commute)
 	  res = make_commuted_modus_ponens(proof,args);
-	else
+	else 
 	  res = iproof->make_mp(conc(prem(proof,1)),args[0],args[1]);
 	break;
       }
@@ -2054,7 +2054,7 @@ void iz3translation_full_show_z3_lit(iz3translation_full *p, iz3mgr::ast a){
 void iz3translation_full_pfgoto(iz3translation_full *p, iz3mgr::ast proof){
   p->pfgoto(proof);
 }
-
+  
 
 void iz3translation_full_pfback(iz3translation_full *p ){
   p->pfback();

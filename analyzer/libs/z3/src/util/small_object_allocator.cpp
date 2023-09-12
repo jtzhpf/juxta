@@ -111,7 +111,7 @@ void * small_object_allocator::allocate(size_t size) {
         m_free_list[slot_id] = *(reinterpret_cast<void **>(r));
         return r;
     }
-    chunk * c = m_chunks[slot_id];
+    chunk * c = m_chunks[slot_id]; 
     size = slot_id << PTR_ALIGNMENT;
     SASSERT(size >= osize);
     if (c != 0) {
@@ -163,9 +163,9 @@ struct ptr_lt {
 #define CONSOLIDATE_VB_LVL 20
 
 void small_object_allocator::consolidate() {
-    IF_VERBOSE(CONSOLIDATE_VB_LVL,
+    IF_VERBOSE(CONSOLIDATE_VB_LVL, 
                verbose_stream() << "(allocator-consolidate :wasted-size " << get_wasted_size()
-               << " :memory " << std::fixed << std::setprecision(2) <<
+               << " :memory " << std::fixed << std::setprecision(2) << 
                static_cast<double>(memory::get_allocation_size())/static_cast<double>(1024*1024) << ")" << std::endl;);
     ptr_vector<chunk> chunks;
     ptr_vector<char> free_objs;
@@ -228,8 +228,8 @@ void small_object_allocator::consolidate() {
         m_chunks[slot_id]    = last_chunk;
         m_free_list[slot_id] = last_free_obj;
     }
-    IF_VERBOSE(CONSOLIDATE_VB_LVL,
-               verbose_stream() << "(end-allocator-consolidate :wasted-size " << get_wasted_size()
-               << " :memory " << std::fixed << std::setprecision(2)
+    IF_VERBOSE(CONSOLIDATE_VB_LVL, 
+               verbose_stream() << "(end-allocator-consolidate :wasted-size " << get_wasted_size() 
+               << " :memory " << std::fixed << std::setprecision(2) 
                << static_cast<double>(memory::get_allocation_size())/static_cast<double>(1024*1024) << ")" << std::endl;);
 }

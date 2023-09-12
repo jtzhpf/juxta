@@ -37,7 +37,7 @@ static void bug_set_double() {
     SASSERT(m.is_regular(a));
 }
 
-static void bug_to_rational() {
+static void bug_to_rational() {    
     hwf_manager m;
     hwf a;
 
@@ -92,7 +92,7 @@ static void bug_to_rational() {
     m.to_rational(a, r);
     ad = m.to_double(a);
     rd = mq.get_double(r);
-#ifdef _WINDOWS
+#ifdef _WINDOWS    
     // CMW: This one depends on the rounding mode,
     // which is implicit in both hwf::set and in mpq::to_double.
     double diff = (ad-rd);
@@ -108,7 +108,7 @@ static void bug_is_int() {
     hwf a;
     m.set(a, val);
     SASSERT(!m.is_int(a));
-}
+} 
 
 void tst_hwf() {
     bug_is_int();

@@ -15,8 +15,8 @@ expr_rand::expr_rand(ast_manager& m):
 {}
 
 expr_rand::~expr_rand() {
-    map_t::iterator it = m_nodes.begin();
-    map_t::iterator end = m_nodes.end();
+    map_t::iterator it = m_nodes.begin(); 
+    map_t::iterator end = m_nodes.end(); 
     for (; it != end; ++it) {
         dealloc(it->m_value);
     }
@@ -37,7 +37,7 @@ void expr_rand::add_expr(expr* t) {
         vals = alloc(expr_ref_vector, m_manager);
         m_nodes.insert(s, vals);
     }
-    vals->push_back(t);
+    vals->push_back(t);    
 }
 
 void expr_rand::get_next(sort* s, expr_ref& e) {
@@ -61,7 +61,7 @@ void expr_rand::walk(unsigned n) {
         walk();
     }
 }
-
+    
 func_decl* expr_rand::choose_func_decl() {
     unsigned idx = m_random(m_funcs.size());
     return m_funcs[idx].get();
@@ -107,15 +107,15 @@ void expr_rand::initialize_bv(unsigned num_vars) {
     bv_util u(m_manager);
     family_id bfid = m_manager.get_basic_family_id();
     family_id bvfid = m_manager.mk_family_id("bv");
-
+    
 
     const unsigned num_sizes = 6;
     unsigned sizes[num_sizes] = { 1, 2, 8, 16, 24, 32 };
     parameter p1(1), p2(2), p3(3), p4(4), p8(8), p16(16), p24(24), p32(32);
 
     for (unsigned i = 0; i < num_sizes; ++i) {
-        add_expr(u.mk_numeral(rational(0), sizes[i]));
-        add_expr(u.mk_numeral(rational(1), sizes[i]));
+        add_expr(u.mk_numeral(rational(0), sizes[i]));        
+        add_expr(u.mk_numeral(rational(1), sizes[i]));        
     }
     add_expr(u.mk_numeral(rational(2), 2));
     add_expr(u.mk_numeral(rational(3), 2));
@@ -132,7 +132,7 @@ void expr_rand::initialize_bv(unsigned num_vars) {
     for (unsigned i = 0; i < num_sizes; ++i) {
         parameter param(sizes[i]);
         sort* s = m_manager.mk_sort(bvfid, BV_SORT, 1, &param);
-
+        
         sort* ss[3] = { s, s, s };
         add_func_decl(m_manager.mk_func_decl(bvfid, OP_BNEG, 0, 0, 1, ss));
         add_func_decl(m_manager.mk_func_decl(bvfid, OP_BADD, 0, 0, 2, ss));
@@ -197,7 +197,7 @@ void expr_rand::initialize_bv(unsigned num_vars) {
         add_func_decl(m_manager.mk_func_decl(bvfid, OP_CONCAT, 0, 0, 2, ss));
     }
 
-
+    
     add_func_decl(m_manager.mk_func_decl(bvfid, OP_SIGN_EXT, 1, &p8, 1, &b8));
     add_func_decl(m_manager.mk_func_decl(bvfid, OP_SIGN_EXT, 1, &p8, 1, &b16));
     add_func_decl(m_manager.mk_func_decl(bvfid, OP_SIGN_EXT, 1, &p16, 1, &b8));
@@ -242,7 +242,7 @@ void expr_rand::initialize_array(unsigned num_vars, sort* dom, sort* rng) {
     parameter ps[2] = { p1, p2 };
     sort* a = m_manager.mk_sort(afid, ARRAY_SORT, 2, ps);
     sort* ss[3] = { a, dom, rng };
-
+    
     add_func_decl(m_manager.mk_func_decl(afid, OP_STORE, 0, 0, 3, ss));
     add_func_decl(m_manager.mk_func_decl(afid, OP_SELECT, 0, 0, 2, ss));
 
@@ -256,10 +256,10 @@ void expr_rand::initialize_basic(unsigned amplification) {
     sort* bools[2] = { m_manager.mk_bool_sort(), m_manager.mk_bool_sort() };
     for (unsigned i = 0; i < amplification; ++i) {
         add_func_decl(m_manager.mk_func_decl(bfid, OP_OR, 0, 0, 2, bools));
-        add_func_decl(m_manager.mk_func_decl(bfid, OP_NOT, 0, 0, 1, bools));
+        add_func_decl(m_manager.mk_func_decl(bfid, OP_NOT, 0, 0, 1, bools));         
     }
-    map_t::iterator it  = m_nodes.begin();
-    map_t::iterator end = m_nodes.end();
+    map_t::iterator it  = m_nodes.begin(); 
+    map_t::iterator end = m_nodes.end(); 
     for (; it != end; ++it) {
         sort* s = it->m_key;
         sort* ites[3] = { bools[0], s, s };

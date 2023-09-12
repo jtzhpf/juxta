@@ -15,7 +15,7 @@ Author:
     Leonardo de Moura (leonardo) 2007-06-8
 
 Notes:
-
+    
 --*/
 
 #include<iostream>
@@ -32,7 +32,7 @@ extern "C" {
 #endif // __cplusplus
 #else
 [pointer_default(ref)] interface Z3 {
-#endif // CAMLIDL
+#endif // CAMLIDL  
 
     Z3_bool Z3_API Z3_get_numeral_rational(__in Z3_context c, __in Z3_ast a, rational& r);
 

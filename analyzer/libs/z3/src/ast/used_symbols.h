@@ -31,7 +31,7 @@ struct do_nothing_rename_proc {
    \brief Functor for collecting the symbols used in an expression.
 */
 template<typename RENAME_PROC=do_nothing_rename_proc>
-class used_symbols : public RENAME_PROC {
+class used_symbols : public RENAME_PROC { 
     typedef hashtable<symbol, symbol_hash_proc, symbol_eq_proc> symbol_set;
 
     symbol_set          m_used;
@@ -51,7 +51,7 @@ public:
     used_symbols(RENAME_PROC const & p = RENAME_PROC()):
         RENAME_PROC(p) {
     }
-
+    
     void operator()(expr * n, bool ignore_quantifiers = false) {
         m_visited.reset();
         m_used.reset();
@@ -96,7 +96,7 @@ public:
     bool contains_core(symbol const & s) const { return m_used.contains(s); }
 
     void insert(symbol const & s) { m_used.insert(RENAME_PROC::operator()(s)); }
-
+    
     void insert_core(symbol const & s) { m_used.insert(s); }
 
     void erase_core(symbol const & s) { m_used.erase(s); }

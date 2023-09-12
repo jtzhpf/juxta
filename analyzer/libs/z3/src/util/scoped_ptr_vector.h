@@ -31,19 +31,19 @@ public:
     void reset() { std::for_each(m_vector.begin(), m_vector.end(), delete_proc<T>()); m_vector.reset(); }
     void push_back(T * ptr) { m_vector.push_back(ptr); }
     T * operator[](unsigned idx) const { return m_vector[idx]; }
-    void set(unsigned idx, T * ptr) {
-        if (m_vector[idx] == ptr)
-            return;
-        dealloc(m_vector[idx]);
-        m_vector[idx] = ptr;
+    void set(unsigned idx, T * ptr) { 
+        if (m_vector[idx] == ptr) 
+            return; 
+        dealloc(m_vector[idx]); 
+        m_vector[idx] = ptr; 
     }
     unsigned size() const { return m_vector.size(); }
     bool empty() const { return m_vector.empty(); }
-    void resize(unsigned sz) {
+    void resize(unsigned sz) { 
         if (sz < m_vector.size()) {
             for (unsigned i = m_vector.size(); i < sz; i++)
                 dealloc(m_vector[i]);
-            m_vector.shrink(sz);
+            m_vector.shrink(sz); 
         }
         else {
             for (unsigned i = m_vector.size(); i < sz; i++)

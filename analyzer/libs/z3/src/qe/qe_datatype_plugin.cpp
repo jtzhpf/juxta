@@ -1,7 +1,7 @@
 // ---------------------
 // datatypes
 // Quantifier elimination routine for recursive data-types.
-//
+// 
 
 
 //
@@ -10,84 +10,84 @@
 
 // for dummies:
 // -----------
-//
+// 
 // Step 1. ensure x is recognized.
-//
-//    exists x . phi[x] -> \/_i exists x. R_C(x) & phi[x]
-//
+// 
+//    exists x . phi[x] -> \/_i exists x. R_C(x) & phi[x]    
+// 
 // Step 2. non-recursive data-types
-//
+// 
 //    exists x . R_C(x) & phi[x] -> exists y . phi[C(y)]
-//
+// 
 // Step 2. recursive data-types, eliminate selectors.
-//
+// 
 //   exists x . R_C(x) & phi[x] -> exists y . phi[C(y)], x occurs with sel^C_i(x)
 //
 // Step 3. (recursive data-types)
-//
-//   Solve equations
+//   
+//   Solve equations 
 //             . C[t] = C[s]   -> t = s
-//             . C[x,t] = y    -> x = s1(y) /\ t = s2(y) /\ R_C(y)
-//             . C[x,t] != y   -> can remain
-//
+//             . C[x,t] = y    -> x = s1(y) /\ t = s2(y) /\ R_C(y) 
+//             . C[x,t] != y   -> can remain 
+// 
 // The remaining formula is in NNF where occurrences of 'x' are of the form
 //      x = t_i or t[x] != s_j
-//
+// 
 // The last normalization step is:
-//
+// 
 //   exists x . R_C(x) & phi[x = t_i, t[x] != s_j]
-//
+// 
 //   -> \/_i R_C(t_i) & phi[t_i/x]  \/ phi[false, true]
-//
-//  Justification:
+// 
+//  Justification: 
 //  - We will asume that each of t_i, s_j are constructor terms.
 //  - We can assume that x \notin t_i, x \notin s_j, or otherwise use simplification.
-//  - We can assume that x occurs only in equalities or disequalities, or the recognizer, since
+//  - We can assume that x occurs only in equalities or disequalities, or the recognizer, since 
 //    otherwise, we could simplify equalities, or QE does not apply.
-//  - either x = t_i for some positive t_i, or we create
+//  - either x = t_i for some positive t_i, or we create 
 //      diag = C(t_1, ..., C(t_n, .. C(s_1, .. , C(s_m))))
 //    and x is different from each t_i, s_j.
-//
+//    
 
 //
 // reduce:
 // --------
-// reduce set of literals containing x. The elimination procedure follows an adaptation of
+// reduce set of literals containing x. The elimination procedure follows an adaptation of 
 // the proof (with corrections) in Hodges (shorter model theory).
 //
 // . x = t - (x \notin t) x is eliminated immediately.
-//
+// 
 // . x != t1, ..., x != t_n - (x \notin t_i) are collected into distrinct_terms.
-//
+// 
 // . recognizer(x) - is stored as pos_recognizer.
-//
+// 
 // . !recognizer(x) - is stored into neg_recognizers.
 //
-// . L[constructor(..,x,..)] -
-//                      We could assume pre-processing introduces auxiliary
+// . L[constructor(..,x,..)] - 
+//                      We could assume pre-processing introduces auxiliary 
 //                      variable y, Is_constructor(y), accessor_j(y) = arg_j.
-//                      But we apply the following hack: re-introduce x' into vars,
+//                      But we apply the following hack: re-introduce x' into vars, 
 //                      but also the variable y and the reduced formula.
-//
-// . L[accessor_i(x)] - if pos_recognizer(x) matches accessor,
-//                      or if complement of neg_recognizers match accessor, then
+// 
+// . L[accessor_i(x)] - if pos_recognizer(x) matches accessor, 
+//                      or if complement of neg_recognizers match accessor, then 
 //                      introduce x_1, .., x_n corresponding to accessor_i(x).
-//
-// The only way x is not in the scope of a data-type method is if it is in
+//                      
+// The only way x is not in the scope of a data-type method is if it is in 
 // an equality or dis-equality of the form:
-//
-// . x (!)= acc_1(acc_2(..(acc_i(x)..) - would be false (true) if recognizer(..)
+// 
+// . x (!)= acc_1(acc_2(..(acc_i(x)..) - would be false (true) if recognizer(..) 
 //                     is declared for each sub-term.
-//
-//
+// 
+// 
 // - otherwise, each x should be in the scope of an accessor.
-//
+// 
 // Normalized literal elimination:
-//
-// .    exists x . Lits[accessor_i(x)] & Is_constructor(x)
-//   ->
+// 
+// .    exists x . Lits[accessor_i(x)] & Is_constructor(x) 
+//   -> 
 //      exists x_1, .., x_n . Lits[x_1, .., x_n] for each accessor_i(x).
-//
+// 
 
 //
 // maintain set of equations and disequations with x.
@@ -116,13 +116,13 @@ namespace qe {
         datatype_util    m_util;
     public:
         datatype_atoms(ast_manager& m) :
-            m(m),
+            m(m), 
             m_recognizers(m),
             m_eqs(m),
             m_neqs(m),
             m_eq_atoms(m), m_neq_atoms(m), m_unsat_atoms(m), m_eq_conds(m),
             m_util(m) {}
-
+        
         bool add_atom(contains_app& contains_x, bool is_pos, app* a) {
             app* x = contains_x.x();
             SASSERT(contains_x(a));
@@ -170,12 +170,12 @@ namespace qe {
 
         unsigned num_unsat() { return m_unsat_atoms.size(); }
         app*     unsat_atom(unsigned i) { return m_unsat_atoms[i].get(); }
-
+        
     private:
 
         //
         // perform occurs check on equality.
-        //
+        // 
         bool add_unsat_eq(contains_app& contains_x, app* atom, expr* a, expr* b) {
             app* x = contains_x.x();
             if (x != a) {
@@ -210,7 +210,7 @@ namespace qe {
                 }
                 for (unsigned i = 0; i < b_app->get_num_args(); ++i) {
                     todo.push_back(b_app->get_arg(i));
-                }
+                }                        
             }
             return false;
         }
@@ -277,7 +277,7 @@ namespace qe {
 
         //
         // check that some occurrence of 'x' is in a constructor sequence.
-        //
+        //        
         bool solve_diseq(contains_app& contains_x, expr* a0, expr* b) {
             SASSERT(!contains_x(b));
             SASSERT(contains_x(a0));
@@ -305,14 +305,14 @@ namespace qe {
                 }
                 for (unsigned i = 0; i < a->get_num_args(); ++i) {
                     todo.push_back(a->get_arg(i));
-                }
+                }                        
             }
             return false;
         }
     };
 
-    //
-    // eliminate foreign variable under datatype functions (constructors).
+    // 
+    // eliminate foreign variable under datatype functions (constructors).            
     // (= C(x,y) t) -> (R_C(t) && x = s1(t) && x = s2(t))
     //
 
@@ -322,14 +322,14 @@ namespace qe {
         datatype_util&    m_util;
         i_solver_context& m_ctx;
     public:
-        lift_foreign_vars(ast_manager& m, datatype_util& util, i_solver_context& ctx):
+        lift_foreign_vars(ast_manager& m, datatype_util& util, i_solver_context& ctx): 
             map_proc(m), m(m), m_change(false), m_util(util), m_ctx(ctx) {}
 
         bool lift(expr_ref& fml) {
             m_change = false;
             for_each_expr(*this, fml.get());
             if (m_change) {
-                fml = get_expr(fml.get());
+                fml = get_expr(fml.get());  
                 TRACE("qe", tout << "lift:\n" << mk_pp(fml.get(), m) << "\n";);
             }
             return m_change;
@@ -338,11 +338,11 @@ namespace qe {
         void operator()(var* v) {
             visit(v);
         }
-
+        
         void operator()(quantifier* q) {
             visit(q);
         }
-
+        
         void operator()(app* a) {
             expr* l, *r;
             if (m.is_eq(a, l, r)) {
@@ -368,7 +368,7 @@ namespace qe {
             if (!m_util.is_constructor(l)) {
                 return false;
             }
-
+            
             if (!contains_foreign(l)) {
                 return false;
             }
@@ -380,10 +380,10 @@ namespace qe {
             for (unsigned i = 0; i < acc.size(); ++i) {
                 expr* r_i = m.mk_app(acc[i], r);
                 expr* l_i = l->get_arg(i);
-                conj.push_back(m.mk_eq(l_i, r_i));
+                conj.push_back(m.mk_eq(l_i, r_i));                
             }
             expr* e = m.mk_and(conj.size(), conj.c_ptr());
-            m_map.insert(a, e, 0);
+            m_map.insert(a, e, 0);            
             TRACE("qe", tout << "replace: " << mk_pp(a, m) << " ==> \n" << mk_pp(e, m) << "\n";);
             return true;
         }
@@ -401,7 +401,7 @@ namespace qe {
                     !m.is_bool(s) &&
                     v(a)) {
                     return true;
-                }
+                }               
             }
             return false;
         }
@@ -421,14 +421,14 @@ namespace qe {
         ast_ref_vector             m_trail;
 
     public:
-        datatype_plugin(i_solver_context& ctx, ast_manager& m) :
+        datatype_plugin(i_solver_context& ctx, ast_manager& m) : 
             qe_solver_plugin(m, m.mk_family_id("datatype"), ctx),
             m_datatype_util(m),
             m_replace(m),
             m_trail(m)
         {
         }
-
+                     
         virtual ~datatype_plugin() {
             {
                 eqs_cache::iterator it = m_eqs_cache.begin(), end = m_eqs_cache.end();
@@ -442,9 +442,9 @@ namespace qe {
                     dealloc(it->get_value());
                 }
             }
-
+            
         }
-
+        
         virtual bool get_num_branches( contains_app& x, expr* fml, rational& num_branches) {
             sort* s = x.x()->get_decl()->get_range();
             SASSERT(m_datatype_util.is_datatype(s));
@@ -456,7 +456,7 @@ namespace qe {
             }
         }
 
-
+                
         virtual void assign(contains_app& x, expr* fml, rational const& vl) {
             sort* s = x.x()->get_decl()->get_range();
             SASSERT(m_datatype_util.is_datatype(s));
@@ -480,7 +480,7 @@ namespace qe {
                 subst_nonrec(x, vl, fml, def);
             }
         }
-
+        
         virtual unsigned get_weight( contains_app& x, expr* fml) {
             return UINT_MAX;
         }
@@ -498,11 +498,11 @@ namespace qe {
             return false;
         }
 
-
+        
         virtual rational get_cost(contains_app&, expr* fml) {
             return rational(0);
         }
-
+        
     private:
 
         void add_def(expr* term, expr_ref* def) {
@@ -516,7 +516,7 @@ namespace qe {
         //
         void subst_constructor(contains_app& x, func_decl* c, expr_ref& fml, expr_ref* def) {
             subst_clos* sub = 0;
-
+            
             if (m_subst_cache.find(x.x(), c, sub)) {
                 m_replace.apply_substitution(x.x(), sub->first, fml);
                 add_def(sub->first, def);
@@ -583,21 +583,21 @@ namespace qe {
             unsigned sz = m_datatype_util.get_datatype_num_constructors(s);
             num_branches = rational(sz);
             func_decl* c = 0, *r = 0;
-
+           
             //
             // If 'x' does not yet have a recognizer, then branch according to recognizers.
-            //
+            // 
             if (!has_recognizer(x.x(), fml, r, c)) {
                 return true;
             }
             //
             // eliminate 'x' by applying constructor to fresh variables.
-            //
+            // 
             if (has_selector(x, fml, c)) {
                 num_branches = rational(1);
                 return true;
-            }
-
+            }                
+            
             //
             // 'x' has a recognizer. Count number of equalities and disequalities.
             //
@@ -618,23 +618,23 @@ namespace qe {
 
             //
             // If 'x' does not yet have a recognizer, then branch according to recognizers.
-            //
+            // 
             if (!has_recognizer(x, fml, r, c)) {
                 c = (*m_datatype_util.get_datatype_constructors(s))[vl.get_unsigned()];
                 r = m_datatype_util.get_constructor_recognizer(c);
-                app* is_c = m.mk_app(r, x);
-                // assert v => r(x)
+                app* is_c = m.mk_app(r, x);                
+                // assert v => r(x)            
                 m_ctx.add_constraint(true, is_c);
                 return;
             }
 
             //
             // eliminate 'x' by applying constructor to fresh variables.
-            //
+            // 
             if (has_selector(contains_x, fml, c)) {
                 return;
-            }
-
+            }                
+            
             //
             // 'x' has a recognizer. The branch ID id provided by the index of the equality.
             //
@@ -642,7 +642,7 @@ namespace qe {
             SASSERT(vl.is_unsigned());
             unsigned idx = vl.get_unsigned();
             SASSERT(idx <= eqs.num_eqs());
-
+            
             if (idx < eqs.num_eqs()) {
                 expr* t = eqs.eq(idx);
                 m_ctx.add_constraint(true, m.mk_eq(x, t));
@@ -665,11 +665,11 @@ namespace qe {
             //
             // Add recognizer to formula.
             // Introduce auxiliary variable to eliminate.
-            //
+            // 
             if (!has_recognizer(x, fml, r, c)) {
                 c = (*m_datatype_util.get_datatype_constructors(s))[vl.get_unsigned()];
                 r = m_datatype_util.get_constructor_recognizer(c);
-                app* is_c = m.mk_app(r, x);
+                app* is_c = m.mk_app(r, x);                
                 fml = m.mk_and(is_c, fml);
                 app_ref fresh_x(m.mk_fresh_const("x", s), m);
                 m_ctx.add_var(fresh_x);
@@ -682,7 +682,7 @@ namespace qe {
 
             if (has_selector(contains_x, fml, c)) {
                 TRACE("qe", tout << "Eliminate selector " << mk_ll_pp(c, m) << "\n";);
-                subst_constructor(contains_x, c, fml, def);
+                subst_constructor(contains_x, c, fml, def); 
                 return;
             }
 
@@ -717,7 +717,7 @@ namespace qe {
                     fml = m.mk_and(c, fml);
                 }
             }
-            else {
+            else {                
                 for (unsigned i = 0; i < eqs.num_eqs(); ++i) {
                     m_replace.apply_substitution(eqs.eq_atom(i), m.mk_false(), fml);
                 }
@@ -747,9 +747,9 @@ namespace qe {
             if (sz != 1 && has_recognizer(x.x(), fml, r, c)) {
                 TRACE("qe", tout << mk_pp(x.x(), m) << " has a recognizer\n";);
                 num_branches = rational(1);
-            }
+            }        
             TRACE("qe", tout << mk_pp(x.x(), m) << " branches: " << sz << "\n";);
-            return true;
+            return true; 
         }
 
         void assign_nonrec(contains_app& contains_x, expr* fml, rational const& vl) {
@@ -767,13 +767,13 @@ namespace qe {
                 TRACE("qe", tout << mk_pp(x, m) << " has a recognizer\n";);
                 return;
             }
-
+            
             c = (*m_datatype_util.get_datatype_constructors(s))[vl.get_unsigned()];
             r = m_datatype_util.get_constructor_recognizer(c);
             app* is_c = m.mk_app(r, x);
-
+            
             // assert v => r(x)
-
+            
             m_ctx.add_constraint(true, is_c);
         }
 
@@ -791,7 +791,7 @@ namespace qe {
                 SASSERT(vl.get_unsigned() < sz);
                 c = (*m_datatype_util.get_datatype_constructors(s))[vl.get_unsigned()];
             }
-            subst_constructor(x, c, fml, def);
+            subst_constructor(x, c, fml, def);                
         }
 
 
@@ -849,16 +849,16 @@ namespace qe {
         bool update_eqs(datatype_atoms& eqs, contains_app& contains_x, expr* fml, atom_set const& tbl, bool is_pos) {
             atom_set::iterator it = tbl.begin(), end = tbl.end();
             for (; it != end; ++it) {
-                app* e = *it;
+                app* e = *it; 
                 if (!contains_x(e)) {
                     continue;
-                }
+                }                
                 if (!eqs.add_atom(contains_x, is_pos, e)) {
                     return false;
                 }
-            }
+            }    
             return true;
-        }
+        }       
     };
 
     qe_solver_plugin* mk_datatype_plugin(i_solver_context& ctx) {

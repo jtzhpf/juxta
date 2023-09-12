@@ -36,7 +36,7 @@ bool recurse_expr<T, Visitor, IgnorePatterns, CallDestructors>::visit_children(e
     switch (n->get_kind()) {
     case AST_APP:
         num = to_app(n)->get_num_args();
-        for (unsigned j = 0; j < num; j++)
+        for (unsigned j = 0; j < num; j++) 
             visit(to_app(n)->get_arg(j), visited);
         break;
     case AST_QUANTIFIER:
@@ -67,10 +67,10 @@ void recurse_expr<T, Visitor, IgnorePatterns, CallDestructors>::process(expr * n
             m_results1.push_back(get_cached(to_app(n)->get_arg(j)));
         cache_result(n, this->Visitor::visit(to_app(n), m_results1.c_ptr()));
         break;
-    case AST_VAR:
+    case AST_VAR: 
         cache_result(n, this->Visitor::visit(to_var(n)));
         break;
-    case AST_QUANTIFIER:
+    case AST_QUANTIFIER:  
         if (IgnorePatterns) {
             cache_result(n, this->Visitor::visit(to_quantifier(n), get_cached(to_quantifier(n)->get_expr()), 0, 0));
         }
@@ -86,7 +86,7 @@ void recurse_expr<T, Visitor, IgnorePatterns, CallDestructors>::process(expr * n
             cache_result(n, this->Visitor::visit(to_quantifier(n), get_cached(to_quantifier(n)->get_expr()), m_results1.c_ptr(), m_results2.c_ptr()));
         }
         break;
-    default:
+    default: 
         UNREACHABLE();
     }
 }

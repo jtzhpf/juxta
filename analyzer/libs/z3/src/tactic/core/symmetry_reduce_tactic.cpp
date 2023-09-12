@@ -35,12 +35,12 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(symmetry_reduce_tactic, m);
     }
-
+    
     virtual ~symmetry_reduce_tactic();
-
-    virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & g, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core);
     virtual void cleanup();
@@ -113,7 +113,7 @@ class symmetry_reduce_tactic::imp {
     ast_manager&                m_manager;
     ac_rewriter_star            m_rewriter;
     scoped_ptr<expr_replacer>   m_replace;
-
+    
     ast_manager& m() const { return m_manager; }
 public:
     imp(ast_manager& m) : m_manager(m), m_rewriter(m) {
@@ -126,7 +126,7 @@ public:
         if (g.inconsistent())
             return;
         tactic_report report("symmetry-reduce", g);
-        vector<ptr_vector<app> > P;
+        vector<ptr_vector<app> > P;    
         expr_ref fml(m());
         to_formula(g, fml);
         app_map occs;
@@ -135,7 +135,7 @@ public:
         if (P.empty()) {
             return;
         }
-        term_set T, cts;
+        term_set T, cts;        
         unsigned num_sym_break_preds = 0;
         for (unsigned i = 0; i < P.size(); ++i) {
             term_set& consts = P[i];
@@ -144,13 +144,13 @@ public:
                 select_terms(fml, consts, T);
                 while (!T.empty() && cts.size() < consts.size()) {
                     app* t = select_most_promising_term(fml, T, cts, consts, occs);
-                    T.erase(t);
+                    T.erase(t);                    
                     compute_used_in(t, cts, consts);
                     app* c = select_const(consts, cts);
                     if (!c) break;
                     cts.push_back(c);
                     expr* mem = mk_member(t, cts);
-                    g.assert_expr(mem);
+                    g.assert_expr(mem); 
                     num_sym_break_preds++;
                     TRACE("symmetry_reduce", tout << "member predicate: " << mk_pp(mem, m()) << "\n";);
                     fml = m().mk_and(fml.get(), mem);
@@ -179,11 +179,11 @@ private:
         unsigned num_occs;
         compute_sort_colors(fml, coloring);
         compute_max_depth(fml, depth);
-        merge_colors(occs, coloring);
-        merge_colors(depth, coloring);
+        merge_colors(occs, coloring);        
+        merge_colors(depth, coloring);     
         // compute_siblings(fml, coloring);
         compute_inv_app(coloring, inv_color);
-
+        
         inv_app_map::iterator it = inv_color.begin(), end = inv_color.end();
         for (; it != end; ++it) {
             if (it->m_value.size() < 2) {
@@ -212,7 +212,7 @@ private:
     //
     // refine coloring by taking most specific generalization.
     // a |-> c1, b |-> c2 <c1,c2> |-> c
-    //
+    // 
     struct u_pair {
         unsigned m_first;
         unsigned m_second;
@@ -258,7 +258,7 @@ private:
         unsigned m_max_id;
 
     public:
-        sort_colors(ast_manager& m, app_map& app2sort):
+        sort_colors(ast_manager& m, app_map& app2sort): 
           m_manager(m), m_app2sortid(app2sort), m_max_id(0) {}
 
         void operator()(app* n) {
@@ -319,7 +319,7 @@ private:
                 if (depth.find(a, d1) && d <= d1) {
                     continue;
                 }
-                depth.insert(a, d);
+                depth.insert(a, d);                
                 ++d;
                 for (unsigned i = 0; i < a->get_num_args(); ++i) {
                     todo.push_back(a->get_arg(i));
@@ -338,7 +338,7 @@ private:
     typedef obj_map<app, fun_set*> app_parents;
 
     class parents {
-        app_parents m_use_funs;
+        app_parents m_use_funs;        
     public:
         parents() {}
 
@@ -352,7 +352,7 @@ private:
                 if (is_app(e)) {
                     app_parents::obj_map_entry* entry = m_use_funs.insert_if_not_there2(to_app(e), 0);
                     if (!entry->get_data().m_value) entry->get_data().m_value = alloc(fun_set);
-                    entry->get_data().m_value->insert(f);
+                    entry->get_data().m_value->insert(f); 
                 }
             }
         }
@@ -390,7 +390,7 @@ private:
             }
         }
         void operator()(quantifier *n) {}
-        void operator()(var* n) {}
+        void operator()(var* n) {}        
     };
     // refine coloring by taking colors of siblings into account.
     bool compute_siblings_rec(expr* e, app_map& colors) {
@@ -424,7 +424,7 @@ private:
 
         SASSERT(p.size() >= 2);
         bool result = check_swap(fml, p[0], p[1]) && check_cycle(fml, p);
-        TRACE("symmetry_reduce",
+        TRACE("symmetry_reduce", 
               if (result) {
                   tout << "Symmetric: ";
               }
@@ -480,7 +480,7 @@ private:
             fml = todo.back();
             todo.pop_back();
             if (m().is_and(fml)) {
-                todo.append(to_app(fml)->get_num_args(), to_app(fml)->get_args());
+                todo.append(to_app(fml)->get_num_args(), to_app(fml)->get_args());               
             }
             else if (is_range_restriction(fml, p, t)) {
                 T.push_back(t);
@@ -514,7 +514,7 @@ private:
     // select the most promising term among T.
     // terms with the largest number of occurrences have higher weight.
     // terms that have fewest terms among C as subterms are preferred.
-
+    
     class num_occurrences {
         app_map& m_occs;
     public:
@@ -541,7 +541,7 @@ private:
     }
 
     app* select_most_promising_term(
-        expr* fml, term_set const& T,
+        expr* fml, term_set const& T, 
         term_set& cts, term_set const& consts, app_map const& occs) {
         SASSERT(!T.empty());
         app* t = T[0];
@@ -557,13 +557,13 @@ private:
             }
             unsigned cts_delta1 = compute_cts_delta(t1, cts, consts);
             TRACE("symmetry_reduce", tout << mk_pp(t1, m()) << " " << weight1 << " " << cts_delta1 << "\n";);
-            if ((t->get_num_args() == t1->get_num_args() && (weight1 > weight || cts_delta1 < cts_delta)) ||
+            if ((t->get_num_args() == t1->get_num_args() && (weight1 > weight || cts_delta1 < cts_delta)) || 
                 t->get_num_args() > t1->get_num_args()) {
                  cts_delta = cts_delta1;
                  weight = weight1;
                  t = t1;
             }
-        }
+        }        
         return t;
     }
 
@@ -633,10 +633,10 @@ symmetry_reduce_tactic::symmetry_reduce_tactic(ast_manager & m) {
 symmetry_reduce_tactic::~symmetry_reduce_tactic() {
     dealloc(m_imp);
 }
-
-void symmetry_reduce_tactic::operator()(goal_ref const & g,
-                                        goal_ref_buffer & result,
-                                        model_converter_ref & mc,
+    
+void symmetry_reduce_tactic::operator()(goal_ref const & g, 
+                                        goal_ref_buffer & result, 
+                                        model_converter_ref & mc, 
                                         proof_converter_ref & pc,
                                         expr_dependency_ref & core) {
     fail_if_proof_generation("symmetry_reduce", g);

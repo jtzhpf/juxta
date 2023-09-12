@@ -31,7 +31,7 @@ Notes:
        - incremental
    In non-incremental mode, the first solver is used.
    In incremental mode, the second one is used.
-
+   
    A timeout for the second solver can be specified.
    If the timeout is reached, then the first solver is executed.
 
@@ -57,13 +57,13 @@ private:
     ref<solver>          m_solver2;
     // We delay sending assertions to solver 2
     // This is relevant for big benchmarks that are meant to be solved
-    // by a non-incremental solver.
+    // by a non-incremental solver. 
     bool                 m_solver2_initialized;
 
     bool                 m_ignore_solver1;
     inc_unknown_behavior m_inc_unknown_behavior;
     unsigned             m_inc_timeout;
-
+    
     void init_solver2_assertions() {
         if (m_solver2_initialized)
             return;
@@ -138,12 +138,12 @@ public:
         m_solver2->collect_param_descrs(r);
         combined_solver_params::collect_param_descrs(r);
     }
-
+    
     virtual void set_produce_models(bool f) {
         m_solver1->set_produce_models(f);
         m_solver2->set_produce_models(f);
     }
-
+    
     virtual void assert_expr(expr * t) {
         if (m_check_sat_executed)
             switch_inc_mode();
@@ -165,7 +165,7 @@ public:
         m_solver1->push();
         m_solver2->push();
     }
-
+    
     virtual void pop(unsigned n) {
         switch_inc_mode();
         m_solver1->pop(n);
@@ -186,10 +186,10 @@ public:
             m_use_solver1_results = false;
             return m_solver2->check_sat(num_assumptions, assumptions);
         }
-
+        
         if (m_inc_mode) {
             if (m_inc_timeout == UINT_MAX) {
-                IF_VERBOSE(PS_VB_LVL, verbose_stream() << "(combined-solver \"using solver 2 (without a timeout)\")\n";);
+                IF_VERBOSE(PS_VB_LVL, verbose_stream() << "(combined-solver \"using solver 2 (without a timeout)\")\n";);            
                 lbool r = m_solver2->check_sat(0, 0);
                 if (r != l_undef || !use_solver1_when_undef()) {
                     m_use_solver1_results = false;
@@ -197,7 +197,7 @@ public:
                 }
             }
             else {
-                IF_VERBOSE(PS_VB_LVL, verbose_stream() << "(combined-solver \"using solver 2 (with timeout)\")\n";);
+                IF_VERBOSE(PS_VB_LVL, verbose_stream() << "(combined-solver \"using solver 2 (with timeout)\")\n";);            
                 aux_timeout_eh eh(m_solver2.get());
                 lbool r;
                 {
@@ -209,9 +209,9 @@ public:
                     return r;
                 }
             }
-            IF_VERBOSE(PS_VB_LVL, verbose_stream() << "(combined-solver \"solver 2 failed, trying solver1\")\n";);
+            IF_VERBOSE(PS_VB_LVL, verbose_stream() << "(combined-solver \"solver 2 failed, trying solver1\")\n";);                        
         }
-
+        
         IF_VERBOSE(PS_VB_LVL, verbose_stream() << "(combined-solver \"using solver 1\")\n";);
         m_use_solver1_results = true;
         return m_solver1->check_sat(0, 0);
@@ -227,12 +227,12 @@ public:
             m_solver2->reset_cancel();
         }
     }
-
+    
     virtual void set_progress_callback(progress_callback * callback) {
         m_solver1->set_progress_callback(callback);
         m_solver2->set_progress_callback(callback);
     }
-
+    
     virtual unsigned get_num_assertions() const {
         return m_solver1->get_num_assertions();
     }

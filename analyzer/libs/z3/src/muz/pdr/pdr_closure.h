@@ -25,7 +25,7 @@ Revision History:
 namespace pdr {
 
     // Arithmetic scaling functor.
-    // Variables are replaced using
+    // Variables are replaced using 
     // m_translate. Constants are replaced by
     // multiplication with a variable 'k' (scale factor).
     class scaler {
@@ -35,7 +35,7 @@ namespace pdr {
         expr*                 m_k;
         obj_map<func_decl, expr*>* m_translate;
     public:
-        scaler(ast_manager& m): m(m), a(m), m_translate(0) {}
+        scaler(ast_manager& m): m(m), a(m), m_translate(0) {}        
         expr_ref operator()(expr* e, expr* k, obj_map<func_decl, expr*>* translate = 0);
         expr_ref undo_k(expr* e, expr* k);
     private:
@@ -60,7 +60,7 @@ namespace pdr {
     public:
         closure(pred_transformer& pt, bool is_closure);
         expr_ref operator()(expr_ref_vector const& As);
-
+        
     };
 }
 

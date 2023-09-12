@@ -30,9 +30,9 @@ enum lift_ite_kind {
     LI_FULL
 };
 
-struct preprocessor_params : public pattern_inference_params,
-                             public bit_blaster_params,
-                             public bv_simplifier_params,
+struct preprocessor_params : public pattern_inference_params, 
+                             public bit_blaster_params, 
+                             public bv_simplifier_params, 
                              public arith_simplifier_params {
     lift_ite_kind   m_lift_ite;
     lift_ite_kind   m_ng_lift_ite;  // lift ite for non ground terms
@@ -58,7 +58,7 @@ struct preprocessor_params : public pattern_inference_params,
 public:
     preprocessor_params(params_ref const & p = params_ref()):
         m_lift_ite(LI_NONE),
-        m_ng_lift_ite(LI_NONE),
+        m_ng_lift_ite(LI_NONE), 
         m_pull_cheap_ite_trees(false),
         m_pull_nested_quantifiers(false),
         m_eliminate_term_ite(false),

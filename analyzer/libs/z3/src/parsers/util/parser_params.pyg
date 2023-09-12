@@ -1,4 +1,4 @@
-def_module_params('parser',
+def_module_params('parser', 
                   export=True,
                   params=(('ignore_user_patterns', BOOL, False, 'ignore patterns provided by the user'),
                           ('ignore_bad_patterns',  BOOL, True, 'ignore malformed patterns'),

@@ -29,7 +29,7 @@ static void display_uninterp_sorts(std::ostream & out, model_core const & md) {
     unsigned sz = md.get_num_uninterpreted_sorts();
     for (unsigned i = 0; i < sz; i++) {
         sort * s = md.get_uninterpreted_sort(i);
-        out << "(define-sort " << mk_pp(s, m);
+        out << "(define-sort " << mk_pp(s, m); 
         ptr_vector<expr> const & univ  = md.get_universe(s);
         ptr_vector<expr>::const_iterator it  = univ.begin();
         ptr_vector<expr>::const_iterator end = univ.end();
@@ -64,7 +64,7 @@ static void display_functions(std::ostream & out, model_core const & md) {
             out << " " << "x!" << j;
         }
         out << ")\n";
-
+        
         unsigned num_entries = fi->num_entries();
         for (unsigned j = 0; j < num_entries; j++) {
             func_entry const * curr = fi->get_entry(j);

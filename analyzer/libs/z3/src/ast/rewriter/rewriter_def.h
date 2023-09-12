@@ -26,7 +26,7 @@ void rewriter_tpl<Config>::process_var(var * v) {
         result_stack().push_back(m_r);
         if (ProofGen) {
             result_pr_stack().push_back(m_pr);
-            m_pr = 0;
+            m_pr = 0; 
         }
         set_new_child_flag(v);
         m_r = 0;
@@ -186,9 +186,9 @@ void rewriter_tpl<Config>::process_app(app * t, frame & fr) {
             // this optimization is only used when Proof generation is disabled.
             if (f->is_associative() && t->get_ref_count() <= 1 && frame_stack().size() > 1) {
                 frame & prev_fr = frame_stack()[frame_stack().size() - 2];
-                if (is_app(prev_fr.m_curr) &&
-                    to_app(prev_fr.m_curr)->get_decl() == f &&
-                    prev_fr.m_state == PROCESS_CHILDREN &&
+                if (is_app(prev_fr.m_curr) && 
+                    to_app(prev_fr.m_curr)->get_decl() == f && 
+                    prev_fr.m_state == PROCESS_CHILDREN && 
                     flat_assoc(f)) {
                     frame_stack().pop_back();
                     set_new_child_flag(t);
@@ -213,7 +213,7 @@ void rewriter_tpl<Config>::process_app(app * t, frame & fr) {
             }
         }
         br_status st = m_cfg.reduce_app(f, new_num_args, new_args, m_r, m_pr2);
-        TRACE("reduce_app",
+        TRACE("reduce_app", 
               tout << mk_ismt2_pp(t, m()) << "\n";
               tout << "st: " << st;
               if (m_r) tout << " --->\n" << mk_ismt2_pp(m_r, m());
@@ -285,11 +285,11 @@ void rewriter_tpl<Config>::process_app(app * t, frame & fr) {
         expr * def;
         proof * def_pr;
         quantifier * def_q;
-        // When get_macro succeeds, then
+        // When get_macro succeeds, then 
         // we know that:
         // forall X. f(X) = def[X]
         // and def_pr is a proof for this quantifier.
-        //
+        // 
         // Remark: def_q is only used for proof generation.
         // It is the quantifier forall X. f(X) = def[X]
         if (get_macro(f, def, def_q, def_pr)) {
@@ -306,7 +306,7 @@ void rewriter_tpl<Config>::process_app(app * t, frame & fr) {
                 if (ProofGen) {
                     NOT_IMPLEMENTED_YET();
                     // We do not support the use of bindings in proof generation mode.
-                    // Thus we have to apply the subsitution here, and
+                    // Thus we have to apply the subsitution here, and 
                     // beta_reducer subst(m());
                     // subst.set_bindings(new_num_args, new_args);
                     // expr_ref r2(m());
@@ -418,7 +418,7 @@ void rewriter_tpl<Config>::process_quantifier(quantifier * q, frame & fr) {
         }
         m_num_qvars += q->get_num_decls();
         if (!ProofGen) {
-            for (unsigned i = 0; i < q->get_num_decls(); i++)
+            for (unsigned i = 0; i < q->get_num_decls(); i++) 
                 m_bindings.push_back(0);
         }
     }
@@ -440,7 +440,7 @@ void rewriter_tpl<Config>::process_quantifier(quantifier * q, frame & fr) {
     }
     else {
         new_pats    = q->get_patterns();
-        new_no_pats = q->get_no_patterns();
+        new_no_pats = q->get_no_patterns(); 
     }
     if (ProofGen) {
         quantifier * new_q = m().update_quantifier(q, q->get_num_patterns(), new_pats, q->get_num_no_patterns(), new_no_pats, new_body);

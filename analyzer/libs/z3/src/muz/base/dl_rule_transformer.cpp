@@ -26,7 +26,7 @@ Revision History:
 
 namespace datalog {
 
-    rule_transformer::rule_transformer(context & ctx)
+    rule_transformer::rule_transformer(context & ctx) 
         : m_context(ctx), m_rule_manager(m_context.get_rule_manager()), m_dirty(false) {
     }
 
@@ -38,7 +38,7 @@ namespace datalog {
     void rule_transformer::reset() {
         plugin_vector::iterator it = m_plugins.begin();
         plugin_vector::iterator end = m_plugins.end();
-        for(; it!=end; ++it) {
+        for(; it!=end; ++it) {            
             dealloc(*it);
         }
         m_plugins.reset();
@@ -77,7 +77,7 @@ namespace datalog {
 
         bool modified = false;
 
-        TRACE("dl_rule_transf",
+        TRACE("dl_rule_transf", 
             tout<<"init:\n";
             rules.display(tout);
         );
@@ -99,7 +99,7 @@ namespace datalog {
                 IF_VERBOSE(1, verbose_stream() << "no-op " << sec << "s)\n";);
                 continue;
             }
-            if (p.can_destratify_negation() &&
+            if (p.can_destratify_negation() && 
                 !new_rules1->is_closed() &&
                 !new_rules1->close()) {
                 warning_msg("a rule transformation skipped "
@@ -114,7 +114,7 @@ namespace datalog {
             new_rules->ensure_closed();
 
             IF_VERBOSE(1, verbose_stream() << new_rules->get_num_rules() << " rules " << sec << "s)\n";);
-            TRACE("dl_rule_transf",
+            TRACE("dl_rule_transf", 
                 tout << typeid(p).name()<<":\n";
                 new_rules->display(tout);
             );

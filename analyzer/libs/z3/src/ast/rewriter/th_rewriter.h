@@ -52,8 +52,8 @@ public:
     void reset();
 
     void set_substitution(expr_substitution * s);
-
-    // Dependency tracking is very coarse.
+    
+    // Dependency tracking is very coarse. 
     // The rewriter just keeps accumulating the dependencies of the used substitutions.
     // The following methods are used to recover and reset them.
     // Remark: reset_used_dependecies will reset the internal cache if get_used_dependencies() != 0

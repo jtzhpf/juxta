@@ -25,7 +25,7 @@ class union_find_default_ctx {
 public:
     typedef trail_stack<union_find_default_ctx> _trail_stack;
     union_find_default_ctx() : m_stack(*this) {}
-
+       
     void unmerge_eh(unsigned, unsigned) {}
     void merge_eh(unsigned, unsigned, unsigned, unsigned) {}
     void after_merge_eh(unsigned, unsigned, unsigned, unsigned) {}
@@ -43,7 +43,7 @@ class union_find {
     svector<unsigned>             m_find;
     svector<unsigned>             m_size;
     svector<unsigned>             m_next;
-
+    
     class mk_var_trail;
     friend class mk_var_trail;
 
@@ -84,7 +84,7 @@ class union_find {
         CASSERT("union_find", check_invariant());
     }
 
-public:
+public:    
     union_find(Ctx & ctx):m_ctx(ctx), m_trail_stack(ctx.get_trail_stack()), m_mk_var_trail(*this) {}
 
     unsigned mk_var() {
@@ -129,7 +129,7 @@ public:
     }
 
     void display(std::ostream & out) const {
-        unsigned num = get_num_vars();
+        unsigned num = get_num_vars(); 
         for (unsigned v = 0; v < num; v++) {
             out << "v" << v << " --> v" << m_find[v] << "\n";
         }
@@ -137,7 +137,7 @@ public:
 
 #ifdef Z3DEBUG
     bool check_invariant() const {
-        unsigned num = get_num_vars();
+        unsigned num = get_num_vars(); 
         for (unsigned v = 0; v < num; v++) {
             if (is_root(v)) {
                 unsigned curr = v;

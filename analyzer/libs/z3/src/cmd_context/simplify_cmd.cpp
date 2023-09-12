@@ -33,10 +33,10 @@ public:
 
     virtual char const * get_usage() const { return "<term> (<keyword> <value>)*"; }
 
-    virtual char const * get_main_descr() const {
+    virtual char const * get_main_descr() const { 
         return "simplify the given term using builtin theory simplification rules.";
     }
-
+    
     virtual void init_pdescrs(cmd_context & ctx, param_descrs & p) {
         th_rewriter::get_param_descrs(p);
         insert_timeout(p);
@@ -44,24 +44,24 @@ public:
         p.insert("print_proofs", CPK_BOOL, "(default: false) print a proof showing the original term is equal to the resultant one.");
         p.insert("print_statistics", CPK_BOOL, "(default: false) print statistics.");
     }
-
+    
     virtual ~simplify_cmd() {
     }
-
-    virtual void prepare(cmd_context & ctx) {
+    
+    virtual void prepare(cmd_context & ctx) { 
         parametric_cmd::prepare(ctx);
-        m_target   = 0;
+        m_target   = 0; 
     }
 
     virtual cmd_arg_kind next_arg_kind(cmd_context & ctx) const {
         if (m_target == 0) return CPK_EXPR;
         return parametric_cmd::next_arg_kind(ctx);
     }
-
+    
     virtual void set_next_arg(cmd_context & ctx, expr * arg) {
         m_target = arg;
     }
-
+    
     virtual void execute(cmd_context & ctx) {
         if (m_target == 0)
             throw cmd_exception("invalid simplify command, argument expected");
@@ -75,7 +75,7 @@ public:
         unsigned timeout   = m_params.get_uint("timeout", UINT_MAX);
         bool failed = false;
         cancel_eh<th_rewriter> eh(s);
-        {
+        { 
             scoped_ctrl_c ctrlc(eh);
             scoped_timer timer(timeout, &eh);
             cmd_context::scoped_watch sw(ctx);
@@ -96,7 +96,7 @@ public:
         }
         if (m_params.get_bool("print", true)) {
             ctx.display(ctx.regular_stream(), r);
-            ctx.regular_stream() << std::endl;
+            ctx.regular_stream() << std::endl; 
         }
         if (!failed && m_params.get_bool("print_proofs", false)) {
             ast_smt_pp pp(ctx.m());

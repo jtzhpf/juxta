@@ -1,4 +1,4 @@
-def_module_params('model_evaluator',
+def_module_params('model_evaluator', 
                   export=True,
                   params=(max_memory_param(),
                           max_steps_param(),

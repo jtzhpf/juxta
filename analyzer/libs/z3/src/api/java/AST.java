@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     AST.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -29,7 +29,7 @@ public class AST extends Z3Object
     /**
      * Object comparison.
      * <param name="o">another AST</param>
-     **/
+     **/    
     public boolean equals(Object o)
     {
         AST casted = null;
@@ -47,7 +47,7 @@ public class AST extends Z3Object
 
     /**
      * Object Comparison. <param name="other">Another AST</param>
-     *
+     * 
      * @return Negative if the object should be sorted before <paramref
      *         name="other"/>, positive if after else zero.
      **/
@@ -75,7 +75,7 @@ public class AST extends Z3Object
 
     /**
      * The AST's hash code.
-     *
+     * 
      * @return A hash code
      **/
     public int hashCode()
@@ -99,7 +99,7 @@ public class AST extends Z3Object
     /**
      * Translates (copies) the AST to the Context <paramref name="ctx"/>. <param
      * name="ctx">A context</param>
-     *
+     * 
      * @return A copy of the AST which is associated with <paramref name="ctx"/>
      **/
     public AST translate(Context ctx) throws Z3Exception

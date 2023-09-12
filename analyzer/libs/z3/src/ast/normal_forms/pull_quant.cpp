@@ -22,13 +22,13 @@ Notes:
 #include"ast_pp.h"
 
 struct pull_quant::imp {
-
+    
     struct rw_cfg : public default_rewriter_cfg {
         ast_manager & m_manager;
         shift_vars    m_shift;
-
+        
         rw_cfg(ast_manager & m):
-            m_manager(m),
+            m_manager(m), 
             m_shift(m) {
         }
 
@@ -37,12 +37,12 @@ struct pull_quant::imp {
             buffer<symbol>    var_names;
             symbol            qid;
             int               w = INT_MAX;
-
+            
             // The input formula is in Skolem normal form...
             // So all children are forall (positive context) or exists (negative context).
             // Remark: (AND a1 ...) may be represented (NOT (OR (NOT a1) ...)))
             // So, when pulling a quantifier over a NOT, it becomes an exists.
-
+            
             if (m_manager.is_not(d)) {
                 SASSERT(num_children == 1);
                 expr * child = children[0];
@@ -56,14 +56,14 @@ struct pull_quant::imp {
                     return false;
                 }
             }
-
+            
             bool found_quantifier = false;
             bool forall_children;
-
+            
             for (unsigned i = 0; i < num_children; i++) {
                 expr * child = children[i];
                 if (is_quantifier(child)) {
-
+                    
                     if (!found_quantifier) {
                         found_quantifier = true;
                         forall_children  = is_forall(child);
@@ -72,7 +72,7 @@ struct pull_quant::imp {
                         // Since the initial formula was in SNF, all children must be EXISTS or FORALL.
                         SASSERT(forall_children == is_forall(child));
                     }
-
+                    
                     quantifier * nested_q = to_quantifier(child);
                     if (var_sorts.empty()) {
                         // use the qid of one of the nested quantifiers.
@@ -91,7 +91,7 @@ struct pull_quant::imp {
                     }
                 }
             }
-
+            
             if (!var_sorts.empty()) {
                 SASSERT(found_quantifier);
                 // adjust the variable ids in formulas in new_children
@@ -106,13 +106,13 @@ struct pull_quant::imp {
                         // increment the free variables in child by num_decls because
                         // child will be in the scope of num_decls bound variables.
                         m_shift(child, num_decls, adjusted_child);
-                        TRACE("pull_quant", tout << "shifted by: " << num_decls << "\n" <<
+                        TRACE("pull_quant", tout << "shifted by: " << num_decls << "\n" << 
                               mk_pp(child, m_manager) << "\n---->\n" << mk_pp(adjusted_child, m_manager) << "\n";);
                     }
                     else {
                         quantifier * nested_q = to_quantifier(child);
                         SASSERT(num_decls >= nested_q->get_num_decls());
-                        // Assume nested_q is of the form
+                        // Assume nested_q is of the form 
                         // forall xs. P(xs, ys)
                         // where xs (ys) represents the set of bound (free) variables.
                         //
@@ -120,22 +120,22 @@ struct pull_quant::imp {
                         //   That is, the number of new bound variables that will precede the bound
                         //   variables xs.
                         //
-                        // - the index of the variables ys must be increased by num_decls - nested_q->get_num_decls.
+                        // - the index of the variables ys must be increased by num_decls - nested_q->get_num_decls. 
                         //   That is, the total number of new bound variables that will be in the scope
                         //   of nested_q->get_expr().
-                        m_shift(nested_q->get_expr(),
+                        m_shift(nested_q->get_expr(), 
                                 nested_q->get_num_decls(),             // bound for shift1/shift2
                                 num_decls - nested_q->get_num_decls(), // shift1  (shift by this ammount if var idx >= bound)
                                 shift_amount,                          // shift2  (shift by this ammount if var idx < bound)
                                 adjusted_child);
                         TRACE("pull_quant", tout << "shifted  bound: " << nested_q->get_num_decls() << " shift1: " << shift_amount <<
-                              " shift2: " << (num_decls - nested_q->get_num_decls()) << "\n" << mk_pp(nested_q->get_expr(), m_manager) <<
+                              " shift2: " << (num_decls - nested_q->get_num_decls()) << "\n" << mk_pp(nested_q->get_expr(), m_manager) << 
                               "\n---->\n" << mk_pp(adjusted_child, m_manager) << "\n";);
                         shift_amount += nested_q->get_num_decls();
                     }
                     new_adjusted_children.push_back(adjusted_child);
                 }
-
+                
                 // Remark: patterns are ignored.
                 // This is ok, since this functor is used in one of the following cases:
                 //
@@ -146,7 +146,7 @@ struct pull_quant::imp {
                 // to increase the effectiveness of the pattern inference
                 // procedure.
                 //
-                // 3) MBQI
+                // 3) MBQI 
                 std::reverse(var_sorts.begin(), var_sorts.end());
                 std::reverse(var_names.begin(), var_names.end());
                 result = m_manager.mk_quantifier(forall_children,
@@ -195,7 +195,7 @@ struct pull_quant::imp {
         void pull_quant1(quantifier * q, expr * new_expr, expr_ref & result) {
             // The original formula was in SNF, so the original quantifiers must be universal.
             SASSERT(is_forall(q));
-            if (is_forall(new_expr)) {
+            if (is_forall(new_expr)) { 
                 pull_quant1_core(q, new_expr, result);
             }
             else {
@@ -212,7 +212,7 @@ struct pull_quant::imp {
             else
                 result = n;
         }
-
+        
         // Code for proof generation...
         void pull_quant2(expr * n, expr_ref & r, proof_ref & pr) {
             pr = 0;
@@ -222,7 +222,7 @@ struct pull_quant::imp {
                 ptr_buffer<proof> proofs;
                 unsigned num = to_app(n)->get_num_args();
                 for (unsigned i = 0; i < num; i++) {
-                    expr * arg = to_app(n)->get_arg(i);
+                    expr * arg = to_app(n)->get_arg(i); 
                     pull_quant1(arg , new_arg);
                     new_args.push_back(new_arg);
                     if (new_arg != arg)
@@ -264,15 +264,15 @@ struct pull_quant::imp {
                 return BR_FAILED;
 
             if (m_manager.proofs_enabled()) {
-                result_pr = m_manager.mk_pull_quant(m_manager.mk_app(f, num, args),
+                result_pr = m_manager.mk_pull_quant(m_manager.mk_app(f, num, args), 
                                                     to_quantifier(result.get()));
             }
             return BR_DONE;
         }
 
-        bool reduce_quantifier(quantifier * old_q,
-                               expr * new_body,
-                               expr * const * new_patterns,
+        bool reduce_quantifier(quantifier * old_q, 
+                               expr * new_body, 
+                               expr * const * new_patterns, 
                                expr * const * new_no_patterns,
                                expr_ref & result,
                                proof_ref & result_pr) {
@@ -299,13 +299,13 @@ struct pull_quant::imp {
             m_cfg(m) {
         }
     };
-
+    
     rw m_rw;
 
     imp(ast_manager & m):
         m_rw(m) {
     }
-
+    
     void operator()(expr * n, expr_ref & r, proof_ref & p) {
         m_rw(n, r, p);
     }
@@ -332,15 +332,15 @@ void pull_quant::pull_quant2(expr * n, expr_ref & r, proof_ref & pr) {
 }
 
 struct pull_nested_quant::imp {
-
+    
     struct rw_cfg : public default_rewriter_cfg {
         pull_quant m_pull;
         expr_ref   m_r;
         proof_ref  m_pr;
 
         rw_cfg(ast_manager & m):m_pull(m), m_r(m), m_pr(m) {}
-
-        bool get_subst(expr * s, expr * & t, proof * & t_pr) {
+        
+        bool get_subst(expr * s, expr * & t, proof * & t_pr) { 
             if (!is_quantifier(s))
                 return false;
             m_pull(to_quantifier(s), m_r, m_pr);
@@ -349,7 +349,7 @@ struct pull_nested_quant::imp {
             return true;
         }
     };
-
+    
     struct rw : public rewriter_tpl<rw_cfg> {
         rw_cfg m_cfg;
         rw(ast_manager & m):
@@ -357,13 +357,13 @@ struct pull_nested_quant::imp {
             m_cfg(m) {
         }
     };
-
+    
     rw m_rw;
 
     imp(ast_manager & m):
         m_rw(m) {
     }
-
+    
     void operator()(expr * n, expr_ref & r, proof_ref & p) {
         m_rw(n, r, p);
     }

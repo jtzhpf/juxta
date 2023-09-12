@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -65,7 +65,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Assert a constraint (or multiple) into the fixedpoint solver.
-        /// </summary>
+        /// </summary>        
         public void Assert(params BoolExpr[] constraints)
         {
             Contract.Requires(constraints != null);
@@ -80,7 +80,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Alias for Assert.
-        /// </summary>
+        /// </summary>        
         public void Add(params BoolExpr[] constraints)
         {
             Assert(constraints);
@@ -88,7 +88,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Register predicate as recursive relation.
-        /// </summary>
+        /// </summary>       
         public void RegisterRelation(FuncDecl f)
         {
             Contract.Requires(f != null);
@@ -99,7 +99,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Add rule into the fixedpoint solver.
-        /// </summary>
+        /// </summary>        
         public void AddRule(BoolExpr rule, Symbol name = null)
         {
             Contract.Requires(rule != null);
@@ -110,7 +110,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Add table fact to the fixedpoint solver.
-        /// </summary>
+        /// </summary>        
         public void AddFact(FuncDecl pred, params uint[] args)
         {
             Contract.Requires(pred != null);
@@ -124,8 +124,8 @@ namespace Microsoft.Z3
         /// Query the fixedpoint solver.
         /// A query is a conjunction of constraints. The constraints may include the recursively defined relations.
         /// The query is satisfiable if there is an instance of the query variables and a derivation for it.
-        /// The query is unsatisfiable if there are no derivations satisfying the query variables.
-        /// </summary>
+        /// The query is unsatisfiable if there are no derivations satisfying the query variables. 
+        /// </summary>        
         public Status Query(BoolExpr query)
         {
             Contract.Requires(query != null);
@@ -145,7 +145,7 @@ namespace Microsoft.Z3
         /// A query is an array of relations.
         /// The query is satisfiable if there is an instance of some relation that is non-empty.
         /// The query is unsatisfiable if there are no derivations satisfying any of the relations.
-        /// </summary>
+        /// </summary>        
         public Status Query(FuncDecl[] relations)
         {
             Contract.Requires(relations != null);
@@ -184,7 +184,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Update named rule into in the fixedpoint solver.
-        /// </summary>
+        /// </summary>        
         public void UpdateRule(BoolExpr rule, Symbol name)
         {
             Contract.Requires(rule != null);
@@ -194,9 +194,9 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Retrieve satisfying instance or instances of solver,
+        /// Retrieve satisfying instance or instances of solver, 
         /// or definitions for the recursive predicates that show unsatisfiability.
-        /// </summary>
+        /// </summary>                
         public Expr GetAnswer()
         {
             IntPtr ans = Native.Z3_fixedpoint_get_answer(Context.nCtx, NativeObject);
@@ -205,7 +205,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Retrieve explanation why fixedpoint engine returned status Unknown.
-        /// </summary>
+        /// </summary>                
         public string GetReasonUnknown()
         {
             Contract.Ensures(Contract.Result<string>() != null);
@@ -215,7 +215,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Retrieve the number of levels explored for a given predicate.
-        /// </summary>
+        /// </summary>                
         public uint GetNumLevels(FuncDecl predicate)
         {
             return Native.Z3_fixedpoint_get_num_levels(Context.nCtx, NativeObject, predicate.NativeObject);
@@ -223,7 +223,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Retrieve the cover of a predicate.
-        /// </summary>
+        /// </summary>                
         public Expr GetCoverDelta(int level, FuncDecl predicate)
         {
             IntPtr res = Native.Z3_fixedpoint_get_cover_delta(Context.nCtx, NativeObject, level, predicate.NativeObject);
@@ -233,7 +233,7 @@ namespace Microsoft.Z3
         /// <summary>
         /// Add <tt>property</tt> about the <tt>predicate</tt>.
         /// The property is added at <tt>level</tt>.
-        /// </summary>
+        /// </summary>                
         public void AddCover(int level, FuncDecl predicate, Expr property)
         {
             Native.Z3_fixedpoint_add_cover(Context.nCtx, NativeObject, level, predicate.NativeObject, property.NativeObject);
@@ -241,7 +241,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Retrieve internal string representation of fixedpoint object.
-        /// </summary>
+        /// </summary>                
         public override string ToString()
         {
             return Native.Z3_fixedpoint_to_string(Context.nCtx, NativeObject, 0, null);
@@ -249,7 +249,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Instrument the Datalog engine on which table representation to use for recursive predicate.
-        /// </summary>
+        /// </summary>                
         public void SetPredicateRepresentation(FuncDecl f, Symbol[] kinds)
         {
             Contract.Requires(f != null);
@@ -261,7 +261,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Convert benchmark given as set of axioms, rules and queries to a string.
-        /// </summary>
+        /// </summary>                
         public string ToString(BoolExpr[] queries)
         {
 
@@ -279,7 +279,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Retrieve set of rules added to fixedpoint context.
-        /// </summary>
+        /// </summary>                
         public BoolExpr[] Rules
         {
             get
@@ -292,7 +292,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Retrieve set of assertions added to fixedpoint context.
-        /// </summary>
+        /// </summary>                
         public BoolExpr[] Assertions
         {
             get
@@ -304,17 +304,17 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Parse an SMT-LIB2 file with fixedpoint rules.
-        /// Add the rules to the current fixedpoint context.
+        /// Parse an SMT-LIB2 file with fixedpoint rules. 
+        /// Add the rules to the current fixedpoint context. 
         /// Return the set of queries in the file.
-        /// </summary>
+        /// </summary>                
 	public BoolExpr[] ParseFile(string file) {
             return ToBoolExprs(new ASTVector(Context, Native.Z3_fixedpoint_from_file(Context.nCtx, NativeObject, file)));
         }
 
         /// <summary>
         /// Similar to ParseFile. Instead it takes as argument a string.
-        /// </summary>
+        /// </summary>                
 
 	public BoolExpr[] ParseString(string s) {
             return ToBoolExprs(new ASTVector(Context, Native.Z3_fixedpoint_from_string(Context.nCtx, NativeObject, s)));

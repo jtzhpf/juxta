@@ -21,7 +21,7 @@ Revision History:
 
 #include"params.h"
 
-struct arith_simplifier_params {
+struct arith_simplifier_params { 
     bool    m_arith_expand_eqs;
     bool    m_arith_process_all_eqs;
 
@@ -31,6 +31,6 @@ struct arith_simplifier_params {
 
     void updt_params(params_ref const & _p);
 };
-
+    
 #endif /* _ARITH_SIMPLIFIER_PARAMS_H_ */
 

@@ -59,7 +59,7 @@ void * region::allocate(size_t size) {
         return result;
     }
     else if (size < DEFAULT_PAGE_SIZE) {
-        allocate_page();
+        allocate_page(); 
         char * result = m_curr_ptr;
         m_curr_ptr += size;
         m_curr_ptr = ALIGN(char *, m_curr_ptr);

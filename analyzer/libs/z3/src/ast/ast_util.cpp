@@ -98,7 +98,7 @@ bool is_atom(ast_manager & m, expr * n) {
         return true;
     SASSERT(is_app(n));
     if (to_app(n)->get_family_id() != m.get_basic_family_id()) {
-        return true;
+        return true;        
     }
     // the other operators of the basic family are not considered atomic: distinct, ite, and, or, iff, xor, not, implies.
     return (m.is_eq(n) && !m.is_bool(to_app(n)->get_arg(0))) || m.is_true(n) || m.is_false(n);
@@ -106,7 +106,7 @@ bool is_atom(ast_manager & m, expr * n) {
 
 
 bool is_literal(ast_manager & m, expr * n) {
-    return
+    return 
         is_atom(m, n) ||
         (m.is_not(n) && is_atom(m, to_app(n)->get_arg(0)));
 }

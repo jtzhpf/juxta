@@ -79,7 +79,7 @@ namespace datalog {
 
         */
         struct assembling_column_info {
-
+            
             relation_sort domain;           // domain of the column
             assembling_column_kind kind;    // "instruction" tag
             unsigned source_column;         // for ACK_BOUND_VAR
@@ -141,9 +141,9 @@ namespace datalog {
         */
         void get_fresh_registers(const func_decl_set & preds,  pred2idx & regs);
 
-        void make_join(reg_idx t1, reg_idx t2, const variable_intersection & vars, reg_idx & result,
+        void make_join(reg_idx t1, reg_idx t2, const variable_intersection & vars, reg_idx & result, 
             instruction_block & acc);
-        void make_join_project(reg_idx t1, reg_idx t2, const variable_intersection & vars,
+        void make_join_project(reg_idx t1, reg_idx t2, const variable_intersection & vars, 
             const unsigned_vector & removed_cols, reg_idx & result, instruction_block & acc);
         void make_filter_interpreted_and_project(reg_idx src, app_ref & cond,
             const unsigned_vector & removed_cols, reg_idx & result, instruction_block & acc);
@@ -153,9 +153,9 @@ namespace datalog {
            \brief Create add an union or widen operation and put it into \c acc.
         */
         void make_union(reg_idx src, reg_idx tgt, reg_idx delta, bool widening, instruction_block & acc);
-        void make_projection(reg_idx src, unsigned col_cnt, const unsigned * removed_cols,
+        void make_projection(reg_idx src, unsigned col_cnt, const unsigned * removed_cols, 
             reg_idx & result, instruction_block & acc);
-        void make_rename(reg_idx src, unsigned cycle_len, const unsigned * permutation_cycle,
+        void make_rename(reg_idx src, unsigned cycle_len, const unsigned * permutation_cycle, 
             reg_idx & result, instruction_block & acc);
         void make_clone(reg_idx src, reg_idx & result, instruction_block & acc);
 
@@ -174,36 +174,36 @@ namespace datalog {
         void make_add_constant_column(func_decl* pred, reg_idx src, const relation_sort & s, const relation_element & val,
             reg_idx & result, bool & dealloc, instruction_block & acc);
 
-        void make_add_unbound_column(rule* compiled_rule, unsigned col_idx, func_decl* pred, reg_idx src, const relation_sort & s, reg_idx & result,
+        void make_add_unbound_column(rule* compiled_rule, unsigned col_idx, func_decl* pred, reg_idx src, const relation_sort & s, reg_idx & result, 
             bool & dealloc, instruction_block & acc);
-        void make_full_relation(func_decl* pred, const relation_signature & sig, reg_idx & result,
+        void make_full_relation(func_decl* pred, const relation_signature & sig, reg_idx & result, 
             instruction_block & acc);
 
         void add_unbound_columns_for_negation(rule* compiled_rule, func_decl* pred, reg_idx& single_res, expr_ref_vector& single_res_expr,
                                               bool & dealloc, instruction_block& acc);
-
+        
         void make_duplicate_column(reg_idx src, unsigned col, reg_idx & result, instruction_block & acc);
-
+        
         void ensure_predicate_loaded(func_decl * pred, instruction_block & acc);
 
         /**
-           \brief For rule \c r with two positive uninterpreted predicates put into \c res indexes of
+           \brief For rule \c r with two positive uninterpreted predicates put into \c res indexes of 
            local variables in a table that results from join of the two positive predicates.
 
            Used to get input for the "project" part of join-project.
          */
         void get_local_indexes_for_projection(rule * r, unsigned_vector & res);
-        void get_local_indexes_for_projection(app * t, var_counter & globals, unsigned ofs,
+        void get_local_indexes_for_projection(app * t, var_counter & globals, unsigned ofs, 
             unsigned_vector & res);
 
         /**
-           \brief Into \c acc add instructions that will add new facts following from the rule into
+           \brief Into \c acc add instructions that will add new facts following from the rule into 
            \c head_reg, and add the facts that were not in \c head_reg before into \c delta_reg.
         */
-        void compile_rule_evaluation_run(rule * r, reg_idx head_reg, const reg_idx * tail_regs,
+        void compile_rule_evaluation_run(rule * r, reg_idx head_reg, const reg_idx * tail_regs, 
             reg_idx delta_reg, bool use_widening, instruction_block & acc);
 
-        void compile_rule_evaluation(rule * r, const pred2idx * input_deltas, reg_idx output_delta,
+        void compile_rule_evaluation(rule * r, const pred2idx * input_deltas, reg_idx output_delta, 
             bool use_widening, instruction_block & acc);
 
         /**
@@ -219,16 +219,16 @@ namespace datalog {
         void compile_preds_init(const func_decl_vector & head_preds, const func_decl_set & widened_preds,
             const pred2idx * input_deltas, const pred2idx & output_deltas, instruction_block & acc);
 
-        void make_inloop_delta_transition(const pred2idx & global_head_deltas,
+        void make_inloop_delta_transition(const pred2idx & global_head_deltas, 
             const pred2idx & global_tail_deltas, const pred2idx & local_deltas, instruction_block & acc);
         void compile_loop(const func_decl_vector & head_preds, const func_decl_set & widened_preds,
-            const pred2idx & global_head_deltas, const pred2idx & global_tail_deltas,
+            const pred2idx & global_head_deltas, const pred2idx & global_tail_deltas, 
             const pred2idx & local_deltas, instruction_block & acc);
         void compile_dependent_rules(const func_decl_set & head_preds,
-            const pred2idx * input_deltas, const pred2idx & output_deltas,
+            const pred2idx * input_deltas, const pred2idx & output_deltas, 
             bool add_saturation_marks, instruction_block & acc);
 
-        void detect_chains(const func_decl_set & preds, func_decl_vector & ordered_preds,
+        void detect_chains(const func_decl_set & preds, func_decl_vector & ordered_preds, 
             func_decl_set & global_deltas);
         /**
            Return true if there is no dependency inside the \c rules stratum.
@@ -239,35 +239,35 @@ namespace datalog {
         /**
         input_deltas==0 --> we use the actual content of relations instead of deltas
         */
-        void compile_nonrecursive_stratum(const func_decl_set & preds,
-            const pred2idx * input_deltas, const pred2idx & output_deltas,
+        void compile_nonrecursive_stratum(const func_decl_set & preds, 
+            const pred2idx * input_deltas, const pred2idx & output_deltas, 
             bool add_saturation_marks, instruction_block & acc);
 
-        void compile_strats(const rule_stratifier & stratifier,
-            const pred2idx * input_deltas, const pred2idx & output_deltas,
+        void compile_strats(const rule_stratifier & stratifier, 
+            const pred2idx * input_deltas, const pred2idx & output_deltas, 
             bool add_saturation_marks, instruction_block & acc);
 
         bool all_saturated(const func_decl_set & preds) const;
 
         void reset();
 
-        explicit compiler(context & ctx, rule_set const & rules, instruction_block & top_level_code)
-            : m_context(ctx),
+        explicit compiler(context & ctx, rule_set const & rules, instruction_block & top_level_code) 
+            : m_context(ctx), 
             m_rule_set(rules),
             m_top_level_code(top_level_code),
             m_instruction_observer(*this) {}
-
+        
         /**
            \brief Compile \c rules in to pseudocode.
 
            Instructions to load data and perform computations put into \c execution_code
         */
-        void do_compilation(instruction_block & execution_code,
+        void do_compilation(instruction_block & execution_code, 
             instruction_block & termination_code);
 
     public:
 
-        static void compile(context & ctx, rule_set const & rules, instruction_block & execution_code,
+        static void compile(context & ctx, rule_set const & rules, instruction_block & execution_code, 
                 instruction_block & termination_code) {
             compiler(ctx, rules, execution_code)
                 .do_compilation(execution_code, termination_code);

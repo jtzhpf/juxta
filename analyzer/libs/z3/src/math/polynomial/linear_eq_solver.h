@@ -10,8 +10,8 @@ Abstract:
     Simple equational solver template for any number field.
     No special optimization, just the basics for solving small systems.
     It is a solver target to dense system of equations.
-    Main client: Sparse Modular GCD algorithm.
-
+    Main client: Sparse Modular GCD algorithm. 
+    
 Author:
 
     Leonardo (leonardo) 2012-01-22
@@ -22,7 +22,7 @@ Notes:
 #ifndef _LINEAR_EQ_SOLVER_H_
 #define _LINEAR_EQ_SOLVER_H_
 
-template<typename numeral_manager>
+template<typename numeral_manager> 
 class linear_eq_solver {
     typedef typename numeral_manager::numeral numeral;
     numeral_manager &         m;
@@ -32,7 +32,7 @@ class linear_eq_solver {
 public:
     linear_eq_solver(numeral_manager & _m):m(_m), n(0) { SASSERT(m.field()); }
     ~linear_eq_solver() { flush(); }
-
+    
     void flush() {
         SASSERT(b.size() == A.size());
         unsigned sz = A.size();
@@ -40,7 +40,7 @@ public:
             svector<numeral> & as = A[i];
             m.del(b[i]);
             SASSERT(as.size() == n);
-            for (unsigned j = 0; j < n; j++)
+            for (unsigned j = 0; j < n; j++) 
                 m.del(as[j]);
         }
         A.reset();
@@ -72,7 +72,7 @@ public:
             m.set(b[i], 0);
         }
     }
-
+    
     // Set row i with _as[0]*x_0 + ... + _as[n-1]*x_{n-1} = b
     void add(unsigned i, numeral const * _as, numeral const & _b) {
         SASSERT(i < n);
@@ -82,13 +82,13 @@ public:
             m.set(A_i[j], _as[j]);
         }
     }
-
+    
     // Return true if the system of equations has a solution.
     // Return false if the matrix is singular
     bool solve(numeral * xs) {
         for (unsigned k = 0; k < n; k++) {
             TRACE("linear_eq_solver", tout << "iteration " << k << "\n"; display(tout););
-            // find pivot
+            // find pivot 
             unsigned i = k;
             for (; i < n; i++) {
                 if (!m.is_zero(A[i][k]))
@@ -101,8 +101,8 @@ public:
             numeral & A_k_k = A_k[k];
             SASSERT(!m.is_zero(A_k_k));
             // normalize row
-            for (unsigned i = k+1; i < n; i++)
-                m.div(A_k[i], A_k_k, A_k[i]);
+            for (unsigned i = k+1; i < n; i++) 
+                m.div(A_k[i], A_k_k, A_k[i]); 
             m.div(b[k], A_k_k, b[k]);
             m.set(A_k_k, 1);
             // check if first k-1 positions are zero

@@ -40,7 +40,7 @@ public:
             return r;
         }
     }
-
+    
     void recycle(T * obj) {
         m_objs.push_back(obj);
     }

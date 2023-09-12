@@ -90,7 +90,7 @@ namespace datalog {
 
     class cost_recorder {
         accounted_object * m_obj;
-        //it's a pointer to avoid everything depending on the stopwatch.h
+        //it's a pointer to avoid everything depending on the stopwatch.h 
         //(and transitively then on windows.h) header file
         stopwatch * m_stopwatch;
 

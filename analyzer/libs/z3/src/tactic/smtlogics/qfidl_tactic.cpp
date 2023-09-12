@@ -66,13 +66,13 @@ tactic * mk_qfidl_tactic(ast_manager & m, params_ref const & p) {
                                              mk_normalize_bounds_tactic(m),
                                              mk_solve_eqs_tactic(m)));
 
-
-
+    
+    
     params_ref bv_solver_p;
     // The cardinality constraint encoding generates a lot of shared if-then-else's that can be flattened.
     // Several of them are simplified to and/or. If we flat them, we increase a lot the memory consumption.
-    bv_solver_p.set_bool("flat", false);
-    bv_solver_p.set_bool("som", false);
+    bv_solver_p.set_bool("flat", false); 
+    bv_solver_p.set_bool("som", false); 
     // dynamic psm seems to work well.
     bv_solver_p.set_sym("gc", symbol("dyn_psm"));
 
@@ -85,13 +85,13 @@ tactic * mk_qfidl_tactic(ast_manager & m, params_ref const & p) {
                                                mk_sat_tactic(m)),
                                       bv_solver_p);
 
-    tactic * try2bv =
+    tactic * try2bv = 
         and_then(using_params(mk_lia2pb_tactic(m), lia2pb_p),
                  mk_propagate_ineqs_tactic(m),
                  using_params(mk_pb2bv_tactic(m), pb2bv_p),
                  fail_if(mk_not(mk_is_qfbv_probe())),
                  bv_solver);
-
+    
     params_ref diff_neq_p;
     diff_neq_p.set_uint("diff_neq_max_k", 25);
 
@@ -104,7 +104,7 @@ tactic * mk_qfidl_tactic(ast_manager & m, params_ref const & p) {
                                                      mk_smt_tactic())),
                                     main_p),
                        mk_smt_tactic());
-
+    
     st->updt_params(p);
 
     return st;

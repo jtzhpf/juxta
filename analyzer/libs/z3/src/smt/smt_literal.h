@@ -27,38 +27,38 @@ namespace smt {
     /**
        \brief The literal b is represented by the value 2*b, and
        the literal (not b) by the value 2*b + 1
-
+       
     */
     class literal {
         int  m_val;
-
+        
     public:
         literal():m_val(-2) {
             SASSERT(var() == null_bool_var && !sign());
         }
-
+        
         explicit literal(bool_var v, bool sign = false):
             m_val((v << 1) + static_cast<int>(sign)) {
         }
-
-        bool_var var() const {
-            return m_val >> 1;
+        
+        bool_var var() const { 
+            return m_val >> 1; 
         }
-
+        
         bool sign() const {
-            return m_val & 1;
+            return m_val & 1; 
         }
-
+        
         int index() const {
             return m_val;
         }
-
+        
         void neg() {
             m_val = m_val ^ 1;
         }
-
+        
         friend literal operator~(literal l);
-
+        
         friend literal to_literal(int x);
 
         void display(std::ostream & out, ast_manager & m, expr * const * bool_var2expr_map) const;
@@ -71,29 +71,29 @@ namespace smt {
     inline bool operator==(literal l1, literal l2) {
         return l1.index() == l2.index();
     }
-
+    
     inline bool operator!=(literal l1, literal l2) {
         return l1.index() != l2.index();
     }
-
+    
     inline bool operator<(literal l1, literal l2) {
         return l1.index() < l2.index();
     }
-
+    
     inline literal operator~(literal l) {
         literal r;
         r.m_val = l.m_val ^ 1;
         return r;
     }
-
+    
     inline literal to_literal(int x) {
         literal l;
         l.m_val = x;
         return l;
     }
-
+    
     const literal null_literal;
-    const literal true_literal(true_bool_var, false);
+    const literal true_literal(true_bool_var, false); 
     const literal false_literal(true_bool_var, true);
 
     typedef svector<literal> literal_vector;
@@ -107,7 +107,7 @@ namespace smt {
 
     template<typename T>
     void neg_literals(unsigned num_lits, literal const * lits, T & result) {
-        for (unsigned i = 0; i < num_lits; ++i)
+        for (unsigned i = 0; i < num_lits; ++i) 
             result.push_back(~lits[i]);
     }
 

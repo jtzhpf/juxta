@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Substitution Trees
+    Substitution Trees 
 
 Author:
 
@@ -39,7 +39,7 @@ public:
    \brief Substitution tree term index.
 */
 class substitution_tree {
-
+    
     typedef std::pair<var *, expr *> subst;
 
     struct node {
@@ -66,7 +66,7 @@ class substitution_tree {
     unsigned_vector   m_todo;
     svector<subst>    m_compatible;
     svector<subst>    m_incompatible;
-
+    
     // Execution time fields
     substitution *    m_subst;
     ptr_vector<node>  m_bstack;
@@ -109,7 +109,7 @@ class substitution_tree {
 
     expr_offset find(expr_offset p);
     bool backtrack();
-
+    
     template<st_visit_mode Mode>
     bool bind_var(var * v, unsigned offset, expr_offset const & p);
     template<st_visit_mode Mode>
@@ -132,7 +132,7 @@ public:
     void erase(app * n);
     void erase(expr * n);
     void reset();
-
+    
     bool empty() const { return m_size == 0; }
 
     void unify(expr * e, st_visitor & v, unsigned in_offset = 0, unsigned st_offset = 1, unsigned reg_offset = 2);

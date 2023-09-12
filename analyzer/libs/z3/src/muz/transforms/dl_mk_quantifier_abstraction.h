@@ -7,19 +7,19 @@ Module Name:
 
 Abstract:
 
-    Convert clauses with array arguments to predicates
+    Convert clauses with array arguments to predicates 
     into Quantified Horn clauses.
 
 Author:
 
-    Ken McMillan
+    Ken McMillan 
     Andrey Rybalchenko
     Nikolaj Bjorner (nbjorner) 2013-04-02
 
 Revision History:
 
-    Based on approach suggested in SAS 2013 paper
-    "On Solving Universally Quantified Horn Clauses"
+    Based on approach suggested in SAS 2013 paper 
+    "On Solving Universally Quantified Horn Clauses"    
 
 --*/
 #ifndef _DL_MK_QUANTIFIER_ABSTRACTION_H_
@@ -52,7 +52,7 @@ namespace datalog {
         mk_quantifier_abstraction(context & ctx, unsigned priority);
 
         virtual ~mk_quantifier_abstraction();
-
+        
         rule_set * operator()(rule_set const & source);
     };
 

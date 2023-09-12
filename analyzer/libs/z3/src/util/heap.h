@@ -27,27 +27,27 @@ class heap : private LT {
     int_vector    m_values;
     int_vector    m_value2indices;
 
-    bool less_than(int v1, int v2) const {
-        return LT::operator()(v1, v2);
+    bool less_than(int v1, int v2) const { 
+        return LT::operator()(v1, v2); 
     }
 
-    static int left(int i) {
-        return i << 1;
+    static int left(int i) { 
+        return i << 1; 
     }
 
-    static int right(int i) {
-        return (i << 1) + 1;
+    static int right(int i) { 
+        return (i << 1) + 1; 
     }
 
-    static int parent(int i) {
-        return i >> 1;
+    static int parent(int i) { 
+        return i >> 1; 
     }
 
 #ifdef Z3DEBUG
     // Return true if the value can be inserted in the heap. That is, the vector m_value2indices is big enough to store this value.
-    bool is_valid_value(int v) const {
-        SASSERT(v >= 0 && v < static_cast<int>(m_value2indices.size()));
-        return true;
+    bool is_valid_value(int v) const { 
+        SASSERT(v >= 0 && v < static_cast<int>(m_value2indices.size())); 
+        return true; 
     }
 
     bool check_invariant_core(int idx) const {
@@ -60,8 +60,8 @@ class heap : private LT {
         return true;
     }
 public:
-    bool check_invariant() const {
-        return check_invariant_core(1);
+    bool check_invariant() const { 
+        return check_invariant_core(1); 
     }
 #endif
 private:
@@ -116,12 +116,12 @@ public:
         CASSERT("heap", check_invariant());
     }
 
-    bool empty() const {
-        return m_values.size() == 1;
+    bool empty() const { 
+        return m_values.size() == 1; 
     }
 
-    bool contains(int val) const {
-        return val < static_cast<int>(m_value2indices.size()) && m_value2indices[val] != 0;
+    bool contains(int val) const { 
+        return val < static_cast<int>(m_value2indices.size()) && m_value2indices[val] != 0; 
     }
 
     void reset() {
@@ -135,15 +135,15 @@ public:
         CASSERT("heap", check_invariant());
     }
 
-    void clear() {
-        reset();
+    void clear() { 
+        reset(); 
     }
 
-    void set_bounds(int s) {
-        m_value2indices.resize(s, 0);
+    void set_bounds(int s) { 
+        m_value2indices.resize(s, 0); 
         CASSERT("heap", check_invariant());
     }
-
+    
     unsigned get_bounds() const {
         return m_value2indices.size();
     }
@@ -207,14 +207,14 @@ public:
         CASSERT("heap", check_invariant());
     }
 
-    void decreased(int val) {
-        SASSERT(contains(val));
-        move_up(m_value2indices[val]);
+    void decreased(int val) { 
+        SASSERT(contains(val)); 
+        move_up(m_value2indices[val]); 
     }
 
-    void increased(int val) {
-        SASSERT(contains(val));
-        move_down(m_value2indices[val]);
+    void increased(int val) { 
+        SASSERT(contains(val)); 
+        move_down(m_value2indices[val]); 
     }
 
     void insert(int val) {
@@ -228,20 +228,20 @@ public:
         CASSERT("heap", check_invariant());
     }
 
-    iterator begin() {
-        return m_values.begin() + 1;
+    iterator begin() { 
+        return m_values.begin() + 1; 
     }
 
-    iterator end() {
-        return m_values.end();
+    iterator end() { 
+        return m_values.end(); 
     }
 
-    const_iterator begin() const {
-        return m_values.begin() + 1;
+    const_iterator begin() const { 
+        return m_values.begin() + 1; 
     }
 
-    const_iterator end() const {
-        return m_values.end();
+    const_iterator end() const { 
+        return m_values.end(); 
     }
 
     void swap(heap & other) {
@@ -272,7 +272,7 @@ public:
             }
         }
     }
-
+  
 };
 
 #endif /* _HEAP_H_ */

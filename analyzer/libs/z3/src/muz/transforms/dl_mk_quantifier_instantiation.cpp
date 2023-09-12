@@ -12,14 +12,14 @@ Abstract:
 
 Author:
 
-    Ken McMillan
+    Ken McMillan 
     Andrey Rybalchenko
     Nikolaj Bjorner (nbjorner) 2013-04-02
 
 Revision History:
 
-    Based on approach suggested in the SAS 2013 paper
-    "On Solving Universally Quantified Horn Clauses"
+    Based on approach suggested in the SAS 2013 paper 
+    "On Solving Universally Quantified Horn Clauses"    
 
 --*/
 
@@ -36,10 +36,10 @@ namespace datalog {
         m(ctx.get_manager()),
         m_ctx(ctx),
         m_var2cnst(m),
-        m_cnst2var(m) {
+        m_cnst2var(m) {        
     }
 
-    mk_quantifier_instantiation::~mk_quantifier_instantiation() {
+    mk_quantifier_instantiation::~mk_quantifier_instantiation() {        
     }
 
     void mk_quantifier_instantiation::extract_quantifiers(rule& r, expr_ref_vector& conjs, quantifier_ref_vector& qs) {
@@ -47,7 +47,7 @@ namespace datalog {
         qs.reset();
         unsigned tsz = r.get_tail_size();
         for (unsigned j = 0; j < tsz; ++j) {
-            conjs.push_back(r.get_tail(j));
+            conjs.push_back(r.get_tail(j));            
         }
         qe::flatten_and(conjs);
         for (unsigned j = 0; j < conjs.size(); ++j) {
@@ -65,7 +65,7 @@ namespace datalog {
     void mk_quantifier_instantiation::instantiate_quantifier(quantifier* q, expr_ref_vector & conjs) {
         expr_ref qe(m);
         qe = q;
-        m_var2cnst(qe);
+        m_var2cnst(qe);        
         q = to_quantifier(qe);
         if (q->get_num_patterns() == 0) {
             proof_ref new_pr(m);
@@ -124,7 +124,7 @@ namespace datalog {
                         }
                         match(i, pat, j + 1, todo, q, conjs);
                         todo.resize(sz);
-                    }
+                    }                    
                 }
                 next_id = m_uf.next(next_id);
             }
@@ -138,7 +138,7 @@ namespace datalog {
         }
         expr* arg = pat->get_arg(i);
         ptr_vector<expr>* terms = 0;
-
+    
         if (m_funs.find(to_app(arg)->get_decl(), terms)) {
             for (unsigned k = 0; k < terms->size(); ++k) {
                 todo.push_back(std::make_pair(arg, (*terms)[k]));
@@ -229,9 +229,9 @@ namespace datalog {
         fml = m.mk_and(conjs.size(), conjs.c_ptr());
         fml = m.mk_implies(fml, r.get_head());
         TRACE("dl", r.display(m_ctx, tout); tout << mk_pp(fml, m) << "\n";);
-
+        
         rule_set added_rules(m_ctx);
-        proof_ref pr(m);
+        proof_ref pr(m); 
         rm.mk_rule(fml, pr, added_rules);
         if (r.get_proof()) {
             // use def-axiom to encode that new rule is a weakening of the original.
@@ -245,7 +245,7 @@ namespace datalog {
         }
         rules.add_rules(added_rules);
     }
-
+        
     rule_set * mk_quantifier_instantiation::operator()(rule_set const & source) {
         if (!m_ctx.instantiate_quantifiers()) {
             return 0;
@@ -254,7 +254,7 @@ namespace datalog {
         unsigned sz = source.get_num_rules();
         for (unsigned i = 0; !has_quantifiers && i < sz; ++i) {
             rule& r = *source.get_rule(i);
-            has_quantifiers = has_quantifiers || r.has_quantifiers();
+            has_quantifiers = has_quantifiers || r.has_quantifiers();   
             if (r.has_negation()) {
                 return 0;
             }
@@ -269,7 +269,7 @@ namespace datalog {
 
         bool instantiated = false;
 
-        for (unsigned i = 0; i < sz; ++i) {
+        for (unsigned i = 0; i < sz; ++i) {       
             rule * r = source.get_rule(i);
             extract_quantifiers(*r, conjs, qs);
             if (qs.empty()) {

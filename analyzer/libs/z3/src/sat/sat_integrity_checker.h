@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Checker whether the SAT solver internal datastructures
+    Checker whether the SAT solver internal datastructures 
     are consistent or not.
 
 Author:
@@ -27,7 +27,7 @@ namespace sat {
         solver const & s;
     public:
         integrity_checker(solver const & s);
-
+        
         bool check_clause(clause const & c) const;
         bool check_clauses(clause * const * begin, clause * const * end) const;
         bool check_clauses() const;

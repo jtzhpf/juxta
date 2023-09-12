@@ -28,7 +28,7 @@ namespace datalog {
         context&     m_ctx;
     public:
         mk_different_symbolic(context & ctx, unsigned priority = 33037);
-        ~mk_different_symbolic();
+        ~mk_different_symbolic();        
         rule_set * operator()(rule_set const & source);
     };
 

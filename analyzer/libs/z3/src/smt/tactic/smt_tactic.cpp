@@ -37,7 +37,7 @@ class smt_tactic : public tactic {
 public:
     smt_tactic(params_ref const & p):
         m_params_ref(p),
-        m_ctx(0),
+        m_ctx(0), 
         m_callback(0) {
         updt_params_core(p);
         TRACE("smt_tactic", tout << this << "\np: " << p << "\n";);
@@ -59,20 +59,20 @@ public:
         m_candidate_models     = p.get_bool("candidate_models", false);
         m_fail_if_inconclusive = p.get_bool("fail_if_inconclusive", true);
     }
-
+    
     virtual void updt_params(params_ref const & p) {
         TRACE("smt_tactic", tout << this << "\nupdt_params: " << p << "\n";);
         updt_params_core(p);
         fparams().updt_params(p);
         SASSERT(p.get_bool("auto_config", fparams().m_auto_config) == fparams().m_auto_config);
     }
-
+    
     virtual void collect_param_descrs(param_descrs & r) {
         r.insert("candidate_models", CPK_BOOL, "(default: false) create candidate models even when quantifier or theory reasoning is incomplete.");
         r.insert("fail_if_inconclusive", CPK_BOOL, "(default: true) fail if found unsat (sat) for under (over) approximated goal.");
         smt_params_helper::collect_param_descrs(r);
     }
-
+    
     virtual void set_cancel(bool f) {
         if (m_ctx)
             m_ctx->set_cancel(f);
@@ -91,7 +91,7 @@ public:
     virtual void reset_statistics() {
         m_stats.reset();
     }
-
+    
     virtual void set_logic(symbol const & l) {
         m_logic = l;
     }
@@ -99,7 +99,7 @@ public:
     virtual void set_progress_callback(progress_callback * callback) {
         m_callback = callback;
     }
-
+    
     struct scoped_init_ctx {
         smt_tactic & m_owner;
 
@@ -110,7 +110,7 @@ public:
             if (o.m_callback) {
                 new_ctx->set_progress_callback(o.m_callback);
             }
-            #pragma omp critical (as_st_solver)
+            #pragma omp critical (as_st_solver) 
             {
                 o.m_ctx = new_ctx;
             }
@@ -129,27 +129,27 @@ public:
 
     typedef obj_map<expr, expr *> expr2expr_map;
 
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         try {
             SASSERT(in->is_well_sorted());
             ast_manager & m = in->m();
-            TRACE("smt_tactic", tout << this << "\nAUTO_CONFIG: " << fparams().m_auto_config << " HIDIV0: " << fparams().m_hi_div0 << " "
+            TRACE("smt_tactic", tout << this << "\nAUTO_CONFIG: " << fparams().m_auto_config << " HIDIV0: " << fparams().m_hi_div0 << " " 
                   << " PREPROCESS: " << fparams().m_preprocess << "\n";
                   tout << "RELEVANCY: " << fparams().m_relevancy_lvl << "\n";
                   tout << "fail-if-inconclusive: " << m_fail_if_inconclusive << "\n";
                   tout << "params_ref: " << m_params_ref << "\n";);
             TRACE("smt_tactic_detail", in->display(tout););
-            TRACE("smt_tactic_memory", tout << "wasted_size: " << m.get_allocator().get_wasted_size() << "\n";);
+            TRACE("smt_tactic_memory", tout << "wasted_size: " << m.get_allocator().get_wasted_size() << "\n";);        
             scoped_init_ctx  init(*this, m);
             SASSERT(m_ctx != 0);
-
+            
             scoped_ptr<expr2expr_map> dep2bool;
-            scoped_ptr<expr2expr_map> bool2dep;
-            ptr_vector<expr>          assumptions;
+            scoped_ptr<expr2expr_map> bool2dep; 
+            ptr_vector<expr>          assumptions;       
             if (in->unsat_core_enabled()) {
                 if (in->proofs_enabled())
                     throw tactic_exception("smt tactic does not support simultaneous generation of proofs and unsat cores");
@@ -184,7 +184,7 @@ public:
                                 clause.push_back(m.mk_not(d));
                             }
                             else {
-                                // must normalize assumption
+                                // must normalize assumption 
                                 expr * b = 0;
                                 if (!dep2bool->find(d, b)) {
                                     b = m.mk_fresh_const(0, m.mk_bool_sort());
@@ -214,14 +214,14 @@ public:
                     m_ctx->assert_expr(in->form(i));
                 }
             }
-
+            
             lbool r;
             if (assumptions.empty())
                 r = m_ctx->setup_and_check();
             else
                 r = m_ctx->check(assumptions.size(), assumptions.c_ptr());
             m_ctx->collect_statistics(m_stats);
-
+            
             switch (r) {
             case l_true: {
                 if (m_fail_if_inconclusive && !in->sat_preserved())
@@ -302,7 +302,7 @@ tactic * mk_smt_tactic(params_ref const & p) {
 }
 
 tactic * mk_smt_tactic_using(bool auto_config, params_ref const & _p) {
-    params_ref p = _p;
+    params_ref p = _p;    
     p.set_bool("auto_config", auto_config);
     tactic * r = mk_smt_tactic(p);
     TRACE("smt_tactic", tout << "auto_config: " << auto_config << "\nr: " << r << "\np: " << p << "\n";);

@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     nbjorner 2008-11-6
-
+    
 --*/
 #ifndef _DATATYPE_SIMPLIFIER_PLUGIN_H_
 #define _DATATYPE_SIMPLIFIER_PLUGIN_H_
@@ -31,7 +31,7 @@ class datatype_simplifier_plugin : public simplifier_plugin {
 public:
     datatype_simplifier_plugin(ast_manager & m, basic_simplifier_plugin & b);
     ~datatype_simplifier_plugin();
-
+    
 
     virtual bool reduce(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result);
 

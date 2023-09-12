@@ -51,7 +51,7 @@ tactic * mk_qfbv_tactic(ast_manager & m, params_ref const & p) {
 
     params_ref solver_p;
     solver_p.set_bool("preprocess", false); // preprocessor of smt::context is not needed.
-
+    
     params_ref no_flat_p;
     no_flat_p.set_bool("flat", false);
 
@@ -64,8 +64,8 @@ tactic * mk_qfbv_tactic(ast_manager & m, params_ref const & p) {
     hoist_p.set_bool("som", false);
 
     params_ref solve_eq_p;
-    // conservative guassian elimination.
-    solve_eq_p.set_uint("solve_eqs_max_occs", 2);
+    // conservative guassian elimination. 
+    solve_eq_p.set_uint("solve_eqs_max_occs", 2); 
 
     params_ref big_aig_p;
     big_aig_p.set_bool("aig_per_assertion", false);
@@ -77,12 +77,12 @@ tactic * mk_qfbv_tactic(ast_manager & m, params_ref const & p) {
                                              if_no_proofs(if_no_unsat_cores(mk_bv_size_reduction_tactic(m))),
                                              using_params(mk_simplify_tactic(m), simp2_p)),
                                     // Z3 can solve a couple of extra benchmarks by using hoist_mul
-                                    // but the timeout in SMT-COMP is too small.
+                                    // but the timeout in SMT-COMP is too small. 
                                     // Moreover, it impacted negatively some easy benchmarks.
                                     // We should decide later, if we keep it or not.
                                     using_params(mk_simplify_tactic(m), hoist_p),
                                     mk_max_bv_sharing_tactic(m));
-
+    
 #ifdef USE_OLD_SAT_SOLVER
     tactic * new_sat = and_then(mk_simplify_tactic(m),
                                 mk_smt_tactic());
@@ -91,11 +91,11 @@ tactic * mk_qfbv_tactic(ast_manager & m, params_ref const & p) {
                             and_then(mk_simplify_tactic(m),
                                      mk_smt_tactic()),
                             mk_sat_tactic(m));
-#endif
-
+#endif    
+    
     tactic * st = using_params(and_then(preamble_st,
                                         // If the user sets HI_DIV0=false, then the formula may contain uninterpreted function
-                                        // symbols. In this case, we should not use
+                                        // symbols. In this case, we should not use 
                                         cond(mk_is_qfbv_probe(),
                                              cond(mk_is_qfbv_eq_probe(),
                                                   and_then(mk_bv1_blaster_tactic(m),

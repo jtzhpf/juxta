@@ -22,22 +22,22 @@ premises   :: "(" "ref" step-name* ")"
 
 model      :: "(" "model" smtlib2-model ")"
 
-In each step the "fact" is derivable by hyper-resolution from the named
-premises and the named rule, under the given substitution for the
-universally quantified variables in the rule. The premises of each
-step must have occurred previously in the step sequence. The last fact
-is a nullary placeholder predicate representing satisfaction of the query
+In each step the "fact" is derivable by hyper-resolution from the named 
+premises and the named rule, under the given substitution for the 
+universally quantified variables in the rule. The premises of each 
+step must have occurred previously in the step sequence. The last fact 
+is a nullary placeholder predicate representing satisfaction of the query 
 (its name is arbitrary).
 
-The labels list consists of all the positively labeled sub-formulas whose
-truth is used in the proof, and all the negatively labeled formulas whose
-negation is used. A theory-term is a ground term using only interpreted
+The labels list consists of all the positively labeled sub-formulas whose 
+truth is used in the proof, and all the negatively labeled formulas whose 
+negation is used. A theory-term is a ground term using only interpreted 
 constants of the background theories.
 
-The smtlib2-model gives an interpretation of the uninterpreted constants
-in the background theory under which the derivation is valid. Currently
-it is a quoted string in the old z3 model format, for compatibility with
-Boogie, however, this should be changed to the new model format (using
+The smtlib2-model gives an interpretation of the uninterpreted constants 
+in the background theory under which the derivation is valid. Currently 
+it is a quoted string in the old z3 model format, for compatibility with 
+Boogie, however, this should be changed to the new model format (using 
 define-fun) when Boogie supports this.
 
 */
@@ -77,9 +77,9 @@ namespace datalog {
 
     public:
         boogie_proof(ast_manager& m): m(m), m_proof(m), m_model(0) {}
-
+        
         void set_proof(proof* p);
-
+        
         void set_model(model* m);
 
         void pp(std::ostream& out);

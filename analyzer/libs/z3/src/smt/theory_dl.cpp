@@ -11,7 +11,7 @@ Abstract:
     DL constants are discrete and ordered by the linear order LT.
     Constants have a parameter which indicates the numeric value that ranges
     from 0 up to the size of the domain.
-
+   
     The procedure works by a simple reduction to bit-vectors. We enforce an injection into bit-vectors.
 
 Author:
@@ -37,7 +37,7 @@ Revision History:
 // LT(x,y) <=> rep(x) < rep(y)
 // val(rep(x)) = x
 // 0 <= rep(x) <= max_value
-//
+// 
 
 
 namespace smt {
@@ -71,11 +71,11 @@ namespace smt {
             theory_dl&                  m_th;
             smt::enode*                 m_node;
         public:
-
+            
             dl_value_proc(theory_dl& th, smt::enode* n) : m_th(th), m_node(n) {}
-
+            
             virtual void get_dependencies(buffer<smt::model_value_dependency> & result) {}
-
+            
             virtual app * mk_value(smt::model_generator & mg, ptr_vector<expr> & ) {
                 smt::context& ctx = m_th.get_context();
                 app* result = 0;
@@ -89,7 +89,7 @@ namespace smt {
                 theory_bv* th_bv = dynamic_cast<theory_bv*>(ctx.get_theory(bv_id));
                 SASSERT(th_bv);
                 rational val;
-                if (ctx.e_internalized(rep_of) && th_bv &&
+                if (ctx.e_internalized(rep_of) && th_bv && 
                     th_bv->get_fixed_value(rep_of.get(), val)) {
                     result = m_th.u().mk_numeral(val.get_int64(), s);
                 }
@@ -98,9 +98,9 @@ namespace smt {
                 }
                 TRACE("theory_dl", tout << mk_pp(result, m_th.m()) << "\n";);
                 return result;
-            }
+            }        
         };
-
+        
     public:
         theory_dl(ast_manager& m):
             theory(m.mk_family_id("datalog_relation")),
@@ -126,7 +126,7 @@ namespace smt {
                 ctx.internalize(a, false);
                 ctx.internalize(b, false);
                 literal l(ctx.mk_bool_var(atom));
-                ctx.set_var_theory(l.var(), get_id());
+                ctx.set_var_theory(l.var(), get_id());                
                 mk_lt(a,b);
                 return true;
             }
@@ -147,7 +147,7 @@ namespace smt {
         }
 
         virtual void new_eq_eh(theory_var v1, theory_var v2) {
-
+            
         }
 
         virtual void new_diseq_eh(theory_var v1, theory_var v2) {
@@ -161,7 +161,7 @@ namespace smt {
         virtual void init_model(smt::model_generator & m) {
             m.register_factory(alloc(dl_factory, m_util, m.get_model()));
         }
-
+        
         virtual smt::model_value_proc * mk_value(smt::enode * n, smt::model_generator&) {
             return alloc(dl_value_proc, *this, n);
         }
@@ -173,13 +173,13 @@ namespace smt {
             }
         }
 
-
+        
         virtual void relevant_eh(app * n) {
             if (u().is_finite_sort(n)) {
                 sort* s = m().get_sort(n);
                 func_decl* r, *v;
                 get_rep(s, r, v);
-
+                
                 if (n->get_decl() != v) {
                     expr* rep = m().mk_app(r, n);
                     uint64 vl;
@@ -249,7 +249,7 @@ namespace smt {
             func_decl* r, *v;
             get_rep(s, r, v);
             app* lt1 = u().mk_lt(x,y);
-            app* lt2 = m().mk_not(b().mk_ule(m().mk_app(r,y),m().mk_app(r,x)));
+            app* lt2 = m().mk_not(b().mk_ule(m().mk_app(r,y),m().mk_app(r,x))); 
             assert_cnstr(m().mk_iff(lt1, lt2));
         }
 
@@ -266,7 +266,7 @@ namespace smt {
             m_trail.push_back(a);
             get_context().push_trail(push_back_vector<context,ast_ref_vector>(m_trail));
         }
-
+                
     };
 
     theory* mk_theory_dl(ast_manager& m) { return alloc(theory_dl, m); }

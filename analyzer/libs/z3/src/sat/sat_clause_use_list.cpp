@@ -24,7 +24,7 @@ namespace sat {
     bool clause_use_list::check_invariant() const {
 #ifdef LAZY_USE_LIST
         unsigned sz = 0;
-        for (unsigned i = 0; i < m_clauses.size(); i++)
+        for (unsigned i = 0; i < m_clauses.size(); i++) 
             if (!m_clauses[i]->was_removed())
                 sz++;
         SASSERT(sz == m_size);

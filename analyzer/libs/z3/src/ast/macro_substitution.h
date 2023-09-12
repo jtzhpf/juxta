@@ -51,7 +51,7 @@ public:
     bool find(func_decl * f, quantifier * & q, proof * & pr);
     bool find(func_decl * f, quantifier * & q, proof * & pr, expr_dependency * & dep);
     void get_head_def(quantifier * q, func_decl * f, app * & head, expr * & def);
-
+    
     void reset();
     void cleanup();
 };

@@ -62,7 +62,7 @@ struct lt_proc2 { bool operator()(int v1, int v2) const { SASSERT(v1 < N && v2 <
 typedef heap<lt_proc2> int_heap2;
 
 static void init_values() {
-    for (unsigned i = 0; i < N; i++)
+    for (unsigned i = 0; i < N; i++) 
         g_value[i] = rand();
 }
 

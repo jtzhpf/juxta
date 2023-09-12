@@ -15,9 +15,9 @@ Author:
 
 Notes:
 
-   [1] Elwyn Ralph Berlekamp. Factoring Polynomials over Finite Fields. Bell System Technical Journal,
+   [1] Elwyn Ralph Berlekamp. Factoring Polynomials over Finite Fields. Bell System Technical Journal, 
        46(8-10):1853-1859, 1967.
-   [2] Donald Ervin Knuth. The Art of Computer Programming, volume 2: Seminumerical Algorithms. Addison Wesley, third
+   [2] Donald Ervin Knuth. The Art of Computer Programming, volume 2: Seminumerical Algorithms. Addison Wesley, third 
        edition, 1997.
    [3] Henri Cohen. A Course in Computational Algebraic Number Theory. Springer Verlag, 1993.
 
@@ -50,8 +50,8 @@ namespace polynomial {
     unsigned factor(polynomial_ref & f, factors & factors);
 
     /**
-       \brief Factor the square-free primitive polynomial f from Z[x1, ..., x_n]. Returns true if the factorization
-       was sucesseful, i.e. it was completed and the result is complete. Otherwise the quarantee is that the all but
+       \brief Factor the square-free primitive polynomial f from Z[x1, ..., x_n]. Returns true if the factorization 
+       was sucesseful, i.e. it was completed and the result is complete. Otherwise the quarantee is that the all but 
        the last factor are irreducible.
     */
     bool factor_square_free_primitive(polynomial_ref const & f, factors & factors);

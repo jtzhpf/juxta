@@ -35,7 +35,7 @@ proto_model::proto_model(ast_manager & m, simplifier & s, params_ref const & p):
     register_factory(alloc(basic_factory, m));
     m_user_sort_factory = alloc(user_sort_factory, m);
     register_factory(m_user_sort_factory);
-
+    
     m_model_partial = model_params(p).partial();
 }
 
@@ -124,7 +124,7 @@ expr * proto_model::mk_some_interp_for(func_decl * d) {
 // It uses the simplifier s during the computation.
 bool eval(func_interp & fi, simplifier & s, expr * const * args, expr_ref & result) {
     bool actuals_are_values = true;
-
+    
     if (fi.num_entries() != 0) {
         for (unsigned i = 0; actuals_are_values && i < fi.get_arity(); i++) {
             actuals_are_values = fi.m().is_value(args[i]);
@@ -136,16 +136,16 @@ bool eval(func_interp & fi, simplifier & s, expr * const * args, expr_ref & resu
         result = entry->get_result();
         return true;
     }
-
-    TRACE("func_interp", tout << "failed to find entry for: ";
-          for(unsigned i = 0; i < fi.get_arity(); i++)
-             tout << mk_pp(args[i], fi.m()) << " ";
+    
+    TRACE("func_interp", tout << "failed to find entry for: "; 
+          for(unsigned i = 0; i < fi.get_arity(); i++) 
+             tout << mk_pp(args[i], fi.m()) << " "; 
           tout << "\nis partial: " << fi.is_partial() << "\n";);
-
+    
     if (!fi.eval_else(args, result)) {
         return false;
     }
-
+    
     if (actuals_are_values && fi.args_are_values()) {
         // cheap case... we are done
         return true;
@@ -179,7 +179,7 @@ bool eval(func_interp & fi, simplifier & s, expr * const * args, expr_ref & resu
    It returns \c true if succeeded, and false otherwise. If the evaluation fails,
    then r contains a term that is simplified as much as possible using the interpretations
    available in the model.
-
+   
    When model_completion == true, if the model does not assign an interpretation to a
    declaration it will build one for it. Moreover, partial functions will also be completed.
    So, if model_completion == true, the evaluator never fails if it doesn't contain quantifiers.
@@ -189,7 +189,7 @@ bool proto_model::eval(expr * e, expr_ref & result, bool model_completion) {
     SASSERT(is_well_sorted(m_manager, e));
     TRACE("model_eval", tout << mk_pp(e, m_manager) << "\n";
           tout << "sort: " << mk_pp(m_manager.get_sort(e), m_manager) << "\n";);
-
+    
     obj_map<expr, expr*> eval_cache;
     expr_ref_vector trail(m_manager);
     sbuffer<std::pair<expr*, expr*>, 128> todo;
@@ -209,7 +209,7 @@ bool proto_model::eval(expr * e, expr_ref & result, bool model_completion) {
             SASSERT(r != 0);
             todo.pop_back();
             eval_cache.insert(a, r);
-            TRACE("model_eval",
+            TRACE("model_eval", 
                   tout << "orig:\n" << mk_pp(a, m_manager) << "\n";
                   tout << "after beta reduction:\n" << mk_pp(expanded_a, m_manager) << "\n";
                   tout << "new:\n" << mk_pp(r, m_manager) << "\n";);
@@ -237,7 +237,7 @@ bool proto_model::eval(expr * e, expr_ref & result, bool model_completion) {
                 SASSERT(args.size() == t->get_num_args());
                 expr_ref new_t(m_manager);
                 func_decl * f   = t->get_decl();
-
+                
                 if (!has_interpretation(f)) {
                     // the model does not assign an interpretation to f.
                     SASSERT(new_t.get() == 0);
@@ -286,7 +286,7 @@ bool proto_model::eval(expr * e, expr_ref & result, bool model_completion) {
                         if (!::eval(*fi, m_simplifier, args.c_ptr(), r1)) {
                             SASSERT(fi->is_partial()); // fi->eval only fails when fi is partial.
                             if (model_completion) {
-                                expr * r = get_some_value(f->get_range());
+                                expr * r = get_some_value(f->get_range()); 
                                 fi->set_else(r);
                                 SASSERT(!fi->is_partial());
                                 new_t = r;
@@ -314,7 +314,7 @@ bool proto_model::eval(expr * e, expr_ref & result, bool model_completion) {
                         }
                     }
                 }
-                TRACE("model_eval",
+                TRACE("model_eval", 
                       tout << "orig:\n" << mk_pp(t, m_manager) << "\n";
                       tout << "new:\n" << mk_pp(new_t, m_manager) << "\n";);
                 todo.pop_back();
@@ -322,12 +322,12 @@ bool proto_model::eval(expr * e, expr_ref & result, bool model_completion) {
                 eval_cache.insert(t, new_t);
                 break;
             }
-            case AST_VAR:
+            case AST_VAR:  
                 SASSERT(a != 0);
                 eval_cache.insert(a, a);
                 todo.pop_back();
                 break;
-            case AST_QUANTIFIER:
+            case AST_QUANTIFIER: 
                 TRACE("model_eval", tout << "found quantifier\n" << mk_pp(a, m_manager) << "\n";);
                 is_ok = false; // evaluator does not handle quantifiers.
                 SASSERT(a != 0);
@@ -347,12 +347,12 @@ bool proto_model::eval(expr * e, expr_ref & result, bool model_completion) {
     }
 
     result = a;
-    TRACE("model_eval",
+    TRACE("model_eval", 
           ast_ll_pp(tout << "original:  ", m_manager, e);
           ast_ll_pp(tout << "evaluated: ", m_manager, a);
           ast_ll_pp(tout << "reduced:   ", m_manager, result.get());
           tout << "sort: " << mk_pp(m_manager.get_sort(e), m_manager) << "\n";
-          );
+          ); 
     SASSERT(is_well_sorted(m_manager, result.get()));
     return is_ok;
 }
@@ -429,7 +429,7 @@ void proto_model::cleanup_func_interp(func_interp * fi, func_decl_set & found_au
     if (!cache.find(fi_else, a)) {
         UNREACHABLE();
     }
-
+    
     fi->set_else(a);
 }
 
@@ -460,12 +460,12 @@ void proto_model::cleanup() {
         func_interp * fi = (*it).m_value;
         cleanup_func_interp(fi, found_aux_fs);
     }
-
+    
     // remove auxiliary declarations that are not used.
     if (found_aux_fs.size() != m_aux_decls.size()) {
         remove_aux_decls_not_in_set(m_decls, found_aux_fs);
         remove_aux_decls_not_in_set(m_func_decls, found_aux_fs);
-
+        
         func_decl_set::iterator it2  = m_aux_decls.begin();
         func_decl_set::iterator end2 = m_aux_decls.end();
         for (; it2 != end2; ++it2) {
@@ -511,13 +511,13 @@ ptr_vector<expr> const & proto_model::get_universe(sort * s) const {
     return tmp;
 }
 
-unsigned proto_model::get_num_uninterpreted_sorts() const {
-    return m_user_sort_factory->get_num_sorts();
+unsigned proto_model::get_num_uninterpreted_sorts() const { 
+    return m_user_sort_factory->get_num_sorts(); 
 }
 
-sort * proto_model::get_uninterpreted_sort(unsigned idx) const {
-    SASSERT(idx < get_num_uninterpreted_sorts());
-    return m_user_sort_factory->get_sort(idx);
+sort * proto_model::get_uninterpreted_sort(unsigned idx) const { 
+    SASSERT(idx < get_num_uninterpreted_sorts()); 
+    return m_user_sort_factory->get_sort(idx); 
 }
 
 /**
@@ -535,7 +535,7 @@ expr * proto_model::get_some_value(sort * s) {
     else {
         family_id fid = s->get_family_id();
         value_factory * f = get_factory(fid);
-        if (f)
+        if (f) 
             return f->get_some_value(s);
         // there is no factory for the family id, then assume s is uninterpreted.
         return m_user_sort_factory->get_some_value(s);
@@ -549,7 +549,7 @@ bool proto_model::get_some_values(sort * s, expr_ref & v1, expr_ref & v2) {
     else {
         family_id fid = s->get_family_id();
         value_factory * f = get_factory(fid);
-        if (f)
+        if (f) 
             return f->get_some_values(s, v1, v2);
         else
             return false;
@@ -561,9 +561,9 @@ expr * proto_model::get_fresh_value(sort * s) {
         return m_user_sort_factory->get_fresh_value(s);
     }
     else {
-        family_id fid = s->get_family_id();
+        family_id fid = s->get_family_id();    
         value_factory * f = get_factory(fid);
-        if (f)
+        if (f) 
             return f->get_fresh_value(s);
         else
             // Use user_sort_factory if the theory has no support for model construnction.
@@ -608,7 +608,7 @@ void proto_model::complete_partial_func(func_decl * f) {
     func_interp * fi = get_func_interp(f);
     if (fi && fi->is_partial()) {
         expr * else_value = 0;
-#if 0
+#if 0 
         // For UFBV benchmarks, setting the "else" to false is not a good idea.
         // TODO: find a permanent solution. A possibility is to add another option.
         if (m_manager.is_bool(f->get_range())) {
@@ -629,7 +629,7 @@ void proto_model::complete_partial_func(func_decl * f) {
 }
 
 /**
-   \brief Set the (else) field of function interpretations...
+   \brief Set the (else) field of function interpretations... 
 */
 void proto_model::complete_partial_funcs() {
     if (m_model_partial)

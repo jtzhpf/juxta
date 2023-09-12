@@ -25,7 +25,7 @@ Revision History:
 #include "dl_rule_subsumption_index.h"
 
 namespace datalog {
-
+  
     // -----------------------------------
     //
     // rule_subsumption_index
@@ -67,7 +67,7 @@ namespace datalog {
     }
 
     bool rule_subsumption_index::is_subsumed(rule * r) {
-
+        
         app * head = r->get_head();
         if(is_subsumed(head)) {
             return true;

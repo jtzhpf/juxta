@@ -33,21 +33,21 @@ Notes:
 #include "ast_smt2_pp.h"
 
 //
-//
+// 
 // 1. for each variable, determine bounds (s.t., non-negative variables
 //    have unsigned bit-vectors).
-//
-// 2. replace uninterpreted variables of sort int by
+// 
+// 2. replace uninterpreted variables of sort int by 
 //    expressions of the form +- bv2int(b) +- k
 //    where k is a slack.
-//
+//   
 // 3. simplify resulting assertion set to reduce occurrences of bv2int.
-//
+//    
 
 class nla2bv_tactic : public tactic {
     class imp {
         typedef rational numeral;
-        ast_manager &               m_manager;
+        ast_manager &               m_manager; 
         bool                        m_is_sat_preserving;
         arith_util                  m_arith;
         bv_util                     m_bv;
@@ -61,18 +61,18 @@ class nla2bv_tactic : public tactic {
         unsigned                    m_num_bits;
         unsigned                    m_default_bv_size;
         ref<filter_model_converter> m_fmc;
-
+        
     public:
         imp(ast_manager & m, params_ref const& p):
-            m_manager(m),
-            m_is_sat_preserving(true),
-            m_arith(m),
-            m_bv(m),
+            m_manager(m), 
+            m_is_sat_preserving(true), 
+            m_arith(m), 
+            m_bv(m), 
             m_bv2real(m, rational(p.get_uint("nla2bv_root",2)), rational(p.get_uint("nla2bv_divisor",2)), p.get_uint("nla2bv_max_bv_size", UINT_MAX)),
             m_bv2int_ctx(m, p),
-            m_bounds(m),
-            m_subst(m),
-            m_vars(m),
+            m_bounds(m), 
+            m_subst(m), 
+            m_vars(m), 
             m_defs(m),
             m_trail(m),
             m_fmc(0) {
@@ -80,8 +80,8 @@ class nla2bv_tactic : public tactic {
         }
 
         ~imp() {}
-
-
+        
+        
         void operator()(goal & g, model_converter_ref & mc) {
             TRACE("nla2bv", g.display(tout);
                   tout << "Muls: " << count_mul(g) << "\n";
@@ -105,7 +105,7 @@ class nla2bv_tactic : public tactic {
             }
             for (unsigned i = 0; i < m_bv2real.num_aux_decls(); ++i) {
                 m_fmc->insert(m_bv2real.get_aux_decl(i));
-            }
+            }        
             IF_VERBOSE(TACTIC_VERBOSITY_LVL, verbose_stream() << "(nla->bv :sat-preserving " << m_is_sat_preserving << ")\n";);
             TRACE("nla2bv_verbose", g.display(tout););
             TRACE("nla2bv", tout << "Muls: " << count_mul(g) << "\n";);
@@ -113,14 +113,14 @@ class nla2bv_tactic : public tactic {
             if (!is_sat_preserving())
                 g.updt_prec(goal::UNDER);
         }
-
+        
         bool const& is_sat_preserving() const { return m_is_sat_preserving; }
-
+        
     private:
         void set_satisfiability_preserving(bool f) {
             m_is_sat_preserving = f;
         }
-
+        
         void collect_power2(goal & g) {
             m_bv2int_ctx.collect_power2(g);
             obj_map<expr, expr*> const& p2 = m_bv2int_ctx.power2();
@@ -138,20 +138,20 @@ class nla2bv_tactic : public tactic {
             substitute_vars(g);
             m_subst.reset();
         }
-
-
+        
+        
         // eliminate bv2int from formula
         void reduce_bv2int(goal & g) {
-            bv2int_rewriter_star reduce(m_manager, m_bv2int_ctx);
+            bv2int_rewriter_star reduce(m_manager, m_bv2int_ctx);        
             expr_ref r(m_manager);
             for (unsigned i = 0; i < g.size(); ++i) {
                 reduce(g.form(i), r);
                 g.update(i, r);
-            }
+            } 
             assert_side_conditions(g, m_bv2int_ctx.num_side_conditions(),
                                    m_bv2int_ctx.side_conditions());
         }
-
+        
         // eliminate bv2real from formula
         void reduce_bv2real(goal & g) {
             bv2real_rewriter_star reduce(m_manager, m_bv2real);
@@ -162,22 +162,22 @@ class nla2bv_tactic : public tactic {
                     throw tactic_exception("nla2bv could not eliminate reals");
                 }
                 g.update(i, r);
-            }
+            } 
             assert_side_conditions(g, m_bv2real.num_side_conditions(),
                                    m_bv2real.side_conditions());
         }
-
+        
         void assert_side_conditions(goal & g, unsigned sz, expr * const * conditions) {
             for (unsigned i = 0; i < sz; ++i) {
                 g.assert_expr(conditions[i]);
                 set_satisfiability_preserving(false);
             }
-            TRACE("nla2bv",
+            TRACE("nla2bv", 
                   for (unsigned i = 0; i < sz; ++i) {
                       tout << mk_ismt2_pp(conditions[i], m_manager) << "\n";
                   });
         }
-
+        
         // substitute variables by bit-vectors
         void substitute_vars(goal & g) {
             scoped_ptr<expr_replacer> er = mk_default_expr_replacer(m_manager);
@@ -186,9 +186,9 @@ class nla2bv_tactic : public tactic {
             for (unsigned i = 0; i < g.size(); ++i) {
                 (*er)(g.form(i), r);
                 g.update(i, r);
-            }
+            }        
         }
-
+        
         // -----------------
         // collect uninterpreted variables in problem.
         // create a substitution from the variables to
@@ -203,7 +203,7 @@ class nla2bv_tactic : public tactic {
                 add_real_var(n);
             }
         }
-
+        
         void add_int_var(app* n) {
             expr_ref s_bv(m_manager);
             sort_ref bv_sort(m_manager);
@@ -215,7 +215,7 @@ class nla2bv_tactic : public tactic {
                 low = tmp;
             }
             if (m_bounds.has_upper(n, tmp, is_strict)) {
-                SASSERT(!is_strict);
+                SASSERT(!is_strict); 
                 up = tmp;
             }
             //
@@ -237,11 +237,11 @@ class nla2bv_tactic : public tactic {
             s_bv = m_bv.mk_bv2int(s_bv);
             if (low) {
                 if (!(*low).is_zero()) {
-                    //    low <= s_bv
+                    //    low <= s_bv 
                     // ~>
-                    //    replace s_bv by s_bv + low
+                    //    replace s_bv by s_bv + low 
                     //    add 'low' to model for n.
-                    //
+                    // 
                     s_bv = m_arith.mk_add(s_bv, m_arith.mk_numeral(*low, true));
                 }
             }
@@ -249,19 +249,19 @@ class nla2bv_tactic : public tactic {
                 //   s_bv <= up
                 // ~>
                 //   replace s_bv by up - s_bv
-                //
+                // 
                 s_bv = m_arith.mk_sub(m_arith.mk_numeral(*up, true), s_bv);
             }
             else {
                 s_bv = m_arith.mk_sub(s_bv, m_arith.mk_numeral(rational::power_of_two(num_bits-1), true));
             }
-
+            
             m_trail.push_back(s_bv);
             m_subst.insert(n, s_bv);
             m_vars.push_back(n->get_decl());
             m_defs.push_back(s_bv);
         }
-
+        
         void add_real_var(app* n) {
             expr_ref s_bv(m_manager), s_bvr(m_manager), s(m_manager), t(m_manager);
             sort_ref bv_sort(m_manager);
@@ -277,13 +277,13 @@ class nla2bv_tactic : public tactic {
             m_trail.push_back(s_bv);
             m_subst.insert(n, s_bv);
             m_vars.push_back(n->get_decl());
-
+            
             // use version without bv2real function.
             m_bv2real.mk_bv2real_reduced(s, t, s_bvr);
             m_defs.push_back(s_bvr);
         }
-
-
+        
+        
         // update number of bits based on the largest constant used.
         void update_num_bits(app* n) {
             bool is_int;
@@ -296,7 +296,7 @@ class nla2bv_tactic : public tactic {
                 }
             }
         }
-
+        
         unsigned log2(rational const& n) {
             rational pow(1), two(2);
             unsigned sz = 0;
@@ -307,7 +307,7 @@ class nla2bv_tactic : public tactic {
             if (sz == 0) sz = 1;
             return sz;
         }
-
+        
         class get_uninterp_proc {
             imp& m_imp;
             ptr_vector<app> m_vars;
@@ -315,10 +315,10 @@ class nla2bv_tactic : public tactic {
         public:
             get_uninterp_proc(imp& s): m_imp(s), m_in_supported_fragment(true) {}
             ptr_vector<app> const& vars() { return m_vars; }
-            void operator()(var * n) {
-                m_in_supported_fragment = false;
+            void operator()(var * n) { 
+                m_in_supported_fragment = false; 
             }
-            void operator()(app* n) {
+            void operator()(app* n) { 
                 arith_util& a = m_imp.m_arith;
                 ast_manager& m = a.get_manager();
                 if (a.is_int(n) &&
@@ -330,7 +330,7 @@ class nla2bv_tactic : public tactic {
                     m_vars.push_back(n);
                 }
                 else if (m.is_bool(n) && is_uninterp_const(n)) {
-
+                    
                 }
                 else if (!(a.is_mul(n) ||
                            a.is_add(n) ||
@@ -349,12 +349,12 @@ class nla2bv_tactic : public tactic {
                 }
                 m_imp.update_num_bits(n);
             }
-            void operator()(quantifier* q) {
-                m_in_supported_fragment = false;
+            void operator()(quantifier* q) { 
+                m_in_supported_fragment = false; 
             }
             bool is_supported() const { return m_in_supported_fragment; }
         };
-
+        
         bool collect_vars(goal const & g) {
             get_uninterp_proc fe_var(*this);
             for_each_expr_at(fe_var, g);
@@ -363,7 +363,7 @@ class nla2bv_tactic : public tactic {
             }
             return fe_var.is_supported() && !fe_var.vars().empty();
         }
-
+        
         class count_mul_proc {
             imp& m_imp;
             unsigned m_count;
@@ -371,7 +371,7 @@ class nla2bv_tactic : public tactic {
             count_mul_proc(imp& s): m_imp(s), m_count(0) {}
             unsigned count() const { return m_count; }
             void operator()(var * n) {}
-            void operator()(app* n) {
+            void operator()(app* n) { 
                 if (m_imp.m_arith.is_mul(n)) {
                     m_count += n->get_num_args()-1;
                 }
@@ -389,7 +389,7 @@ class nla2bv_tactic : public tactic {
             }
             void operator()(quantifier* q) {}
         };
-
+        
         unsigned count_mul(goal const & g) {
             count_mul_proc c(*this);
             for_each_expr_at(c, g);
@@ -401,7 +401,7 @@ class nla2bv_tactic : public tactic {
     imp *           m_imp;
 
     struct scoped_set_imp {
-        nla2bv_tactic & m_owner;
+        nla2bv_tactic & m_owner; 
         scoped_set_imp(nla2bv_tactic & o, imp & i):
             m_owner(o) {
             #pragma omp critical (tactic_cancel)
@@ -417,7 +417,7 @@ class nla2bv_tactic : public tactic {
             }
         }
     };
-
+    
 public:
     nla2bv_tactic(params_ref const & p):
         m_params(p),
@@ -435,21 +435,21 @@ public:
         m_params = p;
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) { 
         r.insert("nla2bv_max_bv_size", CPK_UINT, "(default: inf) maximum bit-vector size used by nla2bv tactic");
         r.insert("nla2bv_bv_size", CPK_UINT, "(default: 4) default bit-vector size used by nla2bv tactic.");
         r.insert("nla2bv_root", CPK_UINT, "(default: 2) nla2bv tactic encodes reals into bit-vectors using expressions of the form a+b*sqrt(c), this parameter sets the value of c used in the encoding.");
         r.insert("nla2bv_divisor", CPK_UINT, "(default: 2) nla2bv tactic parameter.");
     }
-
+    
     /**
-       \brief Modify a goal to use bounded bit-vector
+       \brief Modify a goal to use bounded bit-vector 
        arithmetic in place of non-linear integer arithmetic.
        \return false if transformation is not possible.
     */
     virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         SASSERT(g->is_well_sorted());
@@ -460,11 +460,11 @@ public:
         imp proc(g->m(), m_params);
         scoped_set_imp setter(*this, proc);
         proc(*(g.get()), mc);
-
+        
         result.push_back(g.get());
         SASSERT(g->is_well_sorted());
     }
-
+    
     virtual void cleanup(void) {
     }
 };

@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    use Bellman Ford traversal algorithm for UTVPI.
+    use Bellman Ford traversal algorithm for UTVPI.    
 
 Author:
 
@@ -46,8 +46,8 @@ namespace smt {
         bool linearize(expr* e);
         bool linearize(expr* e1, expr* e2);
 
-        // retrieve linearization
-        vector<std::pair<expr*, rational> > const& get_linearization() const;
+        // retrieve linearization        
+        vector<std::pair<expr*, rational> > const& get_linearization() const;        
         rational const& get_weight() const { return m_weight; }
     private:
         bool linearize();
@@ -55,7 +55,7 @@ namespace smt {
 
     template<typename Ext>
     class theory_utvpi : public theory, private Ext {
-
+        
         typedef typename Ext::numeral numeral;
         typedef theory_var th_var;
         typedef svector<th_var> th_var_vector;
@@ -75,7 +75,7 @@ namespace smt {
             int      m_pos;
             int      m_neg;
         public:
-            atom(bool_var bv, int pos, int neg) :
+            atom(bool_var bv, int pos, int neg) : 
                 m_bvar(bv), m_true(false),
                 m_pos(pos), m_neg(neg) {}
             ~atom() {}
@@ -87,7 +87,7 @@ namespace smt {
             std::ostream& display(theory_utvpi const& th, std::ostream& out) const;
         };
         typedef svector<atom> atoms;
-
+        
         struct scope {
             unsigned   m_atoms_lim;
             unsigned   m_asserted_atoms_lim;
@@ -109,7 +109,7 @@ namespace smt {
             }
         };
 
-        // Functor used to collect the proofs for a conflict due to
+        // Functor used to collect the proofs for a conflict due to 
         // a negative cycle.
         class nc_functor {
             literal_vector m_antecedents;
@@ -134,7 +134,7 @@ namespace smt {
         };
 
 
-        stats                   m_stats;
+        stats                   m_stats;        
         smt_params              m_params;
         arith_util              a;
         arith_eq_adapter        m_arith_eq_adapter;
@@ -145,7 +145,7 @@ namespace smt {
         nc_functor              m_nc_functor;
         atoms                   m_atoms;
         unsigned_vector         m_asserted_atoms;   // set of asserted atoms
-        unsigned                m_asserted_qhead;
+        unsigned                m_asserted_qhead;   
         u_map<unsigned>         m_bool_var2atom;
         svector<scope>          m_scopes;
 
@@ -159,18 +159,18 @@ namespace smt {
 
         arith_factory *         m_factory;
         rational                m_delta;
-
+        
 
         // Set a conflict due to a negative cycle.
         void set_conflict();
-
+               
         void new_edge(dl_var src, dl_var dst, unsigned num_edges, edge_id const* edges) {}
 
         // Create a new theory variable.
         virtual th_var mk_var(enode* n);
 
         virtual th_var mk_var(expr* n);
-
+                                
         void compute_delta();
 
         void found_non_utvpi_expr(expr * n);
@@ -179,7 +179,7 @@ namespace smt {
             return n->get_family_id() == get_family_id();
         }
 
-    public:
+    public:    
         theory_utvpi(ast_manager& m);
 
         virtual ~theory_utvpi();
@@ -196,7 +196,7 @@ namespace smt {
         virtual void init(context * ctx);
 
         virtual bool internalize_atom(app * atom, bool gate_ctx);
-
+                                                     
         virtual bool internalize_term(app * term);
 
         virtual void internalize_eq_eh(app * atom, bool_var v);
@@ -233,14 +233,14 @@ namespace smt {
         virtual bool is_shared(th_var v) const {
             return false;
         }
-
+    
         virtual bool can_propagate() {
             SASSERT(m_asserted_qhead <= m_asserted_atoms.size());
             return m_asserted_qhead != m_asserted_atoms.size();
         }
-
+        
         virtual void propagate();
-
+        
         virtual justification * why_is_diseq(th_var v1, th_var v2) {
             UNREACHABLE();
             return 0;
@@ -249,18 +249,18 @@ namespace smt {
         virtual void reset_eh();
 
         virtual void init_model(model_generator & m);
-
+        
         virtual model_value_proc * mk_value(enode * n, model_generator & mg);
 
         virtual bool validate_eq_in_model(th_var v1, th_var v2, bool is_true) const {
             return true;
         }
-
+                
         virtual void display(std::ostream & out) const;
-
+        
         virtual void collect_statistics(::statistics & st) const;
 
-    private:
+    private:        
 
         rational mk_value(theory_var v, bool is_int);
 
@@ -283,7 +283,7 @@ namespace smt {
 
         virtual void new_diseq_eh(th_var v1, th_var v2, justification& j) {
             m_stats.m_num_core2th_diseqs++;
-            new_eq_or_diseq(false, v1, v2, j);
+            new_eq_or_diseq(false, v1, v2, j);    
         }
 
         void negate(coeffs& coeffs, rational& weight);
@@ -303,7 +303,7 @@ namespace smt {
         th_var expand(bool pos, th_var v, rational & k);
 
         void new_eq_or_diseq(bool is_eq, th_var v1, th_var v2, justification& eq_just);
-
+        
         th_var get_zero(sort* s) const { return a.is_int(s)?m_zero_int:m_zero_real; }
 
         th_var get_zero(expr* e) const { return get_zero(get_manager().get_sort(e)); }
@@ -314,10 +314,10 @@ namespace smt {
 
         bool enable_edge(edge_id id);
 
-        th_var to_var(th_var v) const {
+        th_var to_var(th_var v) const { 
             return 2*v;
         }
-
+        
         th_var from_var(th_var v) const {
             return v/2;
         }

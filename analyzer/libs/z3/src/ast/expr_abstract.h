@@ -26,7 +26,7 @@ class expr_abstractor {
     expr_ref_vector m_pinned;
     ptr_vector<expr> m_stack, m_args;
     obj_map<expr, expr*> m_map;
-
+    
 public:
     expr_abstractor(ast_manager& m): m(m), m_pinned(m) {}
     void operator()(unsigned base, unsigned num_bound, expr* const* bound, expr* n, expr_ref& result);

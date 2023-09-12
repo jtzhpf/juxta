@@ -20,7 +20,7 @@ Revision History:
 #include"debug.h"
 #include"hash.h"
 #include"polynomial.h"
-
+ 
 namespace nlsat {
 
     ineq_atom::ineq_atom(kind k, unsigned sz, poly * const * ps, bool const * is_even, var max_var):

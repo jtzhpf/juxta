@@ -30,7 +30,7 @@ namespace datalog {
     // interval_relation_plugin
 
     interval_relation_plugin::interval_relation_plugin(relation_manager& m):
-        relation_plugin(interval_relation_plugin::get_name(), m),
+        relation_plugin(interval_relation_plugin::get_name(), m), 
         m_empty(m_dep),
         m_arith(get_ast_manager()) {
     }
@@ -49,14 +49,14 @@ namespace datalog {
         return alloc(interval_relation, *this, s, true);
     }
 
-    relation_base * interval_relation_plugin::mk_full(func_decl* p, const relation_signature & s) {
+    relation_base * interval_relation_plugin::mk_full(func_decl* p, const relation_signature & s) {        
         return alloc(interval_relation, *this, s, false);
     }
 
     class interval_relation_plugin::join_fn : public convenient_relation_join_fn {
     public:
         join_fn(const relation_signature & o1_sig, const relation_signature & o2_sig, unsigned col_cnt,
-                const unsigned * cols1, const unsigned * cols2)
+                const unsigned * cols1, const unsigned * cols2) 
             : convenient_relation_join_fn(o1_sig, o2_sig, col_cnt, cols1, cols2){
         }
 
@@ -64,7 +64,7 @@ namespace datalog {
             interval_relation const& r1 = get(_r1);
             interval_relation const& r2 = get(_r2);
             interval_relation_plugin& p = r1.get_plugin();
-            interval_relation* result = dynamic_cast<interval_relation*>(p.mk_full(0, get_result_signature()));
+            interval_relation* result = dynamic_cast<interval_relation*>(p.mk_full(0, get_result_signature()));            
             result->mk_join(r1, r2, m_cols1.size(), m_cols1.c_ptr(), m_cols2.c_ptr());
             return result;
         }
@@ -81,27 +81,27 @@ namespace datalog {
 
     class interval_relation_plugin::project_fn : public convenient_relation_project_fn {
     public:
-        project_fn(const relation_signature & orig_sig, unsigned removed_col_cnt, const unsigned * removed_cols)
+        project_fn(const relation_signature & orig_sig, unsigned removed_col_cnt, const unsigned * removed_cols) 
             : convenient_relation_project_fn(orig_sig, removed_col_cnt, removed_cols) {
         }
 
         virtual relation_base * operator()(const relation_base & _r) {
             interval_relation const& r = get(_r);
             interval_relation_plugin& p = r.get_plugin();
-            interval_relation* result = dynamic_cast<interval_relation*>(p.mk_full(0, get_result_signature()));
+            interval_relation* result = dynamic_cast<interval_relation*>(p.mk_full(0, get_result_signature()));            
             result->mk_project(r, m_removed_cols.size(), m_removed_cols.c_ptr());
             return result;
         }
     };
 
-    relation_transformer_fn * interval_relation_plugin::mk_project_fn(const relation_base & r,
+    relation_transformer_fn * interval_relation_plugin::mk_project_fn(const relation_base & r, 
             unsigned col_cnt, const unsigned * removed_cols) {
         return alloc(project_fn, r.get_signature(), col_cnt, removed_cols);
     }
-
+   
     class interval_relation_plugin::rename_fn : public convenient_relation_rename_fn {
     public:
-        rename_fn(const relation_signature & orig_sig, unsigned cycle_len, const unsigned * cycle)
+        rename_fn(const relation_signature & orig_sig, unsigned cycle_len, const unsigned * cycle) 
             : convenient_relation_rename_fn(orig_sig, cycle_len, cycle) {
         }
 
@@ -114,14 +114,14 @@ namespace datalog {
         }
     };
 
-    relation_transformer_fn * interval_relation_plugin::mk_rename_fn(const relation_base & r,
+    relation_transformer_fn * interval_relation_plugin::mk_rename_fn(const relation_base & r, 
             unsigned cycle_len, const unsigned * permutation_cycle) {
         if(!check_kind(r)) {
             return 0;
         }
         return alloc(rename_fn, r.get_signature(), cycle_len, permutation_cycle);
     }
-
+     
     interval interval_relation_plugin::unite(interval const& src1, interval const& src2) {
         bool l_open = src1.is_lower_open();
         bool r_open = src1.is_upper_open();
@@ -143,7 +143,7 @@ namespace datalog {
         bool r_open = src1.is_upper_open();
         ext_numeral low = src1.inf();
         ext_numeral high = src1.sup();
-
+        
         if (src2.inf() < low || (low == src2.inf() && l_open && !src2.is_lower_open())) {
             low = ext_numeral(false);
             l_open = true;
@@ -183,7 +183,7 @@ namespace datalog {
             return interval(dep(), low, l_open, 0, high, r_open, 0);
         }
     }
-
+    
     bool interval_relation_plugin::is_infinite(interval const& i) {
         return i.plus_infinity() && i.minus_infinity();
     }
@@ -196,7 +196,7 @@ namespace datalog {
         bool                      m_is_widen;
     public:
         union_fn(bool is_widen) :
-            m_is_widen(is_widen) {
+            m_is_widen(is_widen) {            
         }
 
         virtual void operator()(relation_base & _r, const relation_base & _src, relation_base * _delta) {
@@ -211,7 +211,7 @@ namespace datalog {
             }
             else {
                 r.mk_union(src, 0, m_is_widen);
-            }
+            }            
         }
     };
 
@@ -224,7 +224,7 @@ namespace datalog {
     }
 
     relation_union_fn * interval_relation_plugin::mk_widen_fn(
-        const relation_base & tgt, const relation_base & src,
+        const relation_base & tgt, const relation_base & src, 
         const relation_base * delta) {
         if (!check_kind(tgt) || !check_kind(src) || (delta && !check_kind(*delta))) {
             return 0;
@@ -235,7 +235,7 @@ namespace datalog {
     class interval_relation_plugin::filter_identical_fn : public relation_mutator_fn {
         unsigned_vector m_identical_cols;
     public:
-        filter_identical_fn(unsigned col_cnt, const unsigned * identical_cols)
+        filter_identical_fn(unsigned col_cnt, const unsigned * identical_cols) 
             : m_identical_cols(col_cnt, identical_cols) {}
 
         virtual void operator()(relation_base & r) {
@@ -261,21 +261,21 @@ namespace datalog {
         unsigned m_col;
         rational m_value;
     public:
-        filter_equal_fn(relation_manager & m, const relation_element & value, unsigned col)
+        filter_equal_fn(relation_manager & m, const relation_element & value, unsigned col) 
             : m_col(col) {
             arith_util arith(m.get_context().get_manager());
-            VERIFY(arith.is_numeral(value, m_value));
+            VERIFY(arith.is_numeral(value, m_value));            
         }
 
         virtual void operator()(relation_base & _r) {
             interval_relation & r = get(_r);
             interval_relation_plugin & p = r.get_plugin();
             r.mk_intersect(m_col, interval(p.dep(), m_value));
-            TRACE("interval_relation", tout << m_value << "\n"; r.display(tout););
+            TRACE("interval_relation", tout << m_value << "\n"; r.display(tout););            
         }
     };
 
-    relation_mutator_fn * interval_relation_plugin::mk_filter_equal_fn(const relation_base & r,
+    relation_mutator_fn * interval_relation_plugin::mk_filter_equal_fn(const relation_base & r, 
         const relation_element & value, unsigned col) {
         if(check_kind(r)) {
             return alloc(filter_equal_fn, get_manager(), value, col);
@@ -316,20 +316,20 @@ namespace datalog {
     // interval_relation
 
     interval_relation::interval_relation(interval_relation_plugin& p, relation_signature const& s, bool is_empty):
-        vector_relation<interval>(p, s, is_empty, interval(p.dep()))
+        vector_relation<interval>(p, s, is_empty, interval(p.dep())) 
     {
         TRACE("interval_relation", tout << s.size() << "\n";);
-    }
+    }    
 
     void interval_relation::add_fact(const relation_fact & f) {
         interval_relation r(get_plugin(), get_signature(), false);
-        ast_manager& m = get_plugin().get_ast_manager();
+        ast_manager& m = get_plugin().get_ast_manager();        
         for (unsigned i = 0; i < f.size(); ++i) {
             app_ref eq(m);
             expr* e = f[i];
             eq = m.mk_eq(m.mk_var(i, m.get_sort(e)), e);
             r.filter_interpreted(eq.get());
-        }
+        }            
         mk_union(r, 0, false);
     }
 
@@ -376,10 +376,10 @@ namespace datalog {
         relation_signature const& sig = get_signature();
         for (unsigned i = 0; i < sig.size(); ++i) {
             if (i != find(i)) {
-                conjs.push_back(m.mk_eq(m.mk_var(i, sig[i]),
+                conjs.push_back(m.mk_eq(m.mk_var(i, sig[i]), 
                                         m.mk_var(find(i), sig[find(i)])));
                 continue;
-            }
+            }            
             interval const& iv = (*this)[i];
             sort* ty = sig[i];
             expr_ref var(m.mk_var(i, ty), m);
@@ -408,11 +408,11 @@ namespace datalog {
 
 
     void interval_relation::display_index(unsigned i, interval const& j, std::ostream & out) const {
-        out << i << " in " << j << "\n";
+        out << i << " in " << j << "\n";                
     }
 
     interval_relation_plugin& interval_relation::get_plugin() const {
-        return static_cast<interval_relation_plugin &>(relation_base::get_plugin());
+        return static_cast<interval_relation_plugin &>(relation_base::get_plugin());        
     }
 
     void interval_relation::mk_intersect(unsigned idx, interval const& i) {
@@ -514,7 +514,7 @@ namespace datalog {
             }                                       \
             else {                                  \
                 return false;                       \
-            }
+            }                   
 
         if (is_var(e)) {
             SET_VAR(to_var(e)->get_idx());
@@ -523,7 +523,7 @@ namespace datalog {
             return false;
         }
         app* a = to_app(e);
-
+ 
         if (m_arith.is_add(e)) {
             for (unsigned i = 0; i < a->get_num_args(); ++i) {
                 if (!is_linear(a->get_arg(i), neg, pos, k, is_pos)) return false;
@@ -532,19 +532,19 @@ namespace datalog {
         }
         if (m_arith.is_sub(e)) {
             SASSERT(a->get_num_args() == 2);
-            return
+            return 
                 is_linear(a->get_arg(0), neg, pos, k, is_pos) &&
                 is_linear(a->get_arg(1), neg, pos, k, !is_pos);
         }
         rational k1;
         SASSERT(!m_arith.is_mul(e) || a->get_num_args() == 2);
         if (m_arith.is_mul(e) &&
-            m_arith.is_numeral(a->get_arg(0), k1) &&
+            m_arith.is_numeral(a->get_arg(0), k1) && 
             k1.is_minus_one() &&
             is_var(a->get_arg(1))) {
-            SET_VAR(to_var(a->get_arg(1))->get_idx());
+            SET_VAR(to_var(a->get_arg(1))->get_idx());                
         }
-
+        
         if (m_arith.is_numeral(e, k1)) {
             if (is_pos) {
                 k += k1;
@@ -591,7 +591,7 @@ namespace datalog {
             return (x != UINT_MAX || y != UINT_MAX);
         }
         if (m.is_not(cond) && is_app(cond->get_arg(0))) {
-            //     not (0 <= x - y + k)
+            //     not (0 <= x - y + k) 
             // <=>
             //     0 > x - y + k
             // <=>
@@ -602,11 +602,11 @@ namespace datalog {
                 std::swap(x, y);
                 return true;
             }
-            //     not (0 < x - y + k)
+            //     not (0 < x - y + k) 
             // <=>
             //     0 >= x - y + k
             // <=>
-            //     0 <= y - x - k
+            //     0 <= y - x - k 
             if (is_lt(to_app(cond->get_arg(0)), x, k, y)) {
                 is_int = false;
                 k.neg();
@@ -635,7 +635,7 @@ namespace datalog {
         return false;
     }
 
-    // 0 = x - y + k
+    // 0 = x - y + k 
     bool interval_relation_plugin::is_eq(app* cond, unsigned& x, rational& k, unsigned& y) const {
         ast_manager& m = get_ast_manager();
         k.reset();

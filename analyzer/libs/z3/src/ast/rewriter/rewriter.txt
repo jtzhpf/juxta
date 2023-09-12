@@ -13,7 +13,7 @@ where
   - f is expected to be a func_decl of the given theory
   - If the return value if different from BR_FAILED, the result is stored in result.
 
-The template rewriter_tpl<Cfg> can be instantiated to implement
+The template rewriter_tpl<Cfg> can be instantiated to implement 
 rewriters that traverse ASTs applying some kind of transformation/simplification.
 The parameter Cfg is expected to be a class with the following methods:
     bool cache_all_results() const;
@@ -25,9 +25,9 @@ The parameter Cfg is expected to be a class with the following methods:
     bool max_steps_exceeded(unsigned num_steps) const;
     bool pre_visit(expr * t);
     br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr);
-    bool reduce_quantifier(quantifier * old_q,
-                           expr * new_body,
-                           expr * const * new_patterns,
+    bool reduce_quantifier(quantifier * old_q, 
+                           expr * new_body, 
+                           expr * const * new_patterns, 
                            expr * const * new_no_patterns,
                            expr_ref & result,
                            proof_ref & result_pr);
@@ -63,7 +63,7 @@ BR_REWRITE2 should be returned.
 It is also correct (but unnecessary) to return BR_REWRITE3 and BR_REWRITE_FULL.
 
 To instantiate a new rewriter, one should
-1) Define a new configuration class.
+1) Define a new configuration class. 
     class mycfg : public default_rewriter_cfg {
        ...
     }
@@ -72,7 +72,7 @@ To instantiate a new rewriter, one should
 
 3) Define a subclass of rewriter_tpl<mycfg> that
   owns the new cfg.
-
+  
   class myrewriter : public rewriter_tpl<mycfg> {
         mycfg m_cfg;
   public:
@@ -102,32 +102,33 @@ This is very useful, for example, for implementing rewriters that will only
 - bool max_steps_exceeded(unsigned num_steps) const;
 If false, it interrupts the execution of the rewriter.
 The interruption is performed by throwing an exception.
-One can also used this callback to check whether the
+One can also used this callback to check whether the 
 amount of memory used is still reasonable.
 - bool cache_all_results() const;
-By default, the rewriter only caches the results of
-non-atomic shared ASTs (get_ref_count() > 1). If true,
+By default, the rewriter only caches the results of 
+non-atomic shared ASTs (get_ref_count() > 1). If true, 
 is returned, the rewriter will cache all intermediate results.
 - bool flat_assoc(func_decl * f) const;
 If true is returned, then the rewriter will do flattening of
 non-shared nodes. For example,
    (+ a (+ b (+ c d)))
 will be treated as (+ a b c d)
-Shared nodes are not considered. Thus, exponential blowup
+Shared nodes are not considered. Thus, exponential blowup 
 in the rewriter stack is avoided.
-So, when implementing
+So, when implementing 
     br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr);
 one should not assume that for an associative f, there is not
 f-application in args when true is returned by flat_assoc.
 
-when implementing
+when implementing 
     br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr);
-If result_pr is set to 0, and proofs are enabled, then the rewriter will use a generic
+If result_pr is set to 0, and proofs are enabled, then the rewriter will use a generic 
 "rewrite" proof step for justifying that (f args[0] ... args[num-1]) is equal to result.
 
 The th_rewriter takes care of flattening. So, in principle, there is
 not need to return true in flat_assoc.
 
+ 
 
 
 
@@ -137,8 +138,7 @@ not need to return true in flat_assoc.
 
 
 
-
-
+           
 
 
 

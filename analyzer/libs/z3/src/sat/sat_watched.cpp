@@ -22,21 +22,21 @@ Revision History:
 namespace sat {
 
     bool erase_clause_watch(watch_list & wlist, clause_offset c) {
-        watch_list::iterator it  = wlist.begin();
-        watch_list::iterator end = wlist.end();
-        for (; it != end; ++it) {
-            if (it->is_clause() && it->get_clause_offset() == c) {
-                watch_list::iterator it2 = it;
-                ++it;
-                for (; it != end; ++it) {
-                    *it2 = *it;
+        watch_list::iterator it  = wlist.begin();              
+        watch_list::iterator end = wlist.end();                
+        for (; it != end; ++it) {                              
+            if (it->is_clause() && it->get_clause_offset() == c) {                                        
+                watch_list::iterator it2 = it;                 
+                ++it;                                          
+                for (; it != end; ++it) {                      
+                    *it2 = *it;                                
                     ++it2;
-                }
+                }                    
                 wlist.set_end(it2);
-                return true;
-            }
-        }
-        return false;
+                return true;                                  
+            }                                                  
+        }                                                      
+        return false;                                           
     }
 
     void display(std::ostream & out, clause_allocator const & ca, watch_list const & wlist) {
@@ -62,7 +62,7 @@ namespace sat {
             case watched::EXT_CONSTRAINT:
                 out << it->get_ext_constraint_idx();
                 break;
-            default:
+            default: 
                 UNREACHABLE();
             }
         }

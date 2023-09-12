@@ -17,7 +17,7 @@ Author:
     Leonardo de Moura (leonardo) 2012-01-05
 
 Notes:
-
+    
 --*/
 #include<iostream>
 #include"z3.h"
@@ -33,12 +33,12 @@ static void reset_rcf_cancel(Z3_context c) {
     rcfm(c).reset_cancel();
 }
 
-static Z3_rcf_num from_rcnumeral(rcnumeral a) {
-    return reinterpret_cast<Z3_rcf_num>(a.c_ptr());
+static Z3_rcf_num from_rcnumeral(rcnumeral a) { 
+    return reinterpret_cast<Z3_rcf_num>(a.c_ptr()); 
 }
 
-static rcnumeral to_rcnumeral(Z3_rcf_num a) {
-    return rcnumeral::mk(a);
+static rcnumeral to_rcnumeral(Z3_rcf_num a) { 
+    return rcnumeral::mk(a); 
 }
 
 extern "C" {
@@ -180,7 +180,7 @@ extern "C" {
         RETURN_Z3(from_rcnumeral(r));
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_rcf_num Z3_API Z3_rcf_neg(Z3_context c, Z3_rcf_num a) {
         Z3_TRY;
         LOG_Z3_rcf_neg(c, a);

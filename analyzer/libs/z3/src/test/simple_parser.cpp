@@ -47,15 +47,15 @@ void tst_simple_parser() {
     TRACE("simple_parser", tout << mk_pp(r, m) << "\n";);
     p.parse_string(")x)", r); // error
     p.parse_string("(+ x (* 10 y) 2)", r);
-    TRACE("simple_parser",
+    TRACE("simple_parser", 
           tout << mk_pp(r, m) << "\n";
           tout << "val: " << eval(r, 2, vals) << "\n";);
     p.parse_string("(ite (and (> x 3) (<= y 4))  2 10)", r);
-    TRACE("simple_parser",
+    TRACE("simple_parser", 
           tout << mk_pp(r, m) << "\n";
           tout << "val: " << eval(r, 2, vals) << "\n";);
     p.parse_string("(ite (or (> x 3) (<= y 4))  2 10)", r);
-    TRACE("simple_parser",
+    TRACE("simple_parser", 
           tout << mk_pp(r, m) << "\n";
           tout << "val: " << eval(r, 2, vals) << "\n";);
 }

@@ -15,17 +15,17 @@ Author:
 
 Notes:
 
-    Background: The Farkas learner in PDR generates tons
+    Background: The Farkas learner in PDR generates tons 
     of inequalities that contain redundancies.
     It therefore needs a fast way to reduce these redundancies before
     passing the results to routines that are more expensive.
-    The arith subsumption_strategy encapsulates a rudimentary
+    The arith subsumption_strategy encapsulates a rudimentary 
     routine for simplifying inequalities. Additional simplification
     routines can be added here or composed with this strategy.
 
     Note: The bound_manager subsumes some of the collection methods used
     for assembling bounds, but it does not have a way to check for
-    subsumption of atoms.
+    subsumption of atoms. 
 
 --*/
 #ifndef _ARITH_BOUNDS_TACTIC_H_

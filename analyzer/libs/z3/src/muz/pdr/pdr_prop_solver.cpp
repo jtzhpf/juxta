@@ -72,7 +72,7 @@ namespace pdr {
             expr_ref implies(m.mk_or(m.mk_not(res), literal), m);
             s.m_ctx->assert_expr(implies);
             m_assumptions.push_back(implies);
-            TRACE("pdr_verbose", tout << "name asserted " << mk_pp(implies, m) << "\n";);
+            TRACE("pdr_verbose", tout << "name asserted " << mk_pp(implies, m) << "\n";);    
             return res;
         }
 
@@ -112,7 +112,7 @@ namespace pdr {
             rational r;
             unsigned bv_size;
 
-            TRACE("pdr",
+            TRACE("pdr", 
                   tout << "begin expand\n";
                   for (unsigned i = 0; i < conjs.size(); ++i) {
                       tout << mk_pp(conjs[i].get(), m) << "\n";
@@ -161,7 +161,7 @@ namespace pdr {
                     }
                 }
             }
-            TRACE("pdr",
+            TRACE("pdr", 
                   tout << "end expand\n";
                   for (unsigned i = 0; i < conjs.size(); ++i) {
                       tout << mk_pp(conjs[i].get(), m) << "\n";
@@ -169,18 +169,18 @@ namespace pdr {
         }
 
     public:
-        safe_assumptions(prop_solver& s, expr_ref_vector const& assumptions):
+        safe_assumptions(prop_solver& s, expr_ref_vector const& assumptions): 
             s(s), m(s.m), m_atoms(assumptions), m_assumptions(m), m_num_proxies(0) {
               mk_safe(m_atoms);
         }
-
+        
         ~safe_assumptions() {
-        }
-
+        }    
+        
         expr_ref_vector const& atoms() const { return m_atoms; }
-
+        
         unsigned assumptions_size() const { return m_assumptions.size(); }
-
+        
         expr* assumptions(unsigned i) const { return m_assumptions[i]; }
 
         void undo_proxies(expr_ref_vector& es) {
@@ -193,7 +193,7 @@ namespace pdr {
                 }
             }
         }
-
+        
         void elim_proxies(expr_ref_vector& es) {
             expr_substitution sub(m, false, m.proofs_enabled());
             proof_ref pr(m);
@@ -221,7 +221,7 @@ namespace pdr {
                     es.pop_back();
                     --i;
                 }
-            }
+            }        
         }
     };
 
@@ -313,7 +313,7 @@ namespace pdr {
 
         lbool result = m_ctx->check(expr_atoms);
 
-        TRACE("pdr",
+        TRACE("pdr", 
                tout << mk_pp(m_pm.mk_and(expr_atoms), m) << "\n";
                tout << result << "\n";);
 
@@ -321,9 +321,9 @@ namespace pdr {
             m_ctx->get_model(*m_model);
             TRACE("pdr_verbose", model_pp(tout, **m_model); );
         }
-
-        if (result == l_false) {
-            unsigned core_size = m_ctx->get_unsat_core_size();
+        
+        if (result == l_false) { 
+            unsigned core_size = m_ctx->get_unsat_core_size(); 
             m_assumes_level = false;
             for (unsigned i = 0; i < core_size; ++i) {
                 if (m_level_atoms_set.contains(m_ctx->get_unsat_core_expr(i))) {
@@ -333,15 +333,15 @@ namespace pdr {
             }
         }
 
-        if (result == l_false  &&
-            m_core &&
-            m.proofs_enabled() &&
-            m_use_farkas    &&
+        if (result == l_false  && 
+            m_core && 
+            m.proofs_enabled() && 
+            m_use_farkas    && 
             !m_subset_based_core) {
             extract_theory_core(safe);
         }
         else if (result == l_false && m_core) {
-            extract_subset_core(safe);
+            extract_subset_core(safe);    
             SASSERT(expr_atoms.size() >= m_core->size());
         }
         m_core = 0;
@@ -351,7 +351,7 @@ namespace pdr {
     }
 
     void prop_solver::extract_subset_core(safe_assumptions& safe) {
-        unsigned core_size = m_ctx->get_unsat_core_size();
+        unsigned core_size = m_ctx->get_unsat_core_size(); 
         m_core->reset();
         for (unsigned i = 0; i < core_size; ++i) {
             expr * core_expr = m_ctx->get_unsat_core_expr(i);
@@ -364,17 +364,17 @@ namespace pdr {
                 continue;
             }
             m_core->push_back(to_app(core_expr));
-        }
+        }        
 
         safe.undo_proxies(*m_core);
 
-        TRACE("pdr",
+        TRACE("pdr", 
             tout << "core_exprs: ";
                 for (unsigned i = 0; i < core_size; ++i) {
                 tout << mk_pp(m_ctx->get_unsat_core_expr(i), m) << " ";
             }
             tout << "\n";
-            tout << "core: " << mk_pp(m_pm.mk_and(*m_core), m) << "\n";
+            tout << "core: " << mk_pp(m_pm.mk_and(*m_core), m) << "\n";              
         );
     }
 
@@ -393,24 +393,24 @@ namespace pdr {
         safe.elim_proxies(lemmas);
         fl.simplify_lemmas(lemmas); // redundant?
 
-        bool outside_of_logic =
+        bool outside_of_logic = 
             (m_fparams.m_arith_mode == AS_DIFF_LOGIC &&
              !is_difference_logic(m, lemmas.size(), lemmas.c_ptr())) ||
             (m_fparams.m_arith_mode == AS_UTVPI &&
              !is_utvpi_logic(m, lemmas.size(), lemmas.c_ptr()));
 
         if (outside_of_logic) {
-            IF_VERBOSE(2,
+            IF_VERBOSE(2, 
                        verbose_stream() << "not diff\n";
                        for (unsigned i = 0; i < lemmas.size(); ++i) {
                            verbose_stream() << mk_pp(lemmas[i].get(), m) << "\n";
                        });
             extract_subset_core(safe);
-        }
+        }        
         else {
 
-            IF_VERBOSE(2,
-                       verbose_stream() << "Lemmas\n";
+            IF_VERBOSE(2, 
+                       verbose_stream() << "Lemmas\n";            
                        for (unsigned i = 0; i < lemmas.size(); ++i) {
                            verbose_stream() << mk_pp(lemmas[i].get(), m) << "\n";
                        });
@@ -434,16 +434,16 @@ namespace pdr {
         return check_assumptions(asmp);
     }
 
-    lbool prop_solver::check_assumptions_and_formula(const expr_ref_vector & atoms, expr * form)
+    lbool prop_solver::check_assumptions_and_formula(const expr_ref_vector & atoms, expr * form) 
     {
         pdr::smt_context::scoped _scoped(*m_ctx);
         safe_assumptions safe(*this, atoms);
-        m_ctx->assert_expr(form);
+        m_ctx->assert_expr(form);    
         CTRACE("pdr", !m.is_true(form), tout << "check with formula: " << mk_pp(form, m) << "\n";);
         lbool res = check_safe_assumptions(safe, safe.atoms());
 
         //
-        // we don't have to undo model naming, as from the model
+        // we don't have to undo model naming, as from the model 
         // we extract the values for state variables directly
         //
         return res;
@@ -455,7 +455,7 @@ namespace pdr {
     void prop_solver::reset_statistics() {
     }
 
-
+    
 
 
 }

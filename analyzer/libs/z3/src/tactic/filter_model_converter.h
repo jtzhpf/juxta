@@ -25,11 +25,11 @@ class filter_model_converter : public model_converter {
     func_decl_ref_vector  m_decls;
 public:
     filter_model_converter(ast_manager & m):m_decls(m) {}
-
+    
     virtual ~filter_model_converter();
-
+    
     ast_manager & m() const { return m_decls.get_manager(); }
-
+    
     virtual void operator()(model_ref & md, unsigned goal_idx);
 
     virtual void operator()(model_ref & md) { operator()(md, 0); } // TODO: delete

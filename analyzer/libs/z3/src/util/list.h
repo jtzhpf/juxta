@@ -47,7 +47,7 @@ public:
         iterator operator++(int) { iterator tmp = *this; ++*this; return tmp; }
         bool operator==(iterator const & it) { return m_curr == it.m_curr; }
         bool operator!=(iterator const & it) { return m_curr != it.m_curr; }
-    };
+    };        
 
     typedef iterator const_iterator;
     iterator begin() const { return iterator(this); }

@@ -48,7 +48,7 @@ namespace datalog {
         class linear;
 
         bool is_linear() const;
-
+        
         void assert_expr(expr* e);
 
 
@@ -67,7 +67,7 @@ namespace datalog {
 
         void collect_statistics(statistics& st) const;
 
-        void reset_statistics();
+        void reset_statistics(); 
 
         expr_ref get_answer();
 

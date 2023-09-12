@@ -360,12 +360,12 @@ Class (f b) |-> 0
 Class (f c) |-> 0
 
 incremental_example1
-unsat core: 0 2 3
+unsat core: 0 2 3 
 unsat
 sat
-unsat core: 0 2 3
+unsat core: 0 2 3 
 unsat
-unsat core: 0 2 3
+unsat core: 0 2 3 
 unsat
 sat
 

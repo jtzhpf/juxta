@@ -47,28 +47,28 @@ Revision History:
 
 template<typename T>
 static T gcd_core(T u, T v) {
-    if (u == 0)
+    if (u == 0) 
         return v;
     if (v == 0)
         return u;
 
     int k;
-
+    
     for (k = 0; ((u | v) & 1) == 0; ++k) {
         u >>= 1;
         v >>= 1;
     }
-
+ 
     while ((u & 1) == 0)
         u >>= 1;
-
+ 
     do {
-        while ((v & 1) == 0)
+        while ((v & 1) == 0) 
             v >>= 1;
-
+ 
         if (u < v) {
             v -= u;
-        }
+        } 
         else {
             T diff = u - v;
             u = v;
@@ -76,7 +76,7 @@ static T gcd_core(T u, T v) {
         }
         v >>= 1;
     } while (v != 0);
-
+ 
     return u << k;
 }
 
@@ -132,7 +132,7 @@ mpz_manager<SYNCH>::mpz_manager():
     mpz_neg(m_int64_min, m_int64_max);
     mpz_sub_ui(m_int64_min, m_int64_min, 1);
 #endif
-
+    
     mpz one(1);
     set(m_two64, UINT64_MAX);
     add(m_two64, one, m_two64);
@@ -263,7 +263,7 @@ void mpz_manager<SYNCH>::set(mpz & a, int sign, unsigned sz) {
         reset(a);
         return;
     }
-
+    
     if (i == 1 && m_tmp[IDX]->m_digits[0] <= INT_MAX) {
         // m_tmp[IDX] fits is a fixnum
         del(a);
@@ -287,13 +287,13 @@ void mpz_manager<SYNCH>::set(mpz & a, char const * val) {
     char const * str = val;
     bool sign = false;
     while (str[0] == ' ') ++str;
-    if (str[0] == '-')
+    if (str[0] == '-') 
         sign = true;
     while (str[0]) {
         if ('0' <= str[0] && str[0] <= '9') {
             SASSERT(str[0] - '0' <= 9);
             mul(a, ten, tmp);
-            add(tmp, mk_z(str[0] - '0'), a);
+            add(tmp, mk_z(str[0] - '0'), a); 
         }
         ++str;
     }
@@ -347,7 +347,7 @@ void mpz_manager<SYNCH>::set(mpz & target, unsigned sz, digit_t const * digits) 
 	  mpz_set_ui(m_tmp, digits[i]);
 	  mpz_add(*target.m_ptr, *target.m_ptr, m_tmp);
 	}
-#endif
+#endif        
     }
 }
 
@@ -486,7 +486,7 @@ void mpz_manager<SYNCH>::quot_rem_core(mpz const & a, mpz const & b, mpz & q, mp
       +26 / +7 = +3, remainder is +5
       -26 / +7 = -3, remainder is -5
       +26 / -7 = -3, remainder is +5
-      -26 / -7 = +3, remainder is -5
+      -26 / -7 = +3, remainder is -5 
     */
     int sign_a;
     int sign_b;
@@ -496,7 +496,7 @@ void mpz_manager<SYNCH>::quot_rem_core(mpz const & a, mpz const & b, mpz & q, mp
     get_sign_cell<1>(b, sign_b, cell_b);
     if (cell_b->m_size > cell_a->m_size) {
         if (MODE == REM_ONLY || MODE == QUOT_AND_REM)
-            set(r, a);
+            set(r, a); 
         if (MODE == QUOT_ONLY || MODE == QUOT_AND_REM)
             reset(q);
         return;
@@ -551,7 +551,7 @@ void mpz_manager<SYNCH>::big_div(mpz const & a, mpz const & b, mpz & c) {
     mk_big(c);
     mpz_tdiv_q(*c.m_ptr, *arg0, *arg1);
 #endif
-}
+} 
 
 template<bool SYNCH>
 void mpz_manager<SYNCH>::big_rem(mpz const & a, mpz const & b, mpz & c) {
@@ -621,19 +621,19 @@ void mpz_manager<SYNCH>::gcd(mpz const & a, mpz const & b, mpz & c) {
 
         while (true) {
             machine_div2k(v, k_v);
-
+ 
             if (lt(u, v)) {
                 sub(v, u, v);
-            }
+            } 
             else {
                 sub(u, v, diff);
                 swap(u, v);
                 swap(v, diff);
             }
-
+            
             if (is_zero(v) || is_one(v))
                 break;
-
+            
             // reset least significant bit
             if (is_small(v))
                 v.m_val &= ~1;
@@ -689,10 +689,10 @@ void mpz_manager<SYNCH>::gcd(mpz const & a, mpz const & b, mpz & c) {
             // Basic idea:
             // compute t = 2^e*v  such that t <= u < 2t
             // u := min{u - t, 2t - u}
-            //
+            // 
             // The assignment u := min{u - t, 2t - u}
             // can be replaced with u := u - t
-            //
+            // 
             // Since u and v are positive, we have:
             //    2^{log2(u)}     <= u < 2^{(log2(u) + 1)}
             //    2^{log2(v)}     <= v < 2^{(log2(v) + 1)}
@@ -700,7 +700,7 @@ void mpz_manager<SYNCH>::gcd(mpz const & a, mpz const & b, mpz & c) {
             //    2^{log2(v)}*2^{log2(u)-log2(v)} <= v*2^{log2(u)-log2(v)} < 2^{log2(v) + 1}*2^{log2(u)-log2(v)}
             //  -->
             //    2^{log2(u)} <= v*2^{log2(u)-log2(v)} < 2^{log2(u) + 1}
-            //
+            //  
             // Now, let t be v*2^{log2(u)-log2(v)}
             // If t <= u, then we found t
             // Otherwise t = t div 2
@@ -714,7 +714,7 @@ void mpz_manager<SYNCH>::gcd(mpz const & a, mpz const & b, mpz & c) {
                 // t is too big
                 machine_div2k(t, 1);
                 // Now, u1 contains u - 2t
-                neg(u1);
+                neg(u1); 
                 // Now, u1 contains 2t - u
                 sub(u, t, u2); // u2 := u - t
             }
@@ -740,7 +740,7 @@ void mpz_manager<SYNCH>::gcd(mpz const & a, mpz const & b, mpz & c) {
 #ifdef LEHMER_GCD
         // For now, it only works if sizeof(digit_t) == sizeof(unsigned)
         COMPILE_TIME_ASSERT(sizeof(digit_t) == sizeof(unsigned));
-
+        
         int64 a_hat, b_hat, A, B, C, D, T, q, a_sz, b_sz;
         mpz a1, b1, t, r, tmp;
         set(a1, a);
@@ -775,7 +775,7 @@ void mpz_manager<SYNCH>::gcd(mpz const & a, mpz const & b, mpz & c) {
             SASSERT(b_sz <= a_sz);
             a_hat = a1.m_ptr->m_digits[a_sz - 1];
             b_hat = (b_sz == a_sz) ? b1.m_ptr->m_digits[b_sz - 1] : 0;
-            A = 1;
+            A = 1; 
             B = 0;
             C = 0;
             D = 1;
@@ -811,7 +811,7 @@ void mpz_manager<SYNCH>::gcd(mpz const & a, mpz const & b, mpz & c) {
             else {
                 // t <- A*a1
                 set(tmp, A);
-                mul(a1, tmp, t);
+                mul(a1, tmp, t); 
                 // t <- t + B*b1
                 set(tmp, B);
                 addmul(t, tmp, b1, t);
@@ -848,7 +848,7 @@ template<bool SYNCH>
 struct mpz_manager<SYNCH>::sz_lt {
     mpz_manager<SYNCH> & m;
     mpz const *          m_as;
-
+    
     sz_lt(mpz_manager<SYNCH> & _m, mpz const * as):m(_m), m_as(as) {}
 
     bool operator()(unsigned p1, unsigned p2) {
@@ -1019,7 +1019,7 @@ void mpz_manager<SYNCH>::lcm(mpz const & a, mpz const & b, mpz & c) {
             TRACE("lcm_bug", tout << "4. lcm(" << to_string(a) << ", " << to_string(b) << ") = " << to_string(c) << "\n";);
         }
         else {
-            // c contains gcd(a, b)
+            // c contains gcd(a, b)   
             // so c divides a, and machine_div(a, c) is equal to div(a, c)
             machine_div(a, r, r);
             mul(r, b, c);
@@ -1190,7 +1190,7 @@ void mpz_manager<SYNCH>::bitwise_not(unsigned sz, mpz const & a, mpz & c) {
             add(c, tmp, c); // c += m * v
             mul(m, m_two64, m);
             div(a1, m_two64, a1);
-            sz -= (sz<64) ? sz : 64;
+            sz -= (sz<64) ? sz : 64; 
         }
         del(a1); del(a2); del(m); del(tmp);
         TRACE("bitwise_not", tout << "sz: " << sz << " a: " << to_string(a) << " c: " << to_string(c) << "\n";);
@@ -1303,7 +1303,7 @@ bool mpz_manager<SYNCH>::is_int64(mpz const & a) const {
     if (is_small(a))
         return true;
 #ifndef _MP_GMP
-    if (!is_abs_uint64(a))
+    if (!is_abs_uint64(a)) 
         return false;
     uint64 num = big_abs_to_uint64(a);
     uint64 msb = static_cast<uint64>(1) << 63;
@@ -1327,7 +1327,7 @@ bool mpz_manager<SYNCH>::is_int64(mpz const & a) const {
 
 template<bool SYNCH>
 uint64 mpz_manager<SYNCH>::get_uint64(mpz const & a) const {
-    if (is_small(a))
+    if (is_small(a)) 
         return static_cast<uint64>(a.m_val);
 #ifndef _MP_GMP
     SASSERT(a.m_ptr->m_size > 0);
@@ -1424,7 +1424,7 @@ void mpz_manager<SYNCH>::display(std::ostream & out, mpz const & a) const {
         mpz_get_str(buffer.c_ptr(), 10, *a.m_ptr);
         out << buffer.c_ptr();
 #endif
-    }
+    } 
 }
 
 template<bool SYNCH>
@@ -1627,7 +1627,7 @@ void mpz_manager<SYNCH>::normalize(mpz & a) {
         reset(a);
         return;
     }
-
+    
     if (i == 1 && ds[0] <= INT_MAX) {
         // a is small
         int val = a.m_val < 0 ? -static_cast<int>(ds[0]) : static_cast<int>(ds[0]);
@@ -1696,7 +1696,7 @@ void mpz_manager<SYNCH>::machine_div2k(mpz & a, unsigned k) {
         }
         ds[i] >>= bit_shift;
     }
-
+    
     c->m_size = new_sz;
     normalize(a);
 #else
@@ -1707,7 +1707,7 @@ void mpz_manager<SYNCH>::machine_div2k(mpz & a, unsigned k) {
     mk_big(a);
     mpz_swap(*a.m_ptr, m_tmp);
     MPZ_END_CRITICAL();
-#endif
+#endif    
 }
 
 template<bool SYNCH>
@@ -1725,13 +1725,13 @@ void mpz_manager<SYNCH>::mul2k(mpz & a, unsigned k) {
     unsigned old_sz      = is_small(a) ? 1 : a.m_ptr->m_size;
     unsigned new_sz      = old_sz + word_shift + 1;
     ensure_capacity(a, new_sz);
-    TRACE("mpz_mul2k", tout << "word_shift: " << word_shift << "\nbit_shift: " << bit_shift << "\nold_sz: " << old_sz << "\nnew_sz: " << new_sz
+    TRACE("mpz_mul2k", tout << "word_shift: " << word_shift << "\nbit_shift: " << bit_shift << "\nold_sz: " << old_sz << "\nnew_sz: " << new_sz 
           << "\na after ensure capacity:\n" << to_string(a) << "\n";);
     SASSERT(!is_small(a));
     mpz_cell * cell_a    = a.m_ptr;
     old_sz = cell_a->m_size;
     digit_t * ds         = cell_a->m_digits;
-    for (unsigned i = old_sz; i < new_sz; i++)
+    for (unsigned i = old_sz; i < new_sz; i++) 
         ds[i] = 0;
     cell_a->m_size       = new_sz;
 
@@ -1810,7 +1810,7 @@ unsigned mpz_manager<SYNCH>::power_of_two_multiple(mpz const & a) {
     mpz_cell * c        = a.m_ptr;
     unsigned sz         = c->m_size;
     unsigned r          = 0;
-    digit_t * source    = c->m_digits;
+    digit_t * source    = c->m_digits; 
     for (unsigned i = 0; i < sz; i++) {
         if (source[i] != 0) {
             digit_t v = source[i];
@@ -1818,9 +1818,9 @@ unsigned mpz_manager<SYNCH>::power_of_two_multiple(mpz const & a) {
                 // TODO: we can remove this if after we move to MPN
                 // In MPN the digit_t is always an unsigned integer
                 if (static_cast<uint64>(v) % (static_cast<uint64>(1) << 32) == 0) {
-                    r += 32;
+                    r += 32;                     
                     v = static_cast<digit_t>(static_cast<uint64>(v) / (static_cast<uint64>(1) << 32));
-                }
+                }                                
             }
             COUNT_DIGIT_RIGHT_ZEROS();
             return r;
@@ -1843,8 +1843,8 @@ unsigned mpz_manager<SYNCH>::log2(mpz const & a) {
     COMPILE_TIME_ASSERT(sizeof(digit_t) == 8 || sizeof(digit_t) == 4);
     mpz_cell * c     = a.m_ptr;
     unsigned sz      = c->m_size;
-    digit_t * ds     = c->m_digits;
-    if (sizeof(digit_t) == 8)
+    digit_t * ds     = c->m_digits; 
+    if (sizeof(digit_t) == 8) 
         return (sz - 1)*64 + uint64_log2(ds[sz-1]);
     else
         return (sz - 1)*32 + ::log2(static_cast<unsigned>(ds[sz-1]));
@@ -1865,7 +1865,7 @@ unsigned mpz_manager<SYNCH>::mlog2(mpz const & a) {
     COMPILE_TIME_ASSERT(sizeof(digit_t) == 8 || sizeof(digit_t) == 4);
     mpz_cell * c     = a.m_ptr;
     unsigned sz      = c->m_size;
-    digit_t * ds     = c->m_digits;
+    digit_t * ds     = c->m_digits; 
     if (sizeof(digit_t) == 8)
         return (sz - 1)*64 + uint64_log2(ds[sz-1]);
     else
@@ -1880,7 +1880,7 @@ unsigned mpz_manager<SYNCH>::mlog2(mpz const & a) {
 
 template<bool SYNCH>
 unsigned mpz_manager<SYNCH>::bitsize(mpz const & a) {
-    if (is_nonneg(a))
+    if (is_nonneg(a)) 
         return log2(a) + 1;
     else
         return mlog2(a) + 1;
@@ -1922,12 +1922,12 @@ bool mpz_manager<SYNCH>::is_perfect_square(mpz const & a, mpz & root) {
             result = false;
             break;
         }
-
+        
         add(hi, lo, tmp);
         div(tmp, mpz(2), mid);
-
+        
         SASSERT(lt(lo, mid) && lt(mid, hi));
-
+        
         mul(mid, mid, sq_mid);
 
         if (gt(sq_mid, a)) {
@@ -1963,7 +1963,7 @@ bool mpz_manager<SYNCH>::root(mpz & a, unsigned n) {
     if (is_zero(a)) {
         return true; // precise
     }
-
+    
     // Initial approximation
     //
     // We have that:
@@ -1978,7 +1978,7 @@ bool mpz_manager<SYNCH>::root(mpz & a, unsigned n) {
     mpz upper;
     mpz mid;
     mpz mid_n;
-
+    
     if (is_pos(a)) {
         unsigned k = log2(a);
         power(mpz(2), div_l(k, n),     lower);
@@ -2074,7 +2074,7 @@ bool mpz_manager<SYNCH>::divides(mpz const & a, mpz const & b) {
     _scoped_numeral<mpz_manager<SYNCH> > tmp(*this);
     bool r;
     if (is_zero(a)) {
-        // I assume 0 | 0.
+        // I assume 0 | 0. 
         // Remark a|b is a shorthand for (exists x. a x = b)
         // If b is zero, any x will do. If b != 0, then a does not divide b
         r = is_zero(b);

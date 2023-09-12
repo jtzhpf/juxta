@@ -49,7 +49,7 @@ namespace smt {
         statistics() {
             reset();
         }
-
+        
         void reset();
     };
 };

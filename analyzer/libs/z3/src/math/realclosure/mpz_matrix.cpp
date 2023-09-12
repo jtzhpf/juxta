@@ -13,12 +13,12 @@ Abstract:
     implement Sign Determination (Algorithm 10.11) in the Book:
         "Algorithms in real algebraic geometry", Basu, Pollack, Roy
 
-    Design choices:
+    Design choices: 
       - Dense representation. The matrices in Alg 10.11 are small and dense.
       - Integer coefficients instead of rational coefficients (it only complicates the solver a little bit).
         Remark: in Algorithm 10.11, the coefficients of the input matrices are always in {-1, 0, 1}.
         During solving, bigger coefficients are produced, but they are usually very small. It may be
-        an overkill to use mpz instead of int. We use mpz just to be safe.
+        an overkill to use mpz instead of int. We use mpz just to be safe. 
         Remark: We do not use rational arithmetic. The solver is slightly more complicated with integers, but is saves space.
 
 Author:
@@ -79,15 +79,15 @@ void mpz_matrix_manager::tensor_product(mpz_matrix const & A, mpz_matrix const &
     mk(A.m * B.m, A.n * B.n, CC);
     for (unsigned i = 0; i < CC.m(); i++)
         for (unsigned j = 0; j < CC.n(); j++)
-            nm().mul(A(i / B.m, j / B.n),
-                     B(i % B.m, j % B.n),
+            nm().mul(A(i / B.m, j / B.n), 
+                     B(i % B.m, j % B.n), 
                      CC(i, j));
     C.swap(CC);
 }
 
 void mpz_matrix_manager::swap_rows(mpz_matrix & A, unsigned i, unsigned j) {
     if (i != j) {
-        for (unsigned k = 0; k < A.n; k++)
+        for (unsigned k = 0; k < A.n; k++) 
             ::swap(A(i, k), A(j, k));
     }
 }
@@ -145,31 +145,31 @@ bool mpz_matrix_manager::normalize_row(mpz * A_i, unsigned n, mpz * b_i, bool in
                k2
                |
                V
-     X X ... X X ... X
-     0 X ... X X ... X
+     X X ... X X ... X   
+     0 X ... X X ... X 
      ... ... X X ... X
 k1=> 0 0 ... 0 X ... X
      0 0 ... 0 X ... X
      ... ... 0 X ... X
-     0 0 ... 0 X ... X
+     0 0 ... 0 X ... X 
 
-     It will "zero" the elements a_{k1+1, k2} ... a_{m, k2} by addining multiples of the row k1 to multiples of the
+     It will "zero" the elements a_{k1+1, k2} ... a_{m, k2} by addining multiples of the row k1 to multiples of the 
      rows k1+1, ..., m
 
-     The resultant matrix will look like
+     The resultant matrix will look like 
 
                k2
                |
                V
-     X X ... X X ... X
-     0 X ... X X ... X
+     X X ... X X ... X   
+     0 X ... X X ... X 
      ... ... X X ... X
 k1=> 0 0 ... 0 X ... X
      0 0 ... 0 0 ... X
      ... ... 0 0 ... X
-     0 0 ... 0 0 ... X
-
-
+     0 0 ... 0 0 ... X 
+     
+     
      If b != 0, then the transformations are also applied to b.
      If int_solver == true and b != 0, then the method returns false if when
      performing the transformations it detected that it is impossible to
@@ -221,12 +221,12 @@ bool mpz_matrix_manager::solve_core(mpz_matrix const & _A, mpz * b, bool int_sol
     scoped_mpz_matrix A(*this);
     set(A, _A);
     for (unsigned k = 0; k < A.m(); k++) {
-        TRACE("mpz_matrix",
+        TRACE("mpz_matrix", 
               tout << "k: " << k << "\n" << A;
               tout << "b:";
               for (unsigned i = 0; i < A.m(); i++) {
                   tout << " ";
-                  nm().display(tout, b[i]);
+                  nm().display(tout, b[i]); 
               }
               tout << "\n";);
         // find pivot
@@ -240,7 +240,7 @@ bool mpz_matrix_manager::solve_core(mpz_matrix const & _A, mpz * b, bool int_sol
         // swap rows k and i
         swap_rows(A, k, i);
         swap(b[k], b[i]);
-        //
+        // 
         if (!eliminate(A, b, k, k, int_solver))
             return false;
     }
@@ -263,7 +263,7 @@ bool mpz_matrix_manager::solve_core(mpz_matrix const & _A, mpz * b, bool int_sol
             }
         }
         if (!int_solver) {
-            // REMARK:
+            // REMARK: 
             // For the sign determination algorithm, we only use int_solver == true.
             //
             // TODO: implement backward substitution when int_solver == false
@@ -306,7 +306,7 @@ bool mpz_matrix_manager::solve(mpz_matrix const & A, int * b, int const * c) {
 
 void mpz_matrix_manager::filter_cols(mpz_matrix const & A, unsigned num_cols, unsigned const * cols, mpz_matrix & B) {
     SASSERT(num_cols <= A.n);
-    // Check pre-condition:
+    // Check pre-condition: 
     //   - All elements in cols are smaller than A.n
     //   - cols is sorted
     //   - cols does not contain repeated elements
@@ -318,14 +318,14 @@ void mpz_matrix_manager::filter_cols(mpz_matrix const & A, unsigned num_cols, un
         });
     if (num_cols == A.n) {
         // keep everything
-        set(B, A);
+        set(B, A); 
     }
     else {
         SASSERT(num_cols < A.n);
         scoped_mpz_matrix C(*this);
         mk(A.m, num_cols, C);
-        for (unsigned i = 0; i < A.m; i++)
-            for (unsigned j = 0; j < num_cols; j++)
+        for (unsigned i = 0; i < A.m; i++) 
+            for (unsigned j = 0; j < num_cols; j++) 
                 nm().set(C(i, j), A(i, cols[j]));
         B.swap(C);
     }
@@ -333,7 +333,7 @@ void mpz_matrix_manager::filter_cols(mpz_matrix const & A, unsigned num_cols, un
 
 void mpz_matrix_manager::permute_rows(mpz_matrix const & A, unsigned const * p, mpz_matrix & B) {
     // Check if p is really a permutation
-    DEBUG_CODE({
+    DEBUG_CODE({ 
             buffer<bool> seen;
             seen.resize(A.m, false);
             for (unsigned i = 0; i < A.m; i++) {
@@ -344,7 +344,7 @@ void mpz_matrix_manager::permute_rows(mpz_matrix const & A, unsigned const * p, 
         });
     scoped_mpz_matrix C(*this);
     mk(A.m, A.n, C);
-    for (unsigned i = 0; i < A.m; i++)
+    for (unsigned i = 0; i < A.m; i++) 
         for (unsigned j = 0; j < A.n; j++)
             nm().set(C(i, j), A(p[i], j));
     B.swap(C);
@@ -381,7 +381,7 @@ unsigned mpz_matrix_manager::linear_independent_rows(mpz_matrix const & _A, unsi
         // swap rows k and pivot
         swap_rows(A, k1, pivot);
         std::swap(rows[k1], rows[pivot]);
-        //
+        // 
         r[r_sz] = rows[k1];
         r_sz++;
         if (r_sz >= A.n())
@@ -411,7 +411,7 @@ void mpz_matrix_manager::display(std::ostream & out, mpz_matrix const & A, unsig
             std::string s = nm().to_string(A(i, j));
             if (s.size() < cell_width) {
                 unsigned space = cell_width - static_cast<unsigned>(s.size());
-                for (unsigned k = 0; k < space; k++)
+                for (unsigned k = 0; k < space; k++) 
                     out << " ";
             }
             out << s;

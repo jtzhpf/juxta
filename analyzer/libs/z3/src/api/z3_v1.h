@@ -16,7 +16,7 @@ Author:
     Leonardo de Moura (leonardo) 2011-09-22
 
 Notes:
-
+    
 --*/
 #ifndef _Z3_V1_H_
 #define _Z3_V1_H_
@@ -36,8 +36,8 @@ Notes:
 #define Z3_ARRAY_TYPE          Z3_ARRAY_SORT
 #define Z3_TUPLE_TYPE          Z3_DATATYPE_SORT
 #define Z3_UNKNOWN_TYPE        Z3_UNKNOWN_SORT
-#define Z3_CONST_DECL_AST      Z3_FUNC_DECL_AST
-#define Z3_TYPE_AST            Z3_SORT_AST
+#define Z3_CONST_DECL_AST      Z3_FUNC_DECL_AST    
+#define Z3_TYPE_AST            Z3_SORT_AST          
 #define Z3_SORT_ERROR          Z3_TYPE_ERROR
 #define Z3_mk_uninterpreted_type Z3_mk_uninterpreted_sort
 #define Z3_mk_bool_type        Z3_mk_bool_sort

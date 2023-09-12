@@ -31,7 +31,7 @@ namespace nlarith {
         Each branch in a split comprises of:
         - preds    - a sequence of predicates used for the branching.
         - branches - a sequence of branch side conditions
-        - subst    - a sequence of substitutions that replace 'preds' by formulas
+        - subst    - a sequence of substitutions that replace 'preds' by formulas 
                      not containing the eliminated variable
         - constraints - a sequence of side constraints to add to the main formula.
     */
@@ -69,9 +69,9 @@ namespace nlarith {
         expr_ref_vector const&         preds() const  { return m_preds; }
         vector<expr_ref_vector> const& subst() const  { return m_subst; }
         expr_ref_vector const&         constraints() const { return m_constraints; }
-        void reset() {
-            m_branches.reset(); m_preds.reset(); m_subst.reset();
-            m_constraints.reset(); m_defs.reset();
+        void reset() { 
+            m_branches.reset(); m_preds.reset(); m_subst.reset(); 
+            m_constraints.reset(); m_defs.reset(); 
             m_a.reset(); m_b.reset(); m_c.reset();
         }
 
@@ -97,14 +97,14 @@ namespace nlarith {
         bool create_branches(app* x, unsigned nl, expr* const* lits, branch_conditions& bc);
         /**
            \brief Extract non-linear variables from ground formula.
-
+           
            \requires a ground formula.
         */
         void extract_non_linear(expr* e, ptr_vector<app>& nl_vars);
 
         /**
            \brief literal sets. Opaque state.
-        */
+        */                       
 
         class literal_set;
 
@@ -114,7 +114,7 @@ namespace nlarith {
 
         /**
            \brief Sign-based branching. v2.
-        */
+        */                       
         typedef obj_hashtable<app> atoms;
 
         class eval {
@@ -124,7 +124,7 @@ namespace nlarith {
         };
 
         enum atom_update { INSERT, REMOVE };
-
+        
         class branch {
         public:
             virtual ~branch() {}
@@ -141,8 +141,8 @@ namespace nlarith {
             \brief given selected literals, generate branch conditions.
         */
         void get_sign_branches(literal_set& lits, eval& eval, ptr_vector<branch>& branches);
-
-
+        
+        
 
     };
 

@@ -53,7 +53,7 @@ namespace smt {
         virtual ~simple_relevancy_eh() {}
         virtual void operator()(relevancy_propagator & rp);
     };
-
+    
     /**
        \brief Propagate relevancy to m_target if both m_source1 and m_source2 are relevant.
      */
@@ -69,9 +69,9 @@ namespace smt {
 
     /**
        \brief Relevancy propagator.
-
+       
        The relevancy propagation constraints are specified to the
-       relevancy propagator using the methods:
+       relevancy propagator using the methods: 
           - add_handler
           - add_watch
        This class also provides helper methods for specifying commonly used constraints.
@@ -79,10 +79,10 @@ namespace smt {
        It uses the following API from smt::context
        - find_assignment(expr * n)
           - find_enode(expr * n)
-
+          
        It notifies smt::context that an expression became relevant by invoking
           - relevant_eh(expr * n)
-
+          
        smt::context notifies the relevancy_propagator that a literal was assigned by
        invoking assign_eh(n, bool val)
     */
@@ -99,7 +99,7 @@ namespace smt {
            \brief Install an event handler that is invoked whenever n is marked as relevant.
         */
         virtual void add_handler(expr * n, relevancy_eh * eh) = 0;
-
+        
         /**
            \brief Install an event handler that is invoked whenever n is assigned to the given value.
 
@@ -140,12 +140,12 @@ namespace smt {
            \brief Return true if it can propagate relevancy.
         */
         virtual bool can_propagate() const = 0;
-
+        
         /**
            \brief Create a backtracking point
         */
         virtual void push() = 0;
-
+        
         /**
            \brief Backtrack.
         */
@@ -159,7 +159,7 @@ namespace smt {
 #ifdef Z3DEBUG
         virtual bool check_relevancy(expr_ref_vector const & v) const = 0;
         virtual bool check_relevancy_or(app * n, bool root) const = 0;
-#endif
+#endif     
         // --------------------------
         //
         // Helper method
@@ -180,16 +180,16 @@ namespace smt {
            \Brief Return the ast_manager for the smt::context that owns this propagator.
         */
         ast_manager & get_manager() const;
-
+        
         template<typename Eh>
         relevancy_eh * mk_relevancy_eh(Eh const & eh) { return new (get_region()) Eh(eh);  }
-
+        
         /**
            \brief Creates an event handler that marks target as relevant whenever src is marked
            as relevant.
         */
         void add_dependency(expr * src, expr * target);
-
+        
         relevancy_eh * mk_or_relevancy_eh(app * n);
         relevancy_eh * mk_and_relevancy_eh(app * n);
         relevancy_eh * mk_ite_relevancy_eh(app * n);

@@ -37,7 +37,7 @@ namespace datalog {
             /**
                Create uninitialized rel_spec.
             */
-            rel_spec() {}
+            rel_spec() {} 
             /**
                \c inner_kind==null_family_id means we will not specify a relation kind when requesting
                the relation object from the relation_manager.
@@ -69,17 +69,17 @@ namespace datalog {
 
         family_id get_relation_kind(sieve_relation & r, const bool * inner_columns);
 
-        void extract_inner_columns(const relation_signature & s, relation_plugin & inner,
+        void extract_inner_columns(const relation_signature & s, relation_plugin & inner, 
             svector<bool> & inner_columns);
         void extract_inner_signature(const relation_signature & s, relation_signature & inner_sig);
-        void collect_inner_signature(const relation_signature & s, const svector<bool> & inner_columns,
+        void collect_inner_signature(const relation_signature & s, const svector<bool> & inner_columns, 
             relation_signature & inner_sig);
     public:
         static symbol get_name() { return symbol("sieve_relation"); }
         static sieve_relation_plugin& get_plugin(relation_manager & rmgr);
 
         static sieve_relation& get(relation_base& r);
-        static sieve_relation const & get(relation_base const& r);
+        static sieve_relation const & get(relation_base const& r);   
         static sieve_relation* get(relation_base* r);
         static sieve_relation const* get(relation_base const* r);
 
@@ -87,16 +87,16 @@ namespace datalog {
 
         virtual void initialize(family_id fid);
 
-        family_id get_relation_kind(const relation_signature & sig, const bool * inner_columns,
+        family_id get_relation_kind(const relation_signature & sig, const bool * inner_columns, 
             family_id inner_kind);
-        family_id get_relation_kind(const relation_signature & sig, const svector<bool> & inner_columns,
+        family_id get_relation_kind(const relation_signature & sig, const svector<bool> & inner_columns, 
                 family_id inner_kind) {
             SASSERT(sig.size()==inner_columns.size());
             return get_relation_kind(sig, inner_columns.c_ptr(), inner_kind);
         }
 
         virtual bool can_handle_signature(const relation_signature & s);
-
+        
         virtual relation_base * mk_empty(const relation_signature & s);
         sieve_relation * mk_empty(const sieve_relation & original);
         virtual relation_base * mk_empty(const relation_base & original);
@@ -107,9 +107,9 @@ namespace datalog {
         sieve_relation * mk_full(func_decl* p, const relation_signature & s, relation_plugin & inner_plugin);
 
 
-        sieve_relation * mk_from_inner(const relation_signature & s, const bool * inner_columns,
+        sieve_relation * mk_from_inner(const relation_signature & s, const bool * inner_columns, 
             relation_base * inner_rel);
-        sieve_relation * mk_from_inner(const relation_signature & s, const svector<bool> inner_columns,
+        sieve_relation * mk_from_inner(const relation_signature & s, const svector<bool> inner_columns, 
                 relation_base * inner_rel) {
             SASSERT(inner_columns.size()==s.size());
             return mk_from_inner(s, inner_columns.c_ptr(), inner_rel);
@@ -119,19 +119,19 @@ namespace datalog {
 
         virtual relation_join_fn * mk_join_fn(const relation_base & t1, const relation_base & t2,
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2);
-        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
-        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len,
+        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle);
-        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src,
+        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
-        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * identical_cols);
-        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value,
+        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value, 
             unsigned col);
         virtual relation_mutator_fn * mk_filter_interpreted_fn(const relation_base & t, app * condition);
-        virtual relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t,
-            const relation_base & negated_obj, unsigned joined_col_cnt,
+        virtual relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t, 
+            const relation_base & negated_obj, unsigned joined_col_cnt, 
             const unsigned * t_cols, const unsigned * negated_cols);
     };
 
@@ -162,12 +162,12 @@ namespace datalog {
             const bool * inner_columns, relation_base * inner);
 
     public:
-        sieve_relation_plugin & get_plugin() const {
+        sieve_relation_plugin & get_plugin() const { 
             return static_cast<sieve_relation_plugin &>(relation_base::get_plugin());
         }
 
         bool is_inner_col(unsigned idx) const { return m_sig2inner[idx]!=UINT_MAX; }
-        unsigned get_inner_col(unsigned idx) const {
+        unsigned get_inner_col(unsigned idx) const { 
             SASSERT(is_inner_col(idx));
             return m_sig2inner[idx];
         }

@@ -56,14 +56,14 @@ public:
     ~optional() {
         destroy();
     }
-
+    
     static optional const & undef() { static optional u;  return u; }
-
+ 
     bool initialized() const { return m_initialized == 1; }
     operator bool() const { return m_initialized == 1; }
     bool operator!() const { return m_initialized == 0; }
-
-    T * get() const {
+    
+    T * get() const { 
         if (m_initialized == 1) {
             return reinterpret_cast<T *>(m_obj);
         }
@@ -92,7 +92,7 @@ public:
         SASSERT(m_initialized==1);
         return *reinterpret_cast<T const*>(m_obj);
     }
-
+    
     T & operator*() {
         SASSERT(m_initialized==1);
         return *reinterpret_cast<T *>(m_obj);
@@ -126,11 +126,11 @@ class optional<T*> {
     static optional m_undef;
 
 public:
-
+    
     optional():m_ptr(0) {}
 
     explicit optional(T * val):m_ptr(val) {}
-
+    
     optional(const optional & val):m_ptr(val.m_ptr) {}
 
     static optional const & undef() { return m_undef; }
@@ -156,7 +156,7 @@ public:
     T ** operator->() { return &m_ptr; }
 
     T * operator*() const { return m_ptr; }
-
+    
     T * & operator*() { return m_ptr; }
 };
 

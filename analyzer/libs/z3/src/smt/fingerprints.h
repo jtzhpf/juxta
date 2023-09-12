@@ -40,9 +40,9 @@ namespace smt {
         enode * const * get_args() const { return m_args; }
         enode * get_arg(unsigned idx) const { SASSERT(idx < m_num_args); return m_args[idx]; }
     };
-
+    
     class fingerprint_set {
-
+        
         struct fingerprint_khasher {
             unsigned operator()(fingerprint const * f) const { return f->get_data_hash(); }
         };

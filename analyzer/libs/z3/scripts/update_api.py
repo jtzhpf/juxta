@@ -1,7 +1,7 @@
 ############################################
 # Copyright (c) 2012 Microsoft Corporation
-#
-# Scripts for generating Makefiles and Visual
+# 
+# Scripts for generating Makefiles and Visual 
 # Studio project files.
 #
 # Author: Leonardo de Moura (leonardo)
@@ -14,7 +14,7 @@ from mk_exception import *
 # This file is a big HACK.
 # It started as small simple script.
 # Now, it is too big, and is invoked from mk_make.py
-# The communication uses
+# The communication uses 
 #
 ##########################################################
 
@@ -148,7 +148,7 @@ Type2Dotnet = { VOID : 'void', VOID_PTR : 'IntPtr', INT : 'int', UINT : 'uint', 
 
 # Mapping to Java types
 Type2Java = { VOID : 'void', VOID_PTR : 'long', INT : 'int', UINT : 'int', INT64 : 'long', UINT64 : 'long', DOUBLE : 'double',
-              STRING : 'String', STRING_PTR : 'StringPtr',
+              STRING : 'String', STRING_PTR : 'StringPtr', 
               BOOL : 'boolean', SYMBOL : 'long', PRINT_MODE : 'int', ERROR_CODE : 'int'}
 
 Type2JavaW = { VOID : 'void', VOID_PTR : 'jlong', INT : 'jint', UINT : 'jint', INT64 : 'jlong', UINT64 : 'jlong', DOUBLE : 'jdouble',
@@ -683,18 +683,18 @@ def mk_java():
             elif k == IN_ARRAY or k == INOUT_ARRAY:
                 if param_type(param) == INT or param_type(param) == UINT:
                     java_wrapper.write('  %s * _a%s = (%s*) jenv->GetIntArrayElements(a%s, NULL);\n' % (type2str(param_type(param)), i, type2str(param_type(param)), i))
-                else:
+                else:                    
                     java_wrapper.write('  GETLONGAELEMS(%s, a%s, _a%s);\n' % (type2str(param_type(param)), i, i))
             elif k == OUT_ARRAY:
-                java_wrapper.write('  %s * _a%s = (%s *) malloc(((unsigned)a%s) * sizeof(%s));\n' % (type2str(param_type(param)),
-                                                                                                     i,
-                                                                                                     type2str(param_type(param)),
-                                                                                                     param_array_capacity_pos(param),
+                java_wrapper.write('  %s * _a%s = (%s *) malloc(((unsigned)a%s) * sizeof(%s));\n' % (type2str(param_type(param)), 
+                                                                                                     i, 
+                                                                                                     type2str(param_type(param)), 
+                                                                                                     param_array_capacity_pos(param), 
                                                                                                      type2str(param_type(param))))
                 if param_type(param) == INT or param_type(param) == UINT:
                     java_wrapper.write('  jenv->GetIntArrayRegion(a%s, 0, (jsize)a%s, (jint*)_a%s);\n' % (i, param_array_capacity_pos(param), i))
                 else:
-                    java_wrapper.write('  GETLONGAREGION(%s, a%s, 0, a%s, _a%s);\n' % (type2str(param_type(param)), i, param_array_capacity_pos(param), i))
+                    java_wrapper.write('  GETLONGAREGION(%s, a%s, 0, a%s, _a%s);\n' % (type2str(param_type(param)), i, param_array_capacity_pos(param), i))    
             elif k == IN and param_type(param) == STRING:
                 java_wrapper.write('  Z3_string _a%s = (Z3_string) jenv->GetStringUTFChars(a%s, NULL);\n' % (i, i))
             elif k == OUT_MANAGED_ARRAY:
@@ -725,7 +725,7 @@ def mk_java():
                 java_wrapper.write('(%s)a%i' % (param2str(param), i))
             i = i + 1
         java_wrapper.write(');\n')
-        # cleanup
+        # cleanup 
         i = 0
         for param in params:
             k = param_kind(param)
@@ -761,7 +761,7 @@ def mk_java():
         if result == STRING:
             java_wrapper.write('  return jenv->NewStringUTF(result);\n')
         elif result != VOID:
-            java_wrapper.write('  return (%s) result;\n' % type2javaw(result))
+            java_wrapper.write('  return (%s) result;\n' % type2javaw(result))        
         java_wrapper.write('}\n')
     java_wrapper.write('#ifdef __cplusplus\n')
     java_wrapper.write('}\n')
@@ -983,7 +983,7 @@ def def_API(name, result, params):
                 error ("unsupported parameter for %s, %s" % (ty, name, p))
         elif kind == OUT_ARRAY:
             sz   = param_array_capacity_pos(p)
-            sz_p = params[sz]
+            sz_p = params[sz]            
             sz_p_k = param_kind(sz_p)
             tstr = type2str(ty)
             if sz_p_k == OUT or sz_p_k == INOUT:

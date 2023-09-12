@@ -23,7 +23,7 @@ Notes:
    \brief Assert expressions from ctx into t.
 */
 void assert_exprs_from(cmd_context const & ctx, goal & t) {
-    if (ctx.produce_proofs() && ctx.produce_unsat_cores())
+    if (ctx.produce_proofs() && ctx.produce_unsat_cores()) 
         throw cmd_exception("Frontend does not support simultaneous generation of proofs and unsat cores");
     ast_manager & m = t.m();
     bool proofs_enabled = t.proofs_enabled();

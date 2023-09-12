@@ -8,10 +8,10 @@ Module Name:
 Abstract:
 
     Evaluates/Probes a goal.
-
+    
     A probe is used to build tactics (aka strategies) that
     makes decisions based on the structure of a goal.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2011-10-13.
@@ -74,12 +74,12 @@ protected:
 public:
     unary_probe(probe * p):
         m_p(p) {
-        SASSERT(p);
-        p->inc_ref();
+        SASSERT(p); 
+        p->inc_ref(); 
     }
-
-    ~unary_probe() {
-        m_p->dec_ref();
+    
+    ~unary_probe() { 
+        m_p->dec_ref(); 
     }
 
 };
@@ -90,17 +90,17 @@ protected:
     probe * m_p2;
 public:
     bin_probe(probe * p1, probe * p2):
-        m_p1(p1),
-        m_p2(p2) {
-        SASSERT(p1);
+        m_p1(p1), 
+        m_p2(p2) { 
+        SASSERT(p1); 
         SASSERT(p2);
-        p1->inc_ref();
-        p2->inc_ref();
+        p1->inc_ref(); 
+        p2->inc_ref(); 
     }
-
-    ~bin_probe() {
-        m_p1->dec_ref();
-        m_p2->dec_ref();
+    
+    ~bin_probe() { 
+        m_p1->dec_ref(); 
+        m_p2->dec_ref(); 
     }
 };
 
@@ -109,7 +109,7 @@ public:
     not_probe(probe * p):unary_probe(p) {}
     virtual result operator()(goal const & g) {
         return result(!m_p->operator()(g).is_true());
-    }
+    }    
 };
 
 class and_probe : public bin_probe {
@@ -180,9 +180,9 @@ class const_probe : public probe {
     double m_val;
 public:
     const_probe(double v):m_val(v) {}
-
+    
     virtual result operator()(goal const & g) {
-        return result(m_val);
+        return result(m_val); 
     }
 };
 
@@ -256,11 +256,11 @@ struct is_non_propositional_predicate {
     void operator()(app * n) {
         if (!m.is_bool(n))
             throw found();
-
+        
         family_id fid = n->get_family_id();
         if (fid == m.get_basic_family_id())
-            return;
-
+            return; 
+        
         if (is_uninterp_const(n))
             return;
 
@@ -276,15 +276,15 @@ struct is_non_qfbv_predicate {
     is_non_qfbv_predicate(ast_manager & _m):m(_m), u(m) {}
 
     void operator()(var *) { throw found();  }
-
+    
     void operator()(quantifier *) { throw found(); }
-
+    
     void operator()(app * n) {
         if (!m.is_bool(n) && !u.is_bv(n))
             throw found();
         family_id fid = n->get_family_id();
         if (fid == m.get_basic_family_id())
-            return;
+            return; 
         if (fid == u.get_family_id())
             return;
         if (is_uninterp_const(n))
@@ -313,7 +313,7 @@ probe * mk_is_propositional_probe() {
 }
 
 probe * mk_is_qfbv_probe() {
-    return alloc(is_qfbv_probe);
+    return alloc(is_qfbv_probe); 
 }
 
 class num_consts_probe : public probe {
@@ -332,7 +332,7 @@ class num_consts_probe : public probe {
         }
         void operator()(quantifier *) {}
         void operator()(var *) {}
-        void operator()(app * n) {
+        void operator()(app * n) { 
             if (n->get_num_args() == 0 && !m.is_value(n)) {
                 if (m_bool) {
                     if (m.is_bool(n))
@@ -361,7 +361,7 @@ public:
         unsigned sz = g.size();
         expr_fast_mark1 visited;
         for (unsigned i = 0; i < sz; i++) {
-            for_each_expr_core<proc, expr_fast_mark1, true, true>(p, visited, g.form(i));
+            for_each_expr_core<proc, expr_fast_mark1, true, true>(p, visited, g.form(i));        
         }
         return result(p.m_counter);
     }
@@ -422,7 +422,7 @@ struct has_pattern_probe : public probe {
     struct proc {
         void operator()(var * n) {}
         void operator()(app * n) {}
-        void operator()(quantifier * n) {
+        void operator()(quantifier * n) { 
             if (n->get_num_patterns() > 0 || n->get_num_no_patterns() > 0)
                 throw found();
         }

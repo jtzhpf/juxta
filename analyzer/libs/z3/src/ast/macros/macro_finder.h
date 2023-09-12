@@ -34,7 +34,7 @@ inline bool is_simple_macro(ast_manager & m, expr * n, unsigned num_decls, app *
    as macros.
 */
 class macro_finder {
-    ast_manager &               m_manager;
+    ast_manager &               m_manager; 
     macro_manager &             m_macro_manager;
     macro_util &                m_util;
     arith_simplifier_plugin * get_arith_simp() { return m_util.get_arith_simp(); }

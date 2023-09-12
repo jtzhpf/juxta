@@ -37,7 +37,7 @@ namespace smt {
             if (m_logic != symbol::null)
                 m_context.set_logic(m_logic);
         }
-
+        
         virtual ~solver() {
         }
 
@@ -107,7 +107,7 @@ namespace smt {
         virtual unsigned get_num_assertions() const {
             return m_context.size();
         }
-
+    
         virtual expr * get_assertion(unsigned idx) const {
             SASSERT(idx < get_num_assertions());
             return m_context.get_formulas()[idx];
@@ -116,7 +116,7 @@ namespace smt {
         virtual void display(std::ostream & out) const {
             m_context.display(out);
         }
-
+   
     };
 
 };

@@ -41,13 +41,13 @@ namespace api {
         reduce_app_callback_fptr     m_reduce_app;
         reduce_assign_callback_fptr  m_reduce_assign;
         datalog::register_engine     m_register_engine;
-        datalog::context             m_context;
-        ast_ref_vector               m_trail;
+        datalog::context             m_context;    
+        ast_ref_vector               m_trail;        
     public:
-        fixedpoint_context(ast_manager& m, smt_params& p):
-            m_state(0),
-            m_reduce_app(0),
-            m_reduce_assign(0),
+        fixedpoint_context(ast_manager& m, smt_params& p): 
+            m_state(0), 
+            m_reduce_app(0), 
+            m_reduce_assign(0), 
             m_context(m, m_register_engine, p),
             m_trail(m) {}
 
@@ -60,18 +60,18 @@ namespace api {
             ast_manager& m = m_context.get_manager();
             if (!m.has_plugin(name)) {
                 m.register_plugin(name, alloc(datalog::dl_decl_plugin));
-            }
+            }        
             datalog::rel_context_base* rel = m_context.get_rel_context();
             if (rel) {
                 datalog::relation_manager& r = rel->get_rmanager();
                 r.register_plugin(alloc(datalog::external_relation_plugin, *this, r));
             }
         }
-        void set_reduce_app(reduce_app_callback_fptr f) {
-            m_reduce_app = f;
+        void set_reduce_app(reduce_app_callback_fptr f) { 
+            m_reduce_app = f; 
         }
-        void set_reduce_assign(reduce_assign_callback_fptr f) {
-            m_reduce_assign = f;
+        void set_reduce_assign(reduce_assign_callback_fptr f) { 
+            m_reduce_assign = f; 
         }
         virtual void reduce(func_decl* f, unsigned num_args, expr * const* args, expr_ref& result) {
             expr* r = 0;
@@ -113,10 +113,10 @@ namespace api {
             datalog::execution_result status = m_context.get_status();
             switch(status) {
             case datalog::INPUT_ERROR:
-                return "input error";
+                return "input error";        
             case datalog::OK:
                 return "ok";
-            case datalog::TIMEOUT:
+            case datalog::TIMEOUT:            
                 return "timeout";
             case datalog::APPROX:
                 return "approximated";
@@ -130,11 +130,11 @@ namespace api {
             m_context.display_smt2(num_queries, queries, str);
             return str.str();
         }
-        void cancel() {
-            m_context.cancel();
+        void cancel() { 
+            m_context.cancel(); 
         }
-        void reset_cancel() {
-            m_context.reset_cancel();
+        void reset_cancel() { 
+            m_context.reset_cancel(); 
         }
         unsigned get_num_levels(func_decl* pred) {
             return m_context.get_num_levels(pred);
@@ -147,20 +147,20 @@ namespace api {
         }
         void collect_param_descrs(param_descrs & p) { m_context.collect_params(p); }
         void updt_params(params_ref const& p) { m_context.updt_params(p); }
-    };
+    };         
 };
 
 extern "C" {
-
+    
     ////////////////////////////////////
     // Datalog utilities
-    //
+    // 
 
 
     unsigned Z3_API Z3_get_relation_arity(Z3_context c, Z3_sort s) {
         Z3_TRY;
         LOG_Z3_get_relation_arity(c, s);
-        RESET_ERROR_CODE();
+        RESET_ERROR_CODE();  
         sort * r = to_sort(s);
         if (Z3_get_sort_kind(c, s) != Z3_RELATION_SORT) {
             SET_ERROR_CODE(Z3_INVALID_ARG);
@@ -173,7 +173,7 @@ extern "C" {
     Z3_sort Z3_API Z3_get_relation_column(Z3_context c, Z3_sort s, unsigned col) {
         Z3_TRY;
         LOG_Z3_get_relation_column(c, s, col);
-        RESET_ERROR_CODE();
+        RESET_ERROR_CODE();  
         sort * r = to_sort(s);
         if (Z3_get_sort_kind(c, s) != Z3_RELATION_SORT) {
             SET_ERROR_CODE(Z3_INVALID_ARG);
@@ -218,7 +218,7 @@ extern "C" {
         }
         // must start loggging here, since function uses Z3_get_sort_kind above
         LOG_Z3_get_finite_domain_sort_size(c, s, out);
-        RESET_ERROR_CODE();
+        RESET_ERROR_CODE();  
         VERIFY(mk_c(c)->datalog_util().try_get_size(to_sort(s), *out));
         return Z3_TRUE;
 
@@ -257,7 +257,7 @@ extern "C" {
         Z3_TRY;
         LOG_Z3_fixedpoint_assert(c, d, a);
         RESET_ERROR_CODE();
-        CHECK_FORMULA(a,);
+        CHECK_FORMULA(a,);        
         to_fixedpoint_ref(d)->ctx().assert_expr(to_expr(a));
         Z3_CATCH;
     }
@@ -266,12 +266,12 @@ extern "C" {
         Z3_TRY;
         LOG_Z3_fixedpoint_add_rule(c, d, a, name);
         RESET_ERROR_CODE();
-        CHECK_FORMULA(a,);
+        CHECK_FORMULA(a,);        
         to_fixedpoint_ref(d)->add_rule(to_expr(a), to_symbol(name));
         Z3_CATCH;
     }
 
-    void Z3_API Z3_fixedpoint_add_fact(Z3_context c, Z3_fixedpoint d,
+    void Z3_API Z3_fixedpoint_add_fact(Z3_context c, Z3_fixedpoint d, 
                                        Z3_func_decl r, unsigned num_args, unsigned args[]) {
         Z3_TRY;
         LOG_Z3_fixedpoint_add_fact(c, d, r, num_args, args);
@@ -287,7 +287,7 @@ extern "C" {
         lbool r = l_undef;
         cancel_eh<api::fixedpoint_context> eh(*to_fixedpoint_ref(d));
         unsigned timeout = to_fixedpoint(d)->m_params.get_uint("timeout", mk_c(c)->get_timeout());
-        api::context::set_interruptable si(*(mk_c(c)), eh);
+        api::context::set_interruptable si(*(mk_c(c)), eh);        
         {
             scoped_timer timer(timeout, &eh);
             try {
@@ -304,7 +304,7 @@ extern "C" {
     }
 
     Z3_lbool Z3_API Z3_fixedpoint_query_relations(
-        __in Z3_context c,__in Z3_fixedpoint d,
+        __in Z3_context c,__in Z3_fixedpoint d, 
         __in unsigned num_relations, Z3_func_decl const relations[]) {
         Z3_TRY;
         LOG_Z3_fixedpoint_query_relations(c, d, num_relations, relations);
@@ -347,12 +347,12 @@ extern "C" {
     }
 
     Z3_string Z3_API Z3_fixedpoint_to_string(
-        Z3_context c,
+        Z3_context c, 
         Z3_fixedpoint d,
         unsigned num_queries,
         Z3_ast _queries[]) {
         Z3_TRY;
-        expr*const* queries = to_exprs(_queries);
+        expr*const* queries = to_exprs(_queries);        
         LOG_Z3_fixedpoint_to_string(c, d, num_queries, _queries);
         RESET_ERROR_CODE();
         return mk_c(c)->mk_external_string(to_fixedpoint_ref(d)->to_string(num_queries, queries));
@@ -402,7 +402,7 @@ extern "C" {
         std::string str(s);
         std::istringstream is(str);
         RETURN_Z3(Z3_fixedpoint_from_stream(c, d, is));
-        Z3_CATCH_RETURN(0);
+        Z3_CATCH_RETURN(0);        
     }
 
     Z3_ast_vector Z3_API Z3_fixedpoint_from_file(
@@ -417,7 +417,7 @@ extern "C" {
             RETURN_Z3(0);
         }
         RETURN_Z3(Z3_fixedpoint_from_stream(c, d, is));
-        Z3_CATCH_RETURN(0);
+        Z3_CATCH_RETURN(0);        
     }
 
 
@@ -432,7 +432,7 @@ extern "C" {
         RETURN_Z3(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     void Z3_API Z3_fixedpoint_register_relation(Z3_context c,Z3_fixedpoint d, Z3_func_decl f) {
         Z3_TRY;
         LOG_Z3_fixedpoint_register_relation(c, d, f);
@@ -442,9 +442,9 @@ extern "C" {
 
     void Z3_API Z3_fixedpoint_set_predicate_representation(
         Z3_context c,
-        Z3_fixedpoint d,
-        Z3_func_decl f,
-        unsigned num_relations,
+        Z3_fixedpoint d, 
+        Z3_func_decl f, 
+        unsigned num_relations, 
         Z3_symbol const relation_kinds[]) {
         Z3_TRY;
         LOG_Z3_fixedpoint_set_predicate_representation(c, d, f, num_relations, relation_kinds);
@@ -468,7 +468,7 @@ extern "C" {
         mk_c(c)->save_object(v);
         expr_ref_vector rules(m);
         svector<symbol> names;
-
+        
         to_fixedpoint_ref(d)->ctx().get_rules_as_formulas(rules, names);
         for (unsigned i = 0; i < rules.size(); ++i) {
             v->m_ast_vector.push_back(rules[i].get());
@@ -493,7 +493,7 @@ extern "C" {
         RETURN_Z3(of_ast_vector(v));
         Z3_CATCH_RETURN(0);
     }
-
+    
     void Z3_API Z3_fixedpoint_set_reduce_assign_callback(
         Z3_context c, Z3_fixedpoint d, Z3_fixedpoint_reduce_assign_callback_fptr f) {
         Z3_TRY;
@@ -506,7 +506,7 @@ extern "C" {
         Z3_context c, Z3_fixedpoint d, Z3_fixedpoint_reduce_app_callback_fptr f) {
         Z3_TRY;
         // no logging
-        to_fixedpoint_ref(d)->set_reduce_app((reduce_app_callback_fptr)f);
+        to_fixedpoint_ref(d)->set_reduce_app((reduce_app_callback_fptr)f);       
         Z3_CATCH;
     }
 
@@ -522,7 +522,7 @@ extern "C" {
         Z3_TRY;
         LOG_Z3_fixedpoint_update_rule(c, d, a, name);
         RESET_ERROR_CODE();
-        CHECK_FORMULA(a,);
+        CHECK_FORMULA(a,);        
         to_fixedpoint_ref(d)->update_rule(to_expr(a), to_symbol(name));
         Z3_CATCH;
     }
@@ -540,7 +540,7 @@ extern "C" {
         LOG_Z3_fixedpoint_get_cover_delta(c, d, level, pred);
         RESET_ERROR_CODE();
         expr_ref r = to_fixedpoint_ref(d)->get_cover_delta(level, to_func_decl(pred));
-        mk_c(c)->save_ast_trail(r);
+        mk_c(c)->save_ast_trail(r);        
         RETURN_Z3(of_expr(r.get()));
         Z3_CATCH_RETURN(0);
     }
@@ -549,7 +549,7 @@ extern "C" {
         Z3_TRY;
         LOG_Z3_fixedpoint_add_cover(c, d, level, pred, property);
         RESET_ERROR_CODE();
-        to_fixedpoint_ref(d)->add_cover(level, to_func_decl(pred), to_expr(property));
+        to_fixedpoint_ref(d)->add_cover(level, to_func_decl(pred), to_expr(property));        
         Z3_CATCH;
     }
 
@@ -576,7 +576,7 @@ extern "C" {
         RETURN_Z3(r);
         Z3_CATCH_RETURN(0);
     }
-
+    
     void Z3_API Z3_fixedpoint_set_params(Z3_context c, Z3_fixedpoint d, Z3_params p) {
         Z3_TRY;
         LOG_Z3_fixedpoint_set_params(c, d, p);
@@ -605,6 +605,6 @@ extern "C" {
         Z3_CATCH;
 
     }
-
+    
 
 };

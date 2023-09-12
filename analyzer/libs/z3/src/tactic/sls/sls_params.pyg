@@ -1,4 +1,4 @@
-def_module_params('sls',
+def_module_params('sls', 
                   export=True,
                   description='Experimental Stochastic Local Search Solver (for QFBV only).',
                   params=(max_memory_param(),

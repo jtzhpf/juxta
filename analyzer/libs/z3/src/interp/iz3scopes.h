@@ -35,7 +35,7 @@ class scopes {
 
   scopes(){
   }
-
+  
   void initialize(const std::vector<int> &_parents){
     parents = _parents;
   }
@@ -55,7 +55,7 @@ class scopes {
 
   /** computes the lub (smallest containing subtree) of two ranges */
   range range_lub(const range &rng1, const range &rng2);
-
+  
   /** computes the glb (intersection) of two ranges */
   range range_glb(const range &rng1, const range &rng2);
 
@@ -149,7 +149,7 @@ class scopes {
 
   /** computes the lub (smallest containing subtree) of two ranges */
   range range_lub(const range &rng1, const range &rng2);
-
+  
   /** computes the glb (intersection) of two ranges */
   range range_glb(const range &rng1, const range &rng2);
 
@@ -182,10 +182,10 @@ class scopes {
   range_lo *range_glb_lo(range_lo *rng1, range_lo *rng2, int lim);
 
 #endif
-
+  
   /** test whether a tree node is contained in a range */
   bool in_range(int n, const range &rng);
-
+  
   /** test whether two ranges of tree nodes intersect */
   bool ranges_intersect(const range &rng1, const range &rng2);
 

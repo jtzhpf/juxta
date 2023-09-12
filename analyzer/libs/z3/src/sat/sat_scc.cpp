@@ -51,7 +51,7 @@ namespace sat {
         }
         ~report() {
             m_watch.stop();
-            IF_VERBOSE(SAT_VB_LVL,
+            IF_VERBOSE(SAT_VB_LVL, 
                        verbose_stream() << " (sat-scc :elim-vars " << (m_scc.m_num_elim - m_num_elim)
                        << mk_stat(m_scc.m_solver)
                        << " :time " << std::fixed << std::setprecision(2) << m_watch.get_seconds() << ")\n";);
@@ -80,13 +80,13 @@ namespace sat {
         unsigned next_index = 0;
         svector<frame>   frames;
         bool_var_vector  to_elim;
-
+        
         for (unsigned l_idx = 0; l_idx < num_lits; l_idx++) {
             if (index[l_idx] != UINT_MAX)
                 continue;
             if (m_solver.was_eliminated(to_literal(l_idx).var()))
                 continue;
-
+            
             m_solver.checkpoint();
 
 #define NEW_NODE(LIDX) {                                                        \
@@ -98,9 +98,9 @@ namespace sat {
                 watch_list & wlist = m_solver.get_wlist(LIDX);                  \
                 frames.push_back(frame(LIDX, wlist.begin(), wlist.end()));      \
             }
-
+            
             NEW_NODE(l_idx);
-
+            
             while (!frames.empty()) {
             loop:
                 frame & fr         = frames.back();
@@ -147,7 +147,7 @@ namespace sat {
                           while (l2_idx != l_idx);
                           tout << "\n";
                     });
-
+                    
                     SASSERT(!s.empty());
                     literal l  = to_literal(l_idx);
                     bool_var v = l.var();
@@ -182,12 +182,12 @@ namespace sat {
                             }
                         }
                         while (l2_idx != l_idx);
-
+                        
                         if (r == null_literal) {
                             // SCC does not contain external variable
                             r = to_literal(l_idx);
                         }
-
+                        
                         TRACE("scc_detail", tout << "r: " << r << "\n";);
 
                         do {
@@ -203,7 +203,7 @@ namespace sat {
                                 else {
                                     roots[v2] = r;
                                 }
-                                if (v2 != r.var())
+                                if (v2 != r.var()) 
                                     to_elim.push_back(v2);
                             }
                         }
@@ -226,7 +226,7 @@ namespace sat {
     void scc::collect_statistics(statistics & st) const {
         st.update("elim bool vars", m_num_elim);
     }
-
+    
     void scc::reset_statistics() {
         m_num_elim = 0;
     }

@@ -25,7 +25,7 @@ Revision History:
 
 /**
    \brief Functor for eliminating irrelevant bounds in quantified formulas.
-
+   
    Example:
    (forall (x Int) (y Int) (or (not (>= y x) (not (>= x 0)) (= (select a x) 1))))
 

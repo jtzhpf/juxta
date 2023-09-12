@@ -32,8 +32,8 @@ void for_each_expr_core(ForEachProc & proc, ExprMark & visited, expr * n) {
         visited.mark(n);
     }
 
-    sbuffer<frame> stack;
-
+    sbuffer<frame> stack;    
+    
     stack.push_back(frame(n, 0));
     while (!stack.empty()) {
     start:
@@ -145,7 +145,7 @@ struct for_each_expr_proc : public EscapeProc {
     void operator()(var * n)        { operator()(static_cast<expr *>(n)); }
     void operator()(app * n)        { operator()(static_cast<expr *>(n)); }
     void operator()(quantifier * n) { operator()(static_cast<expr *>(n)); }
-};
+};                     
 
 unsigned get_num_exprs(expr * n);
 unsigned get_num_exprs(expr * n, expr_mark & visited);

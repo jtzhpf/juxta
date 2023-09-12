@@ -15,7 +15,7 @@ void dl_query_ask_ground_query(context & ctx, func_decl * pred, relation_fact & 
     app * query = ctx.get_manager().mk_app(pred, q_args);
 
     lbool is_sat = ctx.query(query);
-
+    
     std::cerr << "@@ query should succeed: " << should_be_successful << "\n";
     SASSERT(is_sat != l_undef);
     if((is_sat != l_true) == should_be_successful) {
@@ -159,7 +159,7 @@ void dl_query_test_wpa(smt_params & fparams, params_ref& params) {
     for(unsigned attempt=0; attempt<attempts; attempt++) {
         unsigned el1 = ran()%var_sz;
         unsigned el2 = ran()%var_sz;
-
+        
         expr_ref_vector q_args(m);
         q_args.push_back(dl_util.mk_numeral(el1, var_sort));
         q_args.push_back(dl_util.mk_numeral(el2, var_sort));

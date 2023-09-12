@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Solver.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -34,7 +34,7 @@ public class Solver extends Z3Object
 
     /**
      * Sets the solver parameters.
-     *
+     * 
      * @throws Z3Exception
      **/
     public void setParameters(Params value) throws Z3Exception
@@ -46,7 +46,7 @@ public class Solver extends Z3Object
 
     /**
      * Retrieves parameter descriptions for solver.
-     *
+     * 
      * @throws Z3Exception
      **/
     public ParamDescrs getParameterDescriptions() throws Z3Exception
@@ -102,7 +102,7 @@ public class Solver extends Z3Object
 
     /**
      * Assert a multiple constraints into the solver.
-     *
+     * 
      * @throws Z3Exception
      **/
     public void add(BoolExpr... constraints) throws Z3Exception
@@ -165,7 +165,7 @@ public class Solver extends Z3Object
 
     /**
      * The number of assertions in the solver.
-     *
+     * 
      * @throws Z3Exception
      **/
     public int getNumAssertions() throws Z3Exception
@@ -177,7 +177,7 @@ public class Solver extends Z3Object
 
     /**
      * The set of asserted formulas.
-     *
+     * 
      * @throws Z3Exception
      **/
     public BoolExpr[] getAssertions() throws Z3Exception
@@ -232,7 +232,7 @@ public class Solver extends Z3Object
      * <code>null</code> if <code>Check</code> was not invoked before, if its
      * results was not <code>SATISFIABLE</code>, or if model production is not
      * enabled. </remarks>
-     *
+     * 
      * @throws Z3Exception
      **/
     public Model getModel() throws Z3Exception
@@ -249,7 +249,7 @@ public class Solver extends Z3Object
      * <code>null</code> if <code>Check</code> was not invoked before, if its
      * results was not <code>UNSATISFIABLE</code>, or if proof production is
      * disabled. </remarks>
-     *
+     * 
      * @throws Z3Exception
      **/
     public Expr getProof() throws Z3Exception
@@ -266,7 +266,7 @@ public class Solver extends Z3Object
      * is a subset of <code>Assertions</code> The result is empty if
      * <code>Check</code> was not invoked before, if its results was not
      * <code>UNSATISFIABLE</code>, or if core production is disabled. </remarks>
-     *
+     * 
      * @throws Z3Exception
      **/
     public Expr[] getUnsatCore() throws Z3Exception
@@ -293,7 +293,7 @@ public class Solver extends Z3Object
 
     /**
      * Solver statistics.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Statistics getStatistics() throws Z3Exception

@@ -26,7 +26,7 @@ Revision History:
 #include "expr_functors.h"
 
 namespace qe {
-
+    
     class arith_project_util {
         ast_manager& m;
         arith_util   a;
@@ -85,7 +85,7 @@ namespace qe {
             expr* e1, *e2;
             c.reset();
             sort* s;
-            expr_ref_vector ts(m);
+            expr_ref_vector ts(m);            
             bool is_not = m.is_not(lit, lit);
             rational mul(1);
             if (is_not) {
@@ -109,7 +109,7 @@ namespace qe {
                 is_linear(-mul, e2, c, ts);
                 s = m.get_sort(e1);
                 is_strict = false;
-            }
+            }            
             else {
                 IF_VERBOSE(1, verbose_stream() << "can't project:" << mk_pp(lit, m) << "\n";);
                 throw cant_project();
@@ -147,7 +147,7 @@ namespace qe {
                     }
                     else {
                         ++num_neg;
-                    }
+                    }                    
                 }
                 else {
                     new_lits.push_back(lits[i].get());
@@ -262,7 +262,7 @@ namespace qe {
         }
 
     public:
-        arith_project_util(ast_manager& m):
+        arith_project_util(ast_manager& m): 
             m(m), a(m), m_rw(m), m_ineq_terms(m) {}
 
         expr_ref operator()(model& model, app_ref_vector& vars, expr_ref_vector const& lits) {
@@ -286,7 +286,7 @@ namespace qe {
             vars.reset();
             vars.append(new_vars);
             return qe::mk_and(result);
-        }
+        }  
     };
 
     expr_ref arith_project(model& model, app_ref_vector& vars, expr_ref_vector const& lits) {

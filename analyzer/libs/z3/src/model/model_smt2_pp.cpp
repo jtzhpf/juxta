@@ -25,7 +25,7 @@ Revision History:
 using namespace format_ns;
 
 static void pp_indent(std::ostream & out, unsigned indent) {
-    for (unsigned i = 0; i < indent; i++)
+    for (unsigned i = 0; i < indent; i++) 
         out << " ";
 }
 
@@ -121,7 +121,7 @@ static void pp_uninterp_sorts(std::ostream & out, ast_printer_context & ctx, mod
             f_cond = f_conds[0];
         format_ref f_s(fm(m));
         ctx.pp(s, f_s);
-        format * f_args[2] = { mk_compose(m,
+        format * f_args[2] = { mk_compose(m, 
                                           mk_string(m, "((x "),
                                           mk_indent(m, 4, mk_compose(m, f_s.get(), mk_string(m, "))")))),
                                f_cond };
@@ -199,7 +199,7 @@ static void pp_funs(std::ostream & out, ast_printer_context & ctx, model_core co
     ptr_buffer<func_decl> func_decls;
     sort_fun_decls(m, md, func_decls);
     for (unsigned i = 0; i < func_decls.size(); i++) {
-        func_decl * f     = func_decls[i];
+        func_decl * f     = func_decls[i]; 
         func_interp * f_i = md.get_func_interp(f);
         SASSERT(f->get_arity() == f_i->get_arity());
         format_ref body(fm(m));
@@ -213,7 +213,7 @@ static void pp_funs(std::ostream & out, ast_printer_context & ctx, model_core co
             }
         }
         else {
-            ctx.pp(f_i->get_else(), f->get_arity(), "x", body, var_names);
+            ctx.pp(f_i->get_else(), f->get_arity(), "x", body, var_names);  
         }
         TRACE("model_smt2_pp", for (unsigned i = 0; i < var_names.size(); i++) tout << var_names[i] << "\n";);
         f_var_names.reset();
@@ -250,10 +250,10 @@ static void pp_funs(std::ostream & out, ast_printer_context & ctx, model_core co
                 ctx.pp(e->get_result(), f_result);
                 if (i > 0)
                     f_entries.push_back(mk_line_break(m));
-                f_entries.push_back(mk_group(m, mk_compose(m,
+                f_entries.push_back(mk_group(m, mk_compose(m, 
                                                            mk_string(m, "(ite "),
                                                            mk_indent(m, 5, f_entry_cond),
-                                                           mk_indent(m, TAB_SZ, mk_compose(m,
+                                                           mk_indent(m, TAB_SZ, mk_compose(m, 
                                                                                            mk_line_break(m),
                                                                                            f_result.get())))));
             }
@@ -270,16 +270,16 @@ static void pp_funs(std::ostream & out, ast_printer_context & ctx, model_core co
             fname = mk_smt2_quoted_symbol(f->get_name());
         else
             fname = f->get_name().str();
-        def = mk_indent(m, indent, mk_compose(m,
-                                              mk_compose(m,
+        def = mk_indent(m, indent, mk_compose(m, 
+                                              mk_compose(m, 
                                                          mk_string(m, "(define-fun "),
                                                          mk_string(m, fname.c_str()),
                                                          mk_string(m, " "),
-                                                         mk_compose(m,
+                                                         mk_compose(m, 
                                                                     f_domain,
                                                                     mk_string(m, " "),
                                                                     f_range)),
-                                              mk_indent(m, TAB_SZ, mk_compose(m,
+                                              mk_indent(m, TAB_SZ, mk_compose(m, 
                                                                               mk_line_break(m),
                                                                               body.get(),
                                                                               mk_string(m, ")")))));

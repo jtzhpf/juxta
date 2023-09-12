@@ -22,7 +22,7 @@ Revision History:
 
 class goal;
 
-class goal_num_occurs : public num_occurs {
+class goal_num_occurs : public num_occurs { 
 public:
     goal_num_occurs(bool ignore_ref_count1 = false, bool ignore_quantifiers = false):
         num_occurs(ignore_ref_count1, ignore_quantifiers) {

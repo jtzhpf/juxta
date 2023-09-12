@@ -29,7 +29,7 @@ Revision History:
 static void tst_sine_core(std::ostream & out, unsynch_mpq_manager & nm, interval_manager<im_default_config> & im, mpq & a, unsigned k) {
     scoped_mpq lo(nm), hi(nm);
     im.sine(a, k, lo, hi);
-    nm.display(out, lo);
+    nm.display(out, lo); 
     out << " <= Sin["; nm.display(out, a); out << "]\n";
     out << "Sin["; nm.display(out, a); out << "] <= ";
     nm.display(out, hi);
@@ -37,7 +37,7 @@ static void tst_sine_core(std::ostream & out, unsynch_mpq_manager & nm, interval
 }
 
 static void tst_sine(std::ostream & out, unsigned N, unsigned k) {
-    unsynch_mpq_manager                 nm;
+    unsynch_mpq_manager                 nm;     
     im_default_config                   imc(nm);
     interval_manager<im_default_config> im(imc);
     scoped_mpq a(nm);
@@ -55,7 +55,7 @@ static void tst_sine(std::ostream & out, unsigned N, unsigned k) {
 static void tst_cosine_core(std::ostream & out, unsynch_mpq_manager & nm, interval_manager<im_default_config> & im, mpq & a, unsigned k) {
     scoped_mpq lo(nm), hi(nm);
     im.cosine(a, k, lo, hi);
-    nm.display(out, lo);
+    nm.display(out, lo); 
     out << " <= Cos["; nm.display(out, a); out << "]\n";
     out << "Cos["; nm.display(out, a); out << "] <= ";
     nm.display(out, hi);
@@ -63,7 +63,7 @@ static void tst_cosine_core(std::ostream & out, unsynch_mpq_manager & nm, interv
 }
 
 static void tst_cosine(std::ostream & out, unsigned N, unsigned k) {
-    unsynch_mpq_manager                 nm;
+    unsynch_mpq_manager                 nm;     
     im_default_config                   imc(nm);
     interval_manager<im_default_config> im(imc);
     scoped_mpq a(nm);
@@ -79,10 +79,10 @@ static void tst_cosine(std::ostream & out, unsigned N, unsigned k) {
 
 
 template<typename fmanager>
-static void tst_float_sine_core(std::ostream & out,
-                                fmanager & fm,
-                                interval_manager<im_float_config<fmanager> > & im,
-                                typename fmanager::numeral & a,
+static void tst_float_sine_core(std::ostream & out, 
+                                fmanager & fm, 
+                                interval_manager<im_float_config<fmanager> > & im, 
+                                typename fmanager::numeral & a, 
                                 unsigned k) {
     _scoped_numeral<fmanager> lo(fm), hi(fm);
     im.sine(a, k, lo, hi);
@@ -130,7 +130,7 @@ static void tst_mpf_bug() {
 #endif
 
 static void tst_e(std::ostream & out) {
-    unsynch_mpq_manager                 nm;
+    unsynch_mpq_manager                 nm;     
     im_default_config                   imc(nm);
     interval_manager<im_default_config> im(imc);
     im_default_config::interval         r;

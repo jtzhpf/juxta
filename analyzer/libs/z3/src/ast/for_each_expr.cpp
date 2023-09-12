@@ -45,7 +45,7 @@ unsigned get_num_exprs(expr * n) {
 }
 
 namespace has_skolem_functions_ns {
-    struct found {};
+    struct found {}; 
     struct proc {
         void operator()(var * n) const {}
         void operator()(app const * n) const { if (n->get_decl()->is_skolem() && n->get_num_args() > 0) throw found(); }

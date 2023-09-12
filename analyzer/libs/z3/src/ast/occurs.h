@@ -19,7 +19,7 @@ Revision History:
 #ifndef _OCCURS_H_
 #define _OCCURS_H_
 
-class expr;
+class expr; 
 class func_decl;
 
 /**

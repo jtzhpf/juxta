@@ -34,7 +34,7 @@ namespace sat {
         m_glue("glue"),
         m_glue_psm("glue_psm"),
         m_psm_glue("psm_glue") {
-        updt_params(p);
+        updt_params(p); 
     }
 
     void config::updt_params(params_ref const & _p) {
@@ -50,7 +50,7 @@ namespace sat {
             throw sat_param_exception("invalid restart strategy");
 
         s = p.phase();
-        if (s == m_always_false)
+        if (s == m_always_false) 
             m_phase = PS_ALWAYS_FALSE;
         else if (s == m_always_true)
             m_phase = PS_ALWAYS_TRUE;
@@ -66,16 +66,16 @@ namespace sat {
 
         m_restart_initial = p.restart_initial();
         m_restart_factor  = p.restart_factor();
-
+        
         m_random_freq     = p.random_freq();
         m_random_seed     = p.random_seed();
-        if (m_random_seed == 0)
+        if (m_random_seed == 0) 
             m_random_seed = _p.get_uint("random_seed", 0);
-
+        
         m_burst_search    = p.burst_search();
-
+        
         m_max_conflicts   = p.max_conflicts();
-
+        
         // These parameters are not exposed
         m_simplify_mult1  = _p.get_uint("simplify_mult1", 300);
         m_simplify_mult2  = _p.get_double("simplify_mult2", 1.5);
@@ -101,7 +101,7 @@ namespace sat {
                 m_gc_strategy = GC_PSM;
             else if (s == m_psm_glue)
                 m_gc_strategy = GC_PSM_GLUE;
-            else
+            else 
                 throw sat_param_exception("invalid gc strategy");
             m_gc_initial      = p.gc_initial();
             m_gc_increment    = p.gc_increment();

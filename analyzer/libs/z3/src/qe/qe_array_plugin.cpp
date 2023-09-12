@@ -15,7 +15,7 @@ namespace qe {
 
     public:
 
-        array_plugin(i_solver_context& ctx, ast_manager& m) :
+        array_plugin(i_solver_context& ctx, ast_manager& m) : 
             qe_solver_plugin(m, m.mk_family_id("array"), ctx),
             m_replace(m)
         {
@@ -23,19 +23,19 @@ namespace qe {
 
         virtual ~array_plugin() {}
 
-
+        
         virtual void assign(contains_app& x, expr* fml, rational const& vl) {
             UNREACHABLE();
         }
-
+        
         virtual bool get_num_branches( contains_app& x, expr* fml, rational& num_branches) {
             return false;
         }
-
+        
         virtual void subst(contains_app& x, rational const& vl, expr_ref& fml, expr_ref* def) {
             UNREACHABLE();
         }
-
+        
 
         virtual bool solve(conj_enum& conjs, expr* fml) {
 
@@ -49,7 +49,7 @@ namespace qe {
             expr_ref_vector eqs(m);
             conjs.extract_equalities(eqs);
             for (unsigned i = 0; i < eqs.size(); ++i) {
-                TRACE("qe_verbose",
+                TRACE("qe_verbose", 
                       tout << mk_pp(eqs[i].get(), m) << "\n";);
                 expr* e = eqs[i].get();
                 if (solve_eq_zero(e, fml)) {
@@ -63,9 +63,9 @@ namespace qe {
             return true;
         }
 
-
+           
     private:
-
+        
         bool solve_eq(app* eq, expr* fml) {
             SASSERT(m.is_eq(eq));
             expr* arg1 = eq->get_arg(0);
@@ -74,7 +74,7 @@ namespace qe {
         }
 
         bool solve_eq_zero(expr* e, expr* fml) {
-            arith_util arith(m);
+            arith_util arith(m); 
             if (arith.is_add(e)) {
                 app* a = to_app(e);
                 expr* e1, *e2;
@@ -85,10 +85,10 @@ namespace qe {
                 args.append(sz, a->get_args());
                 for (unsigned i = 0; i < sz; ++i) {
                     expr_ref save(m);
-                    save = lhs = args[i].get();
+                    save = lhs = args[i].get();                    
                     args[i] = arith.mk_numeral(rational(0), m.get_sort(lhs));
                     rhs = arith.mk_uminus(arith.mk_add(args.size(), args.c_ptr()));
-                    if (arith.is_mul(lhs, e1, e2) &&
+                    if (arith.is_mul(lhs, e1, e2) && 
                         arith.is_numeral(e1, r) &&
                         r.is_minus_one()) {
                         lhs = to_app(e2);
@@ -104,15 +104,15 @@ namespace qe {
         }
 
 
-
+        
         bool solve_eq(expr* lhs, expr* rhs, expr* fml) {
-
+            
             if (!is_app(lhs)) {
                 return false;
             }
-
-            TRACE("qe_verbose",
-                  tout << mk_pp(lhs, m) <<
+            
+            TRACE("qe_verbose", 
+                  tout << mk_pp(lhs, m) << 
                   " == " << mk_pp(rhs, m) << "\n";);
             expr_ref tmp(m);
             app* a = to_app(lhs);
@@ -120,13 +120,13 @@ namespace qe {
             // A = t, A not in t.
             //
             unsigned idx = 0;
-            if (m_ctx.is_var(a, idx) &&
+            if (m_ctx.is_var(a, idx) && 
                 !m_ctx.contains(idx)(rhs)) {
                 expr_ref result(fml, m);
                 m_replace.apply_substitution(a, rhs, result);
                 m_ctx.elim_var(idx, result, rhs);
                 return true;
-            }
+            }                 
             if (solve_store(a, rhs, fml)) {
                 return true;
             }
@@ -140,7 +140,7 @@ namespace qe {
             //
             // (select (select A i) j) = t, A not in i, j,  t
             // A |-> (store B' j (store B i t)), where B, B' are fresh.
-            //
+            // 
             // TBD
             return false;
         }
@@ -149,7 +149,7 @@ namespace qe {
             //
             // (select A i) = t, A not in i, v, t
             // A |-> (store B i t), where B is fresh.
-            //
+            // 
             unsigned idx = 0;
             vector<ptr_vector<expr> > args;
             if (is_select(lhs, idx, rhs, args) && args.size() == 1) {
@@ -166,10 +166,10 @@ namespace qe {
                     args2.push_back(args[0][i]);
                 }
                 args2.push_back(rhs);
-
+                
                 store_B_i_t = m.mk_app(m_fid, OP_STORE, args2.size(), args2.c_ptr());
-
-                TRACE("qe",
+                
+                TRACE("qe", 
                       tout << "fml: " << mk_pp(fml, m) << "\n";
                       tout << "solved form: " << mk_pp(store_B_i_t, m) << "\n";
                       tout << "eq: " << mk_pp(lhs, m) << " == " << mk_pp(rhs, m) << "\n";
@@ -193,12 +193,12 @@ namespace qe {
                 return false;
             }
             contains_app& contains_v = m_ctx.contains(idx);
-
+            
             for (unsigned i = 1; i < a->get_num_args(); ++i) {
                 if (contains_v(a->get_arg(i))) {
                     return false;
                 }
-            }
+            }        
             if (contains_v(t)) {
                 return false;
             }
@@ -209,7 +209,7 @@ namespace qe {
         bool solve_store(app* lhs, expr* rhs, expr* fml) {
             //
             // store(store(A, j, u), i, v) = t, A not in i, j, u, v, t
-            // ->
+            // -> 
             // A |-> store(store(t, i, w), j, w') where w, w' are fresh.
             // t[i] = v
             // store(t, i, v)[j] = u
@@ -229,7 +229,7 @@ namespace qe {
                     w = m.mk_fresh_const("w", m.get_sort(args[i].back()));
                     args2.push_back(store_T);
                     args2.append(args[i]);
-
+                    
                     select_t = m.mk_app(m_fid, OP_SELECT, args2.size()-1, args2.c_ptr());
                     fml = m.mk_and(fml, m.mk_eq(select_t, args2.back()));
                     store_T = m.mk_app(m_fid, OP_STORE, args2.size(), args2.c_ptr());
@@ -240,8 +240,8 @@ namespace qe {
 
                     m_ctx.add_var(w);
                 }
-
-                TRACE("qe",
+                               
+                TRACE("qe", 
                       tout << "Variable: " << mk_pp(A, m) << "\n";
                       tout << "fml: " << mk_pp(fml, m) << "\n";
                       tout << "solved form: " << mk_pp(store_t, m) << "\n";
@@ -251,7 +251,7 @@ namespace qe {
                 m_replace.apply_substitution(A, store_t, result);
                 m_ctx.elim_var(idx, result, store_t);
                 return true;
-            }
+            }        
             return false;
         }
 
@@ -269,7 +269,7 @@ namespace qe {
                     }
                 }
                 return true;
-            }
+            }            
             if (!is_app_of(a, m_fid, k)) {
                 return false;
             }
@@ -286,7 +286,7 @@ namespace qe {
         bool is_store_update(app* a, unsigned& idx, expr* t, vector<ptr_vector<expr> >& args) {
             return is_array_app_of(a, idx, t, OP_STORE, args);
         }
-
+        
         bool is_select(app* a, unsigned& idx, expr* t, vector<ptr_vector<expr> >& args) {
             return is_array_app_of(a, idx, t, OP_SELECT, args);
         }
@@ -295,5 +295,5 @@ namespace qe {
     qe_solver_plugin* mk_array_plugin(i_solver_context& ctx) {
         return alloc(array_plugin, ctx, ctx.get_manager());
     }
-
+    
 }

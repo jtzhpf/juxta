@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     ListSort.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -24,7 +24,7 @@ public class ListSort extends Sort
 {
     /**
      * The declaration of the nil function of this list sort.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public FuncDecl getNilDecl() throws Z3Exception
     {
@@ -33,7 +33,7 @@ public class ListSort extends Sort
 
     /**
      * The empty list.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public Expr getNil() throws Z3Exception
     {
@@ -42,7 +42,7 @@ public class ListSort extends Sort
 
     /**
      * The declaration of the isNil function of this list sort.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public FuncDecl getIsNilDecl() throws Z3Exception
     {
@@ -51,7 +51,7 @@ public class ListSort extends Sort
 
     /**
      * The declaration of the cons function of this list sort.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public FuncDecl getConsDecl() throws Z3Exception
     {
@@ -60,8 +60,8 @@ public class ListSort extends Sort
 
     /**
      * The declaration of the isCons function of this list sort.
-     * @throws Z3Exception
-     *
+     * @throws Z3Exception 
+     * 
      **/
     public FuncDecl getIsConsDecl() throws Z3Exception
     {
@@ -70,7 +70,7 @@ public class ListSort extends Sort
 
     /**
      * The declaration of the head function of this list sort.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public FuncDecl getHeadDecl() throws Z3Exception
     {
@@ -79,7 +79,7 @@ public class ListSort extends Sort
 
     /**
      * The declaration of the tail function of this list sort.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public FuncDecl getTailDecl() throws Z3Exception
     {

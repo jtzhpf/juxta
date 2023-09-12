@@ -79,7 +79,7 @@ namespace smt {
        \brief Create the mapping root2proc: enode-root -> model_value_proc, and roots.
        Store the new model_value_proc at procs.
     */
-    void model_generator::mk_value_procs(obj_map<enode, model_value_proc *> & root2proc, ptr_vector<enode> & roots,
+    void model_generator::mk_value_procs(obj_map<enode, model_value_proc *> & root2proc, ptr_vector<enode> & roots, 
                                          ptr_vector<model_value_proc> & procs) {
         ptr_vector<enode>::const_iterator it  = m_context->begin_enodes();
         ptr_vector<enode>::const_iterator end = m_context->end_enodes();
@@ -120,14 +120,14 @@ namespace smt {
             }
         }
     }
-
+    
     model_value_proc* model_generator::mk_model_value(enode* r) {
         SASSERT(r == r->get_root());
         expr * n = r->get_owner();
         if (!m_manager.is_model_value(n)) {
             sort * s = m_manager.get_sort(r->get_owner());
             n = m_model->get_fresh_value(s);
-            CTRACE("model_generator_bug", n == 0,
+            CTRACE("model_generator_bug", n == 0, 
                    tout << mk_pp(r->get_owner(), m_manager) << "\nsort:\n" << mk_pp(s, m_manager) << "\n";
                    tout << "is_finite: " << m_model->is_finite(s) << "\n";);
         }
@@ -137,30 +137,30 @@ namespace smt {
 #define White 0
 #define Grey  1
 #define Black 2
-
+    
     static int get_color(source2color const & colors, source const & s) {
         int color;
         if (colors.find(s, color))
             return color;
         return White;
     }
-
+    
     static void set_color(source2color & colors, source const & s, int c) {
         colors.insert(s, c);
     }
-
+    
     static void visit_child(source const & s, source2color & colors, svector<source> & todo, bool & visited) {
         if (get_color(colors, s) == White) {
             todo.push_back(s);
             visited = false;
         }
     }
-
-    bool model_generator::visit_children(source const & src,
-                                         ptr_vector<enode> const & roots,
-                                         obj_map<enode, model_value_proc *> const & root2proc,
-                                         source2color & colors,
-                                         obj_hashtable<sort> & already_traversed,
+    
+    bool model_generator::visit_children(source const & src, 
+                                         ptr_vector<enode> const & roots, 
+                                         obj_map<enode, model_value_proc *> const & root2proc, 
+                                         source2color & colors, 
+                                         obj_hashtable<sort> & already_traversed, 
                                          svector<source> & todo) {
         if (src.is_fresh_value()) {
             // there is an implicit dependency between a fresh value stub of sort S and the root enodes of sort S that are not associated with fresh values.
@@ -187,7 +187,7 @@ namespace smt {
             already_traversed.insert(s);
             return visited;
         }
-
+        
         SASSERT(!src.is_fresh_value());
 
         enode * n = src.get_enode();
@@ -212,10 +212,10 @@ namespace smt {
     }
 
     void model_generator::process_source(source const & src,
-                                         ptr_vector<enode> const & roots,
-                                         obj_map<enode, model_value_proc *> const & root2proc,
-                                         source2color & colors,
-                                         obj_hashtable<sort> & already_traversed,
+                                         ptr_vector<enode> const & roots, 
+                                         obj_map<enode, model_value_proc *> const & root2proc, 
+                                         source2color & colors, 
+                                         obj_hashtable<sort> & already_traversed, 
                                          svector<source> & todo,
                                          svector<source> & sorted_sources) {
         TRACE("mg_top_sort", tout << "process source, is_fresh: " << src.is_fresh_value() << " ";
@@ -257,10 +257,10 @@ namespace smt {
     /**
        \brief Topological sort of 'sources'. Store result in sorted_sources.
     */
-    void model_generator::top_sort_sources(ptr_vector<enode> const & roots,
-                                           obj_map<enode, model_value_proc *> const & root2proc,
+    void model_generator::top_sort_sources(ptr_vector<enode> const & roots, 
+                                           obj_map<enode, model_value_proc *> const & root2proc, 
                                            svector<source> & sorted_sources) {
-
+        
         svector<source>     todo;
         source2color        colors;
         // The following 'set' of sorts is used to avoid traversing roots looking for enodes of sort S.
@@ -327,7 +327,7 @@ namespace smt {
         svector<source>::const_iterator end = sources.end();
         for (; it != end; ++it) {
             source const & curr = *it;
-
+            
             if (curr.is_fresh_value()) {
                 sort * s = curr.get_value()->get_sort();
                 TRACE("model_fresh_bug", tout << "mk fresh!" << curr.get_value()->get_idx() << " : " << mk_pp(s, m_manager) << "\n";);
@@ -351,7 +351,7 @@ namespace smt {
                 for (; it2 != end2; ++it2) {
                     model_value_dependency const & d = *it2;
                     if (d.is_fresh_value()) {
-                        CTRACE("mg_top_sort", !d.get_value()->get_value(),
+                        CTRACE("mg_top_sort", !d.get_value()->get_value(), 
                                tout << "#" << n->get_owner_id() << " -> ";
                                tout << "fresh!" << d.get_value()->get_idx() << "\n";);
                         SASSERT(d.get_value()->get_value());
@@ -366,7 +366,7 @@ namespace smt {
                         dependency_values.push_back(val);
                     }
                 }
-                app * val = proc->mk_value(*this, dependency_values);
+                app * val = proc->mk_value(*this, dependency_values); 
                 register_value(val);
                 m_asts.push_back(val);
                 m_root2value.insert(n, val);
@@ -375,7 +375,7 @@ namespace smt {
         std::for_each(procs.begin(), procs.end(), delete_proc<model_value_proc>());
         std::for_each(m_extra_fresh_values.begin(), m_extra_fresh_values.end(), delete_proc<extra_fresh_value>());
         m_extra_fresh_values.reset();
-
+        
         // send model
         ptr_vector<enode>::const_iterator it3  = m_context->begin_enodes();
         ptr_vector<enode>::const_iterator end3 = m_context->end_enodes();
@@ -402,7 +402,7 @@ namespace smt {
     bool model_generator::include_func_interp(func_decl * f) const {
         return f->get_family_id() == null_family_id;
     }
-
+    
     /**
        \brief Create (partial) interpretation of function symbols.
        The "else" is missing.
@@ -433,7 +433,7 @@ namespace smt {
                 SASSERT(m_model->has_interpretation(f));
                 SASSERT(m_model->get_func_interp(f) == fi);
                 // The entry must be new because n->get_cg() == n
-                TRACE("func_interp_bug",
+                TRACE("func_interp_bug", 
                       tout << "insert new entry for:\n" << mk_ismt2_pp(n->get_owner(), m_manager) << "\nargs: ";
                       for (unsigned i = 0; i < num_args; i++) {
                           tout << "#" << n->get_arg(i)->get_owner_id() << " ";
@@ -466,8 +466,8 @@ namespace smt {
     }
 
     void model_generator::register_value(expr * val) {
-        SASSERT(m_model);
-        m_model->register_value(val);
+        SASSERT(m_model); 
+        m_model->register_value(val); 
     }
 
     void model_generator::finalize_theory_models() {
@@ -475,7 +475,7 @@ namespace smt {
         ptr_vector<theory>::const_iterator end = m_context->end_theories();
         for (; it != end; ++it)
             (*it)->finalize_model(*this);
-    }
+    } 
 
     void model_generator::register_existing_model_values() {
         ptr_vector<enode>::const_iterator it  = m_context->begin_enodes();
@@ -490,9 +490,9 @@ namespace smt {
             }
         }
     }
-
+    
     void model_generator::register_factory(value_factory * f) {
-        m_model->register_factory(f);
+        m_model->register_factory(f); 
     }
 
     void model_generator::register_macros() {
@@ -516,14 +516,14 @@ namespace smt {
         proto_model &   m_model;
     public:
         mk_interp_proc(context & ctx, proto_model & m):
-            m_context(ctx),
+            m_context(ctx), 
             m_model(m) {
         }
 
-        void operator()(var * n) {
+        void operator()(var * n) { 
         }
 
-        void operator()(app * n) {
+        void operator()(app * n) { 
             if (!is_uninterp(n))
                 return; // n is interpreted
             func_decl * d  = n->get_decl();
@@ -535,14 +535,14 @@ namespace smt {
                 m_model.register_decl(d, v);
             }
             else {
-                func_interp * fi = alloc(func_interp, m_context.get_manager(), d->get_arity());
+                func_interp * fi = alloc(func_interp, m_context.get_manager(), d->get_arity());            
                 m_model.register_decl(d, fi);
             }
         }
-
-        void operator()(quantifier * n) {
+        
+        void operator()(quantifier * n) { 
         }
-
+        
     };
 
     proto_model * model_generator::mk_model() {
@@ -557,5 +557,5 @@ namespace smt {
         register_macros();
         return m_model;
     }
-
+    
 };

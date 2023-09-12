@@ -41,11 +41,11 @@ namespace Microsoft.Z3
         }
         #endregion
 
-        /// <summary>
+        /// <summary> 
         /// Computes an interpolant.
-        /// </summary>
+        /// </summary>    
         /// <remarks>For more information on interpolation please refer
-        /// too the function Z3_get_interpolant in the C/C++ API, which is
+        /// too the function Z3_get_interpolant in the C/C++ API, which is 
         /// well documented.</remarks>
         Expr[] GetInterpolant(Expr pf, Expr pat, Params p)
         {
@@ -66,11 +66,11 @@ namespace Microsoft.Z3
             return res;
         }
 
-        /// <summary>
+        /// <summary> 
         /// Computes an interpolant.
-        /// </summary>
+        /// </summary>    
         /// <remarks>For more information on interpolation please refer
-        /// too the function Z3_compute_interpolant in the C/C++ API, which is
+        /// too the function Z3_compute_interpolant in the C/C++ API, which is 
         /// well documented.</remarks>
         Z3_lbool ComputeInterpolant(Expr pat, Params p, out ASTVector interp, out Model model)
         {
@@ -89,22 +89,22 @@ namespace Microsoft.Z3
             return (Z3_lbool)r;
         }
 
-        /// <summary>
+        /// <summary> 
         /// Return a string summarizing cumulative time used for interpolation.
-        /// </summary>
+        /// </summary>    
         /// <remarks>For more information on interpolation please refer
-        /// too the function Z3_interpolation_profile in the C/C++ API, which is
+        /// too the function Z3_interpolation_profile in the C/C++ API, which is 
         /// well documented.</remarks>
         public string InterpolationProfile()
         {
             return Native.Z3_interpolation_profile(nCtx);
         }
 
-        /// <summary>
+        /// <summary> 
         /// Checks the correctness of an interpolant.
-        /// </summary>
+        /// </summary>    
         /// <remarks>For more information on interpolation please refer
-        /// too the function Z3_check_interpolant in the C/C++ API, which is
+        /// too the function Z3_check_interpolant in the C/C++ API, which is 
         /// well documented.</remarks>
         public int CheckInterpolant(Expr[] cnsts, uint[] parents, Expr[] interps, out string error, Expr[] theory)
         {
@@ -123,11 +123,11 @@ namespace Microsoft.Z3
             return r;
         }
 
-        /// <summary>
+        /// <summary> 
         /// Reads an interpolation problem from a file.
-        /// </summary>
+        /// </summary>    
         /// <remarks>For more information on interpolation please refer
-        /// too the function Z3_read_interpolation_problem in the C/C++ API, which is
+        /// too the function Z3_read_interpolation_problem in the C/C++ API, which is 
         /// well documented.</remarks>
         public int ReadInterpolationProblem(string filename, out Expr[] cnsts, out uint[] parents, out string error, out Expr[] theory)
         {
@@ -147,11 +147,11 @@ namespace Microsoft.Z3
             return r;
         }
 
-        /// <summary>
+        /// <summary> 
         /// Writes an interpolation problem to a file.
-        /// </summary>
+        /// </summary>    
         /// <remarks>For more information on interpolation please refer
-        /// too the function Z3_write_interpolation_problem in the C/C++ API, which is
+        /// too the function Z3_write_interpolation_problem in the C/C++ API, which is 
         /// well documented.</remarks>
         public void WriteInterpolationProblem(string filename, Expr[] cnsts, uint[] parents, Expr[] theory)
         {

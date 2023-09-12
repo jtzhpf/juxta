@@ -29,7 +29,7 @@ namespace datalog {
             m_context(ctx),
             m(ctx.get_manager()),
             rm(ctx.get_rule_manager()),
-            m_result(0),
+            m_result(0), 
             m_pinned(m) {
     }
 
@@ -47,7 +47,7 @@ namespace datalog {
             dealloc(*dit);
         }
     }
-
+            
     /**
        \brief Return true if \c pred is a cadidate for a "filter" rule.
     */
@@ -81,7 +81,7 @@ namespace datalog {
         mk_new_rule_tail(m, pred, non_local_vars, filter_domain, key->filter_args, key->new_pred);
         func_decl * filter_decl = 0;
         if (!m_tail2filter.find(key, filter_decl)) {
-            filter_decl = m_context.mk_fresh_head_predicate(pred->get_decl()->get_name(), symbol("filter"),
+            filter_decl = m_context.mk_fresh_head_predicate(pred->get_decl()->get_name(), symbol("filter"), 
                 filter_domain.size(), filter_domain.c_ptr(), pred->get_decl());
 
             m_pinned.push_back(filter_decl);
@@ -117,7 +117,7 @@ namespace datalog {
                 func_decl * filter_decl = mk_filter_decl(tail, non_local_vars);
                 ptr_buffer<expr> new_args;
                 var_idx_set used_vars;
-                unsigned num_args = tail->get_num_args();
+                unsigned num_args = tail->get_num_args(); 
                 for (unsigned i = 0; i < num_args; i++) {
                     expr * arg = tail->get_arg(i);
                     if (is_var(arg)) {

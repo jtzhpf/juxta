@@ -42,7 +42,7 @@ class contains_vars {
         switch (n->get_kind()) {
         case AST_VAR:
             dw = m_window <= UINT_MAX - delta ? m_window + delta : UINT_MAX;
-            if (to_var(n)->get_idx() >= delta && to_var(n)->get_idx() <= dw)
+            if (to_var(n)->get_idx() >= delta && to_var(n)->get_idx() <= dw) 
                 m_contains = true;
             break;
         case AST_APP:

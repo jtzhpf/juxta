@@ -48,7 +48,7 @@ struct tactic_report::imp {
         m_start_memory(static_cast<double>(memory::get_allocation_size())/static_cast<double>(1024*1024)) {
         m_watch.start();
     }
-
+        
     ~imp() {
         m_watch.stop();
         double end_memory = static_cast<double>(memory::get_allocation_size())/static_cast<double>(1024*1024);
@@ -80,9 +80,9 @@ void report_tactic_progress(char const * id, unsigned val) {
     }
 }
 
-void skip_tactic::operator()(goal_ref const & in,
-                             goal_ref_buffer & result,
-                             model_converter_ref & mc,
+void skip_tactic::operator()(goal_ref const & in, 
+                             goal_ref_buffer & result, 
+                             model_converter_ref & mc, 
                              proof_converter_ref & pc,
                              expr_dependency_ref & core) {
     result.reset();
@@ -98,9 +98,9 @@ tactic * mk_skip_tactic() {
 
 class fail_tactic : public tactic {
 public:
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         throw tactic_exception("fail tactic");
@@ -120,10 +120,10 @@ class report_verbose_tactic : public skip_tactic {
     unsigned     m_lvl;
 public:
     report_verbose_tactic(char const * msg, unsigned lvl) : m_msg(msg), m_lvl(lvl) {}
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         IF_VERBOSE(m_lvl, verbose_stream() << m_msg << "\n";);
@@ -139,10 +139,10 @@ class trace_tactic : public skip_tactic {
     char const * m_tag;
 public:
     trace_tactic(char const * tag):m_tag(tag) {}
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         TRACE(m_tag, in->display(tout););
@@ -158,12 +158,12 @@ class fail_if_undecided_tactic : public skip_tactic {
 public:
     fail_if_undecided_tactic() {}
 
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
-        if (!in->is_decided())
+        if (!in->is_decided()) 
             throw tactic_exception("undecided");
         skip_tactic::operator()(in, result, mc, pc, core);
     }

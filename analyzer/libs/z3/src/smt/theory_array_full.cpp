@@ -26,7 +26,7 @@ Revision History:
 
 namespace smt {
 
-    theory_array_full::theory_array_full(ast_manager & m, theory_array_params & params) :
+    theory_array_full::theory_array_full(ast_manager & m, theory_array_params & params) : 
         theory_array(m, params),
         m_sort2epsilon(m) {}
 
@@ -91,14 +91,14 @@ namespace smt {
             for (; it != end; ++it) {
                 if (!m_params.m_array_cg || (*it)->is_cgr()) {
                     instantiate_select_map_axiom(*it, s);
-                }
+                }                
             }
         }
     }
 
     //
     // set set_prop_upward on root and recursively on children if necessary.
-    //
+    // 
     void theory_array_full::set_prop_upward(theory_var v) {
         if (m_params.m_array_weak)
             return;
@@ -128,12 +128,12 @@ namespace smt {
             for (; it != end; ++it) {
                 set_prop_upward(*it);
             }
-        }
+        }        
     }
 
     //
     // call set_prop_upward on array arguments.
-    //
+    // 
     void theory_array_full::set_prop_upward(enode * n) {
         TRACE("array", tout << mk_pp(n->get_owner(), get_manager()) << "\n";);
         if (is_store(n)) {
@@ -161,7 +161,7 @@ namespace smt {
 
 
     unsigned theory_array_full::get_lambda_equiv_size(theory_var v, var_data* d) {
-        var_data_full * d2 = m_var_data_full[v];
+        var_data_full * d2 = m_var_data_full[v];        
         return d->m_stores.size() + 2*d2->m_consts.size() + 2*d2->m_maps.size();
     }
 
@@ -221,7 +221,7 @@ namespace smt {
         display_ids(out, d->m_consts.size(), d->m_consts.c_ptr());
         out << "}\n";
     }
-
+    
     theory_var theory_array_full::mk_var(enode * n) {
 
         theory_var r = theory_array::mk_var(n);
@@ -303,13 +303,13 @@ namespace smt {
         }
         else if (is_const(n)) {
             instantiate_default_const_axiom(node);
-        }
+        }           
         else if (is_as_array(n)) {
             // The array theory is not a decision procedure
-            // for as-array.
+            // for as-array. 
             // Ex: (as-array f) = (as-array g) & f(0) = 0 & g(0) = 1
             // There is nothing to propagate the disequality.
-            // Even if there was, as-array on interpreted
+            // Even if there was, as-array on interpreted 
             // functions will be incomplete.
             // The instantiation operations are still sound to include.
             found_unsupported_op(n);
@@ -346,7 +346,7 @@ namespace smt {
         for (; it != end; ++it) {
             add_as_array(v1, *it);
         }
-        TRACE("array",
+        TRACE("array", 
               tout << mk_pp(get_enode(v1)->get_owner(), get_manager()) << "\n";
               tout << mk_pp(get_enode(v2)->get_owner(), get_manager()) << "\n";
               tout << "merge in\n"; display_var(tout, v2);
@@ -365,7 +365,7 @@ namespace smt {
             enode * store = *it;
             SASSERT(is_store(store));
             instantiate_default_store_axiom(store);
-        }
+        }        
 
         if (!m_params.m_array_weak && !m_params.m_array_delay_exp_axiom && d->m_prop_upward) {
             it  = d->m_parent_stores.begin();
@@ -381,7 +381,7 @@ namespace smt {
     }
 
     void theory_array_full::add_parent_select(theory_var v, enode * s) {
-        TRACE("array",
+        TRACE("array", 
               tout << v << " select parent: " << mk_pp(s->get_owner(), get_manager()) << "\n";
               display_var(tout, v);
               );
@@ -413,7 +413,7 @@ namespace smt {
             }
         }
     }
-
+    
     void theory_array_full::relevant_eh(app* n) {
         TRACE("array", tout << mk_pp(n, get_manager()) << "\n";);
         theory_array::relevant_eh(n);
@@ -452,11 +452,11 @@ namespace smt {
         }
     }
 
-
+       
     //
-    // Assert axiom:
+    // Assert axiom: 
     // select(map[f](a, ... d), i) = f(select(a,i),...,select(d,i))
-    //
+    //  
     bool theory_array_full::instantiate_select_map_axiom(enode* sl, enode* mp) {
         app* map = mp->get_owner();
         app* select = sl->get_owner();
@@ -479,7 +479,7 @@ namespace smt {
         TRACE("array_map_bug", tout << "new axiom\n";);
 
         m_stats.m_num_map_axiom++;
-        TRACE("array",
+        TRACE("array", 
               tout << mk_bounded_pp(mp->get_owner(), get_manager()) << "\n";
               tout << mk_bounded_pp(sl->get_owner(), get_manager()) << "\n";);
         unsigned num_args   = select->get_num_args();
@@ -509,23 +509,23 @@ namespace smt {
         m_simp->mk_app(f, args2.size(), args2.c_ptr(), sel2);
         ctx.internalize(sel1, false);
         ctx.internalize(sel2, false);
-
+        
         TRACE("array_map_bug",
               tout << "select-map axiom\n" << mk_ismt2_pp(sel1, m) << "\n=\n" << mk_ismt2_pp(sel2,m) << "\n";);
-
+        
         return try_assign_eq(sel1, sel2);
     }
 
 
     //
     //
-    // Assert axiom:
+    // Assert axiom: 
     // default(map[f](a,..,d)) = f(default(a),..,default(d))
-    //
+    //  
 
     bool theory_array_full::instantiate_default_map_axiom(enode* mp) {
         SASSERT(is_map(mp));
-
+                
         app* map = mp->get_owner();
         context& ctx = get_context();
         if (!ctx.add_fingerprint(this, 0, 1, &mp)) {
@@ -602,7 +602,7 @@ namespace smt {
                 return true;
             }
         }
-        return false;
+        return false;        
     }
 
     //
@@ -619,7 +619,7 @@ namespace smt {
             return false;
         }
 
-        m_stats.m_num_select_const_axiom++;
+        m_stats.m_num_select_const_axiom++;   
         ptr_buffer<expr> sel_args;
         sel_args.push_back(cnst->get_owner());
         for (unsigned short i = 1; i < num_args; ++i) {
@@ -634,7 +634,7 @@ namespace smt {
               tout << "value: " << mk_bounded_pp(val, get_manager()) << "\n";
               tout << "#" << sel->get_id() << " = #" << val->get_id() << "\n";
               );
-
+        
         ctx.internalize(sel, false);
         return try_assign_eq(sel,val);
     }
@@ -654,7 +654,7 @@ namespace smt {
             return false;
         }
 
-        m_stats.m_num_select_as_array_axiom++;
+        m_stats.m_num_select_as_array_axiom++;   
         ptr_buffer<expr> sel_args;
         sel_args.push_back(arr->get_owner());
         for (unsigned short i = 1; i < num_args; ++i) {
@@ -670,13 +670,13 @@ namespace smt {
               tout << "value: " << mk_bounded_pp(val.get(), get_manager()) << "\n";
               tout << "#" << sel->get_id() << " = #" << val->get_id() << "\n";
               );
-
+        
         ctx.internalize(sel, false);
         ctx.internalize(val.get(), false);
         return try_assign_eq(sel,val);
     }
 
-
+    
     bool theory_array_full::instantiate_default_store_axiom(enode* store) {
         SASSERT(is_store(store));
         SASSERT(store->get_num_args() >= 3);
@@ -700,10 +700,10 @@ namespace smt {
         else {
             //
             // let A = store(B, i, v)
-            //
+            // 
             // Add:
             //   default(A) = ite(epsilon = i, v, default(B))
-            //
+            // 
             expr_ref_vector eqs(m);
             unsigned num_args = store_app->get_num_args();
             for (unsigned i = 1; i + 1 < num_args; ++i) {
@@ -711,22 +711,22 @@ namespace smt {
                 app* ep = mk_epsilon(srt);
                 eqs.push_back(m.mk_eq(ep, store_app->get_arg(i)));
             }
-
+            
             expr_ref eq(m);
             simplifier_plugin* p = m_simp->get_plugin(m.get_basic_family_id());
             basic_simplifier_plugin* bp = static_cast<basic_simplifier_plugin*>(p);
             bp->mk_and(eqs.size(), eqs.c_ptr(), eq);
             expr* defA = mk_default(store_app->get_arg(0));
-            def2 = m.mk_ite(eq, store_app->get_arg(num_args-1), defA);
+            def2 = m.mk_ite(eq, store_app->get_arg(num_args-1), defA); 
 #if 0
-            //
-            // add soft constraints to guide model construction so that
+            // 
+            // add soft constraints to guide model construction so that 
             // epsilon agrees with the else case in the model construction.
-            //
+            // 
             for (unsigned i = 0; i < eqs.size(); ++i) {
                 // assume_diseq(eqs[i]);
             }
-#endif
+#endif 
         }
 
         def1 = mk_default(store_app);
@@ -742,16 +742,16 @@ namespace smt {
         }
         eps = get_manager().mk_fresh_const("epsilon", s);
         m_trail_stack.push(
-            ast2ast_trail<theory_array, sort, app>(m_sort2epsilon, s, eps));
+            ast2ast_trail<theory_array, sort, app>(m_sort2epsilon, s, eps));   
         return eps;
     }
 
-    final_check_status theory_array_full::assert_delayed_axioms() {
+    final_check_status theory_array_full::assert_delayed_axioms() {        
         final_check_status r = FC_DONE;
         if (!m_params.m_array_delay_exp_axiom) {
             r = FC_DONE;
         }
-        else {
+        else { 
             r = theory_array::assert_delayed_axioms();
             unsigned num_vars = get_num_vars();
             for (unsigned v = 0; v < num_vars; v++) {
@@ -772,8 +772,8 @@ namespace smt {
         if (n1->get_root() == n2->get_root()) {
             return false;
         }
-        TRACE("array",
-              tout << mk_bounded_pp(v1, get_manager()) << "\n==\n"
+        TRACE("array", 
+              tout << mk_bounded_pp(v1, get_manager()) << "\n==\n" 
               << mk_bounded_pp(v2, get_manager()) << "\n";);
 
 #if 0
@@ -797,7 +797,7 @@ namespace smt {
         unsigned num_old_vars = get_old_num_vars(num_scopes);
         theory_array::pop_scope_eh(num_scopes);
         std::for_each(m_var_data_full.begin() + num_old_vars, m_var_data_full.end(), delete_proc<var_data_full>());
-        m_var_data_full.shrink(num_old_vars);
+        m_var_data_full.shrink(num_old_vars);        
     }
 
     void theory_array_full::collect_statistics(::statistics & st) const {

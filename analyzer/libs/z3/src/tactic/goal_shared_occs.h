@@ -24,7 +24,7 @@ Revision History:
 
 /**
    \brief Functor for computing the set of shared occurrences in a goal.
-
+   
    It is essentially a wrapper for shared_occs functor.
 */
 class goal_shared_occs {

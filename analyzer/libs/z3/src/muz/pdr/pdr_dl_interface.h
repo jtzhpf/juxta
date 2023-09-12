@@ -46,9 +46,9 @@ namespace pdr {
         void check_reset();
 
     public:
-        dl_interface(datalog::context& ctx);
+        dl_interface(datalog::context& ctx); 
         ~dl_interface();
-
+        
         virtual lbool query(expr* query);
 
         virtual void cancel();
@@ -66,15 +66,15 @@ namespace pdr {
         virtual unsigned get_num_levels(func_decl* pred);
 
         virtual expr_ref get_cover_delta(int level, func_decl* pred);
-
+       
         virtual void add_cover(int level, func_decl* pred, expr* property);
-
+               
         virtual void updt_params();
 
         virtual model_ref get_model();
 
         virtual proof_ref get_proof();
-
+        
     };
 }
 

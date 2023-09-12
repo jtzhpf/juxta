@@ -25,17 +25,17 @@ class stream_buffer {
     std::istream & m_stream;
     int            m_val;
 public:
-
+    
     stream_buffer(std::istream & s):
         m_stream(s) {
         m_val = m_stream.get();
     }
 
-    int  operator *() const {
+    int  operator *() const { 
         return m_val;
     }
 
-    void operator ++() {
+    void operator ++() { 
         m_val = m_stream.get();
     }
 };
@@ -43,7 +43,7 @@ public:
 template<typename Buffer>
 void skip_whitespace(Buffer & in) {
     while ((*in >= 9 && *in <= 13) || *in == 32) {
-        ++in;
+        ++in; 
     }
 }
 
@@ -53,12 +53,12 @@ void skip_line(Buffer & in) {
         if (*in == EOF) {
             return;
         }
-        if (*in == '\n') {
-            ++in;
-            return;
+        if (*in == '\n') { 
+            ++in; 
+            return; 
         }
-        ++in;
-    }
+        ++in; 
+    } 
 }
 
 template<typename Buffer>
@@ -86,17 +86,17 @@ int parse_int(Buffer & in) {
         ++in;
     }
 
-    return neg ? -val : val;
+    return neg ? -val : val; 
 }
 
 template<typename Buffer>
 void read_clause(Buffer & in, sat::solver & solver, sat::literal_vector & lits) {
     int     parsed_lit;
     int     var;
-
+    
     lits.reset();
 
-    while (true) {
+    while (true) { 
         parsed_lit = parse_int(in);
         if (parsed_lit == 0)
             break;

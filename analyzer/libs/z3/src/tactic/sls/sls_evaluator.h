@@ -36,9 +36,9 @@ class sls_evaluator {
     vector<ptr_vector<expr> > m_traversal_stack;
 
 public:
-    sls_evaluator(ast_manager & m, bv_util & bvu, sls_tracker & t, unsynch_mpz_manager & mm, powers & p) :
-        m_manager(m),
-        m_bv_util(bvu),
+    sls_evaluator(ast_manager & m, bv_util & bvu, sls_tracker & t, unsynch_mpz_manager & mm, powers & p) : 
+        m_manager(m), 
+        m_bv_util(bvu), 
         m_tracker(t),
         m_mpz_manager(mm),
         m_zero(m_mpz_manager.mk_z(0)),
@@ -53,9 +53,9 @@ public:
     ~sls_evaluator() {
         m_mpz_manager.del(m_zero);
         m_mpz_manager.del(m_one);
-        m_mpz_manager.del(m_two);
+        m_mpz_manager.del(m_two);            
     }
-
+    
     void operator()(app * n, mpz & result) {
         family_id nfid = n->get_family_id();
         func_decl * fd = n->get_decl();
@@ -66,10 +66,10 @@ public:
             return;
         }
 
-        expr * const * args = n->get_args();
-
+        expr * const * args = n->get_args(); 
+            
         m_mpz_manager.set(result, m_zero);
-
+            
         if (nfid == m_basic_fid) {
             switch (n->get_decl_kind()) {
             case OP_AND: {
@@ -92,15 +92,15 @@ public:
             case OP_NOT: {
                 SASSERT(n_args == 1);
                 const mpz & child = m_tracker.get_value(args[0]);
-                SASSERT(m_mpz_manager.is_one(child) || m_mpz_manager.is_zero(child));
-                m_mpz_manager.set(result, (m_mpz_manager.is_zero(child)) ? m_one : m_zero);
+                SASSERT(m_mpz_manager.is_one(child) || m_mpz_manager.is_zero(child));                
+                m_mpz_manager.set(result, (m_mpz_manager.is_zero(child)) ? m_one : m_zero);                
                 break;
             }
             case OP_EQ: {
                 SASSERT(n_args >= 2);
                 m_mpz_manager.set(result, m_one);
                 const mpz & first = m_tracker.get_value(args[0]);
-                for (unsigned i = 1; i < n_args; i++)
+                for (unsigned i = 1; i < n_args; i++) 
                     if (m_mpz_manager.neq(m_tracker.get_value(args[i]), first)) {
                         m_mpz_manager.set(result, m_zero);
                         break;
@@ -126,10 +126,10 @@ public:
             switch(k) {
             case OP_CONCAT: {
                 SASSERT(n_args >= 2);
-                for (unsigned i = 0; i < n_args; i++) {
+                for (unsigned i = 0; i < n_args; i++) {                        
                     if (i != 0) {
                         const mpz & p = m_powers(m_bv_util.get_bv_size(args[i]));
-                        m_mpz_manager.mul(result, p, result);
+                        m_mpz_manager.mul(result, p, result);                            
                     }
                     m_mpz_manager.add(result, m_tracker.get_value(args[i]), result);
                 }
@@ -148,10 +148,10 @@ public:
             case OP_BADD: {
                 SASSERT(n_args >= 2);
                 for (unsigned i = 0; i < n_args; i++) {
-                    const mpz & next = m_tracker.get_value(args[i]);
+                    const mpz & next = m_tracker.get_value(args[i]);                    
                     m_mpz_manager.add(result, next, result);
-                }
-                const mpz & p = m_powers(m_bv_util.get_bv_size(n));
+                }                
+                const mpz & p = m_powers(m_bv_util.get_bv_size(n));                
                 m_mpz_manager.rem(result, p, result);
                 break;
             }
@@ -168,10 +168,10 @@ public:
                 SASSERT(n_args >= 2);
                 m_mpz_manager.set(result, m_tracker.get_value(args[0]));
                 for (unsigned i = 1; i < n_args; i++) {
-                    const mpz & next = m_tracker.get_value(args[i]);
+                    const mpz & next = m_tracker.get_value(args[i]);                    
                     m_mpz_manager.mul(result, next, result);
                 }
-                const mpz & p = m_powers(m_bv_util.get_bv_size(n));
+                const mpz & p = m_powers(m_bv_util.get_bv_size(n));                    
                 m_mpz_manager.rem(result, p, result);
                 break;
             }
@@ -189,7 +189,7 @@ public:
                 break;
             }
             case OP_BSDIV:
-            case OP_BSDIV0:
+            case OP_BSDIV0:              
             case OP_BSDIV_I: {
                 SASSERT(n_args == 2);
                 mpz x; m_mpz_manager.set(x, m_tracker.get_value(args[0]));
@@ -198,7 +198,7 @@ public:
                 unsigned bv_sz = m_bv_util.get_bv_size(args[0]);
                 const mpz & p = m_powers(bv_sz);
                 const mpz & p_half = m_powers(bv_sz-1);
-                if (x >= p_half) { m_mpz_manager.sub(x, p, x); }
+                if (x >= p_half) { m_mpz_manager.sub(x, p, x); } 
                 if (y >= p_half) { m_mpz_manager.sub(y, p, y); }
 
                 if (m_mpz_manager.is_zero(y)) {
@@ -215,7 +215,7 @@ public:
                 if (m_mpz_manager.is_neg(result))
                     m_mpz_manager.add(result, p, result);
                 m_mpz_manager.del(x);
-                m_mpz_manager.del(y);
+                m_mpz_manager.del(y);                    
                 break;
             }
             case OP_BUDIV:
@@ -224,7 +224,7 @@ public:
                 SASSERT(n_args == 2);
                 mpz x; m_mpz_manager.set(x, m_tracker.get_value(args[0]));
                 mpz y; m_mpz_manager.set(y, m_tracker.get_value(args[1]));
-
+                    
                 if (m_mpz_manager.is_zero(y)) {
                     m_mpz_manager.set(result, m_powers(m_bv_util.get_bv_size(n)));
                     m_mpz_manager.dec(result);
@@ -236,7 +236,7 @@ public:
                 m_mpz_manager.del(y);
                 break;
             }
-            case OP_BSREM:
+            case OP_BSREM: 
             case OP_BSREM0:
             case OP_BSREM_I: {
                 SASSERT(n_args == 2);
@@ -245,11 +245,11 @@ public:
                 unsigned bv_sz = m_bv_util.get_bv_size(args[0]);
                 const mpz & p = m_powers(bv_sz);
                 const mpz & p_half = m_powers(bv_sz-1);
-                if (x >= p_half) { m_mpz_manager.sub(x, p, x); }
+                if (x >= p_half) { m_mpz_manager.sub(x, p, x); } 
                 if (y >= p_half) { m_mpz_manager.sub(y, p, y); }
 
-                if (m_mpz_manager.is_zero(y)) {
-                    m_mpz_manager.set(result, x);
+                if (m_mpz_manager.is_zero(y)) {                        
+                    m_mpz_manager.set(result, x);                        
                 }
                 else {
                     m_mpz_manager.rem(x, y, result);
@@ -260,15 +260,15 @@ public:
                 m_mpz_manager.del(y);
                 break;
             }
-            case OP_BUREM:
+            case OP_BUREM: 
             case OP_BUREM0:
             case OP_BUREM_I: {
                 SASSERT(n_args == 2);
                 mpz x; m_mpz_manager.set(x, m_tracker.get_value(args[0]));
-                mpz y; m_mpz_manager.set(y, m_tracker.get_value(args[1]));
+                mpz y; m_mpz_manager.set(y, m_tracker.get_value(args[1]));                    
 
                 if (m_mpz_manager.is_zero(y)) {
-                    m_mpz_manager.set(result, x);
+                    m_mpz_manager.set(result, x);                        
                 }
                 else {
                     m_mpz_manager.mod(x, y, result);
@@ -277,7 +277,7 @@ public:
                 m_mpz_manager.del(y);
                 break;
             }
-            case OP_BSMOD:
+            case OP_BSMOD: 
             case OP_BSMOD0:
             case OP_BSMOD_I:{
                 SASSERT(n_args == 2);
@@ -286,8 +286,8 @@ public:
                 unsigned bv_sz = m_bv_util.get_bv_size(args[0]);
                 const mpz & p = m_powers(bv_sz);
                 const mpz & p_half = m_powers(bv_sz-1);
-                if (x >= p_half) { m_mpz_manager.sub(x, p, x); }
-                if (y >= p_half) { m_mpz_manager.sub(y, p, y); }
+                if (x >= p_half) { m_mpz_manager.sub(x, p, x); } 
+                if (y >= p_half) { m_mpz_manager.sub(y, p, y); }                    
 
                 if (m_mpz_manager.is_zero(y))
                     m_mpz_manager.set(result, x);
@@ -314,7 +314,7 @@ public:
                         m_mpz_manager.add(result, y, result);
                     }
                     else {
-                        m_mpz_manager.neg(result);
+                        m_mpz_manager.neg(result);                        
                     }
 
                     m_mpz_manager.del(abs_x);
@@ -325,7 +325,7 @@ public:
                     m_mpz_manager.add(result, p, result);
 
                 m_mpz_manager.del(x);
-                m_mpz_manager.del(y);
+                m_mpz_manager.del(y);                    
                 break;
             }
             case OP_BAND: {
@@ -394,7 +394,7 @@ public:
                 break;
             }
             case OP_SLT:
-            case OP_SLEQ:
+            case OP_SLEQ: 
             case OP_SGT:
             case OP_SGEQ: {
                 SASSERT(n_args == 2);
@@ -403,15 +403,15 @@ public:
                 unsigned bv_sz = m_bv_util.get_bv_size(args[0]);
                 const mpz & p = m_powers(bv_sz);
                 const mpz & p_half = m_powers(bv_sz-1);
-                if (x >= p_half) { m_mpz_manager.sub(x, p, x); }
-                if (y >= p_half) { m_mpz_manager.sub(y, p, y); }
+                if (x >= p_half) { m_mpz_manager.sub(x, p, x); } 
+                if (y >= p_half) { m_mpz_manager.sub(y, p, y); } 
                 if ((k == OP_SLT  && m_mpz_manager.lt(x, y)) ||
                     (k == OP_SLEQ && m_mpz_manager.le(x, y)) ||
                     (k == OP_SGT  && m_mpz_manager.gt(x, y)) ||
                     (k == OP_SGEQ && m_mpz_manager.ge(x, y)))
                     m_mpz_manager.set(result, m_one);
                 m_mpz_manager.del(x);
-                m_mpz_manager.del(y);
+                m_mpz_manager.del(y);                    
                 break;
             }
             case OP_BIT2BOOL: {
@@ -419,7 +419,7 @@ public:
                 const mpz & child = m_tracker.get_value(args[0]);
                 m_mpz_manager.set(result, child);
                 break;
-            }
+            }            
             case OP_BASHR: {
                 SASSERT(n_args == 2);
                 m_mpz_manager.set(result, m_tracker.get_value(args[0]));
@@ -433,7 +433,7 @@ public:
                     m_mpz_manager.add(temp, first, result);
                     m_mpz_manager.dec(shift);
                 }
-                m_mpz_manager.del(first);
+                m_mpz_manager.del(first);                 
                 m_mpz_manager.del(shift);
                 m_mpz_manager.del(temp);
                 break;
@@ -451,7 +451,7 @@ public:
             }
             case OP_BSHL: {
                 SASSERT(n_args == 2);
-                m_mpz_manager.set(result, m_tracker.get_value(args[0]));
+                m_mpz_manager.set(result, m_tracker.get_value(args[0]));                
                 mpz shift; m_mpz_manager.set(shift, m_tracker.get_value(args[1]));
                 while (!m_mpz_manager.is_zero(shift)) {
                     m_mpz_manager.mul(result, m_two, result);
@@ -459,7 +459,7 @@ public:
                 }
                 const mpz & p = m_powers(m_bv_util.get_bv_size(n));
                 m_mpz_manager.rem(result, p, result);
-                m_mpz_manager.del(shift);
+                m_mpz_manager.del(shift);                    
                 break;
             }
             case OP_SIGN_EXT: {
@@ -467,13 +467,13 @@ public:
                 m_mpz_manager.set(result, m_tracker.get_value(args[0]));
                 break;
             }
-            default:
+            default: 
                 NOT_IMPLEMENTED_YET();
             }
         }
         else {
             NOT_IMPLEMENTED_YET();
-        }
+        }        
 
         TRACE("sls_eval", tout << "(" << fd->get_name();
                             for (unsigned i = 0; i < n_args; i++)
@@ -500,23 +500,23 @@ public:
                 m_temp_exprs.push_back(m_tracker.mpz2value(m_manager.get_sort(arg), v));
             }
             expr_ref q(m_manager), temp(m_manager);
-            q = m_manager.mk_app(a->get_decl(), m_temp_exprs.size(), m_temp_exprs.c_ptr());
+            q = m_manager.mk_app(a->get_decl(), m_temp_exprs.size(), m_temp_exprs.c_ptr());                                
             model dummy_model(m_manager);
             model_evaluator evaluator(dummy_model);
             evaluator(q, temp);
             mpz check_res;
             m_tracker.value2mpz(temp, check_res);
-            CTRACE("sls", !m_mpz_manager.eq(check_res, result),
-                            tout << "EVAL BUG: IS " << m_mpz_manager.to_string(result) <<
+            CTRACE("sls", !m_mpz_manager.eq(check_res, result), 
+                            tout << "EVAL BUG: IS " << m_mpz_manager.to_string(result) << 
                             " SHOULD BE " << m_mpz_manager.to_string(check_res) << std::endl; );
             SASSERT(m_mpz_manager.eq(check_res, result));
             m_mpz_manager.del(check_res);
-
+                    
             break;
         }
-        default:
+        default: 
             NOT_IMPLEMENTED_YET();
-        }
+        }    
     }
 
     void run_update(unsigned cur_depth) {
@@ -555,7 +555,7 @@ public:
 
         m_mpz_manager.del(new_value);
     }
-
+        
     void update_all() {
         unsigned max_depth = 0;
 
@@ -564,7 +564,7 @@ public:
         for (sls_tracker::entry_point_type::iterator it = start; it != end; it++) {
             expr * ep = m_tracker.get_entry_point(it->m_key);
             unsigned cur_depth = m_tracker.get_distance(ep);
-            if (m_traversal_stack.size() <= cur_depth)
+            if (m_traversal_stack.size() <= cur_depth) 
                 m_traversal_stack.resize(cur_depth+1);
             m_traversal_stack[cur_depth].push_back(ep);
             if (cur_depth > max_depth) max_depth = cur_depth;
@@ -577,7 +577,7 @@ public:
         m_tracker.set_value(fd, new_value);
         expr * ep = m_tracker.get_entry_point(fd);
         unsigned cur_depth = m_tracker.get_distance(ep);
-        if (m_traversal_stack.size() <= cur_depth)
+        if (m_traversal_stack.size() <= cur_depth) 
             m_traversal_stack.resize(cur_depth+1);
         m_traversal_stack[cur_depth].push_back(ep);
 
@@ -612,9 +612,9 @@ public:
                             tout << unsat_constants[i]->get_name() << ", ";
                         tout << std::endl;*/
                         tout << "Randomization candidate: " << unsat_constants[r]->get_name() << std::endl;
-                        tout << "Locally randomized model: " << std::endl;
+                        tout << "Locally randomized model: " << std::endl; 
                         m_tracker.show_model(tout); );
-    }
+    } 
 };
 
 #endif

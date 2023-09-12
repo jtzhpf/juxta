@@ -28,13 +28,13 @@ Revision History:
 namespace smt2 {
 
     typedef cmd_exception scanner_exception;
-
+    
     class scanner {
     private:
         bool               m_interactive;
         int                m_spos; // position in the current line of the stream
         char               m_curr;  // current char;
-
+        
         int                m_line;  // line
         int                m_pos;   // start position of the token
         // data
@@ -49,19 +49,19 @@ namespace smt2 {
         unsigned           m_bend;
         svector<char>      m_string;
         std::istream&      m_stream;
-
+        
         bool               m_cache_input;
         svector<char>      m_cache;
         svector<char>      m_cache_result;
-
+        
         bool               m_smtlib2_compliant;
-
+        
         char curr() const { return m_curr; }
         void new_line() { m_line++; m_spos = 0; }
         void next();
-
+        
     public:
-
+        
         enum token {
             NULL_TOKEN = 0,
             LEFT_PAREN = 1,
@@ -74,11 +74,11 @@ namespace smt2 {
             FLOAT_TOKEN,
             EOF_TOKEN
         };
-
+        
         scanner(cmd_context & ctx, std::istream& stream, bool interactive = false);
-
-        ~scanner() {}
-
+        
+        ~scanner() {}    
+        
         int get_line() const { return m_line; }
         int get_pos() const { return m_pos; }
         symbol const & get_id() const { return m_id; }
@@ -86,7 +86,7 @@ namespace smt2 {
         unsigned get_bv_size() const { return m_bv_size; }
         char const * get_string() const { return m_string.begin(); }
         token scan();
-
+        
         token read_symbol_core();
         token read_symbol();
         token read_quoted_symbol();

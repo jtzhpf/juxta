@@ -34,7 +34,7 @@ class expr_rand {
 
     func_decl_ref_vector m_funcs;
     map_t                m_nodes;
-
+    
 public:
     expr_rand(ast_manager& m);
     ~expr_rand();
@@ -47,11 +47,11 @@ public:
     void initialize_array(unsigned num_vars, sort* dom, sort* rng);
     void initialize_basic(unsigned amplification);
     void seed(unsigned n) { m_random = random_gen(n); }
-
+                       
 private:
     void walk();
     void walk(unsigned n);
-
+    
     func_decl* choose_func_decl();
     expr*      choose_expr(sort*);
 

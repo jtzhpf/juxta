@@ -18,7 +18,7 @@ Notes:
 
     instead of the brute force enumeration of permutations
     we can add an instruction 'gate' which copies the ast
-    into a register and creates another register with the same
+    into a register and creates another register with the same 
     term. Matching against a 'gate' is a noop, apart from clearing
     the ast in the register. Then on backtracking we know how many
     terms were matched from the permutation. It does not make sense
@@ -38,17 +38,17 @@ Notes:
 #include"smt2parser.h"
 
 expr_pattern_match::expr_pattern_match(ast_manager & manager):
-    m_manager(manager), m_precompiled(manager) {
+    m_manager(manager), m_precompiled(manager) {        
 }
 
 expr_pattern_match::~expr_pattern_match() {
 }
 
-bool
+bool 
 expr_pattern_match::match_quantifier(quantifier* qf, app_ref_vector& patterns, unsigned& weight) {
     if (m_regs.empty()) {
         // HACK: the code crashes if database is empty.
-        return false;
+        return false; 
     }
     m_regs[0] = qf->get_expr();
     for (unsigned i = 0; i < m_precompiled.size(); ++i) {
@@ -68,7 +68,7 @@ expr_pattern_match::match_quantifier(quantifier* qf, app_ref_vector& patterns, u
                 patterns.push_back(to_app(p_result.get()));
             }
             weight = qf2->get_weight();
-            return true;
+            return true;            
         }
     }
     return false;
@@ -80,7 +80,7 @@ expr_pattern_match::instantiate(expr* a, unsigned num_bound, subst& s, expr_ref&
     for (unsigned i = 0; i < num_bound; ++i) {
         b.insert(m_bound_dom[i], m_bound_rng[i]);
     }
-
+    
     inst_proc proc(m_manager, s, b, m_regs);
     for_each_ast(proc, a);
     expr* v = 0;
@@ -92,7 +92,7 @@ expr_pattern_match::instantiate(expr* a, unsigned num_bound, subst& s, expr_ref&
 
 
 void
-expr_pattern_match::compile(expr* q)
+expr_pattern_match::compile(expr* q) 
 {
     SASSERT(q->get_kind() == AST_QUANTIFIER);
     quantifier* qf = to_quantifier(q);
@@ -109,7 +109,7 @@ expr_pattern_match::compile(expr* q)
     regs.push_back(0);
     unsigned num_bound = 0;
     obj_map<var, unsigned> bound;
-
+        
     while (!pats.empty()) {
 
         unsigned reg = regs.back();
@@ -133,14 +133,14 @@ expr_pattern_match::compile(expr* q)
                 instr.m_num_bound = num_bound;
                 bound.insert(b, num_bound);
                 ++num_bound;
-            }
+            }            
             break;
-        }
+        }        
         case AST_APP: {
             unsigned r = 0;
             app* app = to_app(pat);
             func_decl* d  = app->get_decl();
-
+                        
             for (unsigned i = 0; i < app->get_num_args(); ++i) {
                 regs.push_back(max_reg);
                 pats.push_back(app->get_arg(i));
@@ -155,7 +155,7 @@ expr_pattern_match::compile(expr* q)
                 else {
                     instr.m_kind = SET_VAR;
                     s.insert(d, reg);
-                }
+                }        
             }
             else {
                 if (d->is_associative() && d->is_commutative()) {
@@ -166,7 +166,7 @@ expr_pattern_match::compile(expr* q)
                     instr.m_kind = BIND_C;
                 }
                 else {
-                    instr.m_kind = BIND;
+                    instr.m_kind = BIND;           
                 }
             }
             break;
@@ -185,18 +185,18 @@ expr_pattern_match::compile(expr* q)
         m_bound_dom.resize(num_bound+1, 0);
         m_bound_rng.resize(num_bound+1, 0);
     }
-
+    
     instr.m_kind = YIELD;
     m_instrs.push_back(instr);
 }
 
 
-bool
-expr_pattern_match::match(expr* a, unsigned init, subst& s)
-{
+bool 
+expr_pattern_match::match(expr* a, unsigned init, subst& s) 
+{    
     svector<instr> bstack;
     instr pc = m_instrs[init];
-
+    
     while (true) {
         bool ok = false;
         switch(pc.m_kind) {
@@ -206,7 +206,7 @@ expr_pattern_match::match(expr* a, unsigned init, subst& s)
         case CHECK_TERM:
             ok = (pc.m_pat == m_regs[pc.m_reg]);
             break;
-        case SET_VAR:
+        case SET_VAR: 
         case CHECK_VAR: {
             app* app1 = to_app(pc.m_pat);
             a   = m_regs[pc.m_reg];
@@ -217,8 +217,8 @@ expr_pattern_match::match(expr* a, unsigned init, subst& s)
             if (app1->get_num_args() != app2->get_num_args()) {
                 break;
             }
-            if (pc.m_kind == CHECK_VAR &&
-                to_app(m_regs[pc.m_reg])->get_decl() !=
+            if (pc.m_kind == CHECK_VAR && 
+                to_app(m_regs[pc.m_reg])->get_decl() != 
                 to_app(m_regs[pc.m_other_reg])->get_decl()) {
                 break;
             }
@@ -251,13 +251,13 @@ expr_pattern_match::match(expr* a, unsigned init, subst& s)
             break;
         }
         case CHECK_BOUND:
-            TRACE("expr_pattern_match",
-                  tout
-                  << "check bound "
+            TRACE("expr_pattern_match", 
+                  tout 
+                  << "check bound " 
                   << pc.m_num_bound << " " << pc.m_reg;
                   );
             ok = m_bound_rng[pc.m_num_bound] == m_regs[pc.m_reg];
-            break;
+            break;            
         case BIND:
         case BIND_AC:
         case BIND_C: {
@@ -318,7 +318,7 @@ expr_pattern_match::match(expr* a, unsigned init, subst& s)
                 fac *= (j-1);
                 SASSERT(((k /fac) % j) + 1 <= j);
                 std::swap(m_regs[pc.m_offset + j - 1], m_regs[pc.m_offset + j - ((k / fac) % j) - 1]);
-            }
+            }  
             if (k < fac*num_args) {
                 bstack.push_back(instr(CHOOSE_AC, pc.m_offset, pc.m_next, app2, k+1));
             }
@@ -373,13 +373,13 @@ expr_pattern_match::match_decl(func_decl const * pat, func_decl const * d) const
     return true;
 }
 
-bool
+bool 
 expr_pattern_match::is_var(func_decl* d) {
     const char* s = d->get_name().bare_str();
     return s && *s == '?';
 }
 
-void
+void 
 expr_pattern_match::initialize(char const * spec_string) {
     if (!m_instrs.empty()) {
         return;
@@ -398,7 +398,7 @@ expr_pattern_match::initialize(char const * spec_string) {
     TRACE("expr_pattern_match", display(tout); );
 }
 
-void
+void 
 expr_pattern_match::display(std::ostream& out) const {
     for (unsigned i = 0; i < m_instrs.size(); ++i) {
         display(out, m_instrs[i]);

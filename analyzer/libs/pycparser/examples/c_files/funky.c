@@ -12,8 +12,8 @@ int maxout_in(int paste, char** matrix)
 int main()
 {
     auto char* multi = "a multi";
-
-
+    
+    
 }
 
 

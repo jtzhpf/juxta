@@ -11,7 +11,7 @@ Abstract:
        k <= x
        x <= k
        x - y != k
-    And all variables are bounded.
+    And all variables are bounded.   
 
 Author:
 
@@ -30,10 +30,10 @@ class diff_neq_tactic : public tactic {
         ast_manager &       m;
         arith_util          u;
         typedef unsigned    var;
-
+        
         expr_ref_vector     m_var2expr;
         obj_map<expr, var>  m_expr2var;
-
+        
         svector<int>        m_lower;
         svector<int>        m_upper;
         struct diseq {
@@ -46,13 +46,13 @@ class diff_neq_tactic : public tactic {
         typedef svector<int> decision_stack;
         decision_stack       m_stack;
         volatile bool        m_cancel;
-
+        
         bool                m_produce_models;
         rational            m_max_k;
         rational            m_max_neg_k;
-
+        
         unsigned            m_num_conflicts;
-
+        
         imp(ast_manager & _m, params_ref const & p):
             m(_m),
             u(m),
@@ -60,26 +60,26 @@ class diff_neq_tactic : public tactic {
             updt_params(p);
             m_cancel = false;
         }
-
+        
         void updt_params(params_ref const & p) {
             m_max_k          = rational(p.get_uint("diff_neq_max_k", 1024));
             m_max_neg_k      = -m_max_k;
-            if (m_max_k >= rational(INT_MAX/2))
+            if (m_max_k >= rational(INT_MAX/2)) 
                 m_max_k = rational(INT_MAX/2);
         }
-
+        
         void set_cancel(bool f) {
             m_cancel = f;
         }
-
+        
         void throw_not_supported() {
             throw tactic_exception("goal is not diff neq");
         }
-
+        
         unsigned num_vars() const {
             return m_upper.size();
         }
-
+        
         var mk_var(expr * t) {
             SASSERT(is_uninterp_const(t));
             var x;
@@ -93,7 +93,7 @@ class diff_neq_tactic : public tactic {
             m_var_diseqs.push_back(diseqs());
             return x;
         }
-
+        
         void process_le(expr * lhs, expr * rhs) {
             if (!u.is_int(lhs))
                 throw_not_supported();
@@ -102,18 +102,18 @@ class diff_neq_tactic : public tactic {
                 var x  = mk_var(lhs);
                 int _k = static_cast<int>(k.get_int64());
                 m_upper[x] = _k;
-
+                
             }
             else if (is_uninterp_const(rhs) && u.is_numeral(lhs, k) && m_max_neg_k <= k && k <= m_max_k) {
                 var x  = mk_var(rhs);
-                int _k = static_cast<int>(k.get_int64());
+                int _k = static_cast<int>(k.get_int64()); 
                 m_lower[x] = _k;
             }
             else {
                 throw_not_supported();
             }
         }
-
+        
         // process t1 - t2 != k
         void process_neq_core(expr * t1, expr * t2, int k) {
             var x1 = mk_var(t1);
@@ -126,7 +126,7 @@ class diff_neq_tactic : public tactic {
             }
             m_var_diseqs[x1].push_back(diseq(x2, k));
         }
-
+        
         void process_neq(expr * lhs, expr * rhs) {
             if (!u.is_int(lhs))
                 throw_not_supported();
@@ -155,7 +155,7 @@ class diff_neq_tactic : public tactic {
                 throw_not_supported();
             }
         }
-
+        
         // throws exception if contains unbounded variable
         void check_unbounded() {
             unsigned num = num_vars();
@@ -163,11 +163,11 @@ class diff_neq_tactic : public tactic {
                 if (m_lower[x] == INT_MIN || m_upper[x] == INT_MAX)
                     throw_not_supported();
                 // possible extension: support bound normalization here
-                if (m_lower[x] != 0)
+                if (m_lower[x] != 0) 
                     throw_not_supported(); // use bound normalizer
             }
         }
-
+        
         void compile(goal const & g) {
             expr * lhs;
             expr * rhs;
@@ -186,7 +186,7 @@ class diff_neq_tactic : public tactic {
             }
             check_unbounded();
         }
-
+        
         void display(std::ostream & out) {
             unsigned num = num_vars();
             for (var x = 0; x < num; x++) {
@@ -200,16 +200,16 @@ class diff_neq_tactic : public tactic {
                 }
             }
         }
-
+        
         void display_model(std::ostream & out) {
             unsigned num = m_stack.size();
             for (var x = 0; x < num; x++) {
                 out << mk_ismt2_pp(m_var2expr.get(x), m) << " := " << m_stack[x] << "\n";
             }
         }
-
+        
         svector<bool>  m_forbidden;
-
+        
         // make sure m_forbidden.size() > max upper bound
         void init_forbidden() {
             int max = 0;
@@ -221,7 +221,7 @@ class diff_neq_tactic : public tactic {
             m_forbidden.reset();
             m_forbidden.resize(max+1, false);
         }
-
+        
         // Return a value v s.t. v >= starting_at and v <= m_upper[x] and all diseqs in m_var_diseqs[x] are satisfied.
         // Return -1 if such value does not exist.
         int choose_value(var x, int starting_at) {
@@ -265,7 +265,7 @@ class diff_neq_tactic : public tactic {
             });
             return v;
         }
-
+        
         bool extend_model(var x) {
             int v = choose_value(x, 0);
             if (v == -1)
@@ -273,7 +273,7 @@ class diff_neq_tactic : public tactic {
             m_stack.push_back(v);
             return true;
         }
-
+        
         bool resolve_conflict() {
             m_num_conflicts++;
             while (!m_stack.empty()) {
@@ -288,7 +288,7 @@ class diff_neq_tactic : public tactic {
             }
             return false;
         }
-
+        
         bool search() {
             m_num_conflicts = 0;
             init_forbidden();
@@ -318,9 +318,9 @@ class diff_neq_tactic : public tactic {
             return md;
         }
 
-        virtual void operator()(goal_ref const & g,
-                                goal_ref_buffer & result,
-                                model_converter_ref & mc,
+        virtual void operator()(goal_ref const & g, 
+                                goal_ref_buffer & result, 
+                                model_converter_ref & mc, 
                                 proof_converter_ref & pc,
                                 expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
@@ -373,7 +373,7 @@ public:
         m_imp->updt_params(p);
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) { 
         r.insert("diff_neq_max_k", CPK_UINT, "(default: 1024) maximum variable upper bound for diff neq solver.");
     }
 
@@ -389,14 +389,14 @@ public:
        \brief Fix a DL variable in s to 0.
        If s is not really in the difference logic fragment, then this is a NOOP.
     */
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(in, result, mc, pc, core);
     }
-
+    
     virtual void cleanup() {
         imp * d = alloc(imp, m_imp->m, m_params);
         d->m_num_conflicts = m_imp->m_num_conflicts;

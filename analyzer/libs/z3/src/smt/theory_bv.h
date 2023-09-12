@@ -31,7 +31,7 @@ Revision History:
 #include"numeral_factory.h"
 
 namespace smt {
-
+    
     struct theory_bv_stats {
         unsigned   m_num_diseq_static, m_num_diseq_dynamic, m_num_bit2core, m_num_th2core_eq, m_num_conflicts;
         void reset() { memset(this, 0, sizeof(theory_bv_stats)); }
@@ -54,7 +54,7 @@ namespace smt {
             theory_var    m_var;
             unsigned      m_idx;
             var_pos_occ * m_next;
-            var_pos_occ(theory_var v = null_theory_var, unsigned idx = 0, var_pos_occ * next = 0):m_var(v), m_idx(idx), m_next(next) {}
+            var_pos_occ(theory_var v = null_theory_var, unsigned idx = 0, var_pos_occ * next = 0):m_var(v), m_idx(idx), m_next(next) {} 
         };
 
         struct bit_atom : public atom {
@@ -75,14 +75,14 @@ namespace smt {
         /**
            \brief Structure used to store the position of a bitvector variable that
            contains the true_literal/false_literal.
-
+           
            Remark: the implementation assumes that bitvector variables containing
            complementary bits are never merged. I assert a disequality (not (= x y))
            whenever x and y contain complementary bits. However, this is too expensive
            when the bit is the true_literal or false_literal. The number of disequalities
            is too big. To avoid this problem, each equivalence class has a set
            of its true_literal and false_literal bits in the form of svector<zero_one_bit>.
-
+           
            Before merging two classes we just check if the merge is valid by traversing these
            vectors.
         */
@@ -116,7 +116,7 @@ namespace smt {
         th_trail_stack           m_trail_stack;
         th_union_find            m_find;
         vector<literal_vector>   m_bits;     // per var, the bits of a given variable.
-        svector<unsigned>        m_wpos;     // per var, watch position for fixed variable detection.
+        svector<unsigned>        m_wpos;     // per var, watch position for fixed variable detection. 
         vector<zero_one_bits>    m_zero_one_bits; // per var, see comment in the struct zero_one_bit
         bool_var2atom            m_bool_var2atom;
         typedef svector<theory_var> vars;
@@ -251,7 +251,7 @@ namespace smt {
     public:
         theory_bv(ast_manager & m, theory_bv_params const & params, bit_blaster_params const & bb_params);
         virtual ~theory_bv();
-
+        
         virtual theory * mk_fresh(context * new_ctx) { return alloc(theory_bv, get_manager(), m_params, m_bb.get_params()); }
 
         virtual char const * get_name() const { return "bit-vector"; }

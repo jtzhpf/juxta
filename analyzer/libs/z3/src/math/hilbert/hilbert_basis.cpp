@@ -35,7 +35,7 @@ class hilbert_basis::value_index1 {
 
         stats() { reset(); }
         void reset() { memset(this, 0, sizeof(*this)); }
-    };
+    };    
 
     hilbert_basis&     hb;
     int_table          m_table;
@@ -91,7 +91,7 @@ public:
         int_table::iterator it = m_table.begin(), end = m_table.end();
         for (; it != end; ++it) {
             offset_t offs(*it);
-            hb.display(out, offs);
+            hb.display(out, offs);            
         }
         display_profile(out);
     }
@@ -110,9 +110,9 @@ private:
             weights[0].insert(ws.weight());
             for (unsigned i = 0; i < hb.get_num_vars(); ++i) {
                 weights[i+1].insert(ws[i]);
-            }
+            }            
         }
-        out << "profile: ";
+        out << "profile: "; 
         for (unsigned i = 0; i < weights.size(); ++i) {
             out << weights[i].size() << " ";
         }
@@ -175,7 +175,7 @@ class hilbert_basis::value_index2 {
         hilbert_basis* hb;
         offset_t  m_value;
         checker(): hb(0) {}
-        virtual bool operator()(unsigned const& v) {
+        virtual bool operator()(unsigned const& v) {            
             if (m_value.m_offset != v) { //  && hb->is_subsumed(m_value, offset_t(v))) {
                 return true;
             }
@@ -195,8 +195,8 @@ class hilbert_basis::value_index2 {
     }
 
 public:
-    value_index2(hilbert_basis& hb):
-        hb(hb),
+    value_index2(hilbert_basis& hb): 
+        hb(hb), 
         m_le(hb),
         m_trie(m_le),
         m_offset(1) {
@@ -253,7 +253,7 @@ class hilbert_basis::index {
         unsigned m_num_insert;
         stats() { reset(); }
         void reset() { memset(this, 0, sizeof(*this)); }
-    };
+    };        
 
     template<typename Value>
     class numeral_map : public map<numeral, Value, numeral::hash_proc, numeral::eq_proc> {};
@@ -268,7 +268,7 @@ class hilbert_basis::index {
 
 public:
     index(hilbert_basis& hb): hb(hb), m_pos(hb), m_zero(hb), m_num_ineqs(0) {}
-
+    
     void insert(offset_t idx, values const& vs) {
         ++m_stats.m_num_insert;
         if (vs.weight().is_pos()) {
@@ -297,7 +297,7 @@ public:
         }
         else {
             m_neg.find(vs.weight())->remove(idx, vs);
-        }
+        }        
     }
 
     bool find(offset_t idx, values const& vs) {
@@ -311,10 +311,10 @@ public:
         else {
             value_index* map;
             return
-                m_neg.find(vs.weight(), map) &&
+                m_neg.find(vs.weight(), map) && 
                 map->find(idx, vs);
-        }
-    }
+        }        
+    }    
 
     void reset(unsigned num_ineqs) {
         value_map::iterator it = m_neg.begin(), end = m_neg.end();
@@ -356,7 +356,7 @@ public:
             it->m_value->display(out);
         }
     }
-
+    
 private:
     unsigned size() const {
         unsigned sz = m_pos.size();
@@ -364,7 +364,7 @@ private:
         value_map::iterator it = m_neg.begin(), end = m_neg.end();
         for (; it != end; ++it) {
             sz += it->m_value->size();
-        }
+        }        
         return sz;
     }
 };
@@ -396,10 +396,10 @@ class hilbert_basis::passive {
         }
         return w;
     }
-
+    
 public:
-
-    passive(hilbert_basis& hb):
+    
+    passive(hilbert_basis& hb): 
         hb(hb),
         m_lt(&m_this),
         m_heap(10, m_lt)
@@ -412,20 +412,20 @@ public:
         m_free_list.reset();
         m_passive.reset();
     }
-
+    
     bool empty() const {
         return m_heap.empty();
     }
 
     offset_t pop() {
         SASSERT(!empty());
-        unsigned val = static_cast<unsigned>(m_heap.erase_min());
+        unsigned val = static_cast<unsigned>(m_heap.erase_min());        
         offset_t result = m_passive[val];
         m_free_list.push_back(val);
         m_passive[val] = mk_invalid_offset();
         return result;
     }
-
+    
     void insert(offset_t idx) {
         unsigned v;
         if (m_free_list.empty()) {
@@ -445,7 +445,7 @@ public:
         passive& p;
         unsigned m_idx;
         void fwd() {
-            while (m_idx < p.m_passive.size() &&
+            while (m_idx < p.m_passive.size() && 
                    is_invalid_offset(p.m_passive[m_idx])) {
                 ++m_idx;
             }
@@ -517,7 +517,7 @@ class hilbert_basis::passive2 {
     }
 
 public:
-    passive2(hilbert_basis& hb):
+    passive2(hilbert_basis& hb): 
         hb(hb),
         m_lt(&m_this),
         m_heap(10, m_lt)
@@ -603,7 +603,7 @@ public:
         passive2& p;
         unsigned m_idx;
         void fwd() {
-            while (m_idx < p.m_pas.size() &&
+            while (m_idx < p.m_pas.size() && 
                    is_invalid_offset(p.m_pas[m_idx])) {
                 ++m_idx;
             }
@@ -624,7 +624,7 @@ public:
 
     iterator end() {
         return iterator(*this, m_pas.size());
-    }
+    }    
 private:
     void next_resolvable(bool is_positive, unsigned v) {
         offset_t pas = m_pas[v];
@@ -647,7 +647,7 @@ private:
 };
 
 
-hilbert_basis::hilbert_basis():
+hilbert_basis::hilbert_basis(): 
     m_cancel(false),
     m_use_support(true),
     m_use_ordered_support(true),
@@ -692,7 +692,7 @@ void hilbert_basis::reset() {
     }
     m_ints.reset();
     m_current_ineq = 0;
-
+    
 }
 
 void hilbert_basis::collect_statistics(statistics& st) const {
@@ -758,7 +758,7 @@ void hilbert_basis::set_is_int(unsigned var_index) {
     m_ints.push_back(var_index+1);
 }
 
-bool hilbert_basis::get_is_int(unsigned var_index) const {
+bool hilbert_basis::get_is_int(unsigned var_index) const {    
     return m_ints.contains(var_index+1);
 }
 
@@ -788,7 +788,7 @@ void hilbert_basis::init_basis() {
         add_unit_vector(m_ints[i], numeral(-1));
     }
 }
-
+ 
 void hilbert_basis::add_unit_vector(unsigned i, numeral const& e) {
     unsigned num_vars = get_num_vars();
     num_vector w(num_vars, numeral(0));
@@ -798,7 +798,7 @@ void hilbert_basis::add_unit_vector(unsigned i, numeral const& e) {
     for (unsigned j = 0; j < num_vars; ++j) {
         v[j] = w[j];
     }
-    m_basis.push_back(idx);
+    m_basis.push_back(idx);            
 }
 
 lbool hilbert_basis::saturate() {
@@ -809,18 +809,18 @@ lbool hilbert_basis::saturate() {
         stopwatch sw;
         sw.start();
         lbool r = saturate(m_ineqs[m_current_ineq], m_iseq[m_current_ineq]);
-        IF_VERBOSE(3,
-                   { statistics st;
-                       collect_statistics(st);
-                       st.display(verbose_stream());
-                       sw.stop();
+        IF_VERBOSE(3,  
+                   { statistics st; 
+                       collect_statistics(st); 
+                       st.display(verbose_stream()); 
+                       sw.stop(); 
                        verbose_stream() << "time: " << sw.get_seconds() << "\n";
                    });
 
         ++m_stats.m_num_saturations;
         if (r != l_true) {
             return r;
-        }
+        }        
         ++m_current_ineq;
     }
     if (m_cancel) {
@@ -842,7 +842,7 @@ lbool hilbert_basis::saturate_orig(num_vector const& ineq, bool is_eq) {
         values v = vec(idx);
         v.weight() = get_weight(v, ineq);
         for (unsigned k = 0; k < m_current_ineq; ++k) {
-            v.weight(k) = get_weight(v, m_ineqs[k]);
+            v.weight(k) = get_weight(v, m_ineqs[k]);        
         }
         add_goal(idx);
         if (m_use_support) {
@@ -915,7 +915,7 @@ lbool hilbert_basis::saturate(num_vector const& ineq, bool is_eq) {
         values v = vec(idx);
         v.weight() = get_weight(v, ineq);
         for (unsigned k = 0; k < m_current_ineq; ++k) {
-            v.weight(k) = get_weight(v, m_ineqs[k]);
+            v.weight(k) = get_weight(v, m_ineqs[k]);        
         }
         m_index->insert(idx, v);
         if (v.weight().is_zero()) {
@@ -935,8 +935,8 @@ lbool hilbert_basis::saturate(num_vector const& ineq, bool is_eq) {
     // initialize passive
     for (unsigned i = 0; (init_basis_size > 0) && i < m_sos.size(); ++i) {
         if (vec(m_sos[i]).weight().is_neg()) {
-            m_passive2->insert(m_sos[i], 0);
-        }
+            m_passive2->insert(m_sos[i], 0);         
+        }   
     }
 
     TRACE("hilbert_basis", display(tout););
@@ -1090,9 +1090,9 @@ void hilbert_basis::resolve(offset_t i, offset_t j, offset_t r) {
         u.weight(k) = v.weight(k) + w.weight(k);
     }
     TRACE("hilbert_basis_verbose",
-          display(tout, i);
-          display(tout, j);
-          display(tout, r);
+          display(tout, i); 
+          display(tout, j); 
+          display(tout, r); 
           );
 }
 
@@ -1100,7 +1100,7 @@ void hilbert_basis::resolve(offset_t i, offset_t j, offset_t r) {
 hilbert_basis::offset_t hilbert_basis::alloc_vector() {
     if (m_free_list.empty()) {
         unsigned sz  =  m_ineqs.size() + get_num_vars();
-        unsigned idx =  m_store.size();
+        unsigned idx =  m_store.size();   
         m_store.resize(idx + sz);
         // std::cout << "alloc vector: " << idx << " " << sz << " " << m_store.c_ptr() + idx << " " << m_ineqs.size() << "\n";
         return offset_t(idx);
@@ -1130,7 +1130,7 @@ bool hilbert_basis::add_goal(offset_t idx) {
 
 bool hilbert_basis::is_subsumed(offset_t idx)  {
 
-    if (m_index->find(idx, vec(idx))) {
+    if (m_index->find(idx, vec(idx))) {        
         ++m_stats.m_num_subsumptions;
         return true;
     }
@@ -1226,12 +1226,12 @@ void hilbert_basis::display(std::ostream& out) const {
 
 void hilbert_basis::display(std::ostream& out, offset_t o) const {
     display(out, vec(o));
-    out << " -> " << vec(o).weight() << "\n";
+    out << " -> " << vec(o).weight() << "\n";    
 }
 
 void hilbert_basis::display(std::ostream& out, values const& v) const {
     unsigned nv = get_num_vars();
-    for (unsigned j = 0; j < nv; ++j) {
+    for (unsigned j = 0; j < nv; ++j) {            
         out << v[j] << " ";
     }
 }
@@ -1254,7 +1254,7 @@ void hilbert_basis::display_ineq(std::ostream& out, num_vector const& v, bool is
             if (!v[j].is_one() && !v[j].is_minus_one()) {
                 out << abs(v[j]) << "*";
             }
-            out << "x" << j;
+            out << "x" << j;            
         }
     }
     if (is_eq) {
@@ -1268,30 +1268,30 @@ void hilbert_basis::display_ineq(std::ostream& out, num_vector const& v, bool is
 
 /**
    Vector v is subsumed by vector w if
-
+       
        v[i] >= w[i] for each index i.
-
+       
        a*v >= a*w  for the evaluation of vectors with respect to a.
-
+       
        . a*v < 0 => a*v = a*w
        . a*v > 0 => a*w > 0
        . a*v = 0 => a*w = 0
 
    Justification:
-
+       
        let u := v - w, then
-
+       
        u[i] >= 0  for each index i
-
+       
        a*u = a*(v-w) >= 0
-
+       
        So v = u + w, where a*u >= 0, a*w >= 0.
-
-       If a*v >= a*w >= 0 then v and w are linear
+       
+       If a*v >= a*w >= 0 then v and w are linear 
        solutions of e_i, and also v-w is a solution.
 
        If a*v = a*w < 0, then a*(v-w) = 0, so v can be obtained from w + (v - w).
-
+       
 */
 
 bool hilbert_basis::is_subsumed(offset_t i, offset_t j) const {
@@ -1299,14 +1299,14 @@ bool hilbert_basis::is_subsumed(offset_t i, offset_t j) const {
     values w = vec(j);
     numeral const& n = v.weight();
     numeral const& m = w.weight();
-    bool r =
-        i.m_offset != j.m_offset &&
+    bool r = 
+        i.m_offset != j.m_offset &&         
         n >= m && (!m.is_neg() || n == m) &&
         is_geq(v, w);
     for (unsigned k = 0; r && k < m_current_ineq; ++k) {
         r = v.weight(k) >= w.weight(k);
     }
-    CTRACE("hilbert_basis", r,
+    CTRACE("hilbert_basis", r, 
            display(tout, i);
            tout << " <= \n";
            display(tout, j);

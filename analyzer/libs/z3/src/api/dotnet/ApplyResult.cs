@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -23,7 +23,7 @@ using System.Diagnostics.Contracts;
 namespace Microsoft.Z3
 {
     /// <summary>
-    /// ApplyResult objects represent the result of an application of a
+    /// ApplyResult objects represent the result of an application of a 
     /// tactic to a goal. It contains the subgoals that were produced.
     /// </summary>
     [ContractVerification(true)]
@@ -56,8 +56,8 @@ namespace Microsoft.Z3
         }
 
         /// <summary>
-        /// Convert a model for the subgoal <paramref name="i"/> into a model for the original
-        /// goal <c>g</c>, that the ApplyResult was obtained from.
+        /// Convert a model for the subgoal <paramref name="i"/> into a model for the original 
+        /// goal <c>g</c>, that the ApplyResult was obtained from. 
         /// </summary>
         /// <returns>A model for <c>g</c></returns>
         public Model ConvertModel(uint i, Model m)

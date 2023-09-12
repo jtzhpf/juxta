@@ -74,7 +74,7 @@ asserted_formulas::asserted_formulas(ast_manager & m, smt_params & p):
 void asserted_formulas::setup() {
     switch (m_params.m_lift_ite) {
     case LI_FULL:
-        m_params.m_ng_lift_ite = LI_NONE;
+        m_params.m_ng_lift_ite = LI_NONE; 
         break;
     case LI_CONSERVATIVE:
         if (m_params.m_ng_lift_ite == LI_CONSERVATIVE)
@@ -83,7 +83,7 @@ void asserted_formulas::setup() {
     default:
         break;
     }
-
+ 
     if (m_params.m_relevancy_lvl == 0)
         m_params.m_relevancy_lemma = false;
 }
@@ -136,7 +136,7 @@ void asserted_formulas::set_eliminate_and(bool flag) {
 }
 
 void asserted_formulas::assert_expr(expr * e, proof * _in_pr) {
-    if (inconsistent())
+    if (inconsistent()) 
         return;
     if (!m_params.m_preprocess) {
         push_assertion(e, _in_pr, m_asserted_formulas, m_asserted_formula_prs);
@@ -171,7 +171,7 @@ void asserted_formulas::assert_expr(expr * e, proof * _in_pr) {
 }
 
 void asserted_formulas::assert_expr(expr * e) {
-    if (inconsistent())
+    if (inconsistent()) 
         return;
     assert_expr(e, m_manager.mk_asserted(e));
 }
@@ -193,7 +193,7 @@ void asserted_formulas::push_scope() {
     m_bv_sharing.push_scope();
     commit();
 }
-
+ 
 void asserted_formulas::pop_scope(unsigned num_scopes) {
     TRACE("asserted_formulas_scopes", tout << "before pop " << num_scopes << "\n"; display(tout););
     m_bv_sharing.pop_scope(num_scopes);
@@ -222,20 +222,20 @@ void asserted_formulas::reset() {
 }
 
 void asserted_formulas::set_cancel_flag(bool f) {
-    m_cancel_flag = f;
+    m_cancel_flag = f; 
 }
 
 #ifdef Z3DEBUG
 bool asserted_formulas::check_well_sorted() const {
-    for (unsigned i = 0; i < m_asserted_formulas.size(); i++) {
-        if (!is_well_sorted(m_manager, m_asserted_formulas.get(i))) return false;
+    for (unsigned i = 0; i < m_asserted_formulas.size(); i++) { 
+        if (!is_well_sorted(m_manager, m_asserted_formulas.get(i))) return false; 
     }
     return true;
 }
 #endif
 
 void asserted_formulas::reduce() {
-    if (inconsistent())
+    if (inconsistent()) 
         return;
     if (canceled()) {
         return;
@@ -251,7 +251,7 @@ void asserted_formulas::reduce() {
     CASSERT("well_sorted", check_well_sorted());
 
 #define INVOKE(COND, FUNC) if (COND) { FUNC; IF_VERBOSE(10000, verbose_stream() << "total size: " << get_total_size() << "\n";); }  TRACE("reduce_step_ll", ast_mark visited; display_ll(tout, visited);); TRACE("reduce_step", display(tout << #FUNC << " ");); CASSERT("well_sorted",check_well_sorted()); if (inconsistent() || canceled()) { TRACE("after_reduce", display(tout);); TRACE("after_reduce_ll", ast_mark visited; display_ll(tout, visited);); return;  }
-
+    
     set_eliminate_and(false); // do not eliminate and before nnf.
     INVOKE(m_params.m_propagate_booleans, propagate_booleans());
     INVOKE(m_params.m_propagate_values, propagate_values());
@@ -264,18 +264,18 @@ void asserted_formulas::reduce() {
     INVOKE(m_params.m_lift_ite != LI_NONE, lift_ite());
     INVOKE(m_params.m_eliminate_term_ite && m_params.m_lift_ite != LI_FULL, eliminate_term_ite());
     INVOKE(m_params.m_refine_inj_axiom && has_quantifiers(), refine_inj_axiom());
-    INVOKE(m_params.m_distribute_forall && has_quantifiers(), apply_distribute_forall());
-    TRACE("qbv_bug", tout << "after distribute_forall:\n"; display(tout););
+    INVOKE(m_params.m_distribute_forall && has_quantifiers(), apply_distribute_forall());    
+    TRACE("qbv_bug", tout << "after distribute_forall:\n"; display(tout););    
     INVOKE(m_params.m_macro_finder && has_quantifiers(), find_macros());
-    INVOKE(m_params.m_quasi_macros && has_quantifiers(), apply_quasi_macros());
+    INVOKE(m_params.m_quasi_macros && has_quantifiers(), apply_quasi_macros());    
     INVOKE(m_params.m_simplify_bit2int, apply_bit2int());
     INVOKE(m_params.m_eliminate_bounds && has_quantifiers(), cheap_quant_fourier_motzkin());
     INVOKE(m_params.m_ematching && has_quantifiers(), infer_patterns());
     INVOKE(m_params.m_max_bv_sharing && has_bv(), max_bv_sharing());
     INVOKE(m_params.m_bb_quantifiers, elim_bvs_from_quantifiers());
-    // temporary HACK: make sure that arith & bv are list-assoc
+    // temporary HACK: make sure that arith & bv are list-assoc 
     // this may destroy some simplification steps such as max_bv_sharing
-    reduce_asserted_formulas();
+    reduce_asserted_formulas(); 
 
     CASSERT("well_sorted",check_well_sorted());
 
@@ -289,7 +289,7 @@ void asserted_formulas::reduce() {
 void asserted_formulas::eliminate_and() {
     IF_IVERBOSE(10, verbose_stream() << "(smt.eliminating-and)\n";);
     set_eliminate_and(true);
-    reduce_asserted_formulas();
+    reduce_asserted_formulas();    
     TRACE("after_elim_and", display(tout););
 }
 
@@ -329,10 +329,10 @@ void asserted_formulas::display(std::ostream & out) const {
 void asserted_formulas::display_ll(std::ostream & out, ast_mark & pp_visited) const {
     if (!m_asserted_formulas.empty()) {
         unsigned sz = m_asserted_formulas.size();
-        for (unsigned i = 0; i < sz; i++)
+        for (unsigned i = 0; i < sz; i++) 
             ast_def_ll_pp(out, m_manager, m_asserted_formulas.get(i), pp_visited, true, false);
         out << "asserted formulas:\n";
-        for (unsigned i = 0; i < sz; i++)
+        for (unsigned i = 0; i < sz; i++) 
             out << "#" << m_asserted_formulas[i]->get_id() << " ";
         out << "\n";
     }
@@ -385,7 +385,7 @@ void asserted_formulas::find_macros_core() {
     expr_ref_vector  new_exprs(m_manager);
     proof_ref_vector new_prs(m_manager);
     unsigned sz = m_asserted_formulas.size();
-    m_macro_finder->operator()(sz - m_asserted_qhead, m_asserted_formulas.c_ptr() + m_asserted_qhead,
+    m_macro_finder->operator()(sz - m_asserted_qhead, m_asserted_formulas.c_ptr() + m_asserted_qhead, 
                                m_asserted_formula_prs.c_ptr() + m_asserted_qhead, new_exprs, new_prs);
     swap_asserted_formulas(new_exprs, new_prs);
     reduce_and_solve();
@@ -407,10 +407,10 @@ void asserted_formulas::apply_quasi_macros() {
     IF_IVERBOSE(10, verbose_stream() << "(smt.find-quasi-macros)\n";);
     TRACE("before_quasi_macros", display(tout););
     expr_ref_vector  new_exprs(m_manager);
-    proof_ref_vector new_prs(m_manager);
-    quasi_macros proc(m_manager, m_macro_manager, m_simplifier);
-    while (proc(m_asserted_formulas.size() - m_asserted_qhead,
-                m_asserted_formulas.c_ptr() + m_asserted_qhead,
+    proof_ref_vector new_prs(m_manager);      
+    quasi_macros proc(m_manager, m_macro_manager, m_simplifier);    
+    while (proc(m_asserted_formulas.size() - m_asserted_qhead, 
+                m_asserted_formulas.c_ptr() + m_asserted_qhead, 
                 m_asserted_formula_prs.c_ptr() + m_asserted_qhead,
                 new_exprs, new_prs)) {
         swap_asserted_formulas(new_exprs, new_prs);
@@ -428,7 +428,7 @@ void asserted_formulas::nnf_cnf() {
     proof_ref_vector new_prs(m_manager);
     expr_ref_vector  push_todo(m_manager);
     proof_ref_vector push_todo_prs(m_manager);
-
+    
     unsigned i  = m_asserted_qhead;
     unsigned sz = m_asserted_formulas.size();
     TRACE("nnf_bug", tout << "i: " << i << " sz: " << sz << "\n";);
@@ -458,8 +458,8 @@ void asserted_formulas::nnf_cnf() {
             CASSERT("well_sorted",is_well_sorted(m_manager, r1));
             if (canceled()) {
                 return;
-            }
-
+            }        
+            
             if (m_manager.proofs_enabled())
                 pr = m_manager.mk_modus_ponens(push_todo_prs.get(k), pr1);
             else
@@ -592,7 +592,7 @@ void asserted_formulas::propagate_values() {
     // C is a set which contains formulas of the form
     // { x = n }, where x is a variable and n a numberal.
     // R contains the rest.
-    //
+    // 
     // - new_exprs1 is the set C
     // - new_exprs2 is the set R
     //
@@ -651,7 +651,7 @@ void asserted_formulas::propagate_values() {
         // x->n will be removed from m_cache. If we don't do that, the next transformation
         // may simplify constraints in C using these entries, and the variables x in C
         // will be (silently) eliminated, and models produced by Z3 will not contain them.
-        flush_cache();
+        flush_cache(); 
     }
     TRACE("propagate_values", tout << "after:\n"; display(tout););
 }
@@ -774,7 +774,7 @@ void asserted_formulas::refine_inj_axiom() {
             TRACE("inj_axiom", tout << "simplifying...\n" << mk_pp(n, m_manager) << "\n" << mk_pp(new_n, m_manager) << "\n";);
             m_asserted_formulas.set(i, new_n);
             if (m_manager.proofs_enabled()) {
-                proof_ref new_pr(m_manager);
+                proof_ref new_pr(m_manager);     
                 new_pr = m_manager.mk_rewrite(n, new_n);
                 new_pr = m_manager.mk_modus_ponens(pr, new_pr);
                 m_asserted_formula_prs.set(i, new_pr);
@@ -788,7 +788,7 @@ MK_SIMPLIFIER(apply_bit2int, bit2int& functor = m_bit2int, "bit2int", "propagate
 
 MK_SIMPLIFIER(cheap_quant_fourier_motzkin, elim_bounds_star functor(m_manager), "elim_bounds", "cheap-fourier-motzkin", true);
 
-// MK_SIMPLIFIER(quant_elim, qe::expr_quant_elim_star1 &functor = m_quant_elim,
+// MK_SIMPLIFIER(quant_elim, qe::expr_quant_elim_star1 &functor = m_quant_elim, 
 //              "quantifiers", "quantifier elimination procedures", true);
 
 bool asserted_formulas::quant_elim() {
@@ -854,7 +854,7 @@ void asserted_formulas::max_bv_sharing() {
     }
     reduce_asserted_formulas();
     TRACE("bv_sharing", display(tout););
-
+    
 }
 
 #ifdef Z3DEBUG

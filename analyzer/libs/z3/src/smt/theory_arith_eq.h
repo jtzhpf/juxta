@@ -25,7 +25,7 @@ Revision History:
 #include"stopwatch.h"
 #undef max
 #undef min
-#endif
+#endif 
 
 namespace smt {
 
@@ -50,14 +50,14 @@ namespace smt {
                 // It only makes sense to propagate equality to the core when v and v2 have the same sort.
                 // The table m_fixed_var_table is not restored during backtrack. So, it may
                 // contain invalid (key -> value) pairs. So, we must check whether v2 is really equal to val (previous test) AND it has
-                // the same sort of v. The following test was missing in a previous version of Z3.
+                // the same sort of v. The following test was missing in a previous version of Z3. 
                 if (!is_equal(v, v2) && is_int(v) == is_int(v2)) {
                     antecedents& ante = get_antecedents();
 
                     //
                     // v <= k <= v2  => v <= v2
                     // v >= k >= v2 => v >= v2
-                    //
+                    // 
 
                     lower(v)->push_justification(ante, numeral::zero(), proofs_enabled());
                     upper(v2)->push_justification(ante, numeral::zero(), proofs_enabled());
@@ -86,14 +86,14 @@ namespace smt {
     /**
        \brief Returns true if r is a offset row.
        A offset row is a row that can be written as:
-
+       
        x = y + M
-
-       where x and y are non fixed variables, and
+       
+       where x and y are non fixed variables, and 
        M is linear polynomials where all variables are fixed,
        and M evaluates to k.
        When true is returned, x, y and k are stored in the given arguments.
-
+       
        \remark The following rule is used to select x and y.
        - if the base variable is not fixed, then x is the base var.
        - otherwise x is the smallest var.
@@ -175,14 +175,14 @@ namespace smt {
         timer.stop();
         ok++;
         if (ok % 100000 == 0) {
-            TRACE("propagate_cheap_eq",
-                  tout << total << " " << ok << " "
-                  << static_cast<double>(ok)/static_cast<double>(total)
+            TRACE("propagate_cheap_eq", 
+                  tout << total << " " << ok << " " 
+                  << static_cast<double>(ok)/static_cast<double>(total) 
                   << " " << timer.get_seconds() << "\n";
                   tout.flush(););
         }
 #endif
-
+        
         if (y == null_theory_var)
             return true;
 
@@ -200,16 +200,16 @@ namespace smt {
         return true;
     }
 
-
+    
     /**
        \brief Cheap propagation of equalities x_i = x_j, when
-       x_i = y + k
+       x_i = y + k 
        x_j = y + k
 
        This equalities are detected by maintaining a map:
        (y, k) ->  row_id   when a row is of the form  x = y + k
-
-       This methods checks whether the given row is an offset row (See is_offset_row),
+ 
+       This methods checks whether the given row is an offset row (See is_offset_row), 
        and uses the map to find new equalities if that is the case.
     */
     template<typename Ext>
@@ -223,30 +223,30 @@ namespace smt {
         theory_var y;
         numeral k;
         if (is_offset_row(r, x, y, k)) {
-
+            
             if (y == null_theory_var) {
                 // x is an implied fixed var at k.
                 value_sort_pair key(k, is_int(x));
                 theory_var x2;
-                if (m_fixed_var_table.find(key, x2) &&
-                    x2 < static_cast<int>(get_num_vars()) &&
-                    is_fixed(x2) &&
+                if (m_fixed_var_table.find(key, x2) && 
+                    x2 < static_cast<int>(get_num_vars()) && 
+                    is_fixed(x2) && 
                     lower_bound(x2).get_rational() == k &&
-                    // We must check whether x2 is an integer.
+                    // We must check whether x2 is an integer. 
                     // The table m_fixed_var_table is not restored during backtrack. So, it may
-                    // contain invalid (key -> value) pairs.
-                    // So, we must check whether x2 is really equal to k (previous test)
+                    // contain invalid (key -> value) pairs. 
+                    // So, we must check whether x2 is really equal to k (previous test) 
                     // AND has the same sort of x.
-                    // The following test was missing in a previous version of Z3.
+                    // The following test was missing in a previous version of Z3. 
                     is_int(x) == is_int(x2) &&
                     !is_equal(x, x2)) {
 
-                    antecedents& ante = get_antecedents();
+                    antecedents& ante = get_antecedents(); 
                     collect_fixed_var_justifications(r, ante);
 
                     //
                     // x1 <= k1 x1 >= k1, x2 <= x1 + k2 x2 >= x1 + k2
-                    //
+                    // 
                     lower(x2)->push_justification(ante, numeral::zero(), proofs_enabled());
                     upper(x2)->push_justification(ante, numeral::zero(), proofs_enabled());
                     m_stats.m_fixed_eqs++;
@@ -256,7 +256,7 @@ namespace smt {
 
             if (k.is_zero() && y != null_theory_var && !is_equal(x, y) && is_int(x) == is_int(y)) {
                 // found equality x = y
-                antecedents& ante = get_antecedents();
+                antecedents& ante = get_antecedents(); 
                 collect_fixed_var_justifications(r, ante);
                 TRACE("propagate_cheap_eq", tout << "propagate eq using x-y=0 row:\n"; display_row_info(tout, r););
                 m_stats.m_offset_eqs++;
@@ -296,14 +296,14 @@ namespace smt {
                     if (new_eq) {
                         if (!is_equal(x, x2) && is_int(x) == is_int(x2)) {
                             SASSERT(y == y2 && k == k2);
-                            antecedents& ante = get_antecedents();
+                            antecedents& ante = get_antecedents();                             
                             collect_fixed_var_justifications(r, ante);
                             collect_fixed_var_justifications(r2, ante);
-                            TRACE("propagate_cheap_eq", tout << "propagate eq two rows:\n";
+                            TRACE("propagate_cheap_eq", tout << "propagate eq two rows:\n"; 
                                   tout << "swapped: " << swapped << "\n";
                                   tout << "x  : v" << x << "\n";
                                   tout << "x2 : v" << x2 << "\n";
-                                  display_row_info(tout, r);
+                                  display_row_info(tout, r); 
                                   display_row_info(tout, r2););
                             m_stats.m_offset_eqs++;
                             propagate_eq_to_core(x, x2, ante);
@@ -311,13 +311,13 @@ namespace smt {
                         return;
                     }
                 }
-                // the original row was delete or it is not offset row anymore ===> remove it from table
+                // the original row was delete or it is not offset row anymore ===> remove it from table 
                 m_var_offset2row_id.erase(key);
             }
             // add new entry
             m_var_offset2row_id.insert(key, rid);
         }
-
+        
     }
 
 
@@ -332,13 +332,13 @@ namespace smt {
         region & r         = ctx.get_region();
         enode * _x         = get_enode(x);
         enode * _y         = get_enode(y);
-        justification * js =
+        justification * js = 
             ctx.mk_justification(
                 ext_theory_eq_propagation_justification(
-                    get_id(), r,
+                    get_id(), r, 
                     antecedents.lits().size(), antecedents.lits().c_ptr(),
                     antecedents.eqs().size(), antecedents.eqs().c_ptr(),
-                    _x, _y,
+                    _x, _y, 
                     antecedents.num_params(), antecedents.params("eq-propagate")));
         TRACE("propagate_eq_to_core", tout << "detected equality: #" << _x->get_owner_id() << " = #" << _y->get_owner_id() << "\n";
               display_var(tout, x);

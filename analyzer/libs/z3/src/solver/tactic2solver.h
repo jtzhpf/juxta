@@ -29,12 +29,12 @@ class tactic_factory;
 class solver;
 class solver_factory;
 
-solver * mk_tactic2solver(ast_manager & m,
-                          tactic * t = 0,
-                          params_ref const & p = params_ref(),
-                          bool produce_proofs = false,
-                          bool produce_models = true,
-                          bool produce_unsat_cores = false,
+solver * mk_tactic2solver(ast_manager & m, 
+                          tactic * t = 0, 
+                          params_ref const & p = params_ref(), 
+                          bool produce_proofs = false, 
+                          bool produce_models = true, 
+                          bool produce_unsat_cores = false, 
                           symbol const & logic = symbol::null);
 
 solver_factory * mk_tactic2solver_factory(tactic * t);

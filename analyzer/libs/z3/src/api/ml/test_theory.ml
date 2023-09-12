@@ -1,6 +1,6 @@
 module Z3 = Z3.V3
 
-let print_lbool lb =
+let print_lbool lb = 
     match lb with
     | Z3.L_FALSE -> Printf.printf "false\n"
     | Z3.L_TRUE -> Printf.printf "true\n"
@@ -10,10 +10,10 @@ let print_lbool lb =
 let test_theory() =
     let ctx = Z3.mk_context_x [| |] in
     let th  = Z3.mk_theory ctx "test-theory" in
-    let _   = Z3.set_push_callback th (fun () -> Printf.printf "push\n") in
-    let _   = Z3.set_pop_callback th (fun () -> Printf.printf "pop\n") in
-    let _   = Z3.set_delete_callback th (fun () -> Printf.printf "delete\n") in
-    let _   = Z3.set_final_check_callback th (fun () -> (Printf.printf "final\n"; true)) in
+    let _   = Z3.set_push_callback th (fun () -> Printf.printf "push\n") in 
+    let _   = Z3.set_pop_callback th (fun () -> Printf.printf "pop\n") in 
+    let _   = Z3.set_delete_callback th (fun () -> Printf.printf "delete\n") in 
+    let _   = Z3.set_final_check_callback th (fun () -> (Printf.printf "final\n"; true)) in 
     let _   = Z3.set_delete_callback th (fun () -> Printf.printf "deleted\n") in
     let f_sym = Z3.mk_string_symbol ctx "f" in
     let a_sym = Z3.mk_string_symbol ctx "a" in
@@ -28,7 +28,7 @@ let test_theory() =
         | _, [| a' |] when Z3.is_eq_func_decl ctx g f && Z3.is_eq_ast ctx a' a -> Some b
         | _, _ -> None
     in
-    let _   = Z3.set_reduce_app_callback th reduce_f in
+    let _   = Z3.set_reduce_app_callback th reduce_f in 
     (* b != f(b) is consistent *)
     let _   = Z3.assert_cnstr ctx (Z3.mk_not ctx (Z3.mk_eq ctx b (Z3.mk_app ctx f [| b |]))) in
     let res = Z3.check ctx in
@@ -39,4 +39,4 @@ let test_theory() =
     print_lbool res;
     Z3.del_context ctx
 
-let _ = test_theory()
+let _ = test_theory() 

@@ -76,9 +76,9 @@ public:
         uint64 m_timestamp;
     public:
         constraint(kind k):m_kind(k), m_timestamp(0) {}
-
+        
         kind get_kind() const { return m_kind; }
-
+        
         // Return the timestamp of the last propagation visit
         uint64 timestamp() const { return m_timestamp; }
         // Reset propagation visit time
@@ -113,14 +113,14 @@ public:
             CLAUSE,
             VAR_DEF
         };
-
+        
         justification(bool axiom = true) {
             m_data = axiom ? reinterpret_cast<void*>(static_cast<size_t>(AXIOM)) : reinterpret_cast<void*>(static_cast<size_t>(ASSUMPTION));
         }
         justification(justification const & source) { m_data = source.m_data; }
         explicit justification(clause * c) { m_data = TAG(void*, c, CLAUSE); }
         explicit justification(var x) { m_data = BOXTAGINT(void*, x, VAR_DEF);  }
-
+        
         kind get_kind() const { return static_cast<kind>(GET_TAG(m_data)); }
         bool is_clause() const { return get_kind() == CLAUSE; }
         bool is_axiom() const { return get_kind() == AXIOM; }
@@ -132,11 +132,11 @@ public:
             return UNTAG(clause*, m_data);
         }
 
-        var get_var() const {
+        var get_var() const { 
             SASSERT(is_var_def());
             return UNBOXINT(m_data);
         }
-
+        
         bool operator==(justification const & other) const { return m_data == other.m_data;  }
         bool operator!=(justification const & other) const { return !operator==(other); }
     };
@@ -167,13 +167,13 @@ public:
     struct bound_array_config {
         typedef context_t                value_manager;
         typedef small_object_allocator   allocator;
-        typedef bound *                  value;
+        typedef bound *                  value;                    
         static const bool ref_count        = false;
         static const bool preserve_roots   = true;
         static const unsigned max_trail_sz = 16;
         static const unsigned factor       = 2;
     };
-
+    
     // auxiliary declarations for parray_manager
     void dec_ref(bound *) {}
     void inc_ref(bound *) {}
@@ -222,18 +222,18 @@ public:
         */
         bool is_unbounded(var x) const { return lower(x) == 0 && upper(x) == 0; }
         void push(bound * b);
-
+    
         void set_first_child(node * n) { m_first_child = n; }
-        void set_next_sibling(node * n) { m_next_sibling = n; }
+        void set_next_sibling(node * n) { m_next_sibling = n; } 
         void set_next(node * n) { m_next = n; }
         void set_prev(node * n) { m_prev = n; }
 
         unsigned depth() const { return m_depth; }
     };
-
+    
     /**
        \brief Intervals are just temporary place holders.
-       The pavers maintain bounds.
+       The pavers maintain bounds. 
     */
     struct interval {
         bool   m_constant; // Flag: constant intervals are pairs <node*, var>
@@ -247,16 +247,16 @@ public:
         numeral      m_u_val;
         bool         m_u_inf;
         bool         m_u_open;
-
+        
         interval():m_constant(false) {}
-        void set_constant(node * n, var x) {
-            m_constant = true;
-            m_node = n;
-            m_x = x;
+        void set_constant(node * n, var x) { 
+            m_constant = true; 
+            m_node = n; 
+            m_x = x; 
         }
         void set_mutable() { m_constant = false; }
     };
-
+    
     class interval_config {
     public:
         typedef typename C::numeral_manager         numeral_manager;
@@ -301,7 +301,7 @@ public:
                 bound * b = a.m_node->upper(a.m_x);
                 return b == 0 || b->is_open();
             }
-            return a.m_u_open;
+            return a.m_u_open; 
         }
         // Setters
         void set_lower(interval & a, numeral const & n) { SASSERT(!a.m_constant); m().set(a.m_l_val, n); }
@@ -354,7 +354,7 @@ public:
 
     /**
        \brief Watched element (aka occurence) can be:
-
+       
        - A clause
        - A definition (i.e., a variable)
 
@@ -389,9 +389,9 @@ public:
 
         context_t * ctx() const { return m_ctx; }
 
-        // Return the next leaf node to be processed.
+        // Return the next leaf node to be processed. 
         // Front and back are the first and last nodes in the doubly linked list of
-        // leaf nodes.
+        // leaf nodes. 
         // Remark: new nodes are always inserted in the front of the list.
         virtual node * operator()(node * front, node * back) = 0;
     };
@@ -409,7 +409,7 @@ public:
 
         // Return the next variable to branch.
         virtual var operator()(node * n) = 0;
-
+        
         // -----------------------------------
         //
         // Event handlers
@@ -437,16 +437,16 @@ public:
     public:
         node_splitter(context_t * ctx):m_ctx(ctx) {}
         virtual ~node_splitter() {}
-
+        
         context_t * ctx() const { return m_ctx; }
         node * mk_node(node * p) { return ctx()->mk_node(p); }
-        bound * mk_decided_bound(var x, numeral const & val, bool lower, bool open, node * n) {
+        bound * mk_decided_bound(var x, numeral const & val, bool lower, bool open, node * n) { 
             return ctx()->mk_bound(x, val, lower, open, n, justification());
         }
-
-        /**
+        
+        /**                                     
           \brief Create children nodes for n by splitting on x.
-
+        
           \pre n is a leaf. The interval for x in n has more than one element.
         */
         virtual void operator()(node * n, var x) = 0;
@@ -461,7 +461,7 @@ public:
        \brief Return true if x is a definition.
     */
     bool is_definition(var x) const { return m_defs[x] != 0; }
-
+    
     typedef svector<watched> watch_list;
     typedef _scoped_numeral_vector<numeral_manager> scoped_numeral_vector;
 
@@ -481,13 +481,13 @@ private:
     ptr_vector<ineq>          m_unit_clauses;
     ptr_vector<clause>        m_clauses;
     ptr_vector<clause>        m_lemmas;
-
+    
     id_gen                    m_node_id_gen;
 
     uint64                    m_timestamp;
     node *                    m_root;
     // m_leaf_head is the head of a doubly linked list of leaf nodes to be processed.
-    node *                    m_leaf_head;
+    node *                    m_leaf_head; 
     node *                    m_leaf_tail;
 
     var                       m_conflict;
@@ -500,7 +500,7 @@ private:
     scoped_ptr<node_selector> m_node_selector;
     scoped_ptr<var_selector>  m_var_selector;
     scoped_ptr<node_splitter> m_node_splitter;
-
+    
     svector<power>            m_pws;
 
     // Configuration
@@ -512,16 +512,16 @@ private:
     unsigned                  m_max_depth;       //!< Maximum depth
     unsigned                  m_max_nodes;       //!< Maximum number of nodes in the tree
     unsigned long long        m_max_memory;      // in bytes
-
+    
     // Counters
     unsigned                  m_num_nodes;
-
+    
     // Statistics
     unsigned                  m_num_conflicts;
     unsigned                  m_num_mk_bounds;
     unsigned                  m_num_splits;
     unsigned                  m_num_visited;
-
+    
     // Temporary
     numeral                   m_tmp1, m_tmp2, m_tmp3;
     interval                  m_i_tmp1, m_i_tmp2, m_i_tmp3;
@@ -546,7 +546,7 @@ private:
 
     bool is_int(monomial const * m) const;
     bool is_int(polynomial const * p) const;
-
+    
     bool is_monomial(var x) const { return m_defs[x] != 0 && m_defs[x]->get_kind() == constraint::MONOMIAL; }
     monomial * get_monomial(var x) const { SASSERT(is_monomial(x)); return static_cast<monomial*>(m_defs[x]); }
     bool is_polynomial(var x) const { return m_defs[x] != 0 && m_defs[x]->get_kind() == constraint::POLYNOMIAL; }
@@ -581,26 +581,26 @@ private:
        \pre n is a leaf, and it is not already in the list.
     */
     void push_front(node * n);
-
+    
     /**
        \brief Insert n in the end of the doubly linked list of leaves.
-
+       
        \pre n is a leaf, and it is not already in the list.
     */
     void push_back(node * n);
-
+    
     /**
        \brief Remove n from the doubly linked list of leaves.
 
        \pre n is a leaf, and it is in the list.
     */
     void remove_from_leaf_dlist(node * n);
-
+    
     /**
        \brief Remove all nodes from the leaf dlist.
     */
     void reset_leaf_dlist();
-
+    
     /**
        \brief Add all leaves back to the leaf dlist.
     */
@@ -613,7 +613,7 @@ private:
     // -----------------------------------
 
     /**
-       \brief Return true if the given node is in an inconsistent state.
+       \brief Return true if the given node is in an inconsistent state. 
     */
     bool inconsistent(node * n) const { return n->inconsistent(); }
 
@@ -629,7 +629,7 @@ private:
 
     /**
        \brief Normalize bound if x is integer.
-
+       
        Examples:
        x < 2     --> x <= 1
        x <= 2.3  --> x <= 2
@@ -693,7 +693,7 @@ private:
        \brief Propagate new bounds at node n using clause c.
     */
     void propagate_clause(clause * c, node * n);
-
+    
     /**
        \brief Return the truth value of inequaliy t at node n.
     */
@@ -709,12 +709,12 @@ private:
        \brief Propagate constraints in b->x()'s watch list.
     */
     void propagate(node * n, bound * b);
-
+        
     /**
        \brief Perform bound propagation at node n.
     */
     void propagate(node * n);
-
+    
     /**
        \brief Try to propagate at node n using all definitions.
     */
@@ -737,7 +737,7 @@ private:
     // Debugging support
     //
     // -----------------------------------
-
+    
     /**
        \brief Return true if b is a bound for node n.
     */
@@ -752,7 +752,7 @@ private:
        \brief Check paving tree structure.
     */
     bool check_tree() const;
-
+    
     /**
        \brief Check main invariants.
     */
@@ -766,7 +766,7 @@ public:
        \brief Return true if the arithmetic module failed.
     */
     bool arith_failed() const { return m_arith_failed; }
-
+    
     numeral_manager & nm() const { return m_c.m(); }
 
     unsigned num_vars() const { return m_is_int.size(); }
@@ -777,41 +777,41 @@ public:
        \brief Create a new variable.
     */
     var mk_var(bool is_int);
-
+    
     /**
        \brief Create the monomial xs[0]^ks[0] * ... * xs[sz-1]^ks[sz-1].
        The result is a variable y s.t. y = xs[0]^ks[0] * ... * xs[sz-1]^ks[sz-1].
-
+       
        \pre for all i \in [0, sz-1] : ks[i] > 0
        \pre sz > 0
     */
     var mk_monomial(unsigned sz, power const * pws);
-
+    
     /**
        \brief Create the sum c + as[0]*xs[0] + ... + as[sz-1]*xs[sz-1].
        The result is a variable y s.t. y = c + as[0]*xs[0] + ... + as[sz-1]*xs[sz-1].
-
+       
        \pre sz > 0
        \pre for all i \in [0, sz-1] : as[i] != 0
     */
     var mk_sum(numeral const & c, unsigned sz, numeral const * as, var const * xs);
-
+    
     /**
        \brief Create an inequality.
     */
     ineq * mk_ineq(var x, numeral const & k, bool lower, bool open);
     void inc_ref(ineq * a);
     void dec_ref(ineq * a);
-
+    
     /**
        \brief Assert the clause atoms[0] \/ ... \/ atoms[sz-1]
        \pre sz > 1
     */
     void add_clause(unsigned sz, ineq * const * atoms) { add_clause_core(sz, atoms, false, true); }
-
+    
     /**
        \brief Assert a constraint of one of the forms: x < k, x > k, x <= k, x >= k.
-
+       
        If axiom == true, then the constraint is not tracked in proofs.
     */
     void add_ineq(var x, numeral const & k, bool lower, bool open, bool axiom);
@@ -820,7 +820,7 @@ public:
        \brief Store in the given vector all leaves of the paving tree.
     */
     void collect_leaves(ptr_vector<node> & leaves) const;
-
+    
     /**
        \brief Display constraints asserted in the subpaving.
     */
@@ -830,7 +830,7 @@ public:
        \brief Display bounds for each leaf of the tree.
     */
     void display_bounds(std::ostream & out) const;
-
+    
     void display_bounds(std::ostream & out, node * n) const;
 
     void set_display_proc(display_var_proc * p) { m_display_proc = p; }

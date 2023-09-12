@@ -43,20 +43,20 @@ namespace pdr {
         obj_hashtable<expr>  m_cache;
         stats                m_stats;
         datalog::PDR_CACHE_MODE m_cache_mode;
-
+        
         void add_disjuncted_formula(expr * f);
-
+        
     public:
         reachable_cache(pdr::manager & pm, datalog::PDR_CACHE_MODE cm);
-
+        
         void add_init(app * f)   { add_disjuncted_formula(f); }
-
+        
         /** add cube whose all models are reachable */
         void add_reachable(expr * cube);
-
+        
         /** return true if there is a model of cube which is reachable */
         bool is_reachable(expr * cube);
-
+        
         void collect_statistics(statistics& st) const;
 
         void reset_statistics();

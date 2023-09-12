@@ -32,7 +32,7 @@ static void display_statistics() {
     if (g_solver && g_display_statistics) {
         std::cout.flush();
         std::cerr.flush();
-
+        
         statistics st;
         g_solver->collect_statistics(st);
         st.update("total time", ((static_cast<double>(end_time) - static_cast<double>(g_start_time)) / CLOCKS_PER_SEC));
@@ -84,18 +84,18 @@ unsigned read_dimacs(char const * file_name) {
         parse_dimacs(std::cin, solver);
     }
     IF_VERBOSE(20, solver.display_status(verbose_stream()););
-
+    
     lbool r = solver.check();
     switch (r) {
-    case l_true:
-        std::cout << "sat\n";
+    case l_true: 
+        std::cout << "sat\n"; 
         display_model(solver);
         break;
-    case l_undef:
-        std::cout << "unknown\n";
+    case l_undef: 
+        std::cout << "unknown\n"; 
         break;
-    case l_false:
-        std::cout << "unsat\n";
+    case l_false: 
+        std::cout << "unsat\n"; 
         break;
     }
     if (g_display_statistics)

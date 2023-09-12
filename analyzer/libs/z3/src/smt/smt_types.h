@@ -30,11 +30,11 @@ namespace smt {
        \brief A boolean variable is just an integer.
     */
     typedef int bool_var;
-
+    
     const bool_var null_bool_var  = -1;
     const bool_var true_bool_var  = 0;
     const bool_var first_bool_var = 1;
-
+    
     typedef svector<bool_var> bool_var_vector;
 
     typedef family_id theory_id;

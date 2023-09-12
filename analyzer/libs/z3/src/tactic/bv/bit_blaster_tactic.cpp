@@ -43,16 +43,16 @@ class bit_blaster_tactic : public tactic {
             m_rewriter.updt_params(p);
             updt_params_core(p);
         }
-
+        
         ast_manager & m() const { return m_rewriter.m(); }
-
+        
         void set_cancel(bool f) {
             m_rewriter.set_cancel(f);
         }
 
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             mc = 0; pc = 0; core = 0;
@@ -60,12 +60,12 @@ class bit_blaster_tactic : public tactic {
 
             if (proofs_enabled && m_blast_quant)
                 throw tactic_exception("quantified variable blasting does not support proof generation");
-
+            
             tactic_report report("bit-blaster", *g);
-
+            
             TRACE("before_bit_blaster", g->display(tout););
             m_num_steps = 0;
-
+            
             expr_ref   new_curr(m());
             proof_ref  new_pr(m());
             unsigned size = g->size();
@@ -81,8 +81,8 @@ class bit_blaster_tactic : public tactic {
                 }
                 g->update(idx, new_curr, new_pr, g->dep(idx));
             }
-
-            if (g->models_enabled())
+            
+            if (g->models_enabled())  
                 mc = mk_bit_blaster_model_converter(m(), m_rewriter.const2bits());
             else
                 mc = 0;
@@ -91,10 +91,10 @@ class bit_blaster_tactic : public tactic {
             TRACE("after_bit_blaster", g->display(tout); if (mc) mc->display(tout); tout << "\n";);
             m_rewriter.cleanup();
         }
-
+        
         unsigned get_num_steps() const { return m_num_steps; }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
 
@@ -117,7 +117,7 @@ public:
         m_imp->updt_params(p);
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) { 
         insert_max_memory(r);
         insert_max_steps(r);
         r.insert("blast_mul", CPK_BOOL, "(default: true) bit-blast multipliers (and dividers, remainders).");
@@ -125,10 +125,10 @@ public:
         r.insert("blast_quant", CPK_BOOL, "(default: false) bit-blast quantified variables.");
         r.insert("blast_full", CPK_BOOL, "(default: false) bit-blast any term with bit-vector sort, this option will make E-matching ineffective in any pattern containing bit-vector terms.");
     }
-
-    virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+     
+    virtual void operator()(goal_ref const & g, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         try {
@@ -147,7 +147,7 @@ public:
         }
         dealloc(d);
     }
-
+    
     unsigned get_num_steps() const {
         return m_imp->get_num_steps();
     }

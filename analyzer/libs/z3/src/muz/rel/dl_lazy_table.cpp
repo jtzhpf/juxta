@@ -46,10 +46,10 @@ namespace datalog {
 
     class lazy_table_plugin::join_fn : public convenient_table_join_fn {
     public:
-        join_fn(table_signature const& s1, table_signature const& s2, unsigned col_cnt,
+        join_fn(table_signature const& s1, table_signature const& s2, unsigned col_cnt, 
                 unsigned const* cols1, unsigned const* cols2):
             convenient_table_join_fn(s1, s2, col_cnt, cols1, cols2) {}
-
+                                  
         virtual table_base* operator()(const table_base& _t1, const table_base& _t2) {
             lazy_table const& t1 = get(_t1);
             lazy_table const& t2 = get(_t2);
@@ -74,11 +74,11 @@ namespace datalog {
 
     class lazy_table_plugin::union_fn : public table_union_fn {
     public:
-        void operator()(table_base & _tgt, const table_base & _src,
+        void operator()(table_base & _tgt, const table_base & _src, 
                         table_base * _delta) {
             lazy_table& tgt = get(_tgt);
             lazy_table const& src = get(_src);
-            lazy_table* delta = get(_delta);
+            lazy_table* delta = get(_delta);  
             table_base const* t_src = src.eval();
             table_base * t_tgt = tgt.eval();
             table_base * t_delta = delta?delta->eval():0;
@@ -86,13 +86,13 @@ namespace datalog {
             table_union_fn* m = tgt.get_lplugin().get_manager().mk_union_fn(*t_tgt, *t_src, t_delta);
             SASSERT(m);
             (*m)(*t_tgt, *t_src, t_delta);
-            dealloc(m);
+            dealloc(m);                
         }
     };
 
 
     table_union_fn* lazy_table_plugin::mk_union_fn(
-        const table_base & tgt, const table_base & src,
+        const table_base & tgt, const table_base & src, 
         const table_base * delta) {
         if (check_kind(tgt) && check_kind(src) && (!delta || check_kind(*delta))) {
             return alloc(union_fn);
@@ -100,14 +100,14 @@ namespace datalog {
         else {
             return 0;
         }
-    }
+    }        
 
     // --------------------------
     // lazy_table_plugin::project
 
     class lazy_table_plugin::project_fn : public convenient_table_project_fn {
     public:
-        project_fn(table_signature const& orig_sig, unsigned cnt, unsigned const* cols):
+        project_fn(table_signature const& orig_sig, unsigned cnt, unsigned const* cols): 
             convenient_table_project_fn(orig_sig, cnt, cols)
         {}
 
@@ -118,7 +118,7 @@ namespace datalog {
     };
 
     table_transformer_fn * lazy_table_plugin::mk_project_fn(
-        const table_base & t, unsigned col_cnt,
+        const table_base & t, unsigned col_cnt, 
         const unsigned * removed_cols) {
         if (check_kind(t)) {
             return alloc(project_fn, t.get_signature(), col_cnt, removed_cols);
@@ -133,7 +133,7 @@ namespace datalog {
 
     class lazy_table_plugin::rename_fn : public convenient_table_rename_fn {
     public:
-        rename_fn(table_signature const& orig_sig, unsigned cnt, unsigned const* cols):
+        rename_fn(table_signature const& orig_sig, unsigned cnt, unsigned const* cols): 
             convenient_table_rename_fn(orig_sig, cnt, cols)
         {}
 
@@ -142,9 +142,9 @@ namespace datalog {
             return alloc(lazy_table, alloc(lazy_table_rename, m_cycle.size(), m_cycle.c_ptr(), t, get_result_signature()));
         }
     };
-
+    
     table_transformer_fn * lazy_table_plugin::mk_rename_fn(
-        const table_base & t, unsigned col_cnt,
+        const table_base & t, unsigned col_cnt, 
         const unsigned * removed_cols) {
         if (check_kind(t)) {
             return alloc(rename_fn, t.get_signature(), col_cnt, removed_cols);
@@ -162,13 +162,13 @@ namespace datalog {
         unsigned_vector          m_cols;
     public:
         filter_identical_fn(unsigned cnt, unsigned const* cols): m_cols(cnt, cols) {}
-
+        
         virtual void operator()(table_base& _t) {
             lazy_table& t = get(_t);
             t.set(alloc(lazy_table_filter_identical, m_cols.size(), m_cols.c_ptr(), t));
         }
     };
-
+    
     table_mutator_fn * lazy_table_plugin::mk_filter_identical_fn(
         const table_base & t, unsigned col_cnt, const unsigned * identical_cols) {
         if (check_kind(t)) {
@@ -193,7 +193,7 @@ namespace datalog {
             t.set(alloc(lazy_table_filter_interpreted, t, m_condition));
         }
     };
-
+    
     table_mutator_fn * lazy_table_plugin::mk_filter_interpreted_fn(
         const table_base & t, app* condition) {
         if (check_kind(t)) {
@@ -204,7 +204,7 @@ namespace datalog {
             return 0;
         }
     }
-
+    
     // -------------------------------------
     // lazy_table_plugin::filter_by_negation
 
@@ -222,8 +222,8 @@ namespace datalog {
     };
 
     table_intersection_filter_fn * lazy_table_plugin::mk_filter_by_negation_fn(
-        const table_base & t,
-        const table_base & negated_obj, unsigned joined_col_cnt,
+        const table_base & t, 
+        const table_base & negated_obj, unsigned joined_col_cnt, 
         const unsigned * t_cols, const unsigned * negated_cols) {
         if (check_kind(t) && check_kind(negated_obj)) {
             return alloc(filter_by_negation_fn, joined_col_cnt, t_cols, negated_cols);
@@ -241,7 +241,7 @@ namespace datalog {
         table_element m_value;
         unsigned m_col;
     public:
-        filter_equal_fn(const table_element & value, unsigned col):
+        filter_equal_fn(const table_element & value, unsigned col): 
             m_value(value),
             m_col(col)
         { }
@@ -251,7 +251,7 @@ namespace datalog {
             t.set(alloc(lazy_table_filter_equal, m_col, m_value, t));
         }
     };
-
+    
     table_mutator_fn * lazy_table_plugin::mk_filter_equal_fn(
         const table_base & t, const table_element & value, unsigned col) {
         if (check_kind(t)) {
@@ -276,7 +276,7 @@ namespace datalog {
 
     // ----------
     // lazy_table
-
+    
     table_base * lazy_table::clone() const {
         table_base* t = eval();
         verbose_action _t("clone");
@@ -328,7 +328,7 @@ namespace datalog {
         verbose_action _t("join");
         table_join_fn* join = rm().mk_join_fn(*t1, *t2, m_cols1.size(), m_cols1.c_ptr(), m_cols2.c_ptr());
         m_table = (*join)(*t1, *t2);
-        dealloc(join);
+        dealloc(join);        
         return m_table.get();
     }
 
@@ -379,7 +379,7 @@ namespace datalog {
         table_transformer_fn* project = rm().mk_project_fn(*src, m_cols.size(), m_cols.c_ptr());
         SASSERT(project);
         m_table = (*project)(*src);
-        dealloc(project);
+        dealloc(project);            
         return m_table.get();
     }
 
@@ -389,10 +389,10 @@ namespace datalog {
         verbose_action _t("rename");
         table_transformer_fn* rename = rm().mk_rename_fn(*src, m_cols.size(), m_cols.c_ptr());
         m_table = (*rename)(*src);
-        dealloc(rename);
+        dealloc(rename);                    
         return m_table.get();
     }
-
+    
     table_base* lazy_table_filter_identical::force() {
         SASSERT(!m_table);
         m_table = m_src->eval();
@@ -402,7 +402,7 @@ namespace datalog {
         table_mutator_fn* m = rm().mk_filter_identical_fn(*m_table, m_cols.size(), m_cols.c_ptr());
         SASSERT(m);
         (*m)(*m_table);
-        dealloc(m);
+        dealloc(m);                    
         return m_table.get();
     }
 
@@ -415,7 +415,7 @@ namespace datalog {
         table_mutator_fn* m = rm().mk_filter_equal_fn(*m_table, m_value, m_col);
         SASSERT(m);
         (*m)(*m_table);
-        dealloc(m);
+        dealloc(m);                
         return m_table.get();
     }
 
@@ -428,7 +428,7 @@ namespace datalog {
         table_mutator_fn* m = rm().mk_filter_interpreted_fn(*m_table, m_condition);
         SASSERT(m);
         (*m)(*m_table);
-        dealloc(m);
+        dealloc(m);                
         return m_table.get();
     }
 
@@ -448,7 +448,7 @@ namespace datalog {
             table_intersection_join_filter_fn* jn = rm().mk_filter_by_negated_join_fn(*m_table, *t1, *t2, cols1(), cols2(), src.cols1(), src.cols2());
             if (jn) {
                 (*jn)(*m_table, *t1, *t2);
-                dealloc(jn);
+                dealloc(jn);                
                 return m_table.get();
             }
             break;
@@ -461,7 +461,7 @@ namespace datalog {
         table_intersection_filter_fn* m = rm().mk_filter_by_negation_fn(*m_table, *src, m_cols1, m_cols2);
         SASSERT(m);
         (*m)(*m_table, *src);
-        dealloc(m);
+        dealloc(m);                    
         return m_table.get();
     }
 }

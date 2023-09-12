@@ -37,13 +37,13 @@ namespace datalog {
 
           HEAD :- TAIL.
           HEAD :- TAIL_1, TAIL_2.
-
+         
        We also assume a rule may contain interpreted expressions that work as filtering conditions.
        So, we may also have:
 
           HEAD :- TAIL, C_1, ..., C_n.
           HEAD :- TAIL_1, TAIL_2, C_1, ..., C_n.
-
+          
        Where the C_i's are interpreted expressions.
 
        We say that a rule containing C_i's is a rule with a "big tail".
@@ -53,7 +53,7 @@ namespace datalog {
         rule_manager &      rm;
     public:
         mk_simple_joins(context & ctx);
-
+        
         rule_set * operator()(rule_set const & source);
     };
 

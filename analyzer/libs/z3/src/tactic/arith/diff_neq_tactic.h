@@ -11,7 +11,7 @@ Abstract:
        k <= x
        x <= k
        x - y != k
-    And all variables are bounded.
+    And all variables are bounded.   
 
 Author:
 

@@ -55,8 +55,8 @@ public:                                                                         
     }                                                                                   \
     virtual void set_next_arg(cmd_context & ctx, symbol const & s) { m_sym = s; }       \
     virtual void set_next_arg(cmd_context & ctx, ARG_TYPE arg) { ACTION }               \
-};
-
+};    
+   
 
 class ast;
 class expr;

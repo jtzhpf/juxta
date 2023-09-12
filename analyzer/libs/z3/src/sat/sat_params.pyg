@@ -1,4 +1,4 @@
-def_module_params('sat',
+def_module_params('sat', 
                   export=True,
                   description='propositional SAT solver',
                   params=(max_memory_param(),

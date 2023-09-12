@@ -67,7 +67,7 @@ public:
     void set_upper_is_open(interval & a, bool v) { a.m_upper_open = v; }
     void set_lower_is_inf(interval & a, bool v) { a.m_lower_inf = v; }
     void set_upper_is_inf(interval & a, bool v) { a.m_upper_inf = v; }
-
+    
     // Reference to numeral manager
     numeral_manager & m() const { return m_manager; }
 
@@ -84,9 +84,9 @@ inline bool dep_in_lower1(bound_deps d) { return (d & DEP_IN_LOWER1) != 0; }
 inline bool dep_in_lower2(bound_deps d) { return (d & DEP_IN_LOWER2) != 0; }
 inline bool dep_in_upper1(bound_deps d) { return (d & DEP_IN_UPPER1) != 0; }
 inline bool dep_in_upper2(bound_deps d) { return (d & DEP_IN_UPPER2) != 0; }
-inline bound_deps dep1_to_dep2(bound_deps d) {
+inline bound_deps dep1_to_dep2(bound_deps d) { 
     SASSERT(!dep_in_lower2(d) && !dep_in_upper2(d));
-    bound_deps r = d << 2;
+    bound_deps r = d << 2; 
     SASSERT(dep_in_lower1(d) == dep_in_lower2(r));
     SASSERT(dep_in_upper1(d) == dep_in_upper2(r));
     SASSERT(!dep_in_lower1(r) && !dep_in_upper1(r));
@@ -95,9 +95,9 @@ inline bound_deps dep1_to_dep2(bound_deps d) {
 
 /**
    \brief Interval dependencies for unary and binary operations on intervals.
-   It contains the dependencies for the output lower and upper bounds
+   It contains the dependencies for the output lower and upper bounds 
    for the resultant interval.
-*/
+*/ 
 struct interval_deps {
     bound_deps m_lower_deps;
     bound_deps m_upper_deps;
@@ -127,8 +127,8 @@ private:
     interval   m_3_pi_div_2;
     interval   m_2_pi;
 
-    volatile bool m_cancel;
-
+    volatile bool m_cancel;     
+    
     void round_to_minus_inf() { m_c.round_to_minus_inf(); }
     void round_to_plus_inf() { m_c.round_to_plus_inf(); }
     void set_rounding(bool to_plus_inf) { m_c.set_rounding(to_plus_inf); }
@@ -149,7 +149,7 @@ private:
     void approx_nth_root(numeral const & a, unsigned n, numeral const & p, numeral & o);
     void nth_root_pos(numeral const & A, unsigned n, numeral const & p, numeral & lo, numeral & hi);
     void nth_root(numeral const & a, unsigned n, numeral const & p, numeral & lo, numeral & hi);
-
+    
     void pi_series(int x, numeral & r, bool to_plus_inf);
     void fact(unsigned n, numeral & o);
     void sine_series(numeral const & a, unsigned k, bool upper, numeral & o);
@@ -160,13 +160,13 @@ private:
 
     void checkpoint();
 
-public:
+public:    
     interval_manager(C const & c);
     ~interval_manager();
 
     void set_cancel(bool f) { m_cancel = f; }
 
-    numeral_manager & m() const { return m_c.m(); }
+    numeral_manager & m() const { return m_c.m(); }    
 
     void del(interval & a);
 
@@ -178,7 +178,7 @@ public:
     bool upper_is_open(interval const & a) const { return m_c.upper_is_open(a); }
     bool lower_is_inf(interval const & a) const { return m_c.lower_is_inf(a); }
     bool upper_is_inf(interval const & a) const { return m_c.upper_is_inf(a); }
-
+    
     bool lower_is_neg(interval const & a) const { return ::is_neg(m(), lower(a), lower_kind(a)); }
     bool lower_is_pos(interval const & a) const { return ::is_pos(m(), lower(a), lower_kind(a)); }
     bool lower_is_zero(interval const & a) const { return ::is_zero(m(), lower(a), lower_kind(a)); }
@@ -224,12 +224,12 @@ public:
        \brief Return true if the given interval contains 0.
     */
     bool contains_zero(interval const & n) const;
-
+    
     /**
        \brief Return true if n contains v.
     */
     bool contains(interval const & n, numeral const & v) const;
-
+    
     void display(std::ostream & out, interval const & n) const;
     void display_pp(std::ostream & out, interval const & n) const;
 
@@ -269,11 +269,11 @@ public:
 
     /**
        \brief b <- a/k
-
-       \remark For imprecise numerals, this is not equivalent to
+       
+       \remark For imprecise numerals, this is not equivalent to 
        m().inv(k)
        mul(k, a, b)
-
+    
        That is, we must invert k rounding towards +oo or -oo depending whether we
        are computing a lower or upper bound.
     */
@@ -303,16 +303,16 @@ public:
     void nth_root(interval const & a, unsigned n, numeral const & p, interval & b, interval_deps & b_deps);
     void nth_root(interval const & a, unsigned n, numeral const & p, interval & b);
     void nth_root_jst(interval const & a, unsigned n, numeral const & p, interval_deps & b_deps);
-
+    
     /**
        \brief Given an equation x^n = y and an interval for y, compute the solution set for x with precision p.
-
+       
        \pre if n is even, then !lower_is_neg(y)
     */
     void xn_eq_y(interval const & y, unsigned n, numeral const & p, interval & x, interval_deps & x_deps);
-    void xn_eq_y(interval const & y, unsigned n, numeral const & p, interval & x);
+    void xn_eq_y(interval const & y, unsigned n, numeral const & p, interval & x); 
     void xn_eq_y_jst(interval const & y, unsigned n, numeral const & p, interval_deps & x_deps);
-
+   
     /**
        \brief b <- 1/a
        \pre !contains_zero(a)
@@ -329,7 +329,7 @@ public:
     void div(interval const & a, interval const & b, interval & c, interval_deps & c_deps);
     void div(interval const & a, interval const & b, interval & c);
     void div_jst(interval const & a, interval const & b, interval_deps & c_deps);
-
+    
     /**
        \brief Store in r an interval that contains the number pi.
        The size of the interval is (1/15)*(1/16^n)
@@ -367,7 +367,7 @@ private:
 public:
     _scoped_interval(Manager & m):m_manager(m) {}
     ~_scoped_interval() { m_manager.del(m_interval); }
-
+    
     Manager & m() const { return m_manager; }
 
     operator interval const &() const { return m_interval; }

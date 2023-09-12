@@ -1,3 +1,15 @@
 [submodule "analyzer/libs/pygments"]
 	path = analyzer/libs/pygments
 	url = https://github.com/pygments/pygments
+
+[submodule "analyzer/libs/pymake"]
+	path = analyzer/libs/pymake
+	url = https://github.com/mozilla/pymake
+
+[submodule "analyzer/libs/pycparser"]
+	path = analyzer/libs/pycparser
+	url = https://github.com/eliben/pycparser
+
+[submodule "analyzer/libs/z3"]
+	path = analyzer/libs/z3
+	url = https://github.com/Z3Prover/z3

@@ -11,7 +11,7 @@ Abstract:
     Non-arithmetic atoms are "abstracted" into boolean variables.
     Non-supported terms are "abstracted" into variables.
 
-    The mappings can be used to convert back the state of the
+    The mappings can be used to convert back the state of the 
     engine into a goal.
 
 Author:
@@ -47,7 +47,7 @@ struct goal2nlsat::imp {
             return m_solver.mk_var(is_int);
         }
     };
-
+    
     ast_manager &             m;
     nlsat::solver &           m_solver;
     polynomial::manager &     m_pm;
@@ -78,7 +78,7 @@ struct goal2nlsat::imp {
 
     void updt_params(params_ref const & p) {
         m_max_memory   = megabytes_to_bytes(p.get_uint("max_memory", UINT_MAX));
-        m_factor       = p.get_bool("factor", true);
+        m_factor       = p.get_bool("factor", true);  
         m_fparams.updt_params(p);
     }
 
@@ -103,7 +103,7 @@ struct goal2nlsat::imp {
         ptr_buffer<polynomial::polynomial> ps;
         polynomial::factors fs(m_pm);
         m_pm.factor(p, fs, m_fparams);
-        TRACE("goal2nlsat_bug", tout << "factors:\n" << fs << "\n";);
+        TRACE("goal2nlsat_bug", tout << "factors:\n" << fs << "\n";); 
         SASSERT(fs.distinct_factors() > 0);
         for (unsigned i = 0; i < fs.distinct_factors(); i++) {
             ps.push_back(fs[i]);
@@ -186,7 +186,7 @@ struct goal2nlsat::imp {
             if (m_util.is_int_real(to_app(f)->get_arg(0)))
                 return process_eq(to_app(f));
             else
-                return nlsat::literal(process_bvar(f), false);
+                return nlsat::literal(process_bvar(f), false);                
         }
         else if (m_util.is_le(f)) {
             return process_le(to_app(f));
@@ -227,7 +227,7 @@ struct goal2nlsat::imp {
             return nlsat::literal(process_bvar(f), false);
         }
     }
-
+    
     nlsat::literal process_literal(expr * f) {
         bool neg = false;
         while (m.is_not(f, f))
@@ -267,14 +267,14 @@ struct goal2nlsat::imp {
 };
 
 struct goal2nlsat::scoped_set_imp {
-    goal2nlsat & m_owner;
+    goal2nlsat & m_owner; 
     scoped_set_imp(goal2nlsat & o, imp & i):m_owner(o) {
         #pragma omp critical (tactic_cancel)
         {
             m_owner.m_imp = &i;
         }
     }
-
+    
     ~scoped_set_imp() {
         #pragma omp critical (tactic_cancel)
         {
@@ -290,19 +290,19 @@ goal2nlsat::goal2nlsat() {
 goal2nlsat::~goal2nlsat() {
     SASSERT(m_imp == 0);
 }
-
+    
 void goal2nlsat::collect_param_descrs(param_descrs & r) {
     insert_max_memory(r);
     r.insert("factor", CPK_BOOL, "(default: true) factor polynomials.");
     polynomial::factor_params::get_param_descrs(r);
 }
-
+    
 void goal2nlsat::operator()(goal const & g, params_ref const & p, nlsat::solver & s, expr2var & a2b, expr2var & t2x) {
     imp local_imp(g.m(), p, s, a2b, t2x);
     scoped_set_imp setter(*this, local_imp);
     local_imp(g);
 }
-
+    
 void goal2nlsat::set_cancel(bool f) {
     if (m_imp)
         m_imp->set_cancel(f);

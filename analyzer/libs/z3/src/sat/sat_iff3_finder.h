@@ -13,9 +13,9 @@ Abstract:
       ~x \/ ~l1 \/ l2
        x \/ l1  \/ l2
        x \/ ~l1 \/ ~l2
-
+       
     The basic idea is to sort the watch lists.
-
+    
     This information can be used to propagate equivalences
     during probing (and search).
 
@@ -32,14 +32,14 @@ Revision History:
 #include"sat_types.h"
 
 namespace sat {
-
+    
     class iff3_finder {
         solver & s;
         void sort_watches();
         void mk_eq(literal l1, literal l2);
     public:
         iff3_finder(solver & s);
-
+        
         void operator()();
     };
 

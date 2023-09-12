@@ -33,12 +33,12 @@ void (* g_on_timeout)() = 0;
 class g_timeout_eh : public event_handler {
 public:
     void operator()() {
-        #pragma omp critical (g_timeout_cs)
+        #pragma omp critical (g_timeout_cs) 
         {
             std::cout << "timeout\n";
             if (g_on_timeout)
                 g_on_timeout();
-            if (g_timeout)
+            if (g_timeout) 
                 delete g_timeout;
             g_timeout = 0;
             throw z3_error(ERR_TIMEOUT);
@@ -47,7 +47,7 @@ public:
 };
 
 void set_timeout(long ms) {
-    if (g_timeout)
+    if (g_timeout) 
         delete g_timeout;
 
     g_timeout = new scoped_timer(ms, new g_timeout_eh());

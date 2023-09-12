@@ -46,7 +46,7 @@ COMPILE_TIME_ASSERT(sizeof(int64) == 8);
 #endif
 #ifndef INT64_MAX
 #define INT64_MAX static_cast<int64>(0x7fffffffffffffffull)
-#endif
+#endif                              
 #ifndef UINT64_MAX
 #define UINT64_MAX 0xffffffffffffffffull
 #endif
@@ -63,16 +63,16 @@ COMPILE_TIME_ASSERT(sizeof(int64) == 8);
 #ifdef _WINDOWS
 // Disable thread local declspec as it seems to not work downlevel.
 // #define THREAD_LOCAL __declspec(thread)
-#define THREAD_LOCAL
+#define THREAD_LOCAL 
 #else
-#define THREAD_LOCAL
+#define THREAD_LOCAL 
 #endif
 
 inline bool is_power_of_two(unsigned v) { return !(v & (v - 1)) && v; }
 
 /**
    \brief Return the next power of two that is greater than or equal to v.
-
+   
    \warning This function returns 0 for v == 0.
 */
 inline unsigned next_power_of_two(unsigned v) {
@@ -103,12 +103,12 @@ static inline unsigned get_num_1bits(unsigned v) {
     unsigned c;
     unsigned v1 = v;
     for (c = 0; v1; c++) {
-        v1 &= v1 - 1;
+        v1 &= v1 - 1; 
     }
 #endif
-    v = v - ((v >> 1) & 0x55555555);
-    v = (v & 0x33333333) + ((v >> 2) & 0x33333333);
-    unsigned r = (((v + (v >> 4)) & 0xF0F0F0F) * 0x1010101) >> 24;
+    v = v - ((v >> 1) & 0x55555555);                    
+    v = (v & 0x33333333) + ((v >> 2) & 0x33333333);     
+    unsigned r = (((v + (v >> 4)) & 0xF0F0F0F) * 0x1010101) >> 24; 
     SASSERT(c == r);
     return r;
 #endif
@@ -124,7 +124,7 @@ static inline uint64 shift_left(uint64 x, uint64 y) {
     return y < 64ull ? (x << y) : 0ull;
 }
 
-template<class T, size_t N> char (*ArraySizer(T (&)[N]))[N];
+template<class T, size_t N> char (*ArraySizer(T (&)[N]))[N]; 
 // For determining the length of an array. See ARRAYSIZE() macro. This function is never actually called.
 
 #ifndef ARRAYSIZE
@@ -152,7 +152,7 @@ void display(std::ostream & out, const IT & begin, const IT & end, const char * 
 
 template<typename T>
 struct delete_proc {
-    void operator()(T * ptr) {
+    void operator()(T * ptr) { 
 	if (ptr) {
 	    dealloc(ptr);
 	}
@@ -185,7 +185,7 @@ struct default_eq {
 template<typename T>
 struct ptr_eq {
     typedef T * data;
-    bool operator()(T * a1, T * a2) const {
+    bool operator()(T * a1, T * a2) const { 
         return a1 == a2;
     }
 };
@@ -193,7 +193,7 @@ struct ptr_eq {
 template<typename T>
 struct deref_eq {
     typedef T * data;
-    bool operator()(T * a1, T * a2) const {
+    bool operator()(T * a1, T * a2) const { 
         return *a1 == *a2;
     }
 };
@@ -212,18 +212,18 @@ public:
         }
     }
 
-    T * operator->() const {
-        return m_ptr;
+    T * operator->() const { 
+        return m_ptr; 
     }
 
-    T * get() const {
-        return m_ptr;
+    T * get() const { 
+        return m_ptr; 
     }
 
-    operator bool() const {
-        return m_ptr != 0;
+    operator bool() const { 
+        return m_ptr != 0; 
     }
-
+    
     const T & operator*() const {
         return *m_ptr;
     }
@@ -337,14 +337,14 @@ public:
     void set_seed(unsigned s) { m_data = s; }
 
     int operator()() {
-        return ((m_data = m_data * 214013L + 2531011L) >> 16) & 0x7fff;
+        return ((m_data = m_data * 214013L + 2531011L) >> 16) & 0x7fff; 
     }
 
     unsigned operator()(unsigned u) {
         unsigned r = static_cast<unsigned>((*this)());
         return r % u;
     }
-
+    
     static int max_value() {
         return 0x7fff;
     }
@@ -400,7 +400,7 @@ inline size_t megabytes_to_bytes(unsigned mb) {
     unsigned long long b = static_cast<unsigned long long>(mb) * 1024ull * 1024ull;
     size_t r = static_cast<size_t>(b);
     if (r != b)  // overflow
-        r = SIZE_MAX;
+        r = SIZE_MAX;    
     return r;
 }
 

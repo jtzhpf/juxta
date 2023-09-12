@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Rule transformer which removes relations which are out of the cone of
+    Rule transformer which removes relations which are out of the cone of 
     influence of output relations
 
 Author:

@@ -38,7 +38,7 @@ void decl_collector::visit_func(func_decl * n) {
             m_preds.push_back(n);
         else
             m_decls.push_back(n);
-    }
+    }        
 }
 
 decl_collector::decl_collector(ast_manager & m, bool preds):
@@ -55,7 +55,7 @@ void decl_collector::visit(ast* n) {
         n = todo.back();
         todo.pop_back();
         if (!m_visited.is_marked(n)) {
-            m_visited.mark(n, true);
+            m_visited.mark(n, true);                
             switch(n->get_kind()) {
             case AST_APP: {
                 app * a = to_app(n);
@@ -64,7 +64,7 @@ void decl_collector::visit(ast* n) {
                 }
                 todo.push_back(a->get_decl());
                 break;
-            }
+            }                    
             case AST_QUANTIFIER: {
                 quantifier * q = to_quantifier(n);
                 unsigned num_decls = q->get_num_decls();
@@ -77,7 +77,7 @@ void decl_collector::visit(ast* n) {
                 }
                 break;
             }
-            case AST_SORT:
+            case AST_SORT: 
                 visit_sort(to_sort(n));
                 break;
             case AST_FUNC_DECL: {

@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     sexpr to upolynomial converter
-
+    
 Author:
 
     Leonardo (leonardo) 2011-12-28
@@ -96,7 +96,7 @@ void sexpr2upolynomial(upolynomial::manager & m, sexpr const * s, upolynomial::n
         m.set(1, &a, p);
     }
     else if (s->is_symbol()) {
-        if (s->get_symbol() != "x")
+        if (s->get_symbol() != "x") 
             throw sexpr2upolynomial_exception("invalid univariate polynomial, variable 'x' expected", s);
         // make identity
         rational as[2] = { rational(0), rational(1) };
@@ -105,7 +105,7 @@ void sexpr2upolynomial(upolynomial::manager & m, sexpr const * s, upolynomial::n
     else {
         throw sexpr2upolynomial_exception("invalid univariate polynomial, unexpected ", s);
     }
-}
+} 
 
 void sexpr2upolynomial(upolynomial::manager & m, sexpr const * s, upolynomial::numeral_vector & p) {
     sexpr2upolynomial(m, s, p, 0);

@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Checker whether the SAT solver internal datastructures
+    Checker whether the SAT solver internal datastructures 
     are consistent or not.
 
 Author:
@@ -22,16 +22,16 @@ Revision History:
 #include"trace.h"
 
 namespace sat {
-
+    
     integrity_checker::integrity_checker(solver const & _s):
         s(_s) {
     }
 
-    // for ternary clauses
+    // for ternary clauses 
     static bool contains_watched(watch_list const & wlist, literal l1, literal l2) {
         return wlist.contains(watched(l1, l2));
     }
-
+    
     // for nary clauses
     static bool contains_watched(watch_list const & wlist, clause const & c, clause_offset cls_off) {
         watch_list::const_iterator it  = wlist.begin();
@@ -62,7 +62,7 @@ namespace sat {
         }
 
         SASSERT(c.check_approx());
-
+        
         if (c.frozen())
             return true;
 
@@ -95,7 +95,7 @@ namespace sat {
                     }
                 }
             }
-
+            
             // the first two literals must be watched.
             SASSERT(contains_watched(s.get_wlist(~c[0]), c, s.get_offset(c)));
             SASSERT(contains_watched(s.get_wlist(~c[1]), c, s.get_offset(c)));
@@ -171,7 +171,7 @@ namespace sat {
                 case watched::BINARY:
                     SASSERT(!s.was_eliminated(it2->get_literal().var()));
                     CTRACE("sat_watched_bug", !s.get_wlist(~(it2->get_literal())).contains(watched(l, it2->is_learned())),
-                           tout << "l: " << l << " l2: " << it2->get_literal() << "\n";
+                           tout << "l: " << l << " l2: " << it2->get_literal() << "\n"; 
                            tout << "was_eliminated1: " << s.was_eliminated(l.var());
                            tout << " was_eliminated2: " << s.was_eliminated(it2->get_literal().var());
                            tout << " learned: " << it2->is_learned() << "\n";
@@ -207,7 +207,7 @@ namespace sat {
         }
         return true;
     }
-
+    
     bool integrity_checker::operator()() const {
         if (s.inconsistent())
             return true;

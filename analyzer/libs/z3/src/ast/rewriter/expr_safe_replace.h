@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Version of expr_replace/expr_substitution that is safe for quantifiers.
-
+    
 
 Author:
 

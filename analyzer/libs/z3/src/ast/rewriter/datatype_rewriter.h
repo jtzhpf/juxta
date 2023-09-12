@@ -24,7 +24,7 @@ Notes:
 
 class datatype_rewriter {
     datatype_util    m_util;
-public:
+public:    
     datatype_rewriter(ast_manager & m):m_util(m) {}
     ast_manager & m() const { return m_util.get_manager(); }
     family_id get_fid() const { return m_util.get_family_id(); }

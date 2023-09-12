@@ -7,17 +7,17 @@ Module Name:
 
 Abstract:
 
-    Hashtable with chaining.
+    Hashtable with chaining.  
 
     The performance of the hashtable in hashtable.h deteriorates if
     there is a huge number of deletions. In this case, the hashtable
     starts to contain many cells marked as deleted, and insertion/deletion
     start to suffer.
-
+    
     The hashtable defined in this class addresses this problem by using
     chaining. Of course, there is the cost of storing the link to the next
     cell.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2011-04-14.
@@ -40,7 +40,7 @@ Revision History:
 #ifdef CH_STATISTICS
 #define CHS_CODE(CODE) { CODE }
 #else
-#define CHS_CODE(CODE)
+#define CHS_CODE(CODE) 
 #endif
 
 template<typename T, typename HashProc, typename EqProc>
@@ -57,34 +57,34 @@ protected:
         bool is_free() const { return m_next == reinterpret_cast<cell*>(1); }
         void mark_free() { m_next = reinterpret_cast<cell*>(1); }
     };
-
+    
     cell *    m_table;         // array of cells.
     unsigned  m_capacity;      // size of the array of cells.
-    unsigned  m_init_slots;
-    unsigned  m_init_cellar;
-    unsigned  m_slots;         // m_slots < m_capacity, and m_slots is a power of two, the cells [m_slots, m_capacity) are used for chaining.
+    unsigned  m_init_slots; 
+    unsigned  m_init_cellar;   
+    unsigned  m_slots;         // m_slots < m_capacity, and m_slots is a power of two, the cells [m_slots, m_capacity) are used for chaining. 
     unsigned  m_used_slots;    // m_used_slots <= m_slots (number of used slots).
     unsigned  m_size;          // number of occupied cells.
 #ifdef CH_STATISTICS
     unsigned  m_collisions;
 #endif
-    cell *    m_next_cell;
-    cell *    m_free_cell;
-
+    cell *    m_next_cell;   
+    cell *    m_free_cell;   
+    
     unsigned get_hash(T const & d) const { return HashProc::operator()(d); }
     bool equals(T const & e1, T const & e2) const { return EqProc::operator()(e1, e2); }
 
     static cell * alloc_table(unsigned sz) {
-        return alloc_vect<cell>(sz);
+        return alloc_vect<cell>(sz); 
     }
-
+    
     void delete_table() {
         dealloc_vect(m_table, m_capacity);
     }
-
+    
     // Return the next free cell in the cellar, and the number of used slots
     // Return 0 if the cellar is too small (unlikely but it might happen with a bad hash)
-    cell * copy_table(cell * source, unsigned source_slots, unsigned source_capacity,
+    cell * copy_table(cell * source, unsigned source_slots, unsigned source_capacity, 
                       cell * target, unsigned target_slots, unsigned target_capacity,
                       unsigned & used_slots) {
         TRACE("chashtable", tout << "copy_table...\n";);
@@ -127,7 +127,7 @@ protected:
             }
         }
 #if 0
-        TRACE("chashtable",
+        TRACE("chashtable", 
               for (unsigned i = 0; i < source_capacity; i++) {
                   tout << i << ":[";
                   if (source[i].m_next == 0)
@@ -153,7 +153,7 @@ protected:
 #endif
         return target_cellar;
     }
-
+    
     void expand_table() {
         unsigned curr_cellar  = (m_capacity - m_slots);
         unsigned new_slots    = m_slots * 2;
@@ -244,7 +244,7 @@ public:
     }
 
     void reset() {
-        if (m_size == 0)
+        if (m_size == 0) 
             return;
         finalize();
     }
@@ -269,7 +269,7 @@ public:
     unsigned used_slots() const {
         return m_used_slots;
     }
-
+    
     void insert(T const & d) {
         if (!has_free_cells())
             expand_table();
@@ -287,7 +287,7 @@ public:
         }
         else {
             cell * it = c;
-            do {
+            do { 
                 if (equals(it->m_data, d)) {
                     // already there
                     it->m_data = d;
@@ -326,7 +326,7 @@ public:
         }
         else {
             cell * it = c;
-            do {
+            do { 
                 if (equals(it->m_data, d)) {
                     // already there
                     CASSERT("chashtable_bug", check_invariant());
@@ -364,7 +364,7 @@ public:
         }
         else {
             cell * it = c;
-            do {
+            do { 
                 if (equals(it->m_data, d)) {
                     // already there
                     CASSERT("chashtable_bug", check_invariant());
@@ -392,7 +392,7 @@ public:
         cell * c      = m_table + idx;
         if (c->is_free())
             return false;
-        do {
+        do { 
             if (equals(c->m_data, d)) {
                 return true;
             }
@@ -410,7 +410,7 @@ public:
         cell * c      = m_table + idx;
         if (c->is_free())
             return 0;
-        do {
+        do { 
             if (equals(c->m_data, d)) {
                 return &(c->m_data);
             }
@@ -428,7 +428,7 @@ public:
         cell * c      = m_table + idx;
         if (c->is_free())
             return false;
-        do {
+        do { 
             if (equals(c->m_data, d)) {
                 r = c->m_data;
                 return true;
@@ -446,9 +446,9 @@ public:
         unsigned idx  = h & mask;
         cell * c      = m_table + idx;
         if (c->is_free())
-            return;
+            return; 
         cell * prev = 0;
-        do {
+        do { 
             if (equals(c->m_data, d)) {
                 m_size--;
                 if (prev == 0) {
@@ -492,19 +492,19 @@ public:
             }
             m_list_it = 0;
         }
-
+        
     public:
         iterator(cell * start, cell * end): m_it(start), m_end(end) { move_to_used(); }
         iterator():m_it(0), m_end(0), m_list_it(0) {}
-        T & operator*() {
-            return m_list_it->m_data;
+        T & operator*() { 
+            return m_list_it->m_data; 
         }
-        T const & operator*() const {
-            return m_list_it->m_data;
+        T const & operator*() const { 
+            return m_list_it->m_data; 
         }
         T const * operator->() const { return &(operator*()); }
         T * operator->() { return &(operator*()); }
-        iterator & operator++() {
+        iterator & operator++() { 
             m_list_it = m_list_it->m_next;
             if (m_list_it == 0) {
                 m_it++;
@@ -516,7 +516,7 @@ public:
         bool operator==(iterator const & it) const { return m_list_it == it.m_list_it; }
         bool operator!=(iterator const & it) const { return m_list_it != it.m_list_it; }
     };
-
+    
     iterator begin() const { return iterator(m_table, m_table + m_slots); }
     iterator end() const { return iterator(); }
 
@@ -588,7 +588,7 @@ protected:
     };
 
     typedef chashtable<key_value, key_value_hash_proc, key_value_eq_proc> table;
-
+    
     table m_table;
 
 public:
@@ -603,7 +603,7 @@ public:
     }
 
     typedef typename table::iterator iterator;
-
+    
     void reset() {
         m_table.reset();
     }
@@ -611,35 +611,35 @@ public:
     void finalize() {
         m_table.finalize();
     }
-
-    bool empty() const {
+    
+    bool empty() const { 
         return m_table.empty();
     }
-
-    unsigned size() const {
-        return m_table.size();
+    
+    unsigned size() const { 
+        return m_table.size(); 
     }
-
-    unsigned capacity() const {
+    
+    unsigned capacity() const { 
         return m_table.capacity();
     }
 
-    unsigned used_slots() const {
+    unsigned used_slots() const { 
         return m_table.used_slots();
     }
 
     unsigned collisions() const {
         return m_table.collisions();
     }
-
-    iterator begin() const {
+    
+    iterator begin() const { 
         return m_table.begin();
     }
-
-    iterator end() const {
+    
+    iterator end() const { 
         return m_table.end();
     }
-
+    
     void insert(Key const & k, Value const & v) {
         return m_table.insert(key_value(k, v));
     }
@@ -653,7 +653,7 @@ public:
     }
 
     key_value * find_core(Key const & k) const {
-        return m_table.find_core(key_value(k));
+        return m_table.find_core(key_value(k)); 
     }
 
     bool find(Key const & k, Value & v) const {

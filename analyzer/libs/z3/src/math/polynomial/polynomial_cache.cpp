@@ -40,7 +40,7 @@ namespace polynomial {
         unsigned           m_hash;
         unsigned           m_result_sz;
         polynomial **      m_result;
-
+        
         psc_chain_entry(polynomial const * p, polynomial const * q, var x, unsigned h):
             m_p(p),
             m_q(q),
@@ -49,10 +49,10 @@ namespace polynomial {
             m_result_sz(0),
             m_result(0) {
         }
-
+        
         struct hash_proc { unsigned operator()(psc_chain_entry const * entry) const { return entry->m_hash; } };
 
-        struct eq_proc {
+        struct eq_proc { 
             bool operator()(psc_chain_entry const * e1, psc_chain_entry const * e2) const {
                 return e1->m_p == e2->m_p && e1->m_q == e2->m_q && e1->m_x == e2->m_x;
             }
@@ -64,17 +64,17 @@ namespace polynomial {
         unsigned           m_hash;
         unsigned           m_result_sz;
         polynomial **      m_result;
-
+        
         factor_entry(polynomial const * p, unsigned h):
             m_p(p),
             m_hash(h),
             m_result_sz(0),
             m_result(0) {
         }
-
+        
         struct hash_proc { unsigned operator()(factor_entry const * entry) const { return entry->m_hash; } };
 
-        struct eq_proc {
+        struct eq_proc { 
             bool operator()(factor_entry const * e1, factor_entry const * e2) const {
                 return e1->m_p == e2->m_p;
             }
@@ -84,8 +84,8 @@ namespace polynomial {
     typedef chashtable<polynomial*, poly_hash_proc, poly_eq_proc> polynomial_table;
     typedef chashtable<psc_chain_entry*, psc_chain_entry::hash_proc, psc_chain_entry::eq_proc> psc_chain_cache;
     typedef chashtable<factor_entry*, factor_entry::hash_proc, factor_entry::eq_proc> factor_cache;
-
-    struct cache::imp {
+    
+    struct cache::imp { 
         manager &                m;
         polynomial_table         m_poly_table;
         psc_chain_cache          m_psc_chain_cache;
@@ -96,7 +96,7 @@ namespace polynomial {
 
         imp(manager & _m):m(_m), m_poly_table(poly_hash_proc(m), poly_eq_proc(m)), m_cached_polys(m), m_allocator(m.allocator()) {
         }
-
+        
         ~imp() {
             reset_psc_chain_cache();
             reset_factor_cache();
@@ -135,13 +135,13 @@ namespace polynomial {
         }
 
         unsigned pid(polynomial * p) const { return m.id(p); }
-
+        
         polynomial * mk_unique(polynomial * p) {
             if (m_in_cache.get(pid(p), false))
                 return p;
             polynomial * p_prime = m_poly_table.insert_if_not_there(p);
             if (p == p_prime) {
-                m_cached_polys.push_back(p_prime);
+                m_cached_polys.push_back(p_prime); 
                 m_in_cache.setx(pid(p_prime), true, false);
             }
             return p_prime;
@@ -152,7 +152,7 @@ namespace polynomial {
             q = mk_unique(q);
             unsigned h = hash_u_u(pid(p), pid(q));
             psc_chain_entry * entry = new (m_allocator.allocate(sizeof(psc_chain_entry))) psc_chain_entry(p, q, x, h);
-            psc_chain_entry * old_entry = m_psc_chain_cache.insert_if_not_there(entry);
+            psc_chain_entry * old_entry = m_psc_chain_cache.insert_if_not_there(entry); 
             if (entry != old_entry) {
                 entry->~psc_chain_entry();
                 m_allocator.deallocate(sizeof(psc_chain_entry), entry);
@@ -179,7 +179,7 @@ namespace polynomial {
             p = mk_unique(p);
             unsigned h = hash_u(pid(p));
             factor_entry * entry = new (m_allocator.allocate(sizeof(factor_entry))) factor_entry(p, h);
-            factor_entry * old_entry = m_factor_cache.insert_if_not_there(entry);
+            factor_entry * old_entry = m_factor_cache.insert_if_not_there(entry); 
             if (entry != old_entry) {
                 entry->~factor_entry();
                 m_allocator.deallocate(sizeof(factor_entry), entry);
@@ -210,7 +210,7 @@ namespace polynomial {
     cache::~cache() {
         dealloc(m_imp);
     }
-
+    
     manager & cache::m() const {
         return m_imp->m;
     }
@@ -226,7 +226,7 @@ namespace polynomial {
     void cache::factor(polynomial const * p, polynomial_ref_vector & distinct_factors) {
         m_imp->factor(const_cast<polynomial*>(p), distinct_factors);
     }
-
+    
     void cache::reset() {
         manager & _m = m();
         dealloc(m_imp);

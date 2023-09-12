@@ -39,7 +39,7 @@ namespace datalog {
     class hashtable_table_plugin::join_fn : public convenient_table_join_fn {
         unsigned m_joined_col_cnt;
     public:
-        join_fn(const table_signature & t1_sig, const table_signature & t2_sig, unsigned col_cnt, const unsigned * cols1, const unsigned * cols2)
+        join_fn(const table_signature & t1_sig, const table_signature & t2_sig, unsigned col_cnt, const unsigned * cols1, const unsigned * cols2) 
             : convenient_table_join_fn(t1_sig, t2_sig, col_cnt, cols1, cols2),
             m_joined_col_cnt(col_cnt) {}
 
@@ -117,8 +117,8 @@ namespace datalog {
         our_row m_row_obj;
 
     public:
-        our_iterator_core(const hashtable_table & t, bool finished) :
-            m_parent(t), m_inner(finished ? t.m_data.end() : t.m_data.begin()),
+        our_iterator_core(const hashtable_table & t, bool finished) : 
+            m_parent(t), m_inner(finished ? t.m_data.end() : t.m_data.begin()), 
             m_end(t.m_data.end()), m_row_obj(*this) {}
 
         virtual bool is_finished() const {
@@ -157,7 +157,7 @@ namespace datalog {
         }
         unsigned cols = sig.size();
         unsigned shift = 0;
-        for (unsigned i = 0; i < cols; ++i) {
+        for (unsigned i = 0; i < cols; ++i) {            
             unsigned s = static_cast<unsigned>(sig[i]);
             if (s != sig[i] || !is_power_of_two(s)) {
                 return false;
@@ -168,7 +168,7 @@ namespace datalog {
                 if (bit_pos & s) {
                     break;
                 }
-                bit_pos <<= 1;
+                bit_pos <<= 1;                
             }
             shift += num_bits;
             if (shift >= 32) {
@@ -184,7 +184,7 @@ namespace datalog {
     }
 
     class bitvector_table::bv_iterator : public iterator_core {
-
+        
         bitvector_table const& m_bv;
         unsigned         m_offset;
 
@@ -225,7 +225,7 @@ namespace datalog {
                 ++m_offset;
             }
             m_row_obj.reset();
-        }
+        }        
     };
 
     bitvector_table::bitvector_table(bitvector_table_plugin & plugin, const table_signature & sig)
@@ -234,7 +234,7 @@ namespace datalog {
 
         m_num_cols = sig.size();
         unsigned shift = 0;
-        for (unsigned i = 0; i < m_num_cols; ++i) {
+        for (unsigned i = 0; i < m_num_cols; ++i) {            
             unsigned s = static_cast<unsigned>(sig[i]);
             if (s != sig[i] || !is_power_of_two(s)) {
                   throw default_exception("bit-vector table is specialized to small domains that are powers of two");
@@ -247,7 +247,7 @@ namespace datalog {
                 if (bit_pos & s) {
                     break;
                 }
-                bit_pos <<= 1;
+                bit_pos <<= 1;                
             }
             shift += num_bits;
             if (shift >= 32) {
@@ -256,7 +256,7 @@ namespace datalog {
             m_bv.reserve(1 << shift);
         }
     }
-
+    
     unsigned bitvector_table::fact2offset(const table_element* f) const {
         unsigned result = 0;
         for (unsigned i = 0; i < m_num_cols; ++i) {
@@ -272,7 +272,7 @@ namespace datalog {
             f[i] = m_mask[i] & (offset >> m_shift[i]);
         }
     }
-
+    
     void bitvector_table::add_fact(const table_fact & f) {
         m_bv.set(fact2offset(f.c_ptr()));
     }
@@ -322,7 +322,7 @@ namespace datalog {
         unsigned      m_val;
         table_sort    m_sort;
     public:
-        select_equal_and_project_fn(const table_signature & sig, table_element val, unsigned col)
+        select_equal_and_project_fn(const table_signature & sig, table_element val, unsigned col) 
             : m_val(static_cast<unsigned>(val)),
               m_sort(sig[0]) {
             SASSERT(val <= UINT_MAX);
@@ -358,15 +358,15 @@ namespace datalog {
     };
 
     table_transformer_fn * equivalence_table_plugin::mk_select_equal_and_project_fn(
-        const table_base & t, const table_element & value, unsigned col) {
+        const table_base & t, const table_element & value, unsigned col) { 
         return alloc(select_equal_and_project_fn, t.get_signature(), value, col);
     }
 
-    class equivalence_table_plugin::union_fn : public table_union_fn {
+    class equivalence_table_plugin::union_fn : public table_union_fn {    
 
         equivalence_table_plugin& m_plugin;
 
-
+        
         void mk_union1(equivalence_table & tgt, const equivalence_table & src, table_base * delta) {
             unsigned num_vars = src.m_uf.get_num_vars();
             table_fact fact;
@@ -398,9 +398,9 @@ namespace datalog {
                     tgt.add_fact(fact);
                     if (delta) {
                         delta->add_fact(fact);
-                        TRACE("dl",
-                              tout << "Add: ";
-                              for (unsigned i = 0; i < fact.size(); ++i) tout << fact[i] << " ";
+                        TRACE("dl", 
+                              tout << "Add: "; 
+                              for (unsigned i = 0; i < fact.size(); ++i) tout << fact[i] << " "; 
                               tout << "\n";);
                     }
                 }
@@ -412,18 +412,18 @@ namespace datalog {
 
         virtual void operator()(table_base & tgt0, const table_base & src, table_base * delta) {
             TRACE("dl", tout << "union\n";);
-            equivalence_table & tgt = static_cast<equivalence_table &>(tgt0);
+            equivalence_table & tgt = static_cast<equivalence_table &>(tgt0);   
             if (m_plugin.is_equivalence_table(src)) {
                 mk_union1(tgt, static_cast<equivalence_table const&>(src), delta);
             }
             else {
                 mk_union2(tgt, src, delta);
             }
-            TRACE("dl", src.display(tout << "src\n"); tgt.display(tout << "tgt\n");
+            TRACE("dl", src.display(tout << "src\n"); tgt.display(tout << "tgt\n"); 
                         if (delta) delta->display(tout << "delta\n"););
         }
     };
-
+    
     table_union_fn * equivalence_table_plugin::mk_union_fn(
         const table_base & tgt, const table_base & src, const table_base * delta) {
         if (!is_equivalence_table(tgt) ||
@@ -433,20 +433,20 @@ namespace datalog {
         }
         return alloc(union_fn,*this);
     }
-
+    
     class equivalence_table_plugin::join_project_fn : public convenient_table_join_project_fn {
         equivalence_table_plugin& m_plugin;
     public:
         join_project_fn(
-            equivalence_table_plugin& plugin, const table_signature & t1_sig, const table_signature & t2_sig, unsigned col_cnt,
-            const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
-            const unsigned * removed_cols)
+            equivalence_table_plugin& plugin, const table_signature & t1_sig, const table_signature & t2_sig, unsigned col_cnt, 
+            const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
+            const unsigned * removed_cols) 
             : convenient_table_join_project_fn(t1_sig, t2_sig, col_cnt, cols1, cols2, removed_col_cnt, removed_cols),
               m_plugin(plugin) {
             m_removed_cols.push_back(UINT_MAX);
         }
 
-        virtual table_base * operator()(const table_base & tb1, const table_base & tb2) {
+        virtual table_base * operator()(const table_base & tb1, const table_base & tb2) {            
             SASSERT(m_cols1.size() == 1);
             const table_signature & res_sign = get_result_signature();
             table_plugin * plugin = &tb1.get_plugin();
@@ -458,13 +458,13 @@ namespace datalog {
             }
             SASSERT(plugin->can_handle_signature(res_sign));
             table_base * result = plugin->mk_empty(res_sign);
-
+            
             if (m_plugin.is_equivalence_table(tb1)) {
-                mk_join(0, m_cols1[0], static_cast<const equivalence_table&>(tb1),
+                mk_join(0, m_cols1[0], static_cast<const equivalence_table&>(tb1), 
                         2, m_cols2[0], tb2, result);
             }
             else if (m_plugin.is_equivalence_table(tb2)) {
-                mk_join(tb1.get_signature().size(), m_cols2[0], static_cast<const equivalence_table&>(tb2),
+                mk_join(tb1.get_signature().size(), m_cols2[0], static_cast<const equivalence_table&>(tb2), 
                         0, m_cols1[0], tb1, result);
             }
             else {
@@ -475,13 +475,13 @@ namespace datalog {
         }
 
     private:
-        table_base * mk_join(unsigned offs1, unsigned col1, equivalence_table const & t1,
+        table_base * mk_join(unsigned offs1, unsigned col1, equivalence_table const & t1, 
                              unsigned offs2, unsigned col2, table_base const& t2, table_base* res) {
             table_base::iterator els2it  = t2.begin();
             table_base::iterator els2end = t2.end();
 
             table_fact acc, proj;
-            acc.resize(t1.get_signature().size() + t2.get_signature().size());
+            acc.resize(t1.get_signature().size() + t2.get_signature().size()); 
 
             for(; els2it != els2end; ++els2it) {
                 const table_base::row_interface & row2 = *els2it;
@@ -495,7 +495,7 @@ namespace datalog {
                 }
                 for (; it != end; ++it) {
                     acc[offs1+col1] = e2;
-                    acc[offs1+1-col1] = *it;
+                    acc[offs1+1-col1] = *it;   
                     mk_project(acc, proj);
                     TRACE("dl", for (unsigned i = 0; i < proj.size(); ++i) tout << proj[i] << " "; tout << "\n";);
                     res->add_fact(proj);
@@ -514,7 +514,7 @@ namespace datalog {
                 else {
                     p.push_back(f[i]);
                 }
-            }
+            }            
         }
 
 
@@ -522,7 +522,7 @@ namespace datalog {
 
     table_join_fn * equivalence_table_plugin::mk_join_project_fn(
         const table_base & t1, const table_base & t2,
-        unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt,
+        unsigned col_cnt, const unsigned * cols1, const unsigned * cols2, unsigned removed_col_cnt, 
         const unsigned * removed_cols) {
         if (col_cnt != 1) {
             TRACE("dl", tout << "WARNING: join_project on multiple columns is not implemented\n";);
@@ -536,7 +536,7 @@ namespace datalog {
     }
 
     class equivalence_table::eq_iterator : public iterator_core {
-
+        
         equivalence_table const& m_eq;
         unsigned                 m_last;
         unsigned                 m_current;
@@ -567,12 +567,12 @@ namespace datalog {
 
     public:
         eq_iterator(const equivalence_table& eq, bool end):
-            m_eq(eq),
+            m_eq(eq), 
             m_last(eq.m_uf.get_num_vars()),
             m_current(end?m_last:0),
             m_next(0),
             m_row_obj(*this)
-        {
+        { 
             while (m_current < m_last && !m_eq.is_valid(m_current)) {
                 m_current++;
                 m_next = m_current;
@@ -589,7 +589,7 @@ namespace datalog {
         }
 
         virtual void operator++() {
-            SASSERT(!is_finished());
+            SASSERT(!is_finished());            
             m_next = m_eq.m_uf.next(m_next);
             if (m_next == m_current) {
                 do {
@@ -598,21 +598,21 @@ namespace datalog {
                 }
                 while (m_current < m_last && !m_eq.is_valid(m_current));
             }
-        }
+        }        
     };
 
     equivalence_table::equivalence_table(equivalence_table_plugin & plugin, const table_signature & sig)
         : table_base(plugin, sig), m_uf(m_ctx), m_sparse(0) {
-        SASSERT(plugin.can_handle_signature(sig));
+        SASSERT(plugin.can_handle_signature(sig));        
         }
 
-    equivalence_table::~equivalence_table() {
+    equivalence_table::~equivalence_table() { 
         if (is_sparse()) {
             m_sparse->deallocate();
         }
     }
 
-
+           
     void equivalence_table::add_fact(const table_fact & f) {
         if (is_sparse()) {
             add_fact_sparse(f);
@@ -620,7 +620,7 @@ namespace datalog {
         else {
             TRACE("dl_verbose", for (unsigned i = 0; i < f.size(); ++i) tout << f[i] << " "; tout << "\n";);
             while (first(f) >= m_uf.get_num_vars()) m_uf.mk_var();
-            while (second(f) >= m_uf.get_num_vars()) m_uf.mk_var();
+            while (second(f) >= m_uf.get_num_vars()) m_uf.mk_var();     
             m_uf.merge(first(f), second(f));
             m_valid.reserve(m_uf.get_num_vars());
             m_valid.set(first(f));
@@ -643,7 +643,7 @@ namespace datalog {
         table_base* result = rp->mk_empty(get_signature());
         table_base::iterator it = begin(), e = end();
         table_fact fact;
-        for (; it != e; ++it) {
+        for (; it != e; ++it) {            
             it->get_fact(fact);
             result->add_fact(fact);
         }
@@ -687,7 +687,7 @@ namespace datalog {
         if (is_sparse()) {
             return m_sparse->contains_fact(f);
         }
-        return
+        return  
             is_valid(first(f)) &&
             is_valid(second(f)) &&
             m_uf.find(first(f)) == m_uf.find(second(f));
@@ -745,7 +745,7 @@ namespace datalog {
         }
         for (unsigned i = 0; i < m_uf.get_num_vars(); ++i) {
             if (is_valid(i) && m_uf.find(i) == i) {
-                unsigned j = i, last = i;
+                unsigned j = i, last = i;                
                 do {
                     out << "<" << i << " " << j << ">\n";
                     j = m_uf.next(j);
@@ -757,15 +757,15 @@ namespace datalog {
 
     unsigned equivalence_table::get_size_estimate_rows() const {
         if (is_sparse()) return m_sparse->get_size_estimate_rows();
-        return static_cast<unsigned>(get_signature()[0]);
+        return static_cast<unsigned>(get_signature()[0]); 
     }
 
     unsigned equivalence_table::get_size_estimate_bytes() const {
         if (is_sparse()) return m_sparse->get_size_estimate_bytes();
-        return static_cast<unsigned>(get_signature()[0]);
+        return static_cast<unsigned>(get_signature()[0]); 
     }
 
-    bool equivalence_table::knows_exact_size() const {
+    bool equivalence_table::knows_exact_size() const { 
         return (!is_sparse() || m_sparse->knows_exact_size());
     }
 

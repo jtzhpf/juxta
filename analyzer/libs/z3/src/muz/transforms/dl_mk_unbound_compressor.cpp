@@ -71,7 +71,7 @@ namespace datalog {
         std::stringstream name_suffix;
         name_suffix << "compr_arg_" << arg_index;
 
-        func_decl * cpred = m_context.mk_fresh_head_predicate(parent_name, symbol(name_suffix.str().c_str()),
+        func_decl * cpred = m_context.mk_fresh_head_predicate(parent_name, symbol(name_suffix.str().c_str()), 
             arity, domain.c_ptr(), pred);
         m_pinned.push_back(cpred);
 
@@ -91,7 +91,7 @@ namespace datalog {
         }
 
         unsigned n = head_pred->get_arity();
-
+        
         rm.get_counter().reset();
         rm.get_counter().count_vars(m, head, 1);
 
@@ -119,7 +119,7 @@ namespace datalog {
     start:
         rule * r = m_rules.get(rule_index);
         var_idx_set& tail_vars = rm.collect_tail_vars(r);
-
+        
         app * head = r->get_head();
         func_decl * head_pred = head->get_decl();
         unsigned head_arity = head_pred->get_arity();
@@ -216,7 +216,7 @@ namespace datalog {
             }
         }
 
-        // Accumulate negated filtered rule instead
+        // Accumulate negated filtered rule instead 
         // of replacing the original predicate.
         if (r->is_neg_tail(tail_index)) {
             tails_negated.push_back(true);
@@ -225,7 +225,7 @@ namespace datalog {
 
         res = m_context.get_rule_manager().mk( r->get_head(), tails.size(), tails.c_ptr(), tails_negated.c_ptr());
         res->set_accounting_parent_object(m_context, r);
-        m_context.get_rule_manager().fix_unbound_vars(res, true);
+        m_context.get_rule_manager().fix_unbound_vars(res, true);        
     }
 
     void mk_unbound_compressor::add_decompression_rule(rule_set const& source, rule * r, unsigned tail_index, unsigned arg_index) {
@@ -243,7 +243,7 @@ namespace datalog {
         m_modified = true;
 
         //TODO: avoid rule duplicity
-        //If two predicates are compressed in a rule, applying decompression
+        //If two predicates are compressed in a rule, applying decompression 
         //to the results can cause a rule being added multiple times:
         //P:- R(x,y), S(x,y)
         //is decompressed into rules
@@ -262,7 +262,7 @@ namespace datalog {
         mk_decompression_rule(r, tail_index, arg_index, new_rule);
 
         m_rules.set(rule_index, new_rule);
-
+        
         //we don't update the m_head_occurrence_ctr because the head predicate doesn't change
 
         detect_tasks(source, rule_index);
@@ -296,10 +296,10 @@ namespace datalog {
                 unsigned arg_index = compressed_tail_pred_arg_indexes.back();
                 compressed_tail_pred_arg_indexes.pop_back();
 
-                bool can_remove_orig_rule =
+                bool can_remove_orig_rule = 
                     compressed_tail_pred_arg_indexes.empty() &&
                     !m_non_empty_rels.contains(t_pred) &&
-                    m_head_occurrence_ctr.get(t_pred)==0;
+                    m_head_occurrence_ctr.get(t_pred)==0;                
 
                 if (can_remove_orig_rule || is_negated_predicate) {
                     replace_by_decompression_rule(source, rule_index, tail_index, arg_index);
@@ -313,9 +313,9 @@ namespace datalog {
                 //update r with the new rule
                 rule * new_rule = m_rules.get(rule_index);
                 SASSERT(new_rule->get_uninterpreted_tail_size() >= utail_len);
-                //here we check that the rule replacement didn't affect other uninterpreted literals
+                //here we check that the rule replacement didn't affect other uninterpreted literals 
                 //in the tail (aside of variable renaming)
-                SASSERT(tail_index==0 ||
+                SASSERT(tail_index==0 || 
                     new_rule->get_tail(tail_index-1)->get_decl()==r->get_tail(tail_index-1)->get_decl());
 
                 r = new_rule;

@@ -35,7 +35,7 @@ class ast_translation {
     ast_manager &       m_to_manager;
     svector<frame>      m_frame_stack;
     ptr_vector<ast>     m_extra_children_stack; // for sort and func_decl, since they have nested AST in their parameters
-    ptr_vector<ast>     m_result_stack;
+    ptr_vector<ast>     m_result_stack; 
     obj_map<ast, ast*>  m_cache;
 
     void cache(ast * s, ast * t);
@@ -45,7 +45,7 @@ class ast_translation {
     void copy_params(decl * d, unsigned rpos, buffer<parameter> & ps);
     void mk_sort(sort * s, frame & fr);
     void mk_func_decl(func_decl * f, frame & fr);
-
+    
     ast * process(ast const * n);
 
 public:
@@ -57,7 +57,7 @@ public:
     ~ast_translation();
 
     template<typename T>
-    T * operator()(T const * n) {
+    T * operator()(T const * n) { 
         SASSERT(from().contains(const_cast<T*>(n)));
         ast * r = process(n);
         SASSERT(to().contains(const_cast<ast*>(r)));

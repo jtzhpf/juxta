@@ -106,7 +106,7 @@ namespace smt {
             histogram.reserve(num_occs+1, 0);
             histogram[num_occs]++;
         }
-        out << "number of atoms having k occs:\n";
+        out << "number of atoms having k occs:\n"; 
         unsigned sz = histogram.size();
         for (unsigned i = 1; i < sz; i++)
             if (histogram[i] > 0)

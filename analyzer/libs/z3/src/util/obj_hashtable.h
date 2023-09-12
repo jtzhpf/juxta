@@ -93,11 +93,11 @@ public:
     typedef core_hashtable<obj_map_entry, obj_hash<key_data>, default_eq<key_data> > table;
 
     table m_table;
-
+  
 public:
     obj_map():
         m_table(DEFAULT_HASHTABLE_INITIAL_CAPACITY) {}
-
+    
     typedef typename table::iterator iterator;
     typedef Key    key;
     typedef Value  value;
@@ -105,35 +105,35 @@ public:
     void reset() {
         m_table.reset();
     }
-
+            
     void finalize() {
         m_table.finalize();
     }
-
-    bool empty() const {
+    
+    bool empty() const { 
         return m_table.empty();
     }
-
-    unsigned size() const {
-        return m_table.size();
+    
+    unsigned size() const { 
+        return m_table.size(); 
     }
-
-    unsigned capacity() const {
+    
+    unsigned capacity() const { 
         return m_table.capacity();
     }
-
-    iterator begin() const {
+    
+    iterator begin() const { 
         return m_table.begin();
     }
-
-    iterator end() const {
+    
+    iterator end() const { 
         return m_table.end();
     }
-
+    
     void insert(Key * k, Value const & v) {
         m_table.insert(key_data(k, v));
     }
-
+    
     key_data const & insert_if_not_there(Key * k, Value const & v) {
         return m_table.insert_if_not_there(key_data(k, v));
     }
@@ -141,7 +141,7 @@ public:
     obj_map_entry * insert_if_not_there2(Key * k, Value const & v) {
         return m_table.insert_if_not_there2(key_data(k, v));
     }
-
+    
     obj_map_entry * find_core(Key * k) const {
         return m_table.find_core(key_data(k));
     }
@@ -173,19 +173,19 @@ public:
     value & operator[](key * k) {
         return find(k);
     }
-
-    iterator find_iterator(Key * k) const {
+    
+    iterator find_iterator(Key * k) const { 
         return m_table.find(key_data(k));
     }
 
-    bool contains(Key * k) const {
-        return find_core(k) != 0;
+    bool contains(Key * k) const { 
+        return find_core(k) != 0; 
     }
 
     void remove(Key * k) {
         m_table.remove(key_data(k));
     }
-
+    
     void erase(Key * k) {
         remove(k);
     }

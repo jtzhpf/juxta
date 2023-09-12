@@ -26,15 +26,15 @@ inline void shared_occs::insert(expr * t) {
         m.inc_ref(t);
 }
 
-void shared_occs::reset() {
+void shared_occs::reset() { 
     dec_ref_collection_values(m, m_shared);
-    m_shared.reset();
+    m_shared.reset(); 
 }
 
-void shared_occs::cleanup() {
+void shared_occs::cleanup() { 
     reset();
     m_shared.finalize();
-    m_stack.finalize();
+    m_stack.finalize(); 
 }
 
 shared_occs::~shared_occs() {
@@ -55,7 +55,7 @@ inline bool shared_occs::process(expr * t, shared_occs_mark & visited) {
         if (num_args == 0)
             return true; // done with t
         m_stack.push_back(frame(t, 0)); // need to create frame if num_args > 0
-        return false;
+        return false; 
     }
     case AST_VAR:
         if (m_track_atomic && t->get_ref_count() > 1) {
@@ -74,9 +74,9 @@ inline bool shared_occs::process(expr * t, shared_occs_mark & visited) {
             visited.mark(t);
         }
         if (!m_visit_quantifiers)
-            return true;
+            return true; 
         m_stack.push_back(frame(t, 0));
-        return false;
+        return false; 
     default:
         UNREACHABLE();
         return true;

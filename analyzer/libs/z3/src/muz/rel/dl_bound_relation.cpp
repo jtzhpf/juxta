@@ -24,7 +24,7 @@ Revision History:
 namespace datalog {
 
     bound_relation_plugin::bound_relation_plugin(relation_manager& m):
-        relation_plugin(bound_relation_plugin::get_name(), m),
+        relation_plugin(bound_relation_plugin::get_name(), m), 
         m_arith(get_ast_manager()),
         m_bsimp(get_ast_manager()) {
     }
@@ -50,7 +50,7 @@ namespace datalog {
         return dynamic_cast<bound_relation*>(r);
     }
 
-    bool bound_relation_plugin::is_interval_relation(relation_base const& r) {
+    bool bound_relation_plugin::is_interval_relation(relation_base const& r) {       
         return symbol("interval_relation") == r.get_plugin().get_name();
     }
 
@@ -75,7 +75,7 @@ namespace datalog {
     class bound_relation_plugin::join_fn : public convenient_relation_join_fn {
     public:
         join_fn(const relation_signature & o1_sig, const relation_signature & o2_sig, unsigned col_cnt,
-                const unsigned * cols1, const unsigned * cols2)
+                const unsigned * cols1, const unsigned * cols2) 
             : convenient_relation_join_fn(o1_sig, o2_sig, col_cnt, cols1, cols2) {
         }
 
@@ -83,7 +83,7 @@ namespace datalog {
             bound_relation const& r1 = get(_r1);
             bound_relation const& r2 = get(_r2);
             bound_relation_plugin& p = r1.get_plugin();
-            bound_relation* result = dynamic_cast<bound_relation*>(p.mk_full(0, get_result_signature()));
+            bound_relation* result = dynamic_cast<bound_relation*>(p.mk_full(0, get_result_signature()));            
             result->mk_join(r1, r2, m_cols1.size(), m_cols1.c_ptr(), m_cols2.c_ptr());
             return result;
         }
@@ -100,27 +100,27 @@ namespace datalog {
 
     class bound_relation_plugin::project_fn : public convenient_relation_project_fn {
     public:
-        project_fn(const relation_signature & orig_sig, unsigned removed_col_cnt, const unsigned * removed_cols)
+        project_fn(const relation_signature & orig_sig, unsigned removed_col_cnt, const unsigned * removed_cols) 
             : convenient_relation_project_fn(orig_sig, removed_col_cnt, removed_cols) {
         }
 
         virtual relation_base * operator()(const relation_base & _r) {
             bound_relation const& r = get(_r);
             bound_relation_plugin& p = r.get_plugin();
-            bound_relation* result = get(p.mk_full(0, get_result_signature()));
+            bound_relation* result = get(p.mk_full(0, get_result_signature()));            
             result->mk_project(r, m_removed_cols.size(), m_removed_cols.c_ptr());
             return result;
         }
     };
 
-    relation_transformer_fn * bound_relation_plugin::mk_project_fn(const relation_base & r,
+    relation_transformer_fn * bound_relation_plugin::mk_project_fn(const relation_base & r, 
             unsigned col_cnt, const unsigned * removed_cols) {
         return alloc(project_fn, r.get_signature(), col_cnt, removed_cols);
     }
-
+   
     class bound_relation_plugin::rename_fn : public convenient_relation_rename_fn {
     public:
-        rename_fn(const relation_signature & orig_sig, unsigned cycle_len, const unsigned * cycle)
+        rename_fn(const relation_signature & orig_sig, unsigned cycle_len, const unsigned * cycle) 
             : convenient_relation_rename_fn(orig_sig, cycle_len, cycle) {
         }
 
@@ -133,20 +133,20 @@ namespace datalog {
         }
     };
 
-    relation_transformer_fn * bound_relation_plugin::mk_rename_fn(const relation_base & r,
+    relation_transformer_fn * bound_relation_plugin::mk_rename_fn(const relation_base & r, 
             unsigned cycle_len, const unsigned * permutation_cycle) {
         if(check_kind(r)) {
             return alloc(rename_fn, r.get_signature(), cycle_len, permutation_cycle);
         }
         return 0;
     }
-
+     
 
     class bound_relation_plugin::union_fn : public relation_union_fn {
         bool m_is_widen;
     public:
         union_fn(bool is_widen) :
-            m_is_widen(is_widen) {
+            m_is_widen(is_widen) {            
         }
         virtual void operator()(relation_base & _r, const relation_base & _src, relation_base * _delta) {
             TRACE("bound_relation", _r.display(tout << "dst:\n"); _src.display(tout  << "src:\n"););
@@ -158,15 +158,15 @@ namespace datalog {
         bool m_is_widen;
     public:
         union_fn_i(bool is_widen) :
-            m_is_widen(is_widen) {
+            m_is_widen(is_widen) {            
         }
         virtual void operator()(relation_base & _r, const relation_base & _src, relation_base * _delta) {
-            TRACE("bound_relation", _r.display(tout << "dst:\n"); _src.display(tout  << "src:\n"););
+            TRACE("bound_relation", _r.display(tout << "dst:\n"); _src.display(tout  << "src:\n"););   
             get(_r).mk_union_i(get_interval_relation(_src), get(_delta), m_is_widen);
             TRACE("bound_relation", _r.display(tout << "dst':\n"););
         }
     };
-
+    
 
     relation_union_fn * bound_relation_plugin::mk_union_fn(const relation_base & tgt, const relation_base & src,
         const relation_base * delta) {
@@ -180,7 +180,7 @@ namespace datalog {
     }
 
     relation_union_fn * bound_relation_plugin::mk_widen_fn(
-        const relation_base & tgt, const relation_base & src,
+        const relation_base & tgt, const relation_base & src, 
         const relation_base * delta) {
         if (check_kind(tgt) && is_interval_relation(src) && (!delta || check_kind(*delta))) {
             return alloc(union_fn_i, true);
@@ -194,7 +194,7 @@ namespace datalog {
     class bound_relation_plugin::filter_identical_fn : public relation_mutator_fn {
         unsigned_vector m_cols;
     public:
-        filter_identical_fn(unsigned col_cnt, const unsigned * identical_cols)
+        filter_identical_fn(unsigned col_cnt, const unsigned * identical_cols) 
             : m_cols(col_cnt, identical_cols) {}
 
         virtual void operator()(relation_base & r) {
@@ -219,7 +219,7 @@ namespace datalog {
         virtual void operator()(relation_base & r) { }
     };
 
-    relation_mutator_fn * bound_relation_plugin::mk_filter_equal_fn(const relation_base & r,
+    relation_mutator_fn * bound_relation_plugin::mk_filter_equal_fn(const relation_base & r, 
         const relation_element & value, unsigned col) {
         if (check_kind(r)) {
             return alloc(filter_equal_fn, value, col);
@@ -240,7 +240,7 @@ namespace datalog {
             SASSERT(is_var(a));
             return to_var(a)->get_idx();
         }
-
+        
         // x = z - y
         void mk_sub_eq(expr* x, expr* z, expr* y) {
             SASSERT(is_var(x));
@@ -278,26 +278,26 @@ namespace datalog {
 
     public:
 
-        filter_interpreted_fn(ast_manager& m, app* cond) :
-            m_cond(cond, m),
+        filter_interpreted_fn(ast_manager& m, app* cond) : 
+            m_cond(cond, m), 
             m_lt(m), m_arith(m), m_interval(0), m_kind(NOT_APPLICABLE) {
             expr* l, *r, *r1, *r2, *c2;
             rational n1;
-            if ((m_arith.is_lt(cond, l, r) || m_arith.is_gt(cond, r, l)) &&
+            if ((m_arith.is_lt(cond, l, r) || m_arith.is_gt(cond, r, l)) && 
                 is_var(l) && is_var(r)) {
                 mk_lt(l, r);
             }
-            else if (m.is_not(cond, c2) &&
-                     (m_arith.is_ge(c2, l, r) || m_arith.is_le(c2, r, l)) &&
+            else if (m.is_not(cond, c2) && 
+                     (m_arith.is_ge(c2, l, r) || m_arith.is_le(c2, r, l)) && 
                 is_var(l) && is_var(r)) {
                 mk_lt(l, r);
             }
-            else if ((m_arith.is_le(cond, l, r) || m_arith.is_ge(cond, r, l)) &&
+            else if ((m_arith.is_le(cond, l, r) || m_arith.is_ge(cond, r, l)) && 
                 is_var(l) && is_var(r)) {
                 mk_le(l, r);
             }
-            else if (m.is_not(cond, c2) &&
-                     (m_arith.is_gt(c2, l, r) || m_arith.is_lt(c2, r, l)) &&
+            else if (m.is_not(cond, c2) && 
+                     (m_arith.is_gt(c2, l, r) || m_arith.is_lt(c2, r, l)) && 
                 is_var(l) && is_var(r)) {
                 mk_le(l, r);
             }
@@ -306,41 +306,41 @@ namespace datalog {
             }
             else if (m.is_eq(cond, l, r) && is_var(l) && is_var(r)) {
                 mk_eq(l, r);
-            }
-            else if (m.is_eq(cond, l, r) &&
-                     m_arith.is_sub(r, r1, r2) &&
+            }            
+            else if (m.is_eq(cond, l, r) && 
+                     m_arith.is_sub(r, r1, r2) && 
                      is_var(l) && is_var(r1) && is_var(r2)) {
                 mk_sub_eq(l, r1, r2);
             }
-            else if (m.is_eq(cond, l, r) &&
-                     m_arith.is_sub(l, r1, r2) &&
+            else if (m.is_eq(cond, l, r) && 
+                     m_arith.is_sub(l, r1, r2) && 
                      is_var(r) && is_var(r1) && is_var(r2)) {
                 mk_sub_eq(r, r1, r2);
             }
-            else if (m.is_eq(cond, l, r) &&
+            else if (m.is_eq(cond, l, r) && 
                      m_arith.is_add(r, r1, r2) &&
                      m_arith.is_numeral(r1, n1) &&
                      n1.is_pos() && is_var(l) && is_var(r2)) {
                 mk_lt(r2, l);
             }
-            else if (m.is_eq(cond, l, r) &&
+            else if (m.is_eq(cond, l, r) && 
                      m_arith.is_add(r, r1, r2) &&
                      m_arith.is_numeral(r2, n1) &&
                      n1.is_pos() && is_var(l) && is_var(r1)) {
                 mk_lt(r1, l);
             }
             else {
-
-            }
+                
+            }            
         }
-
+     
         //
         // x = z - y
         // x = y
         // x < y
         // x <= y
         // x < y + z
-        //
+        //  
 
         void operator()(relation_base& t) {
             TRACE("dl", tout << mk_pp(m_cond, m_cond.get_manager()) << "\n"; t.display(tout););
@@ -349,14 +349,14 @@ namespace datalog {
             case K_FALSE:
                 r.set_empty();
                 break;
-            case NOT_APPLICABLE:
+            case NOT_APPLICABLE: 
                 break;
             case EQ_VAR:
                 r.equate(m_vars[0], m_vars[1]);
                 break;
             case EQ_SUB:
                 // TBD
-                break;
+                break;            
             case LT_VAR:
                 r.mk_lt(m_vars[0], m_vars[1]);
                 break;
@@ -366,8 +366,8 @@ namespace datalog {
             default:
                 UNREACHABLE();
                 break;
-            }
-            TRACE("dl", t.display(tout << "result\n"););
+            }    
+            TRACE("dl", t.display(tout << "result\n"););   
         }
 
         bool supports_attachment(relation_base& t) {
@@ -378,12 +378,12 @@ namespace datalog {
             SASSERT(is_interval_relation(t));
             interval_relation& r = get_interval_relation(t);
             m_interval = &r;
-        }
+        } 
     };
 
     relation_mutator_fn * bound_relation_plugin::mk_filter_interpreted_fn(const relation_base & t, app * condition) {
         return alloc(filter_interpreted_fn, t.get_plugin().get_ast_manager(), condition);
-    }
+    }      
 
     // -----------------------------
     // bound_relation
@@ -401,9 +401,9 @@ namespace datalog {
         for (; it != end; ++it) {
             lev.push_back(renaming[*it]);
         }
-        TRACE("dl",
+        TRACE("dl", 
               tout << "project: ";
-              for (unsigned i = 0; i < renaming.size(); ++i)
+              for (unsigned i = 0; i < renaming.size(); ++i) 
                   if (renaming[i] == UINT_MAX) tout << i << " ";
               tout << ": ";
               it = t.lt.begin(); end = t.lt.end();
@@ -441,7 +441,7 @@ namespace datalog {
     }
 
     uint_set2 bound_relation::mk_widen(uint_set2 const& t1, uint_set2 const& t2) const {
-        return mk_unite(t1, t2);
+        return mk_unite(t1, t2);  
     }
 
     uint_set2 bound_relation::mk_unite(uint_set2 const& t1, uint_set2 const& t2) const {
@@ -457,7 +457,7 @@ namespace datalog {
         uint_set2 result;
         for (unsigned i = 0; i < sz; ++i) {
             if (t.lt.contains(i)) {
-                unsigned j = i;
+                unsigned j = i;         
                 do {
                     result.lt.insert(new_eqs.find(j));
                     j = old_eqs.next(j);
@@ -465,7 +465,7 @@ namespace datalog {
                 while (j != i);
             }
             if (t.le.contains(i)) {
-                unsigned j = i;
+                unsigned j = i;         
                 do {
                     result.le.insert(new_eqs.find(j));
                     j = old_eqs.next(j);
@@ -537,7 +537,7 @@ namespace datalog {
 
 
     void bound_relation::mk_lt(unsigned i) {
-        uint_set2& dst = (*this)[i];
+        uint_set2& dst = (*this)[i];        
         while (!m_todo.empty()) {
             unsigned j = m_todo.back().first;
             bool strict = m_todo.back().second;
@@ -586,13 +586,13 @@ namespace datalog {
         return (*this)[i].lt.contains(find(j));
     }
 
-    void bound_relation::add_fact(const relation_fact & f) {
+    void bound_relation::add_fact(const relation_fact & f) {        
         bound_relation r(get_plugin(), get_signature(), false);
         for (unsigned i = 0; i < f.size(); ++i) {
             scoped_ptr<relation_mutator_fn> fe = get_plugin().mk_filter_equal_fn(r, f[i], i);
             (*fe)(r);
         }
-        mk_union(r, 0, false);
+        mk_union(r, 0, false);        
     }
 
     bool bound_relation::contains_fact(const relation_fact & f) const {
@@ -611,7 +611,7 @@ namespace datalog {
         else {
             result = bound_relation_plugin::get(get_plugin().mk_full(0, get_signature()));
             result->copy(*this);
-        }
+        }        
         return result;
     }
 
@@ -634,14 +634,14 @@ namespace datalog {
                 if (hi.is_infinite() || lo.to_rational() >= hi.to_rational()) {
                     s.lt.remove(*it);
                 }
-            }
+            }            
             it = s.le.begin(), end = s.le.end();
             for(; it != end; ++it) {
                 ext_numeral const& hi = src[*it].inf();
                 if (hi.is_infinite() || lo.to_rational() > hi.to_rational()) {
                     s.le.remove(*it);
                 }
-            }
+            }            
         }
     }
 

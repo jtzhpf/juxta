@@ -60,7 +60,7 @@ class expr_strong_context_simplifier {
     arith_util    m_arith;
     func_decl_ref m_fn;
     smt::kernel   m_solver;
-
+    
     void simplify(expr* e, expr_ref& result) { simplify_model_based(e, result); }
     void simplify_basic(expr* fml, expr_ref& result);
     void simplify_model_based(expr* fml, expr_ref& result);
@@ -74,7 +74,7 @@ public:
     void push() { m_solver.push(); }
     void pop() { m_solver.pop(1); }
     void assert_expr(expr* e) { m_solver.assert_expr(e); }
-
+    
     void collect_statistics(statistics & st) const { m_solver.collect_statistics(st); }
     void reset_statistics() { m_solver.reset_statistics(); }
     void set_cancel(bool f) { m_solver.set_cancel(f); }

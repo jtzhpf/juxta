@@ -4,7 +4,7 @@ Copyright (c) 2013 Microsoft Corporation
 Module Name:
 
     theory_utvpi.h
-
+    
 Author:
 
     Nikolaj Bjorner (nbjorner) 2013-04-26
@@ -52,7 +52,7 @@ namespace smt {
                 else if (ap->get_family_id() == m.get_basic_family_id()) {
                     continue;
                 }
-                else if (a.is_le(e, e1, e2) || a.is_ge(e, e2, e1) ||
+                else if (a.is_le(e, e1, e2) || a.is_ge(e, e2, e1) || 
                     a.is_lt(e, e1, e2) || a.is_gt(e, e2, e1)) {
                     if (!linearize(e1, e2)) {
                         return false;
@@ -73,7 +73,7 @@ namespace smt {
         SASSERT(m_terms.size() <= 2);
         return m_terms;
     }
-
+    
     bool utvpi_tester::operator()(unsigned num_fmls, expr* const* fmls) {
         for (unsigned i = 0; i < num_fmls; ++i) {
             if (!(*this)(fmls[i])) {
@@ -120,7 +120,7 @@ namespace smt {
             }
             else if (a.is_sub(e, e1, e2)) {
                 m_terms.push_back(std::make_pair(e1, mul));
-                m_terms.push_back(std::make_pair(e2, -mul));
+                m_terms.push_back(std::make_pair(e2, -mul));                
             }
             else if (a.is_uminus(e, e1)) {
                 m_terms.push_back(std::make_pair(e1, -mul));

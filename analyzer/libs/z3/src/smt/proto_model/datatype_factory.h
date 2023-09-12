@@ -25,7 +25,7 @@ Revision History:
 class datatype_factory : public struct_factory {
     datatype_util         m_util;
     obj_map<sort, expr *> m_last_fresh_value;
-
+    
     expr * get_last_fresh_value(sort * s);
     expr * get_almost_fresh_value(sort * s);
 

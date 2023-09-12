@@ -6,7 +6,7 @@ Module Name:
     vector.h
 
 Abstract:
-    Dynamic array implementation.
+    Dynamic array implementation. 
     Remarks:
 
     - Empty arrays consume only sizeof(T *) bytes.
@@ -51,7 +51,7 @@ class vector {
         }
     }
 
-    void free_memory() {
+    void free_memory() { 
         memory::deallocate(reinterpret_cast<char*>(reinterpret_cast<SZ*>(m_data) - 2));
     }
 
@@ -59,9 +59,9 @@ class vector {
         if (m_data == 0) {
             SZ capacity = 2;
             SZ * mem    = reinterpret_cast<SZ*>(memory::allocate(sizeof(T) * capacity + sizeof(SZ) * 2));
-            *mem              = capacity;
+            *mem              = capacity; 
             mem++;
-            *mem              = 0;
+            *mem              = 0;        
             mem++;
             m_data            = reinterpret_cast<T *>(mem);
         }
@@ -76,9 +76,9 @@ class vector {
                 throw default_exception("Overflow encountered when expanding vector");
             }
             SZ * mem        = reinterpret_cast<SZ*>(memory::allocate(new_capacity_T));
-            *mem                  = new_capacity;
+            *mem                  = new_capacity; 
             mem ++;
-            *mem                  = size;
+            *mem                  = size;         
             mem++;
             memcpy(mem, m_data, size * sizeof(T));
             free_memory();
@@ -90,9 +90,9 @@ class vector {
         SZ size      = source.size();
         SZ capacity  = source.capacity();
         SZ * mem     = reinterpret_cast<SZ*>(memory::allocate(sizeof(T) * capacity + sizeof(SZ) * 2));
-        *mem = capacity;
+        *mem = capacity; 
         mem++;
-        *mem = size;
+        *mem = size; 
         mem++;
         m_data             = reinterpret_cast<T *>(mem);
         const_iterator it  = source.begin();
@@ -100,17 +100,17 @@ class vector {
         SASSERT(it2 == m_data);
         const_iterator e   = source.end();
         for (; it != e; ++it, ++it2) {
-            new (it2) T(*it);
+            new (it2) T(*it); 
         }
     }
 
     void destroy() {
-        if (m_data) {
+        if (m_data) { 
             if (CallDestructors) {
-                destroy_elements();
+                destroy_elements(); 
             }
-            free_memory();
-        }
+            free_memory(); 
+        } 
     }
 
 public:
@@ -124,16 +124,16 @@ public:
 
     vector(SZ s) {
         SZ * mem = reinterpret_cast<SZ*>(memory::allocate(sizeof(T) * s + sizeof(SZ) * 2));
-        *mem = s;
+        *mem = s; 
         mem++;
-        *mem = s;
+        *mem = s; 
         mem++;
         m_data = reinterpret_cast<T *>(mem);
         // initialize elements
         iterator it = begin();
         iterator e  = end();
         for (; it != e; ++it) {
-            new (it) T();
+            new (it) T(); 
         }
     }
 
@@ -157,10 +157,10 @@ public:
         }
     }
 
-
-    ~vector() {
+ 
+    ~vector() { 
         destroy();
-    }
+    } 
 
     void finalize() {
         destroy();
@@ -181,7 +181,7 @@ public:
         return *this;
     }
 
-    void reset() {
+    void reset() { 
         if (m_data) {
             if (CallDestructors) {
                 destroy_elements();
@@ -190,38 +190,38 @@ public:
         }
     }
 
-    bool empty() const {
-        return m_data == 0 || reinterpret_cast<SZ *>(m_data)[SIZE_IDX] == 0;
+    bool empty() const { 
+        return m_data == 0 || reinterpret_cast<SZ *>(m_data)[SIZE_IDX] == 0; 
     }
 
-    SZ size() const {
+    SZ size() const { 
+        if (m_data == 0) {
+            return 0;  
+        }
+        return reinterpret_cast<SZ *>(m_data)[SIZE_IDX]; 
+    }
+
+    SZ capacity() const { 
         if (m_data == 0) {
             return 0;
         }
-        return reinterpret_cast<SZ *>(m_data)[SIZE_IDX];
+        return reinterpret_cast<SZ *>(m_data)[CAPACITY_IDX]; 
     }
 
-    SZ capacity() const {
-        if (m_data == 0) {
-            return 0;
-        }
-        return reinterpret_cast<SZ *>(m_data)[CAPACITY_IDX];
+    iterator begin() { 
+        return m_data; 
     }
 
-    iterator begin() {
-        return m_data;
-    }
-
-    iterator end() {
+    iterator end() { 
         return m_data + size();
     }
 
-    const_iterator begin() const {
-        return m_data;
+    const_iterator begin() const { 
+        return m_data; 
     }
 
-    const_iterator end() const {
-        return m_data + size();
+    const_iterator end() const { 
+        return m_data + size(); 
     }
 
     void set_end(iterator it) {
@@ -240,54 +240,54 @@ public:
         }
     }
 
-    T & operator[](SZ idx) {
-        SASSERT(idx < size());
+    T & operator[](SZ idx) { 
+        SASSERT(idx < size()); 
+        return m_data[idx]; 
+    }
+
+    T const & operator[](SZ idx) const { 
+        SASSERT(idx < size()); 
         return m_data[idx];
     }
 
-    T const & operator[](SZ idx) const {
-        SASSERT(idx < size());
+    T & get(SZ idx) { 
+        SASSERT(idx < size()); 
+        return m_data[idx]; 
+    }
+
+    T const & get(SZ idx) const { 
+        SASSERT(idx < size()); 
         return m_data[idx];
     }
 
-    T & get(SZ idx) {
-        SASSERT(idx < size());
-        return m_data[idx];
-    }
-
-    T const & get(SZ idx) const {
-        SASSERT(idx < size());
-        return m_data[idx];
-    }
-
-    void set(SZ idx, T const & val) {
-        SASSERT(idx < size());
+    void set(SZ idx, T const & val) { 
+        SASSERT(idx < size()); 
         m_data[idx] = val;
     }
 
-    T & back() {
-        SASSERT(!empty());
-        return operator[](size() - 1);
+    T & back() { 
+        SASSERT(!empty()); 
+        return operator[](size() - 1); 
     }
 
-    T const & back() const {
-        SASSERT(!empty());
-        return operator[](size() - 1);
+    T const & back() const { 
+        SASSERT(!empty()); 
+        return operator[](size() - 1); 
     }
 
-    void pop_back() {
-        SASSERT(!empty());
+    void pop_back() { 
+        SASSERT(!empty()); 
         if (CallDestructors) {
-            back().~T();
+            back().~T(); 
         }
-        reinterpret_cast<SZ *>(m_data)[SIZE_IDX]--;
+        reinterpret_cast<SZ *>(m_data)[SIZE_IDX]--; 
     }
 
     void push_back(T const & elem) {
         if (m_data == 0 || reinterpret_cast<SZ *>(m_data)[SIZE_IDX] == reinterpret_cast<SZ *>(m_data)[CAPACITY_IDX]) {
             expand_vector();
         }
-        new (m_data + reinterpret_cast<SZ *>(m_data)[SIZE_IDX]) T(elem);
+        new (m_data + reinterpret_cast<SZ *>(m_data)[SIZE_IDX]) T(elem); 
         reinterpret_cast<SZ *>(m_data)[SIZE_IDX]++;
     }
 

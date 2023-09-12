@@ -33,7 +33,7 @@ inline void cooperate(char const * task) {
     if (cooperation_ctx::enabled()) cooperation_ctx::checkpoint(task);
 }
 
-// must be declared before "#pragma parallel" to enable cooperation
+// must be declared before "#pragma parallel" to enable cooperation 
 class cooperation_section {
 public:
     cooperation_section();

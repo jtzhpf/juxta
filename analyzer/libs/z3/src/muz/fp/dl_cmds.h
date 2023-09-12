@@ -27,7 +27,7 @@ struct dl_collected_cmds {
     svector<symbol> m_names;
     expr_ref_vector m_queries;
     func_decl_ref_vector m_rels;
-    dl_collected_cmds(ast_manager& m) : m_rules(m), m_queries(m), m_rels(m) {}
+    dl_collected_cmds(ast_manager& m) : m_rules(m), m_queries(m), m_rels(m) {}    
 };
 
 void install_dl_cmds(cmd_context & ctx);

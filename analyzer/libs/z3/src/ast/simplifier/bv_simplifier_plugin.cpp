@@ -13,7 +13,7 @@ Author:
 
     Leonardo (leonardo) 2008-01-08
     Nikolaj Bjorner (nbjorner) 2008-01-05
-
+    
 --*/
 #include"bv_simplifier_plugin.h"
 #include"ast_ll_pp.h"
@@ -42,9 +42,9 @@ rational bv_simplifier_plugin::norm(const numeral & n) {
 }
 
 
-bool bv_simplifier_plugin::is_numeral(expr * n, rational & val) const {
+bool bv_simplifier_plugin::is_numeral(expr * n, rational & val) const { 
     unsigned bv_size;
-    return m_util.is_numeral(n, val, bv_size);
+    return m_util.is_numeral(n, val, bv_size); 
 }
 
 expr * bv_simplifier_plugin::get_zero(sort * s) const {
@@ -70,9 +70,9 @@ bool bv_simplifier_plugin::are_numerals(unsigned num_args, expr * const* args, u
     return true;
 }
 
-app * bv_simplifier_plugin::mk_numeral(numeral const & n) {
+app * bv_simplifier_plugin::mk_numeral(numeral const & n) { 
     unsigned bv_size = get_bv_size(m_curr_sort);
-    return mk_numeral(n, bv_size);
+    return mk_numeral(n, bv_size); 
 }
 
 app * bv_simplifier_plugin::mk_numeral(numeral const& n, unsigned bv_size) {
@@ -84,20 +84,20 @@ app * bv_simplifier_plugin::mk_numeral(numeral const& n, unsigned bv_size) {
 
 bool bv_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result) {
     set_reduce_invoked();
-
+    
     SASSERT(f->get_family_id() == m_fid);
-
+    
     bv_op_kind k = static_cast<bv_op_kind>(f->get_decl_kind());
     switch (k) {
     case OP_BV_NUM:    SASSERT(num_args == 0); result = mk_numeral(f->get_parameter(0).get_rational(), f->get_parameter(1).get_int()); break;
     case OP_BIT0:      SASSERT(num_args == 0); result = mk_numeral(0, 1); break;
     case OP_BIT1:      SASSERT(num_args == 0); result = mk_numeral(1, 1); break;
-    case OP_BADD:      SASSERT(num_args > 0);
-        mk_add(num_args, args, result);
-        TRACE("bv_add_bug",
+    case OP_BADD:      SASSERT(num_args > 0); 
+        mk_add(num_args, args, result); 
+        TRACE("bv_add_bug", 
               for (unsigned i = 0; i < num_args; i++) tout << mk_bounded_pp(args[i], m_manager, 10) << "\n";
-              tout << mk_bounded_pp(result, m_manager, 10) << "\n";);
-        mk_add_concat(result);
+              tout << mk_bounded_pp(result, m_manager, 10) << "\n";); 
+        mk_add_concat(result);              
         break;
     case OP_BSUB:      SASSERT(num_args > 0); mk_sub(num_args, args, result);  break;
     case OP_BNEG:      SASSERT(num_args == 1); mk_uminus(args[0], result);     break;
@@ -115,23 +115,23 @@ bool bv_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * const
     case OP_BNOT:      SASSERT(num_args == 1); mk_bv_not(args[0], result); break;
     case OP_BXOR:      SASSERT(num_args > 0); mk_bv_xor(num_args, args, result); break;
     case OP_CONCAT:    SASSERT(num_args > 0); mk_concat(num_args, args, result); break;
-    case OP_ZERO_EXT:
-        SASSERT(num_args == 1); SASSERT(f->get_num_parameters() == 1);
+    case OP_ZERO_EXT:  
+        SASSERT(num_args == 1); SASSERT(f->get_num_parameters() == 1); 
         mk_zeroext(f->get_parameter(0).get_int(), args[0], result);
         break;
     case OP_EXTRACT:
-        SASSERT(num_args == 1); SASSERT(f->get_num_parameters() == 2);
+        SASSERT(num_args == 1); SASSERT(f->get_num_parameters() == 2); 
         mk_extract(f->get_parameter(0).get_int(), f->get_parameter(1).get_int(), args[0], result);
         break;
     case OP_REPEAT:
-        SASSERT(num_args == 1); SASSERT(f->get_num_parameters() == 1);
+        SASSERT(num_args == 1); SASSERT(f->get_num_parameters() == 1); 
         mk_repeat(f->get_parameter(0).get_int(), args[0], result);
         break;
     case OP_BUREM:
         SASSERT(num_args == 2);
         mk_bv_urem(args[0], args[1], result);
         break;
-    case OP_SIGN_EXT:
+    case OP_SIGN_EXT:  
         SASSERT(num_args == 1); SASSERT(f->get_num_parameters() == 1);
         mk_sign_extend(f->get_parameter(0).get_int(), args[0], result);
         break;
@@ -172,14 +172,14 @@ bool bv_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * const
     case OP_BSMUL_NO_OVFL:
     case OP_BSMUL_NO_UDFL:
         result = m_manager.mk_app(f, num_args, args);
-        break;
+        break;        
     default:
         UNREACHABLE();
         break;
     }
     SASSERT(result.get());
 
-    TRACE("bv_simplifier",
+    TRACE("bv_simplifier", 
           tout << mk_pp(f, m_manager) << "\n";
           for (unsigned i = 0; i < num_args; ++i) {
               tout << mk_pp(args[i], m_manager) << " ";
@@ -191,7 +191,7 @@ bool bv_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * const
     return true;
 }
 
-bool bv_simplifier_plugin::reduce_eq(expr * lhs, expr * rhs, expr_ref & result) {
+bool bv_simplifier_plugin::reduce_eq(expr * lhs, expr * rhs, expr_ref & result) {    
     set_reduce_invoked();
 
     if (m_presimp)
@@ -202,13 +202,13 @@ bool bv_simplifier_plugin::reduce_eq(expr * lhs, expr * rhs, expr_ref & result) 
     return result.get() != tmp.get();
 }
 
-bool bv_simplifier_plugin::reduce_distinct(unsigned num_args, expr * const * args, expr_ref & result) {
+bool bv_simplifier_plugin::reduce_distinct(unsigned num_args, expr * const * args, expr_ref & result) { 
     set_reduce_invoked();
 
     return false;
 }
 
-void bv_simplifier_plugin::flush_caches() {
+void bv_simplifier_plugin::flush_caches() { 
     TRACE("extract_cache", tout << "flushing extract cache...\n";);
     extract_cache::iterator it  = m_extract_cache.begin();
     extract_cache::iterator end = m_extract_cache.end();
@@ -258,22 +258,22 @@ MK_BV_OP(and,&)
 MK_BV_OP(or,|)
 MK_BV_OP(xor,^)
 
-rational bv_simplifier_plugin::mk_bv_not(numeral const& a0, unsigned sz) {
+rational bv_simplifier_plugin::mk_bv_not(numeral const& a0, unsigned sz) { 
     rational r(0), a(a0), mul(1);
-    numeral p64 = rational::power_of_two(64);
-    while (sz > 0) {
-        numeral a1 = a % p64;
+    numeral p64 = rational::power_of_two(64); 
+    while (sz > 0) { 
+        numeral a1 = a % p64; 
         uint64 u = ~a1.get_uint64();
-        if (sz < 64) {
-            uint64 mask = shift_left(1ull,(uint64)sz) - 1ull;
-            u = mask & u;
-        }
-        r += mul*rational(u,rational::ui64());
-        mul *= p64;
-        a = div(a, p64);
-        sz -= (64<sz)?64:sz;
-    }
-    return r;
+        if (sz < 64) { 
+            uint64 mask = shift_left(1ull,(uint64)sz) - 1ull; 
+            u = mask & u; 
+        } 
+        r += mul*rational(u,rational::ui64()); 
+        mul *= p64; 
+        a = div(a, p64); 
+        sz -= (64<sz)?64:sz; 
+    } 
+    return r; 
 }
 
 
@@ -358,9 +358,9 @@ void bv_simplifier_plugin::mk_leq_core(bool is_signed, expr * arg1, expr * arg2,
     // In general, we can use lexicographic extensions of concat.
     // But this does not always turn into savings.
     // Only apply the simplification if arg1 is a numeral.
-    //
+    // 
     if (is_num1 && !is_signed && m_util.is_concat(arg2) && to_app(arg2)->get_num_args() == 2) {
-        //
+        // 
         // c <=_u (concat 0 a) <=> c[u:l] = 0 && c[l-1:0] <=_u a
         //
         app* app = to_app(arg2);
@@ -369,27 +369,27 @@ void bv_simplifier_plugin::mk_leq_core(bool is_signed, expr * arg1, expr * arg2,
         if (m_util.is_zero(arg2_1)) {
             unsigned sz1   = get_bv_size(arg2_1);
             unsigned sz2   = get_bv_size(arg2_2);
-
+            
             expr_ref tmp1(m_manager);
             expr_ref tmp2(m_manager);
             mk_extract(sz2 + sz1 - 1, sz2, arg1, tmp1);
             mk_extract(sz2 - 1, 0, arg1, tmp2);
-
+            
             expr_ref eq(m_manager);
             expr_ref zero(m_manager);
             zero = mk_bv0(sz1);
             mk_bv_eq(tmp1.get(), zero, eq);
-
+            
             expr_ref ineq(m_manager);
             ineq = m_util.mk_ule(tmp2.get(), arg2_2);
-
+            
             m_bsimp.mk_and(eq.get(), ineq.get(), result);
             return;
         }
     }
 
     //
-    // TODO:
+    // TODO: 
     // Others:
     //
     // k <=_s (concat 0 a) <=> (k[u:l] = 0 && k[l-1:0] <=_u a) || k[u:u] = bv1
@@ -403,13 +403,13 @@ void bv_simplifier_plugin::mk_leq_core(bool is_signed, expr * arg1, expr * arg2,
 }
 
 void bv_simplifier_plugin::mk_extract(unsigned high, unsigned low, expr* arg, expr_ref& result) {
-
+    
     unsigned arg_sz = get_bv_size(arg);
     unsigned sz     = high - low + 1;
     TRACE("bv_simplifier_plugin", tout << "mk_extract [" << high << ":" << low << "]\n";
           tout << "arg_sz: " << arg_sz << " sz: " << sz << "\n";
           tout << "arg:\n";
-          ast_ll_pp(tout, m_manager, arg););
+          ast_ll_pp(tout, m_manager, arg););    
 
     if (arg_sz == sz) {
         result = arg;
@@ -431,7 +431,7 @@ void bv_simplifier_plugin::mk_extract(unsigned high, unsigned low, expr* arg, ex
 
 
 void bv_simplifier_plugin::cache_extract(unsigned h, unsigned l, expr * arg, expr * result) {
-    m_manager.inc_ref(arg);
+    m_manager.inc_ref(arg); 
     m_manager.inc_ref(result);
     m_extract_cache.insert(extract_entry(h, l, arg), result);
 }
@@ -446,7 +446,7 @@ expr* bv_simplifier_plugin::get_cached_extract(unsigned h, unsigned l, expr * ar
 
 
 void bv_simplifier_plugin::mk_extract_core(unsigned high, unsigned low, expr * arg, expr_ref& result) {
-
+    
     if (!lookup_mk_extract(high, low, arg, result)) {
         while (!m_extract_args.empty()) {
             unsigned low2 = m_lows.back();
@@ -499,7 +499,7 @@ bool bv_simplifier_plugin::try_mk_extract(unsigned high, unsigned low, expr * ar
     if (cached_result) {
         result = cached_result;
         return true;
-    }
+    }    
 
     if (!is_app(arg)) {
         result = m_util.mk_extract(high, low, arg);
@@ -515,7 +515,7 @@ bool bv_simplifier_plugin::try_mk_extract(unsigned high, unsigned low, expr * ar
         if (r.is_uint64()) {
             uint64 u     = r.get_uint64();
             uint64 e     = shift_right(u, low) & (shift_left(1ull, sz) - 1ull);
-            TRACE("mk_extract_bug", tout << u << "[" << high << ":" << low << "] " << e << " (u >> low): " << shift_right(u, low) << " (1ull << sz): "
+            TRACE("mk_extract_bug", tout << u << "[" << high << ":" << low << "] " << e << " (u >> low): " << shift_right(u, low) << " (1ull << sz): " 
                   << shift_left(1ull, sz) << " ((1ull << sz) - 1ull)" << (shift_left(1ull, sz) - 1ull) << "\n";);
             result = mk_numeral(numeral(e, numeral::ui64()), sz);
             return true;
@@ -530,7 +530,7 @@ bool bv_simplifier_plugin::try_mk_extract(unsigned high, unsigned low, expr * ar
         return lookup_mk_extract(high + low2, low + low2, x, result);
     }
     //
-    // (extract[hi:lo] (bvXshr A c:bv[n])) -> (extract[hi+c:lo+c] A)
+    // (extract[hi:lo] (bvXshr A c:bv[n])) -> (extract[hi+c:lo+c] A) 
     //   if c < n, c <= lo <= hi < n - c
     //
     else if ((is_app_of(a, m_fid, OP_BASHR) || is_app_of(a, m_fid, OP_BLSHR)) &&
@@ -576,13 +576,13 @@ bool bv_simplifier_plugin::try_mk_extract(unsigned high, unsigned low, expr * ar
             }
         }
         TRACE("extract_bug", tout << " high: " << high << " low: " << low << "\n";);
-
+        
         // look for remaining arguments
         while (i > 0) {
             --i;
             expr * a_i     = a->get_arg(i);
             unsigned a_sz = get_bv_size(a_i);
-            TRACE("extract_bug", tout << "SECOND a_sz: " << a_sz << " high: " << high << " " <<
+            TRACE("extract_bug", tout << "SECOND a_sz: " << a_sz << " high: " << high << " " << 
                   mk_pp( a_i, m_manager) << "\n";);
             if (a_sz <= high) {
                 high  -= a_sz;
@@ -717,7 +717,7 @@ void get_inv_assoc_args(family_id fid, decl_kind k, expr * n, T & result) {
         if (is_app_of(n, fid, k)) {
             app * app     = to_app(n);
             unsigned  num = app->get_num_args();
-            for (unsigned i = 0; i < num; i++)
+            for (unsigned i = 0; i < num; i++) 
                 todo.push_back(app->get_arg(i));
         }
         else {
@@ -727,7 +727,7 @@ void get_inv_assoc_args(family_id fid, decl_kind k, expr * n, T & result) {
 }
 
 void bv_simplifier_plugin::mk_bv_eq(expr* a1, expr* a2, expr_ref& result) {
-
+    
     rational val1;
     rational val2;
     bool is_num1 = is_numeral(a1, val1);
@@ -745,7 +745,7 @@ void bv_simplifier_plugin::mk_bv_eq(expr* a1, expr* a2, expr_ref& result) {
         mk_eq_core(a1, a2, result);
         return;
     }
-
+    
     ptr_buffer<expr> args1, args2;
     get_inv_assoc_args(m_fid, OP_CONCAT, a1, args1);
     get_inv_assoc_args(m_fid, OP_CONCAT, a2, args2);
@@ -755,7 +755,7 @@ void bv_simplifier_plugin::mk_bv_eq(expr* a1, expr* a2, expr_ref& result) {
           tout << "args2:\n";
           for (unsigned i = 0; i < args2.size(); i++) tout << mk_ll_pp(args2[i], m_manager) << "\n";);
 
-
+          
 
     expr_ref lhs(m_manager), rhs(m_manager), eq(m_manager);
     expr_ref_buffer eqs(m_manager);
@@ -794,7 +794,7 @@ void bv_simplifier_plugin::mk_bv_eq(expr* a1, expr* a2, expr_ref& result) {
             mk_extract(sz1  - 1, low1, arg1, lhs);
             mk_extract(rsz1 + low2 - 1, low2, arg2, rhs);
             low1  = 0;
-            low2 += rsz1;
+            low2 += rsz1; 
             ++it1;
         }
         else {
@@ -831,7 +831,7 @@ void bv_simplifier_plugin::mk_eq_core(expr * arg1, expr * arg2, expr_ref & resul
     if (m_util.is_numeral(arg2, r, num_bits)) {
         std::swap(arg1, arg2);
     }
-
+    
     if (m_util.is_numeral(arg1, r, num_bits) &&
         (m_util.is_bv_and(arg2) || m_util.is_bv_or(arg2) || m_util.is_bv_not(arg2))) {
         rational two(2);
@@ -847,9 +847,9 @@ void bv_simplifier_plugin::mk_eq_core(expr * arg1, expr * arg2, expr_ref & resul
             }
             tmps.push_back(tmp);
             r = div(r, two);
-        }
+        }        
         m_bsimp.mk_and(tmps.size(), tmps.c_ptr(), result);
-        TRACE("mk_eq_bb",
+        TRACE("mk_eq_bb", 
               tout << mk_pp(arg1, m_manager) << "\n";
               tout << mk_pp(arg2, m_manager) << "\n";
               tout << mk_pp(result, m_manager) << "\n";);
@@ -857,12 +857,12 @@ void bv_simplifier_plugin::mk_eq_core(expr * arg1, expr * arg2, expr_ref & resul
     }
 #endif
 
-    if (!m_util.is_bv_add(arg1) && !m_util.is_bv_add(arg2) &&
+    if (!m_util.is_bv_add(arg1) && !m_util.is_bv_add(arg2) && 
         !m_util.is_bv_mul(arg1) && !m_util.is_bv_mul(arg2)) {
         m_bsimp.mk_eq(arg1, arg2, result);
         return;
     }
-
+    
     set_curr_sort(arg1);
     expr_ref_vector args1(m_manager);
     expr_ref_vector args2(m_manager);
@@ -929,16 +929,16 @@ void bv_simplifier_plugin::mk_concat(unsigned num_args, expr * const * args, exp
             arg_val    *= rational::power_of_two(shift);
             val        += arg_val;
             shift      += get_bv_size(arg);
-            TRACE("bv_simplifier_plugin",
+            TRACE("bv_simplifier_plugin", 
                   tout << "val: " << val << " arg_val: " << arg_val << " shift: " << shift << "\n";);
         }
         else {
-            // one of the arguments is not a number
+            // one of the arguments is not a number 
             result = m_manager.mk_app(m_fid, OP_CONCAT, num_args, args);
             return;
         }
     }
-
+    
     // all arguments are numerals
     result = mk_numeral(val, shift);
 }
@@ -959,14 +959,14 @@ void bv_simplifier_plugin::mk_bv_and(unsigned num_args, expr * const* args, expr
 
     uint64 unit = bv_size <= 64 ? to_uint64(numeral(-1), bv_size) : 0;
     numeral n_unit(allone);
-
+ 
     expr * prev  = 0;
     ptr_buffer<expr>::iterator it  = flat_args.begin();
     ptr_buffer<expr>::iterator it2 = it;
     ptr_buffer<expr>::iterator end = flat_args.end();
     for (; it != end; ++it) {
         expr* n = *it;
-        if (prev &&
+        if (prev && 
             ((is_app_of(n, m_fid, OP_BNOT)    && to_app(n)->get_arg(0) == prev) ||
              (is_app_of(prev, m_fid, OP_BNOT) && to_app(prev)->get_arg(0) == n))) {
             result = mk_bv0(bv_size);
@@ -1021,16 +1021,16 @@ void bv_simplifier_plugin::mk_bv_or(unsigned num_args, expr * const* args, expr_
     // Transformations for SAGE
     // (bvor (concat 0 x) (concat y 0)) ==> (concat y x)
     // (bvor (concat x 0) (concat 0 y)) ==> (concat x y)
-    if (num_args == 2 &&
-        m_util.is_concat(args[0]) &&
+    if (num_args == 2 && 
+        m_util.is_concat(args[0]) && 
         m_util.is_concat(args[1]) &&
-        to_app(args[0])->get_num_args() == 2 &&
+        to_app(args[0])->get_num_args() == 2 && 
         to_app(args[1])->get_num_args() == 2) {
         expr * x1 = to_app(args[0])->get_arg(0);
         expr * x2 = to_app(args[0])->get_arg(1);
         expr * y1 = to_app(args[1])->get_arg(0);
         expr * y2 = to_app(args[1])->get_arg(1);
-        if (get_bv_size(x1) == get_bv_size(y1) &&
+        if (get_bv_size(x1) == get_bv_size(y1) && 
             get_bv_size(x2) == get_bv_size(y2)) {
             if (m_util.is_zero(x1) && m_util.is_zero(y2)) {
                 // (bvor (concat 0 x) (concat y 0)) ==> (concat y x)
@@ -1045,7 +1045,7 @@ void bv_simplifier_plugin::mk_bv_or(unsigned num_args, expr * const* args, expr_
         }
     }
     // Investigate why it did not work.
-#endif
+#endif        
 
     ptr_buffer<expr> flat_args;
     for (unsigned i = 0; i < num_args; ++i) {
@@ -1067,7 +1067,7 @@ void bv_simplifier_plugin::mk_bv_or(unsigned num_args, expr * const* args, expr_
     ptr_buffer<expr>::iterator end = flat_args.end();
     for (; it != end; ++it) {
         expr* n = *it;
-        if (prev &&
+        if (prev && 
             ((is_app_of(n, m_fid, OP_BNOT)  && to_app(n)->get_arg(0) == prev) ||
              (is_app_of(prev, m_fid, OP_BNOT) && to_app(prev)->get_arg(0) == n))) {
             result = mk_numeral(allone, bv_size);
@@ -1124,7 +1124,7 @@ void bv_simplifier_plugin::mk_bv_xor(unsigned num_args, expr * const * args, exp
 
     unsigned bv_size = get_bv_size(args[0]);
     numeral val;
-
+    
     uint64 unit = 0;
     numeral n_unit(0);
 
@@ -1184,15 +1184,15 @@ void bv_simplifier_plugin::mk_bv_not(expr * arg, expr_ref & result) {
             uint64 u    = val.get_uint64();
             u           = mask & (~u);
             result = mk_numeral(numeral(u, numeral::ui64()), bv_size);
-            TRACE("bv_not_bug",
+            TRACE("bv_not_bug", 
                   tout << l << " " << mask << " " << u << "\n";
                   tout << mk_pp(arg, m_manager) << "\n" << mk_pp(result, m_manager) << "\n";);
         }
         else {
             numeral r = mk_bv_not(val, bv_size);
             result = mk_numeral(r, bv_size);
-            TRACE("bv_not_bug",
-                  tout << mk_pp(arg, m_manager) << "\n" << mk_pp(result, m_manager) << "\n";);
+            TRACE("bv_not_bug", 
+                  tout << mk_pp(arg, m_manager) << "\n" << mk_pp(result, m_manager) << "\n";);   
         }
     }
     else if (is_app_of(arg, m_fid, OP_BNOT)) {
@@ -1275,13 +1275,13 @@ void bv_simplifier_plugin::mk_bv_urem(expr * arg1, expr * arg2, expr_ref & resul
             urem0 = m_manager.mk_app(m_fid, OP_BUREM0, 1, &zero);
             m_bsimp.mk_eq(arg2, zero, eq0);
             m_bsimp.mk_ite(eq0.get(), urem0.get(), zero, result);
-            TRACE("urem",
+            TRACE("urem", 
                   tout << "urem:\n";
                   ast_ll_pp(tout, m_manager, arg1); ast_ll_pp(tout, m_manager, arg2);
                   tout << "result:\n"; ast_ll_pp(tout, m_manager, result.get()););
             return;
         }
-
+        
         // urem(x - 1, x) ==> ite(x = 0, urem0(x-1), x - 1) ==> ite(x = 0, urem0(-1), x - 1)
         expr * x;
         if (is_x_minus_one(arg1, x) && x == arg2) {
@@ -1294,7 +1294,7 @@ void bv_simplifier_plugin::mk_bv_urem(expr * arg1, expr * arg2, expr_ref & resul
             urem0 = m_manager.mk_app(m_fid, OP_BUREM0, 1, &minus_1);
             m_bsimp.mk_eq(arg2, zero.get(), eq0);
             m_bsimp.mk_ite(eq0.get(), urem0.get(), x_minus_1, result);
-            TRACE("urem",
+            TRACE("urem", 
                   tout << "urem:\n";
                   ast_ll_pp(tout, m_manager, arg1); ast_ll_pp(tout, m_manager, arg2);
                   tout << "result:\n"; ast_ll_pp(tout, m_manager, result.get()););
@@ -1321,8 +1321,8 @@ void bv_simplifier_plugin::mk_sign_extend(unsigned n, expr * arg, expr_ref & res
         r = norm(r, bv_size, true);
         r = mod(r, rational::power_of_two(result_bv_size));
         result = mk_numeral(r, result_bv_size);
-        TRACE("mk_sign_extend", tout << "n: " << n << "\n";
-              ast_ll_pp(tout, m_manager, arg); tout << "====>\n";
+        TRACE("mk_sign_extend", tout << "n: " << n << "\n"; 
+              ast_ll_pp(tout, m_manager, arg); tout << "====>\n"; 
               ast_ll_pp(tout, m_manager, result.get()););
         return;
     }
@@ -1332,13 +1332,13 @@ void bv_simplifier_plugin::mk_sign_extend(unsigned n, expr * arg, expr_ref & res
 
 /**
    Implement the following reductions
-
+   
    (bvashr (bvashr a n1) n2) ==> (bvashr a (+ n1 n2))
    (bvlshr (bvlshr a n1) n2) ==> (bvlshr a (+ n1 n2))
    (bvshl (bvshl a n1) n2)   ==> (bvshl a (+ n1 n2))
    when n1 and n2 are numerals.
-   Remark if (+ n1 n2) is greater than bv_size, we set (+ n1 n2) to bv_size
-
+   Remark if (+ n1 n2) is greater than bv_size, we set (+ n1 n2) to bv_size 
+   
    Return true if the transformation was applied and the result stored in 'result'.
    Return false otherwise.
 */
@@ -1377,7 +1377,7 @@ bool bv_simplifier_plugin::shift_shift(bv_op_kind k, expr* arg1, expr* arg2, exp
 void bv_simplifier_plugin::mk_bv_shl(expr * arg1, expr * arg2, expr_ref & result) {
     // x << 0  ==  x
     numeral r1, r2;
-    unsigned bv_size = get_bv_size(arg1);
+    unsigned bv_size = get_bv_size(arg1);        
     bool is_num1 = is_numeral(arg1, r1);
     bool is_num2 = is_numeral(arg2, r2);
 
@@ -1385,7 +1385,7 @@ void bv_simplifier_plugin::mk_bv_shl(expr * arg1, expr * arg2, expr_ref & result
         result = arg1;
     }
     else if (is_num2 && r2 >= rational(bv_size)) {
-        result = mk_numeral(0, bv_size);
+        result = mk_numeral(0, bv_size);        
     }
     else if (is_num2 && is_num1 && bv_size <= 64) {
         SASSERT(r1.is_uint64() && r2.is_uint64());
@@ -1419,16 +1419,16 @@ void bv_simplifier_plugin::mk_bv_shl(expr * arg1, expr * arg2, expr_ref & result
     else {
         result = m_manager.mk_app(m_fid, OP_BSHL, arg1, arg2);
     }
-    TRACE("mk_bv_shl",
-          tout << mk_pp(arg1, m_manager) << " << "
-          << mk_pp(arg2, m_manager) << " = "
+    TRACE("mk_bv_shl", 
+          tout << mk_pp(arg1, m_manager) << " << " 
+          << mk_pp(arg2, m_manager) << " = " 
           << mk_pp(result.get(), m_manager) << "\n";);
 }
-
+ 
 void bv_simplifier_plugin::mk_bv_lshr(expr * arg1, expr * arg2, expr_ref & result) {
     // x >> 0 == x
     numeral r1, r2;
-    unsigned bv_size = get_bv_size(arg1);
+    unsigned bv_size = get_bv_size(arg1);        
     bool is_num1 = is_numeral(arg1, r1);
     bool is_num2 = is_numeral(arg2, r2);
 
@@ -1438,8 +1438,8 @@ void bv_simplifier_plugin::mk_bv_lshr(expr * arg1, expr * arg2, expr_ref & resul
     else if (is_num2 && r2 >= rational(bv_size)) {
         result = mk_numeral(rational(0), bv_size);
     }
-    else if (is_num1 && is_num2 && bv_size <= 64) {
-        SASSERT(r1.is_uint64());
+    else if (is_num1 && is_num2 && bv_size <= 64) {        
+        SASSERT(r1.is_uint64()); 
         SASSERT(r2.is_uint64());
         uint64 r = shift_right(r1.get_uint64(), r2.get_uint64());
         result   = mk_numeral(r, bv_size);
@@ -1469,7 +1469,7 @@ void bv_simplifier_plugin::mk_bv_lshr(expr * arg1, expr * arg2, expr_ref & resul
     else {
         result = m_manager.mk_app(m_fid, OP_BLSHR, arg1, arg2);
     }
-    TRACE("mk_bv_lshr", tout << mk_pp(arg1, m_manager) << " >> " <<
+    TRACE("mk_bv_lshr", tout << mk_pp(arg1, m_manager) << " >> " << 
           mk_pp(arg2, m_manager) << " = " << mk_pp(result.get(), m_manager) << "\n";);
 
 }
@@ -1479,7 +1479,7 @@ void bv_simplifier_plugin::mk_int2bv(expr * arg, sort* range, expr_ref & result)
     numeral val;
     bool is_int;
     unsigned bv_size = get_bv_size(range);
-
+    
     if (m_arith.is_numeral(arg, val, is_int)) {
         result = mk_numeral(val, bv_size);
     }
@@ -1508,13 +1508,13 @@ void bv_simplifier_plugin::mk_bv2int(expr * arg, sort* range, expr_ref & result)
         expr_ref tmp1(m_manager), tmp2(m_manager);
         mk_bv2int(to_app(arg)->get_arg(0), range, tmp1);
         mk_bv2int(to_app(arg)->get_arg(1), range, tmp2);
-        result = m_arith.mk_mul(tmp1, tmp2);
+        result = m_arith.mk_mul(tmp1, tmp2);        
     }
     else if (is_add_no_overflow(arg)) {
         expr_ref tmp1(m_manager), tmp2(m_manager);
         mk_bv2int(to_app(arg)->get_arg(0), range, tmp1);
         mk_bv2int(to_app(arg)->get_arg(1), range, tmp2);
-        result = m_arith.mk_add(tmp1, tmp2);
+        result = m_arith.mk_add(tmp1, tmp2);        
     }
     // commented out to reproduce bug in reduction of int2bv/bv2int
     else if (m_util.is_concat(arg)) {
@@ -1690,8 +1690,8 @@ void bv_simplifier_plugin::mk_bv_smod(expr* arg1, expr* arg2, expr_ref& result) 
         r1 = m_util.norm(r1, bv_size, true);
     if (is_num2)
         r2 = m_util.norm(r2, bv_size, true);
-
-    TRACE("bv_simplifier",
+    
+    TRACE("bv_simplifier", 
           tout << mk_pp(arg1, m_manager) << " smod " << mk_pp(arg2, m_manager) << "\n";
           );
 
@@ -1825,7 +1825,7 @@ void bv_simplifier_plugin::mk_bv_rotate_left_core(unsigned shift, numeral r, uns
     if (bv_size <= 64) {
         uint64 a       = r.get_uint64();
         uint64 r       = shift_left(a, shift) | shift_right(a, bv_size - shift);
-        result = mk_numeral(r, bv_size);
+        result = mk_numeral(r, bv_size);        
     }
     else {
         rational r1 = div(r, rational::power_of_two(bv_size - shift)); // shift right
@@ -1857,7 +1857,7 @@ void bv_simplifier_plugin::mk_bv_rotate_right_core(unsigned shift, numeral r, un
     else {
         rational r1 = div(r, rational::power_of_two(shift)); // shift right
         rational r2 = (r * rational::power_of_two(bv_size - shift)) % rational::power_of_two(bv_size); // shift left
-        result = mk_numeral(r1 + r2, bv_size);
+        result = mk_numeral(r1 + r2, bv_size);            
     }
 }
 
@@ -1942,8 +1942,8 @@ void bv_simplifier_plugin::mk_bv_ashr(expr* arg1, expr* arg2, expr_ref& result) 
             r |= mask;
         }
         result = mk_numeral(r, bv_size);
-        TRACE("bv", tout << mk_pp(arg1, m_manager) << " >> "
-              << mk_pp(arg2, m_manager) << " = "
+        TRACE("bv", tout << mk_pp(arg1, m_manager) << " >> " 
+              << mk_pp(arg2, m_manager) << " = " 
               << mk_pp(result.get(), m_manager) << "\n";
               tout << n1 << " >> " << n2 << " = " << r << "\n";
               );
@@ -1971,7 +1971,7 @@ void bv_simplifier_plugin::mk_bv_ashr(expr* arg1, expr* arg2, expr_ref& result) 
             }
         }
         result = mk_numeral(r1, bv_size);
-
+        
     }
     else if (shift_shift(OP_BASHR, arg1, arg2, result)) {
         // done
@@ -2101,7 +2101,7 @@ void bv_simplifier_plugin::bit2bool_simplify(unsigned idx, expr* e, expr_ref& re
             rational two(2);
             for (unsigned i = 0; i < idx; ++i) {
                 val = div(val, two);
-            }
+            }  
             bool is_pos = !(val % two).is_zero();
             tmp = is_pos?m_manager.mk_true():m_manager.mk_false();
         }
@@ -2135,7 +2135,7 @@ void bv_simplifier_plugin::bit2bool_simplify(unsigned idx, expr* e, expr_ref& re
         }
         cache[e_id] = to_app(tmp);
     }
-    result = cache[e0->get_id()];
+    result = cache[e0->get_id()]; 
 }
 
 
@@ -2182,7 +2182,7 @@ void bv_simplifier_plugin::mk_add_concat(expr_ref& result) {
             }                                                           \
         }                                                               \
     }
-
+    
     unsigned idx1 = 0, idx2 = 0;
     expr* curr1 = x, *curr2 = y;
     bool is_num1 = false, is_num2 = false;
@@ -2207,7 +2207,7 @@ void bv_simplifier_plugin::mk_add_concat(expr_ref& result) {
     }
     mk_bv_or(2, a->get_args(), result);
 #endif
-
+    
     for (unsigned i = 0; i < sz; ++i) {
         if (!is_zero_bit(x,i) && !is_zero_bit(y,i)) {
             return;
@@ -2245,6 +2245,6 @@ bool bv_simplifier_plugin::is_zero_bit(expr* x, unsigned idx) {
         }
         UNREACHABLE();
     }
-
+    
     return false;
 }

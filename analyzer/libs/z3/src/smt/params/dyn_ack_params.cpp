@@ -20,7 +20,7 @@ Revision History:
 
 #if 0
 void dyn_ack_params::register_params(ini_params & p) {
-    p.register_int_param("dack", 0, 2, reinterpret_cast<int&>(m_dack),
+    p.register_int_param("dack", 0, 2, reinterpret_cast<int&>(m_dack), 
                          "0 - disable dynamic ackermannization, 1 - expand Leibniz's axiom if a congruence is the root of a conflict, 2 - expand Leibniz's axiom if a congruence is used during conflict resolution.");
     p.register_bool_param("dack_eq", m_dack_eq, "enable dynamic ackermannization for transtivity of equalities");
     p.register_unsigned_param("dack_threshold", m_dack_threshold, "number of times the congruence rule must be used before Leibniz's axiom is expanded");

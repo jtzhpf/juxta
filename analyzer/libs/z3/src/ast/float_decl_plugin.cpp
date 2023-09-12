@@ -39,9 +39,9 @@ void float_decl_plugin::set_manager(ast_manager * m, family_id id) {
     m_int_sort = m_manager->mk_sort(aid, INT_SORT);
     SASSERT(m_int_sort != 0); // arith_decl_plugin must be installed before float_decl_plugin.
     m_manager->inc_ref(m_int_sort);
-
+    
     // BV is not optional anymore.
-    SASSERT(m_manager->has_plugin(symbol("bv")));
+    SASSERT(m_manager->has_plugin(symbol("bv")));        
         m_bv_fid = m_manager->mk_family_id("bv");
         m_bv_plugin = static_cast<bv_decl_plugin*>(m_manager->get_plugin(m_bv_fid));
 }
@@ -158,8 +158,8 @@ void float_decl_plugin::finalize() {
     if (m_int_sort)  { m_manager->dec_ref(m_int_sort); }
 }
 
-decl_plugin * float_decl_plugin::mk_fresh() {
-    return alloc(float_decl_plugin);
+decl_plugin * float_decl_plugin::mk_fresh() { 
+    return alloc(float_decl_plugin); 
 }
 
 sort * float_decl_plugin::mk_float_sort(unsigned ebits, unsigned sbits) {
@@ -244,7 +244,7 @@ func_decl * float_decl_plugin::mk_float_const_decl(decl_kind k, unsigned num_par
     }
 
     SASSERT(is_sort_of(s, m_family_id, FLOAT_SORT));
-
+    
     unsigned ebits = s->get_parameter(0).get_int();
     unsigned sbits = s->get_parameter(1).get_int();
     scoped_mpf val(m_fm);
@@ -273,9 +273,9 @@ func_decl * float_decl_plugin::mk_bin_rel_decl(decl_kind k, unsigned num_paramet
     switch (k) {
     case OP_FLOAT_EQ: name = "fp.eq";  break;
     case OP_FLOAT_LT: name = "fp.lt";   break;
-    case OP_FLOAT_GT: name = "fp.gt";   break;
-    case OP_FLOAT_LE: name = "fp.lte";  break;
-    case OP_FLOAT_GE: name = "fp.gte";  break;
+    case OP_FLOAT_GT: name = "fp.gt";   break;        
+    case OP_FLOAT_LE: name = "fp.lte";  break;        
+    case OP_FLOAT_GE: name = "fp.gte";  break;        
     default:
         UNREACHABLE();
         break;
@@ -295,7 +295,7 @@ func_decl * float_decl_plugin::mk_unary_rel_decl(decl_kind k, unsigned num_param
     switch (k) {
     case OP_FLOAT_IS_ZERO: name = "fp.isZero";  break;
     case OP_FLOAT_IS_NZERO: name = "fp.isNZero";   break;
-    case OP_FLOAT_IS_PZERO: name = "fp.isPZero";   break;
+    case OP_FLOAT_IS_PZERO: name = "fp.isPZero";   break;        
     case OP_FLOAT_IS_NEGATIVE: name = "fp.isNegative";  break;
     case OP_FLOAT_IS_POSITIVE: name = "fp.isPositive";  break;
     case OP_FLOAT_IS_NAN: name = "fp.isNaN";  break;
@@ -314,7 +314,7 @@ func_decl * float_decl_plugin::mk_unary_decl(decl_kind k, unsigned num_parameter
     if (arity != 1)
         m_manager->raise_exception("invalid number of arguments to floating point operator");
     if (!is_float_sort(domain[0]))
-        m_manager->raise_exception("sort mismatch, expected argument of FloatingPoint sort");
+        m_manager->raise_exception("sort mismatch, expected argument of FloatingPoint sort"); 
     symbol name;
     switch (k) {
     case OP_FLOAT_ABS: name = "fp.abs"; break;
@@ -331,7 +331,7 @@ func_decl * float_decl_plugin::mk_binary_decl(decl_kind k, unsigned num_paramete
     if (arity != 2)
         m_manager->raise_exception("invalid number of arguments to floating point operator");
     if (domain[0] != domain[1] || !is_float_sort(domain[0]))
-        m_manager->raise_exception("sort mismatch, expected arguments of equal FloatingPoint sorts");
+        m_manager->raise_exception("sort mismatch, expected arguments of equal FloatingPoint sorts"); 
     symbol name;
     switch (k) {
     case OP_FLOAT_REM: name = "fp.rem"; break;
@@ -351,7 +351,7 @@ func_decl * float_decl_plugin::mk_rm_binary_decl(decl_kind k, unsigned num_param
     if (!is_rm_sort(domain[0]))
         m_manager->raise_exception("sort mismatch, expected first argument of RoundingMode sort");
     if (domain[1] != domain[2] || !is_float_sort(domain[1]))
-        m_manager->raise_exception("sort mismatch, expected arguments 1 and 2 of equal FloatingPoint sorts");
+        m_manager->raise_exception("sort mismatch, expected arguments 1 and 2 of equal FloatingPoint sorts"); 
     symbol name;
     switch (k) {
     case OP_FLOAT_ADD: name = "fp.add";   break;
@@ -372,7 +372,7 @@ func_decl * float_decl_plugin::mk_rm_unary_decl(decl_kind k, unsigned num_parame
     if (!is_rm_sort(domain[0]))
         m_manager->raise_exception("sort mismatch, expected RoundingMode as first argument");
     if (!is_float_sort(domain[1]))
-        m_manager->raise_exception("sort mismatch, expected FloatingPoint as second argument");
+        m_manager->raise_exception("sort mismatch, expected FloatingPoint as second argument"); 
     symbol name;
     switch (k) {
     case OP_FLOAT_SQRT: name = "fp.sqrt";   break;
@@ -391,14 +391,14 @@ func_decl * float_decl_plugin::mk_fma(decl_kind k, unsigned num_parameters, para
     if (!is_rm_sort(domain[0]))
         m_manager->raise_exception("sort mismatch, expected RoundingMode as first argument");
     if (domain[1] != domain[2] || domain[1] != domain[3] || !is_float_sort(domain[1]))
-        m_manager->raise_exception("sort mismatch, expected arguments 1,2,3 of equal FloatingPoint sort");
+        m_manager->raise_exception("sort mismatch, expected arguments 1,2,3 of equal FloatingPoint sort"); 
     symbol name("fp.fma");
     return m_manager->mk_func_decl(name, arity, domain, domain[1], func_decl_info(m_family_id, k));
 }
 
 func_decl * float_decl_plugin::mk_to_float(decl_kind k, unsigned num_parameters, parameter const * parameters,
-                                           unsigned arity, sort * const * domain, sort * range) {
-    if (m_bv_plugin && arity == 3 &&
+                                           unsigned arity, sort * const * domain, sort * range) {    
+    if (m_bv_plugin && arity == 3 && 
         is_sort_of(domain[0], m_bv_fid, BV_SORT) &&
         is_sort_of(domain[1], m_bv_fid, BV_SORT) &&
         is_sort_of(domain[2], m_bv_fid, BV_SORT)) {
@@ -415,12 +415,12 @@ func_decl * float_decl_plugin::mk_to_float(decl_kind k, unsigned num_parameters,
             m_manager->raise_exception("invalid parameter type to to_fp");
         int ebits = parameters[0].get_int();
         int sbits = parameters[1].get_int();
-
+        
         sort * fp = mk_float_sort(ebits, sbits);
         symbol name("to_fp");
         return m_manager->mk_func_decl(name, arity, domain, fp, func_decl_info(m_family_id, k, num_parameters, parameters));
     }
-    else if (m_bv_plugin && arity == 2 &&
+    else if (m_bv_plugin && arity == 2 && 
              is_sort_of(domain[0], m_family_id, ROUNDING_MODE_SORT) &&
              is_sort_of(domain[1], m_bv_fid, BV_SORT)) {
         // Rounding + 1 BV -> 1 FP
@@ -444,30 +444,30 @@ func_decl * float_decl_plugin::mk_to_float(decl_kind k, unsigned num_parameters,
         if (!parameters[0].is_int() || !parameters[1].is_int())
             m_manager->raise_exception("invalid parameter type to to_fp");
         int ebits = parameters[0].get_int();
-        int sbits = parameters[1].get_int();
+        int sbits = parameters[1].get_int();        
         if (!is_rm_sort(domain[0]))
             m_manager->raise_exception("sort mismatch, expected first argument of RoundingMode sort");
         if (!is_sort_of(domain[1], m_family_id, FLOAT_SORT))
             m_manager->raise_exception("sort mismatch, expected second argument of FloatingPoint sort");
-
+        
         sort * fp = mk_float_sort(ebits, sbits);
         symbol name("to_fp");
         return m_manager->mk_func_decl(name, arity, domain, fp, func_decl_info(m_family_id, k, num_parameters, parameters));
     }
     else {
         // 1 Real -> 1 FP
-        if (!(num_parameters == 2 && parameters[0].is_int() && parameters[1].is_int()))
-            m_manager->raise_exception("expecting two integer parameters to to_fp");
+        if (!(num_parameters == 2 && parameters[0].is_int() && parameters[1].is_int())) 
+            m_manager->raise_exception("expecting two integer parameters to to_fp");        
         if (arity != 2 && arity != 3)
             m_manager->raise_exception("invalid number of arguments to to_fp operator");
         if (arity == 3 && domain[2] != m_int_sort)
-            m_manager->raise_exception("sort mismatch, expected second argument of Int sort");
+            m_manager->raise_exception("sort mismatch, expected second argument of Int sort");     
         if (domain[1] != m_real_sort)
             m_manager->raise_exception("sort mismatch, expected second argument of Real sort");
-
+        
         sort * fp = mk_float_sort(parameters[0].get_int(), parameters[1].get_int());
         symbol name("to_fp");
-        return m_manager->mk_func_decl(name, arity, domain, fp, func_decl_info(m_family_id, k, num_parameters, parameters));
+        return m_manager->mk_func_decl(name, arity, domain, fp, func_decl_info(m_family_id, k, num_parameters, parameters));            
     }
 }
 
@@ -477,23 +477,23 @@ func_decl * float_decl_plugin::mk_float_to_ieee_bv(decl_kind k, unsigned num_par
         m_manager->raise_exception("invalid number of arguments to asIEEEBV");
     if (!is_float_sort(domain[0]))
         m_manager->raise_exception("sort mismatch, expected argument of FloatingPoint sort");
-
+    
     unsigned float_sz = domain[0]->get_parameter(0).get_int() + domain[0]->get_parameter(1).get_int();
     parameter ps[] = { parameter(float_sz) };
     sort * bv_srt = m_bv_plugin->mk_sort(m_bv_fid, 1, ps);
     symbol name("asIEEEBV");
-    return m_manager->mk_func_decl(name, 1, domain, bv_srt, func_decl_info(m_family_id, k, num_parameters, parameters));
+    return m_manager->mk_func_decl(name, 1, domain, bv_srt, func_decl_info(m_family_id, k, num_parameters, parameters));        
 }
 
 func_decl * float_decl_plugin::mk_from3bv(decl_kind k, unsigned num_parameters, parameter const * parameters,
                                           unsigned arity, sort * const * domain, sort * range) {
     if (arity != 3)
-        m_manager->raise_exception("invalid number of arguments to fp");
+        m_manager->raise_exception("invalid number of arguments to fp");    
     if (!is_sort_of(domain[0], m_bv_fid, BV_SORT) ||
         !is_sort_of(domain[1], m_bv_fid, BV_SORT) ||
         !is_sort_of(domain[2], m_bv_fid, BV_SORT))
         m_manager->raise_exception("sort mismatch");
-
+        
     sort * fp = mk_float_sort(domain[1]->get_parameter(0).get_int(), domain[2]->get_parameter(0).get_int() + 1);
     symbol name("fp");
     return m_manager->mk_func_decl(name, arity, domain, fp, func_decl_info(m_family_id, k));
@@ -549,14 +549,14 @@ func_decl * float_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters
     case OP_FLOAT_IS_ZERO:
     case OP_FLOAT_IS_NZERO:
     case OP_FLOAT_IS_PZERO:
-    case OP_FLOAT_IS_NEGATIVE:
+    case OP_FLOAT_IS_NEGATIVE: 
     case OP_FLOAT_IS_POSITIVE:
     case OP_FLOAT_IS_NAN:
     case OP_FLOAT_IS_INF:
     case OP_FLOAT_IS_NORMAL:
     case OP_FLOAT_IS_SUBNORMAL:
         return mk_unary_rel_decl(k, num_parameters, parameters, arity, domain, range);
-    case OP_FLOAT_ABS:
+    case OP_FLOAT_ABS: 
     case OP_FLOAT_NEG:
         return mk_unary_decl(k, num_parameters, parameters, arity, domain, range);
     case OP_FLOAT_REM:
@@ -568,7 +568,7 @@ func_decl * float_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters
     case OP_FLOAT_DIV:
         return mk_rm_binary_decl(k, num_parameters, parameters, arity, domain, range);
     case OP_FLOAT_SUB:
-        if (arity == 1)
+        if (arity == 1) 
             return mk_unary_decl(OP_FLOAT_NEG, num_parameters, parameters, arity, domain, range);
         else
             return mk_rm_binary_decl(k, num_parameters, parameters, arity, domain, range);
@@ -606,7 +606,7 @@ void float_decl_plugin::get_op_names(svector<builtin_name> & op_names, symbol co
     op_names.push_back(builtin_name("roundTowardPositive", OP_RM_TOWARD_POSITIVE));
     op_names.push_back(builtin_name("roundTowardNegative", OP_RM_TOWARD_NEGATIVE));
     op_names.push_back(builtin_name("roundTowardZero", OP_RM_TOWARD_ZERO));
-
+    
     op_names.push_back(builtin_name("RNE", OP_RM_NEAREST_TIES_TO_EVEN));
     op_names.push_back(builtin_name("RNA", OP_RM_NEAREST_TIES_TO_AWAY));
     op_names.push_back(builtin_name("RTP", OP_RM_TOWARD_POSITIVE));
@@ -614,19 +614,19 @@ void float_decl_plugin::get_op_names(svector<builtin_name> & op_names, symbol co
     op_names.push_back(builtin_name("RTZ", OP_RM_TOWARD_ZERO));
 
     op_names.push_back(builtin_name("fp.abs", OP_FLOAT_ABS));
-    op_names.push_back(builtin_name("fp.neg", OP_FLOAT_NEG));
-    op_names.push_back(builtin_name("fp.add", OP_FLOAT_ADD));
-    op_names.push_back(builtin_name("fp.sub", OP_FLOAT_SUB));
-    op_names.push_back(builtin_name("fp.mul", OP_FLOAT_MUL));
+    op_names.push_back(builtin_name("fp.neg", OP_FLOAT_NEG)); 
+    op_names.push_back(builtin_name("fp.add", OP_FLOAT_ADD)); 
+    op_names.push_back(builtin_name("fp.sub", OP_FLOAT_SUB));     
+    op_names.push_back(builtin_name("fp.mul", OP_FLOAT_MUL)); 
     op_names.push_back(builtin_name("fp.div", OP_FLOAT_DIV));
-    op_names.push_back(builtin_name("fp.fma", OP_FLOAT_FMA));
-    op_names.push_back(builtin_name("fp.sqrt", OP_FLOAT_SQRT));
-    op_names.push_back(builtin_name("fp.rem", OP_FLOAT_REM));
+    op_names.push_back(builtin_name("fp.fma", OP_FLOAT_FMA)); 
+    op_names.push_back(builtin_name("fp.sqrt", OP_FLOAT_SQRT)); 
+    op_names.push_back(builtin_name("fp.rem", OP_FLOAT_REM));  
     op_names.push_back(builtin_name("fp.roundToIntegral", OP_FLOAT_ROUND_TO_INTEGRAL));
     op_names.push_back(builtin_name("fp.min", OP_FLOAT_MIN));
-    op_names.push_back(builtin_name("fp.max", OP_FLOAT_MAX));
+    op_names.push_back(builtin_name("fp.max", OP_FLOAT_MAX));      
     op_names.push_back(builtin_name("fp.leq", OP_FLOAT_LE));
-    op_names.push_back(builtin_name("fp.lt",  OP_FLOAT_LT));
+    op_names.push_back(builtin_name("fp.lt",  OP_FLOAT_LT));    
     op_names.push_back(builtin_name("fp.geq", OP_FLOAT_GE));
     op_names.push_back(builtin_name("fp.gt",  OP_FLOAT_GT));
     op_names.push_back(builtin_name("fp.eq", OP_FLOAT_EQ));
@@ -637,13 +637,13 @@ void float_decl_plugin::get_op_names(svector<builtin_name> & op_names, symbol co
     op_names.push_back(builtin_name("fp.isInfinite", OP_FLOAT_IS_INF));
     op_names.push_back(builtin_name("fp.isNaN", OP_FLOAT_IS_NAN));
     op_names.push_back(builtin_name("fp.isNegative", OP_FLOAT_IS_NEGATIVE));
-    op_names.push_back(builtin_name("fp.isPositive", OP_FLOAT_IS_POSITIVE));
+    op_names.push_back(builtin_name("fp.isPositive", OP_FLOAT_IS_POSITIVE));    
 
     op_names.push_back(builtin_name("fp", OP_FLOAT_FP));
     op_names.push_back(builtin_name("fp.to_ubv", OP_FLOAT_TO_UBV));
     op_names.push_back(builtin_name("fp.to_sbv", OP_FLOAT_TO_SBV));
-
-    op_names.push_back(builtin_name("to_fp", OP_TO_FLOAT));
+        
+    op_names.push_back(builtin_name("to_fp", OP_TO_FLOAT));    
 }
 
 void float_decl_plugin::get_sort_names(svector<builtin_name> & sort_names, symbol const & logic) {
@@ -658,7 +658,7 @@ void float_decl_plugin::get_sort_names(svector<builtin_name> & sort_names, symbo
 }
 
 expr * float_decl_plugin::get_some_value(sort * s) {
-    SASSERT(s->is_sort_of(m_family_id, FLOAT_SORT));
+    SASSERT(s->is_sort_of(m_family_id, FLOAT_SORT));    
     mpf tmp;
     m_fm.mk_nan(s->get_parameter(0).get_int(), s->get_parameter(1).get_int(), tmp);
     expr * res = this->mk_value(tmp);
@@ -667,7 +667,7 @@ expr * float_decl_plugin::get_some_value(sort * s) {
 }
 
 bool float_decl_plugin::is_value(app * e) const {
-    if (e->get_family_id() != m_family_id)
+    if (e->get_family_id() != m_family_id) 
         return false;
     switch (e->get_decl_kind()) {
     case OP_RM_NEAREST_TIES_TO_EVEN:

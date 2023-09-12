@@ -47,7 +47,7 @@ unsigned ntz(unsigned sz, unsigned const * data);
 
 /**
    \brief dst <- src
-
+   
    Trucate if src_sz > dst_sz.
    Fill range [src_sz, dst_sz) of dst with zeros if dst_sz > src_sz.
 */
@@ -103,20 +103,20 @@ bool has_one_at_first_k_bits(unsigned sz, unsigned const * data, unsigned k);
 
 /**
    \brief data <- data + 1
-
+   
    Return true if no overflow occurred.
 */
 bool inc(unsigned sz, unsigned * data);
 
 /**
    \brief data <- data - 1
-
+   
    Return true if no underflow occurred.
 */
 bool dec(unsigned sz, unsigned * data);
 
 /**
-   \brief Return true if data1 < data2.
+   \brief Return true if data1 < data2. 
 
    Both must have the same size.
 */

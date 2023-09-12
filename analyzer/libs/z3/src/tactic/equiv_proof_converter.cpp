@@ -13,7 +13,7 @@ Author:
 
     Nikolaj Bjorner (nbjorner) 2012-11-23
 
-Revision History:
+Revision History:  
 
 --*/
 

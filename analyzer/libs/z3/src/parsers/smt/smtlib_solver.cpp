@@ -34,7 +34,7 @@ Revision History:
 namespace smtlib {
 
     solver::solver():
-        m_ast_manager(m_params.m_proof ? PGM_FINE : PGM_DISABLED,
+        m_ast_manager(m_params.m_proof ? PGM_FINE : PGM_DISABLED, 
                       m_params.m_trace ? m_params.m_trace_file_name.c_str() : 0),
         m_ctx(0),
         m_error_code(0) {
@@ -48,7 +48,7 @@ namespace smtlib {
             dealloc(m_ctx);
     }
 
-    bool solver::solve_smt(char const * benchmark_file) {
+    bool solver::solve_smt(char const * benchmark_file) {    
         IF_VERBOSE(100, verbose_stream() << "parsing...\n";);
         if (!m_parser->parse_file(benchmark_file)) {
             if (benchmark_file) {
@@ -65,7 +65,7 @@ namespace smtlib {
         return true;
     }
 
-    bool solver::solve_smt_string(char const * benchmark_string) {
+    bool solver::solve_smt_string(char const * benchmark_string) {    
         if (!m_parser->parse_string(benchmark_string)) {
             warning_msg("could not parse string '%s'.", benchmark_string);
             return false;
@@ -74,7 +74,7 @@ namespace smtlib {
         solve_benchmark(*benchmark);
         return true;
     }
-
+    
     void solver::display_statistics() {
         if (m_ctx)
             m_ctx->display_statistics();
@@ -96,7 +96,7 @@ namespace smtlib {
     void solver::solve_formula(benchmark const & benchmark, expr * f) {
         IF_VERBOSE(100, verbose_stream() << "starting...\n";);
         m_ctx->reset();
-        for (unsigned i = 0; i < benchmark.get_num_axioms(); i++)
+        for (unsigned i = 0; i < benchmark.get_num_axioms(); i++) 
             m_ctx->assert_expr(benchmark.get_axioms()[i]);
         m_ctx->assert_expr(f);
         m_ctx->check_sat(benchmark.get_num_assumptions(), benchmark.get_assumptions());

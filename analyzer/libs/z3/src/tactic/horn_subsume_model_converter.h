@@ -15,7 +15,7 @@ Author:
 
 Revision History:
 
-
+    
 Notes:
 
 
@@ -24,9 +24,9 @@ Subsumption transformation (remove Horn clause):
     P(x) :- Body(x,y)      Rules
     ----------------------------
     Rules
-
-
-    Model converter:
+ 
+    
+    Model converter: 
 
        P(x) := P(x) or (exists y. Body(x,y))
 
@@ -58,7 +58,7 @@ class horn_subsume_model_converter : public model_converter {
 
 public:
 
- horn_subsume_model_converter(ast_manager& m):
+ horn_subsume_model_converter(ast_manager& m): 
     m(m), m_funcs(m), m_bodies(m), m_rewrite(m),
         m_delay_head(m), m_delay_body(m) {}
 
@@ -71,7 +71,7 @@ public:
     void insert(app* head, unsigned sz, expr* const* body);
 
     void insert(func_decl* p, expr* body) { m_funcs.push_back(p); m_bodies.push_back(body); }
-
+    
     virtual void operator()(model_ref& m);
 
     virtual model_converter * translate(ast_translation & translator);

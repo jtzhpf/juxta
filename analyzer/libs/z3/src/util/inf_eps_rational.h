@@ -30,7 +30,7 @@ class inf_eps_rational {
     Numeral     m_r;
  public:
 
-    unsigned hash() const {
+    unsigned hash() const { 
         return m_infty.hash() ^ m_r.hash();
     }
 
@@ -38,7 +38,7 @@ class inf_eps_rational {
 
     struct eq_proc { bool operator()(inf_eps_rational const& r1, inf_eps_rational const& r2) const { return r1 == r2; } };
 
-    void swap(inf_eps_rational & n) {
+    void swap(inf_eps_rational & n) { 
         m_infty.swap(n.m_infty);
         m_r.swap(n.m_r);
     }
@@ -73,7 +73,7 @@ class inf_eps_rational {
         m_r()
     {}
 
-    inf_eps_rational(const inf_eps_rational & r):
+    inf_eps_rational(const inf_eps_rational & r): 
         m_infty(r.m_infty),
         m_r(r.m_r)
      {}
@@ -103,15 +103,15 @@ class inf_eps_rational {
         m_r.reset();
     }
 
-    bool is_int() const {
+    bool is_int() const { 
         return m_infty.is_zero() && m_r.is_int();
     }
 
-    bool is_int64() const {
+    bool is_int64() const { 
         return m_infty.is_zero() && m_r.is_int64();
     }
 
-    bool is_uint64() const {
+    bool is_uint64() const { 
         return m_infty.is_zero() && m_r.is_uint64();
     }
 
@@ -151,26 +151,26 @@ class inf_eps_rational {
         return *this;
     }
 
-    inf_eps_rational & operator+=(const inf_eps_rational & r) {
+    inf_eps_rational & operator+=(const inf_eps_rational & r) { 
         m_infty  += r.m_infty;
         m_r      += r.m_r;
-	return *this;
+	return *this; 
     }
 
-    inf_eps_rational & operator-=(const inf_eps_rational & r) {
+    inf_eps_rational & operator-=(const inf_eps_rational & r) { 
         m_infty  -= r.m_infty;
         m_r      -= r.m_r;
-	return *this;
+	return *this; 
     }
 
-    inf_eps_rational & operator+=(const rational & r) {
+    inf_eps_rational & operator+=(const rational & r) { 
         m_r  += r;
-	return *this;
+	return *this; 
     }
 
-    inf_eps_rational & operator-=(const rational & r) {
+    inf_eps_rational & operator-=(const rational & r) { 
         m_r  -= r;
-	return *this;
+	return *this; 
     }
 
     inf_eps_rational & operator*=(const rational & r1) {
@@ -192,7 +192,7 @@ class inf_eps_rational {
     }
 
     const inf_eps_rational operator++(int) { inf_eps_rational tmp(*this); ++(*this); return tmp; }
-
+  
     inf_eps_rational & operator--() {
         --m_r;
         return *this;
@@ -212,20 +212,20 @@ class inf_eps_rational {
         return r1.m_infty == r2 && r1.m_r.is_zero();
     }
 
-    friend inline bool operator<(const inf_eps_rational & r1, const inf_eps_rational & r2) {
-        return
+    friend inline bool operator<(const inf_eps_rational & r1, const inf_eps_rational & r2) { 
+        return 
             (r1.m_infty < r2.m_infty) ||
             (r1.m_infty == r2.m_infty && r1.m_r < r2.m_r);
     }
 
-    friend inline bool operator<(const rational & r1, const inf_eps_rational & r2) {
-        return
+    friend inline bool operator<(const rational & r1, const inf_eps_rational & r2) { 
+        return 
             r2.m_infty.is_pos() ||
             (r2.m_infty.is_zero() && r1 < r2.m_r);
     }
 
-    friend inline bool operator<(const inf_eps_rational & r1, const rational & r2) {
-        return
+    friend inline bool operator<(const inf_eps_rational & r1, const rational & r2) { 
+        return 
             r1.m_infty.is_neg() ||
             (r1.m_infty.is_zero() && r1.m_r < r2);
     }
@@ -248,25 +248,25 @@ class inf_eps_rational {
     }
 
     bool is_neg() const {
-        return
-            m_infty.is_neg() ||
+        return 
+            m_infty.is_neg() || 
             (m_infty.is_zero() && m_r.is_neg());
     }
-
+    
     bool is_pos() const {
-        return
-            m_infty.is_pos() ||
+        return 
+            m_infty.is_pos() || 
             (m_infty.is_zero() && m_r.is_pos());
     }
 
     bool is_nonneg() const {
-        return
+        return 
             m_infty.is_pos() ||
             (m_infty.is_zero() && m_r.is_nonneg());
     }
 
     bool is_nonpos() const {
-        return
+        return 
             m_infty.is_neg() ||
             (m_infty.is_zero() && m_r.is_nonpos());
     }
@@ -296,80 +296,80 @@ class inf_eps_rational {
 };
 
 template<typename N>
-inline bool operator!=(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) { 
+    return !operator==(r1, r2); 
 }
 
 template<typename N>
-inline bool operator!=(const rational & r1, const inf_eps_rational<N> & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const rational & r1, const inf_eps_rational<N> & r2) { 
+    return !operator==(r1, r2); 
 }
 
 template<typename N>
-inline bool operator!=(const inf_eps_rational<N> & r1, const rational & r2) {
-    return !operator==(r1, r2);
+inline bool operator!=(const inf_eps_rational<N> & r1, const rational & r2) { 
+    return !operator==(r1, r2); 
 }
 
 template<typename N>
-inline bool operator>(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) { 
+    return operator<(r2, r1); 
 }
 
 template<typename N>
-inline bool operator>(const inf_eps_rational<N> & r1, const rational & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const inf_eps_rational<N> & r1, const rational & r2) { 
+    return operator<(r2, r1); 
 }
 
 template<typename N>
-inline bool operator>(const rational & r1, const inf_eps_rational<N> & r2) {
-    return operator<(r2, r1);
+inline bool operator>(const rational & r1, const inf_eps_rational<N> & r2) { 
+    return operator<(r2, r1); 
 }
 
 template<typename N>
-inline bool operator<=(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) { 
+    return !operator>(r1, r2); 
 }
 
 template<typename N>
-inline bool operator<=(const rational & r1, const inf_eps_rational<N> & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const rational & r1, const inf_eps_rational<N> & r2) { 
+    return !operator>(r1, r2); 
 }
 
 template<typename N>
-inline bool operator<=(const inf_eps_rational<N> & r1, const rational & r2) {
-    return !operator>(r1, r2);
+inline bool operator<=(const inf_eps_rational<N> & r1, const rational & r2) { 
+    return !operator>(r1, r2); 
 }
 
 template<typename N>
-inline bool operator>=(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) { 
+    return !operator<(r1, r2); 
 }
 
 template<typename N>
-inline bool operator>=(const rational & r1, const inf_eps_rational<N> & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const rational & r1, const inf_eps_rational<N> & r2) { 
+    return !operator<(r1, r2); 
 }
 
 template<typename N>
-inline bool operator>=(const inf_eps_rational<N> & r1, const rational & r2) {
-    return !operator<(r1, r2);
+inline bool operator>=(const inf_eps_rational<N> & r1, const rational & r2) { 
+    return !operator<(r1, r2); 
 }
 
 template<typename N>
-inline inf_eps_rational<N> operator+(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) {
-    return inf_eps_rational<N>(r1) += r2;
+inline inf_eps_rational<N> operator+(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) { 
+    return inf_eps_rational<N>(r1) += r2; 
 }
 
 template<typename N>
-inline inf_eps_rational<N> operator-(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) {
-    return inf_eps_rational<N>(r1) -= r2;
+inline inf_eps_rational<N> operator-(const inf_eps_rational<N> & r1, const inf_eps_rational<N> & r2) { 
+    return inf_eps_rational<N>(r1) -= r2; 
 }
 
 template<typename N>
-inline inf_eps_rational<N> operator-(const inf_eps_rational<N> & r) {
-    inf_eps_rational<N> result(r);
-    result.neg();
-    return result;
+inline inf_eps_rational<N> operator-(const inf_eps_rational<N> & r) { 
+    inf_eps_rational<N> result(r); 
+    result.neg(); 
+    return result; 
 }
 
 template<typename N>

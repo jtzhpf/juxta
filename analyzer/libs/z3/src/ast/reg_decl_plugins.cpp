@@ -37,7 +37,7 @@ void reg_decl_plugins(ast_manager & m) {
         m.register_plugin(symbol("array"), alloc(array_decl_plugin));
     }
     if (!m.get_plugin(m.mk_family_id(symbol("datatype")))) {
-        m.register_plugin(symbol("datatype"), alloc(datatype_decl_plugin));
+        m.register_plugin(symbol("datatype"), alloc(datatype_decl_plugin));    
     }
     if (!m.get_plugin(m.mk_family_id(symbol("datalog_relation")))) {
         m.register_plugin(symbol("datalog_relation"), alloc(datalog::dl_decl_plugin));

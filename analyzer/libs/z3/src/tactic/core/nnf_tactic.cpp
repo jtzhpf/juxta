@@ -26,7 +26,7 @@ class nnf_tactic : public tactic {
 
     struct set_nnf {
         nnf_tactic & m_owner;
-
+        
         set_nnf(nnf_tactic & owner, nnf & n):
             m_owner(owner) {
             #pragma omp critical (nnf_tactic)
@@ -34,7 +34,7 @@ class nnf_tactic : public tactic {
                 m_owner.m_nnf = &n;
             }
         }
-
+        
         ~set_nnf() {
             #pragma omp critical (nnf_tactic)
             {
@@ -59,9 +59,9 @@ public:
 
     virtual void collect_param_descrs(param_descrs & r) { nnf::get_param_descrs(r); }
 
-    virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & g, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         TRACE("nnf", tout << "params: " << m_params << "\n"; g->display(tout););
@@ -74,13 +74,13 @@ public:
         defined_names dnames(m);
         nnf local_nnf(m, dnames, m_params);
         set_nnf setter(*this, local_nnf);
-
+        
         expr_ref_vector defs(m);
         proof_ref_vector def_prs(m);
-
+        
         expr_ref   new_curr(m);
         proof_ref  new_pr(m);
-
+        
         unsigned sz = g->size();
         for (unsigned i = 0; i < sz; i++) {
             expr * curr = g->form(i);
@@ -91,7 +91,7 @@ public:
             }
             g->update(i, new_curr, new_pr, g->dep(i));
         }
-
+        
         sz = defs.size();
         for (unsigned i = 0; i < sz; i++) {
             if (produce_proofs)
@@ -111,7 +111,7 @@ public:
         TRACE("nnf", g->display(tout););
         SASSERT(g->is_well_sorted());
     }
-
+    
     virtual void cleanup() {}
     virtual void set_cancel(bool f) {
         #pragma omp critical (nnf_tactic)

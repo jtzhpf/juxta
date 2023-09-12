@@ -43,7 +43,7 @@ class sls_tactic : public tactic {
     class stats {
     public:
         unsigned        m_restarts;
-        stopwatch       m_stopwatch;
+        stopwatch       m_stopwatch;    
         unsigned        m_full_evals;
         unsigned        m_incr_evals;
         unsigned        m_moves, m_flips, m_incs, m_decs, m_invs;
@@ -64,16 +64,16 @@ class sls_tactic : public tactic {
             m_stopwatch.reset();
             m_stopwatch.start();
         }
-    };
+    };    
 
-    struct imp {
+    struct imp {       
         ast_manager   & m_manager;
         stats         & m_stats;
         unsynch_mpz_manager m_mpz_manager;
         powers          m_powers;
-        mpz             m_zero, m_one, m_two;
+        mpz             m_zero, m_one, m_two;            
         bool            m_produce_models;
-        volatile bool   m_cancel;
+        volatile bool   m_cancel;    
         bv_util         m_bv_util;
         sls_tracker     m_tracker;
         sls_evaluator   m_evaluator;
@@ -81,9 +81,9 @@ class sls_tactic : public tactic {
         unsigned        m_max_restarts;
         unsigned        m_plateau_limit;
 
-        typedef enum { MV_FLIP = 0, MV_INC, MV_DEC, MV_INV } move_type;
+        typedef enum { MV_FLIP = 0, MV_INC, MV_DEC, MV_INV } move_type;        
 
-        imp(ast_manager & m, params_ref const & p, stats & s) :
+        imp(ast_manager & m, params_ref const & p, stats & s) : 
             m_manager(m),
             m_stats(s),
             m_powers(m_mpz_manager),
@@ -93,7 +93,7 @@ class sls_tactic : public tactic {
             m_cancel(false),
             m_bv_util(m),
             m_tracker(m, m_bv_util, m_mpz_manager, m_powers),
-            m_evaluator(m, m_bv_util, m_tracker, m_mpz_manager, m_powers)
+            m_evaluator(m, m_bv_util, m_tracker, m_mpz_manager, m_powers) 
         {
             updt_params(p);
         }
@@ -102,7 +102,7 @@ class sls_tactic : public tactic {
             m_mpz_manager.del(m_zero);
             m_mpz_manager.del(m_one);
             m_mpz_manager.del(m_two);
-        }
+        }        
 
         ast_manager & m() const { return m_manager; }
 
@@ -117,12 +117,12 @@ class sls_tactic : public tactic {
         void updt_params(params_ref const & _p) {
             sls_params p(_p);
             m_produce_models = _p.get_bool("model", false);
-            m_max_restarts = p.restarts();
+            m_max_restarts = p.restarts();            
             m_tracker.set_random_seed(p.random_seed());
             m_plateau_limit = p.plateau_limit();
         }
 
-        void checkpoint() {
+        void checkpoint() { 
             if (m_cancel)
                 throw tactic_exception(TACTIC_CANCELED_MSG);
             cooperate("sls");
@@ -140,7 +140,7 @@ class sls_tactic : public tactic {
                     exit(ERR_INTERNAL_FATAL);
 
                 res = m_manager.is_true(o.get());
-            }
+            }        
 
             TRACE("sls", tout << "Evaluation: " << res << std::endl;);
 
@@ -155,7 +155,7 @@ class sls_tactic : public tactic {
                 double q = m_tracker.get_score(g->form(i));
                 if (q < min) min = q;
             }
-            TRACE("sls_top", tout << "Score distribution:";
+            TRACE("sls_top", tout << "Score distribution:"; 
                                 for (unsigned i = 0; i < sz; i++)
                                     tout << " " << m_tracker.get_score(g->form(i));
                                 tout << " MIN: " << min << std::endl; );
@@ -166,7 +166,7 @@ class sls_tactic : public tactic {
             for (unsigned i = 0; i < sz; i++) {
                 top_sum += m_tracker.get_score(g->form(i));
             }
-            TRACE("sls_top", tout << "Score distribution:";
+            TRACE("sls_top", tout << "Score distribution:"; 
                                     for (unsigned i = 0; i < sz; i++)
                                         tout << " " << m_tracker.get_score(g->form(i));
                                     tout << " AVG: " << top_sum / (double) sz << std::endl; );
@@ -186,26 +186,26 @@ class sls_tactic : public tactic {
             return top_score(g);
         }
 
-        bool what_if(goal_ref const & g, func_decl * fd, const unsigned & fd_inx, const mpz & temp,
+        bool what_if(goal_ref const & g, func_decl * fd, const unsigned & fd_inx, const mpz & temp, 
                         double & best_score, unsigned & best_const, mpz & best_value) {
-
+        
             #ifdef Z3DEBUG
             mpz old_value;
             m_mpz_manager.set(old_value, m_tracker.get_value(fd));
             #endif
 
             double r = incremental_score(g, fd, temp);
-
+        
             #ifdef Z3DEBUG
-            TRACE("sls_whatif", tout << "WHAT IF " << fd->get_name() << " WERE " << m_mpz_manager.to_string(temp) <<
+            TRACE("sls_whatif", tout << "WHAT IF " << fd->get_name() << " WERE " << m_mpz_manager.to_string(temp) << 
                                         " --> " << r << std::endl; );
-
+        
             m_mpz_manager.del(old_value);
             #endif
 
             if (r >= best_score) {
                 best_score = r;
-                best_const = fd_inx;
+                best_const = fd_inx;            
                 m_mpz_manager.set(best_value, temp);
                 return true;
             }
@@ -214,7 +214,7 @@ class sls_tactic : public tactic {
         }
 
         void mk_inc(unsigned bv_sz, const mpz & old_value, mpz & incremented) {
-            unsigned shift;
+            unsigned shift;        
             m_mpz_manager.add(old_value, m_one, incremented);
             if (m_mpz_manager.is_power_of_two(incremented, shift) && shift == bv_sz)
                 m_mpz_manager.set(incremented, m_zero);
@@ -257,8 +257,8 @@ class sls_tactic : public tactic {
             // inversion doesn't make sense, let's do a flip instead.
             if (mt == MV_INV) mt = MV_FLIP;
 
-            ptr_vector<func_decl> & unsat_constants = m_tracker.get_unsat_constants(g);
-            unsigned ucc = unsat_constants.size();
+            ptr_vector<func_decl> & unsat_constants = m_tracker.get_unsat_constants(g);                
+            unsigned ucc = unsat_constants.size(); 
             unsigned rc = (m_tracker.get_random_uint((ucc < 16) ? 4 : (ucc < 256) ? 8 : (ucc < 4096) ? 12 : (ucc < 65536) ? 16 : 32)) % ucc;
             func_decl * fd = unsat_constants[rc];
             mpz new_value;
@@ -272,10 +272,10 @@ class sls_tactic : public tactic {
                 mk_flip(fd->get_range(), m_tracker.get_value(fd), bit, new_value);
                 break;
             }
-            case MV_INC:
+            case MV_INC: 
                 mk_inc(m_bv_util.get_bv_size(fd->get_range()), m_tracker.get_value(fd), new_value);
                 break;
-            case MV_DEC:
+            case MV_DEC: 
                 mk_dec(m_bv_util.get_bv_size(fd->get_range()), m_tracker.get_value(fd), new_value);
                 break;
             case MV_INV:
@@ -285,7 +285,7 @@ class sls_tactic : public tactic {
                 NOT_IMPLEMENTED_YET();
             }
 
-            m_evaluator.update(fd, new_value);
+            m_evaluator.update(fd, new_value);            
 
             TRACE("sls", tout << "Randomization candidates: ";
                          for (unsigned i = 0; i < unsat_constants.size(); i++)
@@ -298,12 +298,12 @@ class sls_tactic : public tactic {
                          case MV_DEC: tout << "-1 for " << fd->get_name() << std::endl; break;
                          case MV_INV: tout << "NEG for " << fd->get_name() << std::endl; break;
                          }
-                         tout << "Locally randomized model: " << std::endl; m_tracker.show_model(tout); );
+                         tout << "Locally randomized model: " << std::endl; m_tracker.show_model(tout); );            
 
             m_mpz_manager.del(new_value);
         }
 
-        double find_best_move(goal_ref const & g, ptr_vector<func_decl> & to_evaluate, double score,
+        double find_best_move(goal_ref const & g, ptr_vector<func_decl> & to_evaluate, double score, 
                               unsigned & best_const, mpz & best_value, unsigned & new_bit, move_type & move) {
             mpz old_value, temp;
             unsigned bv_sz;
@@ -317,8 +317,8 @@ class sls_tactic : public tactic {
 
                 // first try to flip every bit
                 for (unsigned j = 0; j < bv_sz && new_score < 1.0; j++) {
-                    // What would happen if we flipped bit #i ?
-                    mk_flip(srt, old_value, j, temp);
+                    // What would happen if we flipped bit #i ?                
+                    mk_flip(srt, old_value, j, temp);                
 
                     if (what_if(g, fd, i, temp, new_score, best_const, best_value)) {
                         new_bit = j;
@@ -327,13 +327,13 @@ class sls_tactic : public tactic {
                 }
 
                 if (m_bv_util.is_bv_sort(srt) && bv_sz > 1) {
-                    if (!m_mpz_manager.is_even(old_value)) {
+                    if (!m_mpz_manager.is_even(old_value)) { 
                         // for odd values, try +1
                         mk_inc(bv_sz, old_value, temp);
                         if (what_if(g, fd, i, temp, new_score, best_const, best_value))
                             move = MV_INC;
                     }
-                    else {
+                    else { 
                         // for even values, try -1
                         mk_dec(bv_sz, old_value, temp);
                         if (what_if(g, fd, i, temp, new_score, best_const, best_value))
@@ -354,32 +354,32 @@ class sls_tactic : public tactic {
             m_mpz_manager.del(old_value);
             m_mpz_manager.del(temp);
             return new_score;
-        }
+        }        
 
-        lbool search(goal_ref const & g) {
+        lbool search(goal_ref const & g) {        
             lbool res = l_undef;
             double score = 0.0, old_score = 0.0;
-            unsigned new_const = (unsigned)-1, new_bit = 0;
+            unsigned new_const = (unsigned)-1, new_bit = 0;        
             mpz new_value;
             move_type move;
-
+            
             score = rescore(g);
             TRACE("sls", tout << "Starting search, initial score   = " << std::setprecision(32) << score << std::endl;
-                         tout << "Score distribution:";
+                         tout << "Score distribution:"; 
                          for (unsigned i = 0; i < g->size(); i++)
                              tout << " " << std::setprecision(3) << m_tracker.get_score(g->form(i));
-                         tout << " TOP: " << score << std::endl; );
-
+                         tout << " TOP: " << score << std::endl; ); 
+        
             unsigned plateau_cnt = 0;
 
-            while (plateau_cnt < m_plateau_limit) {
+            while (plateau_cnt < m_plateau_limit) {                
 
                 do {
                     checkpoint();
-
+            
                     old_score = score;
                     new_const = (unsigned)-1;
-
+                        
                     ptr_vector<func_decl> & to_evaluate = m_tracker.get_unsat_constants(g);
 
                     TRACE("sls_constants", tout << "Evaluating these constants: " << std::endl;
@@ -389,7 +389,7 @@ class sls_tactic : public tactic {
                     score = find_best_move(g, to_evaluate, score, new_const, new_value, new_bit, move);
 
                     if (new_const == static_cast<unsigned>(-1)) {
-                        TRACE("sls", tout << "Local maximum reached; unsatisfied constraints: " << std::endl;
+                        TRACE("sls", tout << "Local maximum reached; unsatisfied constraints: " << std::endl; 
                                         for (unsigned i = 0; i < g->size(); i++) {
                                             if (!m_mpz_manager.is_one(m_tracker.get_value(g->form(i))))
                                                 tout << mk_ismt2_pp(g->form(i), m_manager) << std::endl;
@@ -398,7 +398,7 @@ class sls_tactic : public tactic {
                         TRACE("sls_max", m_tracker.show_model(tout);
                                         tout << "Scores: " << std::endl;
                                         for (unsigned i = 0; i < g->size(); i++)
-                                            tout << mk_ismt2_pp(g->form(i), m_manager) << " ---> " <<
+                                            tout << mk_ismt2_pp(g->form(i), m_manager) << " ---> " << 
                                             m_tracker.get_score(g->form(i)) << std::endl; );
                         score = old_score;
                     }
@@ -408,20 +408,20 @@ class sls_tactic : public tactic {
 
                         TRACE("sls", tout << "Setting " << fd->get_name() << " to " << m_mpz_manager.to_string(new_value) << " (Move: ";
                                         switch (move) {
-                                        case MV_FLIP:
+                                        case MV_FLIP:  
                                             tout << "Flip";
                                             if (!m_manager.is_bool(fd->get_range())) tout << " #" << new_bit;
                                             break;
-                                        case MV_INC:
+                                        case MV_INC: 
                                             tout << "+1";
                                             break;
-                                        case MV_DEC:
+                                        case MV_DEC: 
                                             tout << "-1";
                                             break;
-                                        case MV_INV:
+                                        case MV_INV: 
                                             tout << "NEG";
                                             break;
-                                        };
+                                        };                                        
                                         tout << ") ; new score = " << std::setprecision(32) << score << std::endl; );
 
                         switch (move) {
@@ -430,13 +430,13 @@ class sls_tactic : public tactic {
                         case MV_DEC: m_stats.m_decs++; break;
                         case MV_INV: m_stats.m_invs++; break;
                         }
+                    
+                        score = incremental_score(g, fd, new_value);    
 
-                        score = incremental_score(g, fd, new_value);
-
-                        TRACE("sls", tout << "Score distribution:";
+                        TRACE("sls", tout << "Score distribution:"; 
                                         for (unsigned i = 0; i < g->size(); i++)
                                             tout << " " << std::setprecision(3) << m_tracker.get_score(g->form(i));
-                                        tout << " TOP: " << score << std::endl; );
+                                        tout << " TOP: " << score << std::endl; );                        
                     }
 
                     if (score >= 1.0) {
@@ -452,7 +452,7 @@ class sls_tactic : public tactic {
                             TRACE("sls", tout << "Imprecise 1.0 score" << std::endl;);
                     }
                 }
-                while (score > old_score && res == l_undef);
+                while (score > old_score && res == l_undef);                
 
                 if (score != old_score)
                     plateau_cnt = 0;
@@ -471,7 +471,7 @@ class sls_tactic : public tactic {
             m_mpz_manager.del(new_value);
 
             return res;
-        }
+        }    
 
         void operator()(goal_ref const & g, model_converter_ref & mc) {
             if (g->inconsistent()) {
@@ -481,20 +481,20 @@ class sls_tactic : public tactic {
 
             m_tracker.initialize(g);
             lbool res = l_undef;
-
+        
             do {
                 checkpoint();
-                if ((m_stats.m_restarts % 100) == 0)
+                if ((m_stats.m_restarts % 100) == 0)                        
                     report_tactic_progress("Searching... restarts left:", m_max_restarts - m_stats.m_restarts);
-
+                
                 res = search(g);
 
                 if (res == l_undef)
                     m_tracker.randomize();
             }
             while (res != l_true && m_stats.m_restarts++ < m_max_restarts);
-
-            if (res == l_true) {
+        
+            if (res == l_true) {                
                 if (m_produce_models) {
                     model_ref mdl = m_tracker.get_model();
                     mc = model2model_converter(mdl.get());
@@ -506,7 +506,7 @@ class sls_tactic : public tactic {
                 mc = 0;
         }
     };
-
+    
     ast_manager    & m;
     params_ref       m_params;
     imp            * m_imp;
@@ -535,19 +535,19 @@ public:
     virtual void collect_param_descrs(param_descrs & r) {
         imp::collect_param_descrs(r);
     }
-
-    virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & g, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         SASSERT(g->is_well_sorted());
-        m_imp->m_produce_models = g->models_enabled();
+        m_imp->m_produce_models = g->models_enabled();        
         mc = 0; pc = 0; core = 0; result.reset();
-
+        
         TRACE("sls", g->display(tout););
         tactic_report report("sls", *g);
-
+        
         m_imp->operator()(g, mc);
 
         g->inc_depth();
@@ -556,7 +556,7 @@ public:
         SASSERT(g->is_well_sorted());
     }
 
-    virtual void cleanup() {
+    virtual void cleanup() {        
         imp * d = alloc(imp, m, m_params, m_stats);
         #pragma omp critical (tactic_cancel)
         {
@@ -564,14 +564,14 @@ public:
         }
         dealloc(d);
     }
-
+    
     virtual void collect_statistics(statistics & st) const {
-        double seconds = m_stats.m_stopwatch.get_current_seconds();
+        double seconds = m_stats.m_stopwatch.get_current_seconds();            
         st.update("sls restarts", m_stats.m_restarts);
         st.update("sls full evals", m_stats.m_full_evals);
         st.update("sls incr evals", m_stats.m_incr_evals);
         st.update("sls incr evals/sec", m_stats.m_incr_evals/ seconds);
-        st.update("sls FLIP moves", m_stats.m_flips);
+        st.update("sls FLIP moves", m_stats.m_flips);    
         st.update("sls INC moves", m_stats.m_incs);
         st.update("sls DEC moves", m_stats.m_decs);
         st.update("sls INV moves", m_stats.m_invs);
@@ -617,10 +617,10 @@ tactic * mk_preamble(ast_manager & m, params_ref const & p) {
     hoist_p.set_bool("som", false);
 
     params_ref gaussian_p;
-    // conservative gaussian elimination.
-    gaussian_p.set_uint("gaussian_max_occs", 2);
+    // conservative gaussian elimination. 
+    gaussian_p.set_uint("gaussian_max_occs", 2); 
 
-    return and_then(and_then(mk_simplify_tactic(m),
+    return and_then(and_then(mk_simplify_tactic(m),                             
                              mk_propagate_values_tactic(m),
                              using_params(mk_solve_eqs_tactic(m), gaussian_p),
                              mk_elim_uncnstr_tactic(m),
@@ -632,7 +632,7 @@ tactic * mk_preamble(ast_manager & m, params_ref const & p) {
 }
 
 tactic * mk_qfbv_sls_tactic(ast_manager & m, params_ref const & p) {
-    tactic * t = and_then(mk_preamble(m, p), mk_sls_tactic(m));
+    tactic * t = and_then(mk_preamble(m, p), mk_sls_tactic(m));    
     t->updt_params(p);
     return t;
 }

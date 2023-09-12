@@ -55,7 +55,7 @@ Revision History:
 // #define KEEP_EXPANSIONS
 // #define USE_CACHING_RPFP
 // #define PROPAGATE_BEFORE_CHECK
-#define NEW_STRATIFIED_INLINING
+#define NEW_STRATIFIED_INLINING	
 
 #define USE_RPFP_CLONE
 #define USE_NEW_GEN_CANDS
@@ -102,7 +102,7 @@ namespace Duality {
 
    Reporter *CreateStdoutReporter(RPFP *rpfp);
   Reporter *CreateConjectureFileReporter(RPFP *rpfp, const std::string &fname);
-
+  
   /** Object we throw in case of catastrophe. */
 
   struct InternalError {
@@ -143,18 +143,18 @@ namespace Duality {
 #ifdef USE_RPFP_CLONE
       clone_rpfp = new RPFP_caching(rpfp->ls);
       clone_rpfp->Clone(rpfp);
-#endif
+#endif      
 #ifdef USE_NEW_GEN_CANDS
       gen_cands_rpfp = new RPFP_caching(rpfp->ls);
       gen_cands_rpfp->Clone(rpfp);
-#endif
+#endif      
       }
     }
 
     ~Duality(){
 #ifdef USE_RPFP_CLONE
       delete clone_rpfp;
-#endif
+#endif      
 #ifdef USE_NEW_GEN_CANDS
       delete gen_cands_rpfp;
 #endif
@@ -163,10 +163,10 @@ namespace Duality {
 
 #ifdef USE_RPFP_CLONE
     RPFP_caching *clone_rpfp;
-#endif
+#endif      
 #ifdef USE_NEW_GEN_CANDS
     RPFP_caching *gen_cands_rpfp;
-#endif
+#endif      
 
 
     typedef RPFP::Node Node;
@@ -175,15 +175,15 @@ namespace Duality {
     /** This struct represents a candidate for extending the
 	unwinding. It consists of an edge to instantiate
 	and a vector of children for the new instance. */
-
+    
     struct Candidate {
       Edge *edge; std::vector<Node *>
       Children;
     };
-
+    
     /** Comparison operator, allowing us to sort Nodes
 	by their number field. */
-
+    
     struct lnode
     {
       bool operator()(const Node* s1, const Node* s2) const
@@ -207,7 +207,7 @@ namespace Duality {
 	score() : updates(0) {}
       };
       hash_map<RPFP::Node *,score> scores;
-
+      
     public:
       Heuristic(RPFP *_rpfp){
 	rpfp = _rpfp;
@@ -252,7 +252,7 @@ namespace Duality {
 	    best.insert(*it);
       }
 #endif
-
+      
       /** Called when done expanding a tree */
       virtual void Done() {}
 
@@ -263,7 +263,7 @@ namespace Duality {
 	return 0;
       }
     };
-
+    
     /** The Proposer class proposes conjectures eagerly. These can come
        from any source, including predicate abstraction, templates, or
        previous solver runs. The proposed conjectures are checked
@@ -282,7 +282,7 @@ namespace Duality {
 
     // These members represent the state of the algorithm.
 
-    RPFP *rpfp;                          // the input RPFP
+    RPFP *rpfp;                          // the input RPFP 
     Reporter *reporter;                  // object for logging
     Reporter *conj_reporter;             // object for logging conjectures
     Heuristic *heuristic;                // expansion heuristic
@@ -299,7 +299,7 @@ namespace Duality {
     hash_map<Node *, std::vector<Node *> > insts_of_node;
     // maps each node in input RPFP to all its instances
     hash_map<Node *, std::vector<Node *> > all_of_node;
-    RPFP *unwinding;                     // the unwinding
+    RPFP *unwinding;                     // the unwinding 
     Covering *indset;                    // proposed inductive subset
     Counterexample cex;                  // counterexample
     std::list<Node *> to_expand;
@@ -319,7 +319,7 @@ namespace Duality {
     typedef std::map<Node *,Counter> NodeToCounter;
     hash_map<Node *,NodeToCounter> back_edges; // counts of back edges
 #endif
-
+    
     /** Solve the problem. */
     virtual bool Solve(){
       PreSolve();
@@ -330,7 +330,7 @@ namespace Duality {
 
     void PreSolve(){
       reporter = Report ? CreateStdoutReporter(rpfp) : new Reporter(rpfp);
-      conj_reporter = ConjectureFile.empty() ? 0 : CreateConjectureFileReporter(rpfp,ConjectureFile);
+      conj_reporter = ConjectureFile.empty() ? 0 : CreateConjectureFileReporter(rpfp,ConjectureFile); 
 #ifndef LOCALIZE_CONJECTURES
       heuristic = !cex.get_tree() ? new Heuristic(rpfp) : new ReplayHeuristic(rpfp,cex);
 #else
@@ -389,13 +389,13 @@ namespace Duality {
         else InstantiateAllEdges();
       }
       else {
-#ifdef NEW_STRATIFIED_INLINING
+#ifdef NEW_STRATIFIED_INLINING	
 
 #else
 	CreateLeaves();
 #endif
       }
-
+      
     }
 
     void Cancel(){
@@ -442,8 +442,8 @@ namespace Duality {
     bool StratifiedInlining; // Do stratified inlining as preprocessing step
     int RecursionBound;  // Recursion bound for bounded verification
     bool BatchExpand;
-    bool EnableRestarts;
-
+    bool EnableRestarts; 
+    
     bool SetBoolOption(bool &opt, const std::string &value){
       if(value == "0") {
           opt = false;
@@ -585,7 +585,7 @@ namespace Duality {
 	  cand.edge = edge;
 	  candidates.push_back(cand);
 	}
-      }
+      } 
     }
 
     void InstantiateAllEdges(){
@@ -725,7 +725,7 @@ namespace Duality {
       timer_stop("GenCandIndFailUsing");
     }
 #endif
-
+    
     void ExpandNodeFromOther(Node *node, Node *other){
       std::vector<Edge *> &in = other->Incoming;
       for(unsigned i = 0; i < in.size(); i++){
@@ -764,8 +764,8 @@ namespace Duality {
 #endif
       return true;
     }
-
-
+      
+    
     /** Make a boolean variable to act as a "marker" for a node. */
     expr NodeMarker(Node *node){
       std::string name = std::string("@m_") + string_of_int(node->number);
@@ -800,7 +800,7 @@ namespace Duality {
 	if(indset->Contains(insts[j]))
 	  UnionAnnotations(annot,insts[j],with_markers);
       annot.Simplify();
-    }
+    }    
 
     bool NodeSolutionFromIndSetFull(Node *node){
       std::vector<Node *> &insts = insts_of_node[node];
@@ -826,7 +826,7 @@ namespace Duality {
 	    if(NodePastRecursionBound(insts[j],true))
 	      recursionBounded = true;
       }
-    }
+    }    
 
     bool IsResultRecursionBounded(){
       return recursionBounded;
@@ -878,7 +878,7 @@ namespace Duality {
 	  timer_stop("CandidateFeasible");
 	  return false;
 	}
-#endif
+#endif      
 #ifdef NEW_CAND_SEL
       GenNodeSolutionFromIndSet(cand.edge->Parent,root->Bound);
 #else
@@ -903,7 +903,7 @@ namespace Duality {
     hash_map<Node *, int> TopoSort;
     int TopoSortCounter;
     std::vector<Edge *> SortedEdges;
-
+    
     void DoTopoSortRec(Node *node){
       if(TopoSort.find(node) != TopoSort.end())
 	return;
@@ -926,10 +926,10 @@ namespace Duality {
 	DoTopoSortRec(nodes[i]);
     }
 
-
+    
     int StratifiedLeafCount;
 
-#ifdef NEW_STRATIFIED_INLINING
+#ifdef NEW_STRATIFIED_INLINING	
 
     /** Stratified inlining builds an initial layered unwinding before
 	switching to the LAWI strategy. Currently the number of layers
@@ -955,7 +955,7 @@ namespace Duality {
 	    Node *child = chs[j];
 	    int ch_level = TopoSort[child] >= TopoSort[parent] ? level-1 : level;
 	    if(unfolding_levels[ch_level].find(child) == unfolding_levels[ch_level].end()){
-	      if(ch_level == 0)
+	      if(ch_level == 0) 
 		unfolding_levels[0][child] = CreateLeaf(child);
 	      else
 		throw InternalError("in levelized unwinding");
@@ -977,7 +977,7 @@ namespace Duality {
       MakeLeaf(nchild, /* do_not_expand = */ true);
       nchild->Annotation.SetEmpty();
       return nchild;
-    }
+    }      
 
     void MarkExpanded(Node *node){
       if(unexpanded.find(node) != unexpanded.end()){
@@ -1009,18 +1009,18 @@ namespace Duality {
 #ifndef EFFORT_BOUNDED_STRAT
       for(unsigned i = 0; i < leaves.size(); i++)
 	if(!leaves[i]->Outgoing)
-	  MakeLeaf(leaves[i],true);
+	  MakeLeaf(leaves[i],true);    
 #endif
       timer_stop("StratifiedInlining");
       return true;
     }
-
+    
 #endif
 
     /** Here, we do the downward expansion for stratified inlining */
 
     hash_map<Node *, Node *> LeafMap, StratifiedLeafMap;
-
+    
     Edge *GetNodeOutgoing(Node *node, int last_decs = 0){
       if(overapproxes.find(node) == overapproxes.end()) return node->Outgoing; /* already expanded */
       overapproxes.erase(node);
@@ -1135,7 +1135,7 @@ namespace Duality {
 	conj = rpfp->conjoin(conjs);
       }
     }
-
+	
 
     Node *CreateUnderapproxNode(Node *node){
       // cex.get_tree()->ComputeUnderapprox(cex.get_root(),0);
@@ -1149,7 +1149,7 @@ namespace Duality {
       reporter->Extend(under_node);
       return under_node;
     }
-
+    
     /** Try to prove a conjecture about a node. If successful
 	update the unwinding annotation appropriately. */
     bool ProveConjecture(Node *node, const RPFP::Transformer &t,Node *other = 0, Counterexample *_cex = 0){
@@ -1164,7 +1164,7 @@ namespace Duality {
       SetHeuristicOldNode(other);
       bool ok = SatisfyUpperBound(node);
       SetHeuristicOldNode(0);
-#endif
+#endif      
 
       if(ok){
 	timer_stop("ProveConjecture");
@@ -1193,13 +1193,13 @@ namespace Duality {
 	/* TODO: temporary fix. this prevents an infinite loop in case
 	   the node is covered by multiple others. This should be
 	   removed when covering by a set is implemented.
-	*/
+	*/ 
 	if(indset->Contains(node)){
 	  unexpanded.erase(node);
 	  insts_of_node[node->map].push_back(node);
 	}
 #endif
-	return;
+	return; 
       }
 #ifdef UNDERAPPROX_NODES
       if(!indset->Contains(node))
@@ -1232,8 +1232,8 @@ namespace Duality {
 	  t.Formula = t.Formula && !NodeMarker(insts[i]);
 #endif
     }
-
-
+  
+    
     void GenNodeSolutionWithMarkersAux(Node *node, RPFP::Transformer &annot, expr &marker_disjunction, Node *other_node){
 #ifdef BOUNDED
       if(RecursionBound >= 0 && NodePastRecursionBound(node))
@@ -1260,7 +1260,7 @@ namespace Duality {
       annot.Formula = annot.Formula && marker_disjunction;
       annot.Simplify();
       return res;
-    }
+    }    
 
     /** Make a checker to determine if an edge in the input RPFP
 	is satisfied. */
@@ -1307,7 +1307,7 @@ namespace Duality {
       checker->AssertEdge(checker->CreateEdge(root,edge->F,cs));
       return root;
     }
-
+  
 #else
     /** Make a checker to determine if an edge in the input RPFP
 	is satisfied. */
@@ -1350,7 +1350,7 @@ namespace Duality {
 	{
 	  Node *inst = insts[k];
 	  if(indset->Contains(inst)){
-	    if(checker->Empty(node) ||
+	    if(checker->Empty(node) || 
 	       eq(lb ? checker->Eval(lb,NodeMarker(inst)) : checker->dualModel.eval(NodeMarker(inst,node)),ctx.bool_val(true))){
 	      candidate.Children.push_back(inst);
 	      goto next_child;
@@ -1399,7 +1399,7 @@ namespace Duality {
 	    Node *inst = insts[k];
 	    expr marker = NodeMarker(inst);
 	    if(indset->Contains(inst)){
-	      if(checker->Empty(lb->Parent) ||
+	      if(checker->Empty(lb->Parent) || 
 		 eq(checker->Eval(lb,marker),ctx.bool_val(true))){
 		candidate.Children.push_back(inst);
 		assumps.push_back(checker->Localize(lb,marker));
@@ -1530,7 +1530,7 @@ namespace Duality {
 	TryExpandNode(node);
       }
     }
-
+  
     std::list<Candidate> postponed_candidates;
 
     /** Try to produce some extension candidates, first from unexpanded
@@ -1571,7 +1571,7 @@ namespace Duality {
       }
       return false;
     }
-
+    
     bool UpdateNodeToNode(Node *node, Node *top){
       return Update(node,top->Annotation);
     }
@@ -1628,7 +1628,7 @@ namespace Duality {
       delete dtp;
       return !res;
     }
-
+    
     /* For a given nod in the unwinding, get conjectures from the
        proposers and check them locally. Update the node with any true
        conjectures.
@@ -1637,7 +1637,7 @@ namespace Duality {
     void DoEagerDeduction(Node *node){
       for(unsigned i = 0; i < proposers.size(); i++){
 	const std::vector<RPFP::Transformer> &conjectures = proposers[i]->Propose(node);
-	for(unsigned j = 0; j < conjectures.size(); j++){
+	for(unsigned j = 0; j < conjectures.size(); j++){ 
 	  const RPFP::Transformer &conjecture = conjectures[j];
 	  RPFP::Transformer bound(conjecture);
 	  std::vector<expr> conj_vec;
@@ -1653,7 +1653,7 @@ namespace Duality {
       }
     }
 
-
+      
     check_result CheckEdge(RPFP *checker, Edge *edge){
       Node *root = edge->Parent;
       checker->Push();
@@ -1673,7 +1673,7 @@ namespace Duality {
       Edge *edge = unwinding_edge->map; // get the edge in the original RPFP
       RPFP_caching::scoped_solver_for_edge ssfe(checker,edge,true /* models */, true /*axioms*/);
       Edge *checker_edge = checker->GetEdgeClone(edge);
-
+      
       // copy the annotations and bound to the clone
       Node *root = checker_edge->Parent;
       root->Bound = bound;
@@ -1682,7 +1682,7 @@ namespace Duality {
 	Node *nc = checker_edge->Children[j];
 	nc->Annotation = oc->Annotation;
       }
-
+      
       return CheckEdge(checker,checker_edge);
     }
 
@@ -1691,12 +1691,12 @@ namespace Duality {
        use of underapproximations, complete it. */
 
     void BuildFullCex(Node *node){
-      DerivationTree dt(this,unwinding,reporter,heuristic,FullExpand);
+      DerivationTree dt(this,unwinding,reporter,heuristic,FullExpand); 
       bool res = dt.Derive(unwinding,node,UseUnderapprox,true); // build full tree
       if(!res) throw "Duality internal error in BuildFullCex";
       cex.set(dt.tree,dt.top);
     }
-
+    
     void UpdateBackEdges(Node *node){
 #ifdef BOUNDED
       std::vector<Node *> &chs = node->Outgoing->Children;
@@ -1791,7 +1791,7 @@ namespace Duality {
 	    nc->Annotation = oc->Annotation; // is this needed?
 	    cs.push_back(nc);
 	  }
-	  Edge *checker_edge = checker->CreateEdge(root,edge->F,cs);
+	  Edge *checker_edge = checker->CreateEdge(root,edge->F,cs); 
 	  checker->AssertEdge(checker_edge, 0, true, false);
 	  std::vector<expr> propagated;
 	  for(std::set<expr> ::iterator it = node_facts.begin(), en = node_facts.end(); it != en;){
@@ -1826,7 +1826,7 @@ namespace Duality {
       }
       timer_stop("Propagate");
     }
-
+    
 
     /** This class represents a derivation tree. */
     class DerivationTree {
@@ -1834,13 +1834,13 @@ namespace Duality {
 
       virtual ~DerivationTree(){}
 
-      DerivationTree(Duality *_duality, RPFP *rpfp, Reporter *_reporter, Heuristic *_heuristic, bool _full_expand)
+      DerivationTree(Duality *_duality, RPFP *rpfp, Reporter *_reporter, Heuristic *_heuristic, bool _full_expand) 
 	: slvr(rpfp->slvr()),
 	  ctx(rpfp->ctx)
       {
 	duality = _duality;
 	reporter = _reporter;
-	heuristic = _heuristic;
+	heuristic = _heuristic; 
         full_expand = _full_expand;
       }
 
@@ -1849,13 +1849,13 @@ namespace Duality {
       Heuristic *heuristic;
       solver &slvr;
       context &ctx;
-      RPFP *tree;
+      RPFP *tree; 
       RPFP::Node *top;
       std::list<RPFP::Node *> leaves;
       bool full_expand;
-      bool underapprox;
+      bool underapprox; 
       bool constrained;
-      bool false_approx;
+      bool false_approx; 
       std::vector<Node *> underapprox_core;
       int start_decs, last_decs;
 
@@ -1872,7 +1872,7 @@ namespace Duality {
 	 underapproximations as upper bounds. This mode is used to
 	 complete the partial derivation constructed in underapprox
 	 mode.
-      */
+      */	 
 
       bool Derive(RPFP *rpfp, RPFP::Node *root, bool _underapprox, bool _constrained = false, RPFP *_tree = 0){
 	underapprox = _underapprox;
@@ -2057,7 +2057,7 @@ namespace Duality {
 	heuristic->ChooseExpand(choices, best, high_priority, best_only);
       }
 
-      void ExpansionChoicesRec(std::vector <Node *> &unused_set, std::vector <Node *> &used_set,
+      void ExpansionChoicesRec(std::vector <Node *> &unused_set, std::vector <Node *> &used_set, 
 			       std::set<Node *> &choices, int from, int to){
 	if(from == to) return;
 	int orig_unused = unused_set.size();
@@ -2066,7 +2066,7 @@ namespace Duality {
 	if(!top->Outgoing || tree->Check(top,unused_set) == unsat){
 	  unused_set.resize(orig_unused);
 	  if(to - from == 1){
-#if 1
+#if 1	    
 	    std::cout << "Not using underapprox of " << used_set[from] ->number << std::endl;
 #endif
 	    choices.insert(used_set[from]);
@@ -2089,7 +2089,7 @@ namespace Duality {
 #endif
 	}
       }
-
+      
       std::set<Node *> old_choices;
 
       void ExpansionChoices(std::set<Node *> &best, bool high_priority, bool best_only = false){
@@ -2118,7 +2118,7 @@ namespace Duality {
       }
 #endif
 #endif
-
+      
       bool ExpandSomeNodes(bool high_priority = false, int max = INT_MAX){
 #ifdef EFFORT_BOUNDED_STRAT
 	last_decs = tree->CumulativeDecisions() - start_decs;
@@ -2144,7 +2144,7 @@ namespace Duality {
 
       void RemoveExpansion(RPFP::Node *p){
 	Edge *edge = p->Outgoing;
-	Node *parent = edge->Parent;
+	Node *parent = edge->Parent; 
 #ifndef KEEP_EXPANSIONS
 	std::vector<RPFP::Node *> cs = edge->Children;
 	tree->DeleteEdge(edge);
@@ -2153,7 +2153,7 @@ namespace Duality {
 #endif
 	leaves.push_back(parent);
       }
-
+      
       // remove all the descendants of tree root (but not root itself)
       void RemoveTree(RPFP *tree, RPFP::Node *root){
 	Edge *edge = root->Outgoing;
@@ -2168,7 +2168,7 @@ namespace Duality {
 
     class DerivationTreeSlow : public DerivationTree {
     public:
-
+      
       struct stack_entry {
 	unsigned level; // SMT solver stack level
 	std::vector<Node *> expansions;
@@ -2180,7 +2180,7 @@ namespace Duality {
 
       int restart_interval;
 
-      DerivationTreeSlow(Duality *_duality, RPFP *rpfp, Reporter *_reporter, Heuristic *_heuristic, bool _full_expand)
+      DerivationTreeSlow(Duality *_duality, RPFP *rpfp, Reporter *_reporter, Heuristic *_heuristic, bool _full_expand) 
 	: DerivationTree(_duality, rpfp, _reporter, _heuristic, _full_expand) {
 	stack.push_back(stack_entry());
       }
@@ -2216,7 +2216,7 @@ namespace Duality {
 	  std::vector<Node*> &chs = node->Outgoing->Children;
 	  for(unsigned j = 0; j < chs.size(); j++){
 	    Node *ch = chs[j];
-	    int use = heuristic->UseNode(ch);
+	    int use = heuristic->UseNode(ch); 
 	    if(use == 1)
 	      posnodes.push_back(ch);
 	    else if (use == -1)
@@ -2257,7 +2257,7 @@ namespace Duality {
 	  if (res == l_false) {
 	    if (stack.empty()) // should never happen
 	      return false;
-
+	    
 	    {
 	      std::vector<Node *> &expansions = stack.back().expansions;
 	      int update_count = 0;
@@ -2333,7 +2333,7 @@ namespace Duality {
 	      std::vector<Node *> &unused_ex = stack.back().expansions;
 	      for(unsigned i = 0; i < unused_ex.size(); i++)
 		heuristic->Update(unused_ex[i]->map); // make it less likely to expand this node in future
-	    }
+	    } 
 	    HandleUpdatedNodes();
 	    if(stack.size() == 1){
 	      if(top->Outgoing)
@@ -2372,7 +2372,7 @@ namespace Duality {
 	    tree->Pop(1);
 	    node_order.clear();
 	    while(stack.size() > 1){
-	      tree->Pop(1);
+	      tree->Pop(1);	
 	      std::vector<Node *> &expansions = stack.back().expansions;
 	      for(unsigned i = 0; i < expansions.size(); i++)
 		node_order.push_back(expansions[i]);
@@ -2385,7 +2385,7 @@ namespace Duality {
 	  }
 	}
       }
-
+      
       std::vector<Node *> node_order;
 
       void Reduce(){
@@ -2408,7 +2408,7 @@ namespace Duality {
 
       void PopLevel(){
 	std::vector<Node *> &expansions = stack.back().expansions;
-	tree->Pop(1);
+	tree->Pop(1);	
 	hash_set<Node *> leaves_to_remove;
 	for(unsigned i = 0; i < expansions.size(); i++){
 	  Node *node = expansions[i];
@@ -2429,7 +2429,7 @@ namespace Duality {
 	}
 	stack.pop_back();
       }
-
+	
       bool NodeTooComplicated(Node *node){
 	int ops = tree->CountOperators(node->Annotation.Formula);
 	if(ops > 10) return true;
@@ -2512,7 +2512,7 @@ namespace Duality {
 	}
 	return res;
       }
-
+      
       void HandleUpdatedNodes(){
 	for(std::list<Node *>::iterator it = updated_nodes.begin(), en = updated_nodes.end(); it != en;){
 	  Node *node = *it;
@@ -2528,7 +2528,7 @@ namespace Duality {
 	    ++it;
 	}
       }
-
+      
       bool AtCurrentStackLevel(Node *node){
 	std::vector<Node *> vec = stack.back().expansions;
 	for(unsigned i = 0; i < vec.size(); i++)
@@ -2627,7 +2627,7 @@ namespace Duality {
       std::set<Node *> &dominates(Node *x){
 	return cm[x].dominates;
       }
-
+      
       bool dominates(Node *x, Node *y){
 	std::set<Node *> &d = cm[x].dominates;
 	return d.find(y) != d.end();
@@ -2658,10 +2658,10 @@ namespace Duality {
 	    }
 	  }
 	}
-#endif
+#endif	
 
       }
-
+      
       bool IsCoveredRec(hash_set<Node *> &memo, Node *node){
 	if(memo.find(node) != memo.end())
 	  return false;
@@ -2672,7 +2672,7 @@ namespace Duality {
 	    return true;
 	return false;
       }
-
+      
       bool IsCovered(Node *node){
 	hash_set<Node *> memo;
 	return IsCoveredRec(memo,node);
@@ -2720,17 +2720,17 @@ namespace Duality {
 	  return false;
 	if(parent->underapprox_map.find(covering) != parent->underapprox_map.end())
 	  return covering->number < covered->number || parent->underapprox_map[covering] == covered;
-#endif
+#endif	
 	return covering->number < covered->number;
       }
 
       bool CheckCover(Node *covered, Node *covering){
 	return
-	  CoverOrder(covering,covered)
+	  CoverOrder(covering,covered) 
 	  && covered->Annotation.SubsetEq(covering->Annotation)
 	  && !IsCovered(covering);
       }
-
+      
       bool CoverByNode(Node *covered, Node *covering){
 	if(CheckCover(covered,covering)){
 	  covered_by(covered) = covering;
@@ -2766,7 +2766,7 @@ namespace Duality {
 	else
 	  return false;
       }
-#endif
+#endif	
 
       bool Close(Node *node){
 	if(covered_by(node))
@@ -2794,7 +2794,7 @@ namespace Duality {
 	memo.insert(node);
 	return false;
       }
-
+      
       bool CloseDescendants(Node *node){
 	timer_start("CloseDescendants");
 	hash_set<Node *> memo;
@@ -2830,8 +2830,8 @@ namespace Duality {
 #ifdef UNDERAPPROX_NODES
 	// if(parent->underapprox_map.find(covering) != parent->underapprox_map.end())
 	// return parent->underapprox_map[covering] == covered;
-#endif
-	if(CoverOrder(covering,covered)
+#endif	
+	if(CoverOrder(covering,covered) 
 	   && !IsCovered(covering)){
 	  RPFP::Transformer f(covering->Annotation); f.SetEmpty();
 #if defined(TOP_DOWN) || defined(EFFORT_BOUNDED_STRAT)
@@ -2841,7 +2841,7 @@ namespace Duality {
 	  return !covering->Annotation.SubsetEq(f);
 	}
 	return false;
-      }
+      }      
 
       bool ContainsCex(Node *node, Counterexample &cex){
 	expr val = cex.get_tree()->Eval(cex.get_root()->Outgoing,node->Annotation.Formula);
@@ -2858,7 +2858,7 @@ namespace Duality {
 #ifndef UNDERAPPROX_NODES
       bool Conjecture(Node *node){
 	std::vector<Node *> &insts = insts_of_node(node->map);
-	Counterexample cex;
+	Counterexample cex; 
 	for(int i = insts.size() - 1; i >= 0; i--){
 	  Node *other = insts[i];
 	  if(CouldCover(node,other)){
@@ -2877,7 +2877,7 @@ namespace Duality {
 #else
       bool Conjecture(Node *node){
 	std::vector<Node *> &insts = insts_of_node(node->map);
-	Counterexample cex;
+	Counterexample cex; 
 	RPFP::Transformer Bound = node->Annotation;
 	Bound.SetEmpty();
 	bool some_other = false;
@@ -2910,7 +2910,7 @@ namespace Duality {
 	for(int i = insts.size()-1; i >= 0;  i--){
 	  Node *other = insts[i];
 	  if(dominates(node,other))
-	    if(CoverOrder(other,node)
+	    if(CoverOrder(other,node) 
 	       && !IsCovered(other))
 	      return other;
 	}
@@ -2923,7 +2923,7 @@ namespace Duality {
 	std::vector<Node *> &insts = insts_of_node(node->map);
 	for(int i = insts.size() - 1; i >= 0; i--){
 	  Node *other = insts[i];
-	  if(CoverOrder(other,node)
+	  if(CoverOrder(other,node) 
 	     && !IsCovered(other))
 	    return other;
 	}
@@ -2943,8 +2943,8 @@ namespace Duality {
 	      return false;
 	  }
 	  return true;
-	}
-	return false;
+	}  
+	return false; 
       }
 
       void Add(Node *node){
@@ -2980,7 +2980,7 @@ namespace Duality {
 
       // Maps nodes of derivation tree into old cex
       hash_map<Node *, Node*> cex_map;
-
+      
       void Done() {
 	cex_map.clear();
 	old_cex.clear();
@@ -3083,7 +3083,7 @@ namespace Duality {
 
       // Maps nodes of derivation tree into old subtree
       hash_map<Node *, Node*> cex_map;
-
+      
       virtual void ChooseExpand(const std::set<RPFP::Node *> &choices, std::set<RPFP::Node *> &best){
 	if(old_node == 0){
 	  Heuristic::ChooseExpand(choices,best);
@@ -3133,11 +3133,11 @@ namespace Duality {
 	abstraction of the same system. The trick is to adapt the
 	annotations in the old unwinding to the new predicates.  We
 	start by generating a map from predicates and parameters in
-	the old problem to the new.
+	the old problem to the new. 
 
 	HACK: mapping is done by cheesy name comparison.
     */
-
+    
     class HistoryProposer : public Proposer
     {
       Duality *old_solver;
@@ -3163,7 +3163,7 @@ namespace Duality {
 	  // else
 	  //  std::cout << "constant not matched\n";
 	}
-
+	
 	RPFP *old_unwinding = old_solver->unwinding;
 	hash_map<std::string, std::vector<Node *> > pred_match;
 
@@ -3184,7 +3184,7 @@ namespace Duality {
 	    MatchNodes(node,matches[j],bckg_map);
 	}
       }
-
+      
       virtual std::vector<RPFP::Transformer> &Propose(Node *node){
 	return conjectures[node->map];
       }
@@ -3222,7 +3222,7 @@ namespace Duality {
 	new_annot.Formula = fmla;
 	conjectures[new_node].push_back(new_annot);
       }
-
+      
       // We match names by removing suffixes beginning with double at sign
 
       std::string GetKey(Node *node){
@@ -3322,7 +3322,7 @@ namespace Duality {
     virtual void Message(const std::string &msg){
       ev(); s << "msg " << msg << std::endl;
     }
-
+    
   };
 
 

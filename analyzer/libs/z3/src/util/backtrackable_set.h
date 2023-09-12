@@ -29,7 +29,7 @@ struct default_eh {
 // quick hack for having backtrackable sets.
 //
 // EV is a big hack, it should be used with care.
-//
+// 
 template<typename Set, typename T, typename EV=default_eh<T> >
 class backtrackable_set : private EV {
     enum trail_kind { DEL, INS };
@@ -40,7 +40,7 @@ class backtrackable_set : private EV {
 
 public:
     typedef typename Set::iterator iterator;
-
+    
     backtrackable_set(EV const & ev = EV()):
         EV(ev) {
     }
@@ -54,10 +54,10 @@ public:
             m_trail.push_back(std::make_pair(INS, e));
         }
     }
-
+                
     void erase(T const & e) {
         if (m_scopes.empty()) {
-            m_set.insert(e);
+            m_set.insert(e); 
         }
         else if (m_set.contains(e)) {
             m_set.erase(e);
@@ -95,17 +95,17 @@ public:
             m_trail.pop_back();
         }
     }
-
+    
     void reset() {
         m_scopes.reset();
         m_trail.reset();
         m_set.reset();
     }
-
+    
     iterator begin() const {
         return m_set.begin();
     }
-
+    
     iterator end() const {
         return m_set.end();
     }

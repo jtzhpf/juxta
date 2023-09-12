@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Approximated natural numbers. It performs operations on the set [0, ..., 2^{n-2}, huge].
-    Where huge represents all numbers greater than 2^{n-2}.
+    Where huge represents all numbers greater than 2^{n-2}. 
 
 Author:
 
@@ -29,7 +29,7 @@ approx_nat & approx_nat::operator=(unsigned val) {
 }
 
 approx_nat & approx_nat::operator+=(unsigned w) {
-    if (is_huge())
+    if (is_huge()) 
         return *this;
     if (w > m_limit) {
         m_value = UINT_MAX;
@@ -42,7 +42,7 @@ approx_nat & approx_nat::operator+=(unsigned w) {
 }
 
 approx_nat & approx_nat::operator*=(unsigned w) {
-    if (is_huge())
+    if (is_huge()) 
         return *this;
     unsigned long long r = static_cast<unsigned long long>(m_value) * static_cast<unsigned long long>(w);
     if (r > m_limit)
@@ -53,7 +53,7 @@ approx_nat & approx_nat::operator*=(unsigned w) {
 }
 
 std::ostream & operator<<(std::ostream & target, approx_nat const & w) {
-    if (w.is_huge())
+    if (w.is_huge()) 
         target << "[huge]";
     else
         target << w.get_value();

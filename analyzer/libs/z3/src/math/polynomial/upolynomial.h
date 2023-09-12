@@ -8,12 +8,12 @@ Module Name:
 Abstract:
 
     Goodies for creating and handling univariate polynomials.
-
-    A dense representation is much better for Root isolation algorithms,
+    
+    A dense representation is much better for Root isolation algorithms, 
     encoding algebraic numbers, factorization, etc.
 
     We also use integers as the coefficients of univariate polynomials.
-
+    
 Author:
 
     Leonardo (leonardo) 2011-11-29
@@ -32,7 +32,7 @@ Notes:
 #define FACTOR_VERBOSE_LVL 1000
 
 namespace upolynomial {
-
+    
     typedef polynomial::factor_params factor_params;
 
     // It is used only for signing cancellation.
@@ -46,7 +46,7 @@ namespace upolynomial {
     typedef mpzzp_manager                           zp_numeral_manager;
     typedef unsynch_mpz_manager                     z_numeral_manager;
     typedef svector<numeral>                        numeral_vector;
-
+    
     class core_manager {
     public:
         typedef _scoped_numeral_vector<numeral_manager> scoped_numeral_vector;
@@ -70,28 +70,28 @@ namespace upolynomial {
             core_manager & upm() const { return m_upm; }
             core_manager & pm() const { return m_upm; }
             numeral_manager & nm() const;
-
+            
             unsigned distinct_factors() const { return m_factors.size(); }
             unsigned total_factors() const { return m_total_factors; }
             void clear();
             void reset() { clear(); }
 
-            numeral_vector const & operator[](unsigned i) const { return m_factors[i]; }
-
+            numeral_vector const & operator[](unsigned i) const { return m_factors[i]; }        
+            
             numeral const & get_constant() const { return m_constant; }
             void set_constant(numeral const & constant);
-
+            
             unsigned get_degree() const { return m_total_degree; }
             unsigned get_degree(unsigned i) const { return m_degrees[i]; }
             void set_degree(unsigned i, unsigned degree);
-            void push_back(numeral_vector const & p, unsigned degree);
+            void push_back(numeral_vector const & p, unsigned degree);        
             // push p to vectors and kill it
             void push_back_swap(numeral_vector & p, unsigned degree);
-
+            
             void swap_factor(unsigned i, numeral_vector & p);
             void swap(factors & other);
-            void multiply(numeral_vector & out) const;
-
+            void multiply(numeral_vector & out) const; 
+            
             void display(std::ostream & out) const;
 
             friend std::ostream & operator<<(std::ostream & out, factors const & fs) {
@@ -110,7 +110,7 @@ namespace upolynomial {
         numeral_vector    m_gcd_tmp2;
         numeral_vector    m_CRA_tmp;
         #define UPOLYNOMIAL_MGCD_TMPS 6
-        numeral_vector    m_mgcd_tmp[UPOLYNOMIAL_MGCD_TMPS];
+        numeral_vector    m_mgcd_tmp[UPOLYNOMIAL_MGCD_TMPS]; 
         numeral_vector    m_sqf_tmp1;
         numeral_vector    m_sqf_tmp2;
         numeral_vector    m_pw_tmp;
@@ -162,19 +162,19 @@ namespace upolynomial {
            \brief set p size to 0. That is, p is the zero polynomial after this operation.
         */
         void reset(numeral_vector & p);
-
+        
         /**
-           \brief Remove zero leading coefficients.
+           \brief Remove zero leading coefficients. 
            After applying this method, we have that p is empty() or p[p.size()-1] is not zero.
         */
         void trim(numeral_vector & p);
-
+        
         void set_size(unsigned sz, numeral_vector & buffer);
 
         /**
            \brief Return the actual degree of p.
         */
-        unsigned degree(numeral_vector const & p) {
+        unsigned degree(numeral_vector const & p) { 
             unsigned sz = p.size();
             return sz == 0 ? 0 : sz - 1;
         }
@@ -197,7 +197,7 @@ namespace upolynomial {
 
         /**
            \brief Copy p to buffer.
-
+           
            Coefficients of p must be integer.
         */
         void set(unsigned sz, rational const * p, numeral_vector & buffer);
@@ -209,7 +209,7 @@ namespace upolynomial {
         void get_primitive_and_content(numeral_vector const & f, numeral_vector & pp, numeral & cont) {
             get_primitive_and_content(f.size(), f.c_ptr(), pp, cont);
         }
-        void get_primitive(numeral_vector const & f, numeral_vector & pp) {
+        void get_primitive(numeral_vector const & f, numeral_vector & pp) { 
             scoped_numeral cont(m());
             get_primitive_and_content(f.size(), f.c_ptr(), pp, cont);
         }
@@ -259,7 +259,7 @@ namespace upolynomial {
            \brief Divide coeffients of p by their GCD
         */
         void normalize(unsigned sz, numeral * p);
-
+        
         /**
            \brief Divide coeffients of p by their GCD
         */
@@ -273,8 +273,8 @@ namespace upolynomial {
         void div(numeral_vector & p, numeral const & b) { div(p.size(), p.c_ptr(), b); }
 
         /**
-           \brief Multiply the coefficients of p by b.
-
+           \brief Multiply the coefficients of p by b. 
+           
            This method assume b != 0.
         */
         void mul(unsigned sz, numeral * p, numeral const & b);
@@ -294,10 +294,10 @@ namespace upolynomial {
            \brief If numeral is a field, then
            return q and r s.t. p1 = q*p2 + r
            And degree(r) < degree(p2).
-
-           If numeral is not a field, then
+           
+           If numeral is not a field, then 
            return q and r s.t.  (b_m)^d * p1 = q * p2 + r
-           where b_m is the leading coefficient of p2 and d <= sz1 - sz2 + 1
+           where b_m is the leading coefficient of p2 and d <= sz1 - sz2 + 1 
            if sz1 >= sz2.
 
            The output value d is irrelevant if numeral is a field.
@@ -311,8 +311,8 @@ namespace upolynomial {
             unsigned d = 0;
             div_rem(sz1, p1, sz2, p2, d, q, r);
         }
-
-        void div_rem(numeral_vector const & p1, numeral_vector const & p2, numeral_vector & q, numeral_vector & r) {
+        
+        void div_rem(numeral_vector const & p1, numeral_vector const & p2, numeral_vector & q, numeral_vector & r) { 
             div_rem(p1.size(), p1.c_ptr(), p2.size(), p2.c_ptr(), q, r);
         }
 
@@ -335,7 +335,7 @@ namespace upolynomial {
         }
 
         /**
-           \brief Signed pseudo-remainder.
+           \brief Signed pseudo-remainder. 
            Alias for rem(sz1, p1, sz2, p2, r); neg(r);
         */
         void srem(unsigned sz1, numeral const * p1, unsigned sz2, numeral const * p2, numeral_vector & r);
@@ -356,9 +356,9 @@ namespace upolynomial {
 
         /**
            \brief Assuming that we can, make the polynomial monic by dividing with the leading coefficient. It
-           puts the leading coefficient into lc, and it's inverse into lc_inv.
+           puts the leading coefficient into lc, and it's inverse into lc_inv.           
         */
-        void mk_monic(unsigned sz, numeral * p, numeral & lc, numeral & lc_inv);
+        void mk_monic(unsigned sz, numeral * p, numeral & lc, numeral & lc_inv);        
         void mk_monic(unsigned sz, numeral * p, numeral & lc) { numeral lc_inv; mk_monic(sz, p, lc, lc_inv); m().del(lc_inv); }
         void mk_monic(unsigned sz, numeral * p) { numeral lc, lc_inv; mk_monic(sz, p, lc, lc_inv); m().del(lc); m().del(lc_inv); }
         void mk_monic(numeral_vector & p) { mk_monic(p.size(), p.c_ptr()); }
@@ -376,7 +376,7 @@ namespace upolynomial {
         void subresultant_gcd(numeral_vector const & p1, numeral_vector const & p2, numeral_vector & g) {
             subresultant_gcd(p1.size(), p1.c_ptr(), p2.size(), p2.c_ptr(), g);
         }
-
+        
         /**
            \brief g := square free part of p
         */
@@ -419,12 +419,12 @@ namespace upolynomial {
         }
 
         /**
-           \brief Convert a multi-variate polynomial in [x, y1, ..., yn] to a univariate polynomial in just x
+           \brief Convert a multi-variate polynomial in [x, y1, ..., yn] to a univariate polynomial in just x 
            by removing everything multivariate.
         */
         template<typename polynomial_ref>
         void to_numeral_vector(polynomial_ref const & p, polynomial::var x, numeral_vector & r) {
-            typename polynomial_ref::manager & pm = p.m();
+            typename polynomial_ref::manager & pm = p.m();            
             polynomial_ref np(pm);
             np = pm.normalize(p);
             unsigned sz  = pm.size(p);
@@ -446,7 +446,7 @@ namespace upolynomial {
         }
 
         /**
-           \brief Extended GCD
+           \brief Extended GCD 
            This method assumes that numeral is a field.
            It determines U, V, D such that
            A*U + B*V = D and D is the GCD of A and B.
@@ -466,8 +466,8 @@ namespace upolynomial {
         void display_star(std::ostream & out, numeral_vector const & p) { display_star(out, p.size(), p.c_ptr()); }
 
         void display_smt2(std::ostream & out, unsigned sz, numeral const * p, char const * var_name = "x") const;
-        void display_smt2(std::ostream & out, numeral_vector const & p, char const * var_name = "x") const {
-            return display_smt2(out, p.size(), p.c_ptr(), var_name);
+        void display_smt2(std::ostream & out, numeral_vector const & p, char const * var_name = "x") const { 
+            return display_smt2(out, p.size(), p.c_ptr(), var_name); 
         }
     };
 
@@ -497,7 +497,7 @@ namespace upolynomial {
 
     typedef z_manager::factors  factors;
     typedef zp_manager::factors zp_factors;
-
+    
     typedef svector<numeral> numeral_vector;
 
     class scoped_numeral_vector : public _scoped_numeral_vector<numeral_manager> {
@@ -509,7 +509,7 @@ namespace upolynomial {
     class upolynomial_sequence {
         numeral_vector     m_seq_coeffs; // coefficients of all polynomials in the sequence
         unsigned_vector    m_begins;     // start position (in m_seq_coeffs) of each polynomial in the sequence
-        unsigned_vector    m_szs;        // size of each polynomial in the sequence
+        unsigned_vector    m_szs;        // size of each polynomial in the sequence 
         friend class manager;
     public:
         /**
@@ -528,12 +528,12 @@ namespace upolynomial {
            \brief Return the number of polynomials in the sequence.
         */
         unsigned size() const { return m_szs.size(); }
-
+        
         /**
            \brief Return the vector of coefficients for the i-th polynomial in the sequence.
         */
         numeral const * coeffs(unsigned i) const { return m_seq_coeffs.c_ptr() + m_begins[i]; }
-
+        
         /**
            \brief Return the size of the i-th polynomial in the sequence.
         */
@@ -594,7 +594,7 @@ namespace upolynomial {
                 forall u, p(u) = 0 and u != 0 implies buffer(u) = 0
                 forall u, buffer(u) = 0 implies p(u) = 0
 
-           This method assumes p is not the zero polynomial
+           This method assumes p is not the zero polynomial     
         */
         void remove_zero_roots(unsigned sz, numeral const * p, numeral_vector & buffer);
 
@@ -615,7 +615,7 @@ namespace upolynomial {
            Zero coefficients are ignored.
         */
         unsigned sign_changes(unsigned sz, numeral const * p);
-
+        
         /**
            \brief Return the descartes bound for the number of roots of p in the interval (0, +oo)
 
@@ -645,7 +645,7 @@ namespace upolynomial {
         */
         void translate(unsigned sz, numeral * p);
         void translate(unsigned sz, numeral const * p, numeral_vector & buffer) { set(sz, p, buffer); translate(sz, buffer.c_ptr()); }
-
+        
         /**
            \brief p(x) := p(x+2^k)
         */
@@ -659,19 +659,19 @@ namespace upolynomial {
         void translate_z(unsigned sz, numeral const * p, numeral const & c, numeral_vector & buffer) { set(sz, p, buffer); translate_z(sz, buffer.c_ptr(), c); }
 
         /**
-           \brief p(x) := p(x+b) where b = c/2^k
+           \brief p(x) := p(x+b) where b = c/2^k 
            buffer := (2^k)^n * p(x + c/(2^k))
         */
         void translate_bq(unsigned sz, numeral * p, mpbq const & b);
         void translate_bq(unsigned sz, numeral const * p, mpbq const & b, numeral_vector & buffer) { set(sz, p, buffer); translate_bq(sz, buffer.c_ptr(), b); }
-
+        
         /**
            \brief p(x) := p(x+b) where b = c/d
            buffer := d^n * p(x + c/d)
         */
         void translate_q(unsigned sz, numeral * p, mpq const & b);
         void translate_q(unsigned sz, numeral const * p, mpq const & b, numeral_vector & buffer) { set(sz, p, buffer); translate_q(sz, buffer.c_ptr(), b); }
-
+        
         /**
            \brief p(x) := 2^n*p(x/2) where n = sz-1
         */
@@ -683,27 +683,27 @@ namespace upolynomial {
         void compose_2kn_p_x_div_2k(unsigned sz, numeral * p, unsigned k);
 
         /**
-           \brief p(x) := p(2^k * x)
+           \brief p(x) := p(2^k * x) 
 
            If u is a root of old(p), then u/2^k is a root of p
         */
         void compose_p_2k_x(unsigned sz, numeral * p, unsigned k);
 
         /**
-           \brief p(x) := p(b * x)
+           \brief p(x) := p(b * x) 
 
            If u is a root of old(p), then u/b is a root of p
         */
         void compose_p_b_x(unsigned sz, numeral * p, numeral const & b);
-
+        
         /**
            \brief p(x) := p(b * x)
-
+           
            If u is a root of old(p), then u/b is a root of p
-
+           
            Let b be of the form c/(2^k), then this operation is equivalent to:
            (2^k)^n*p(c*x/(2^k))
-
+          
            Let old(p) be of the form:
            a_n * x^n + a_{n-1}*x^{n-1} + ... + a_1 * x + a_0
 
@@ -731,9 +731,9 @@ namespace upolynomial {
            \brief p(x) := x^n * p(1/x)
         */
         void p_1_div_x(unsigned sz, numeral * p);
-
+        
         /**
-           \brief Evaluate the sign of p(b)
+           \brief Evaluate the sign of p(b) 
         */
         int eval_sign_at(unsigned sz, numeral const * p, mpbq const & b);
 
@@ -776,7 +776,7 @@ namespace upolynomial {
            \brief Evaluate the sign variations in the polynomial sequence at 0
         */
         unsigned sign_variations_at_zero(upolynomial_sequence const & seq);
-
+        
         /**
            \brief Evaluate the sign variations in the polynomial sequence at b
         */
@@ -788,7 +788,7 @@ namespace upolynomial {
            We have that if u is a root of p, then |u| < U
         */
         void root_upper_bound(unsigned sz, numeral const * p, numeral & U);
-
+        
         unsigned knuth_positive_root_upper_bound(unsigned sz, numeral const * p);
         unsigned knuth_negative_root_upper_bound(unsigned sz, numeral const * p);
 
@@ -811,7 +811,7 @@ namespace upolynomial {
            \pre p is not the zero polynomial, that is, sz > 0
         */
         void sqf_isolate_roots(unsigned sz, numeral const * p, mpbq_manager & bqm, mpbq_vector & roots, mpbq_vector & lowers, mpbq_vector & uppers);
-
+        
         /**
            \brief Isolate roots of an arbitrary polynomial p.
 
@@ -848,7 +848,7 @@ namespace upolynomial {
            \brief Compute the Fourier sequence for p.
         */
         void fourier_seq(unsigned sz, numeral const * p, upolynomial_sequence & seq);
-
+        
         /**
            \brief Convert an isolating interval into a refinable one.
            See comments in upolynomial.cpp.
@@ -861,26 +861,26 @@ namespace upolynomial {
         //
         // Return TRUE, if interval was squeezed, and new interval is stored in (a,b).
         // Return FALSE, if the actual root was found, it is stored in a.
-        //
+        // 
         // See upolynomial.cpp for additional comments
         bool refine_core(unsigned sz, numeral const * p, int sign_a, mpbq_manager & bqm, mpbq & a, mpbq & b);
-
+        
         bool refine(unsigned sz, numeral const * p, mpbq_manager & bqm, mpbq & a, mpbq & b);
 
         bool refine_core(unsigned sz, numeral const * p, int sign_a, mpbq_manager & bqm, mpbq & a, mpbq & b, unsigned prec_k);
-
+        
         bool refine(unsigned sz, numeral const * p, mpbq_manager & bqm, mpbq & a, mpbq & b, unsigned prec_k);
         /////////////////////
 
         /**
-           \brief Convert a isolating (refinable) rational interval into a
+           \brief Convert a isolating (refinable) rational interval into a 
            isolating refinable binary rational interval.
 
            Return TRUE,  if interval was found and the result is stored in (c, d).
            Return FALSE, if the actual root was found, it is stored in c.
         */
         bool convert_q2bq_interval(unsigned sz, numeral const * p, mpq const & a, mpq const & b, mpbq_manager & bqm, mpbq & c, mpbq & d);
-
+        
         /**
            \brief Given a polynomial p, and a lower bound l. Return
            the root id i. That is, the first root u > l is the i-th root of p.
@@ -889,12 +889,12 @@ namespace upolynomial {
 
         /**
            \brief Make sure that isolating interval (a, b) for p does not contain zero.
-
+           
            Return TRUE, if updated (a, b) does not contain zero.
            Return FALSE, if zero is a root of p
         */
         bool normalize_interval_core(unsigned sz, numeral const * p, int sign_a, mpbq_manager & m, mpbq & a, mpbq & b);
-
+        
         /**
            \brief Similar to normalize_interval_core, but sign_a does not need to be provided.
         */
@@ -908,11 +908,11 @@ namespace upolynomial {
         bool factor(unsigned sz, numeral const * p, factors & r, factor_params const & params = factor_params());
         bool factor(numeral_vector const & p, factors & r, factor_params const & params = factor_params()) { return factor(p.size(), p.c_ptr(), r, params); }
 
-        void display(std::ostream & out, unsigned sz, numeral const * p, char const * var_name = "x", bool use_star = false) const {
-            return core_manager::display(out, sz, p, var_name);
+        void display(std::ostream & out, unsigned sz, numeral const * p, char const * var_name = "x", bool use_star = false) const { 
+            return core_manager::display(out, sz, p, var_name); 
         }
-        void display(std::ostream & out, numeral_vector const & p, char const * var_name = "x") const {
-            return core_manager::display(out, p, var_name);
+        void display(std::ostream & out, numeral_vector const & p, char const * var_name = "x") const { 
+            return core_manager::display(out, p, var_name); 
         }
         void display(std::ostream & out, upolynomial_sequence const & seq, char const * var_name = "x") const;
     };

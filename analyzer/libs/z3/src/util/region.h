@@ -63,7 +63,7 @@ public:
         }
         m_chuncks.shrink(old_size);
     }
-
+    
     void pop_scope(unsigned num_scopes) {
         for (unsigned i = 0; i < num_scopes; i++) {
             pop_scope();

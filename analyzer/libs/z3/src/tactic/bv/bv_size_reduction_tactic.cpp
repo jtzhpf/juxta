@@ -53,7 +53,7 @@ tactic * mk_bv_size_reduction_tactic(ast_manager & m, params_ref const & p) {
 struct bv_size_reduction_tactic::imp {
     typedef rational numeral;
     typedef extension_model_converter bv_size_reduction_mc;
-
+    
     ast_manager &             m;
     bv_util                   m_util;
     obj_map<app, numeral>     m_signed_lowers;
@@ -90,7 +90,7 @@ struct bv_size_reduction_tactic::imp {
             entry->get_data().m_value = k;
         }
     }
-
+    
     void update_unsigned_lower(app * v, numeral const & k) {
         SASSERT(k > numeral(0));
         // k <= v
@@ -115,10 +115,10 @@ struct bv_size_reduction_tactic::imp {
         unsigned sz = g.size();
         numeral  val;
         unsigned bv_sz;
-        expr * f, * lhs, * rhs;
+        expr * f, * lhs, * rhs;        
         for (unsigned i = 0; i < sz; i++) {
             bool negated = false;
-            f = g.form(i);
+            f = g.form(i);            
             if (m.is_not(f)) {
                 negated = true;
                 f = to_app(f)->get_arg(0);
@@ -134,7 +134,7 @@ struct bv_size_reduction_tactic::imp {
                         val += numeral(1);
                         if (m_util.norm(val, bv_sz, true) != val) {
                             // bound is infeasible.
-                        }
+                        } 
                         else {
                             update_signed_lower(to_app(lhs), val);
                         }
@@ -149,15 +149,15 @@ struct bv_size_reduction_tactic::imp {
                         val -= numeral(1);
                         if (m_util.norm(val, bv_sz, true) != val) {
                             // bound is infeasible.
-                        }
+                        } 
                         else {
                             update_signed_upper(to_app(lhs), val);
-                        }
+                        }                        
                     }
                     else update_signed_lower(to_app(rhs), val);
                 }
             }
-
+            
 #if 0
             else if (m_util.is_bv_ule(f, lhs, rhs)) {
                 if (is_uninterp_const(lhs) && m_util.is_numeral(rhs, val, bv_sz)) {
@@ -170,18 +170,18 @@ struct bv_size_reduction_tactic::imp {
                     TRACE("bv_size_reduction", tout << (negated?"not ":"") << mk_ismt2_pp(f, m) << std::endl; );
                     // k <= v
                     if (negated) update_unsigned_upper(to_app(rhs), val-numeral(1));
-                    else update_unsigned_lower(to_app(rhs), val);
+                    else update_unsigned_lower(to_app(rhs), val);                    
                 }
             }
 #endif
         }
     }
-
+    
     void checkpoint() {
         if (m_cancel)
             throw tactic_exception(TACTIC_CANCELED_MSG);
     }
-
+    
     void operator()(goal & g, model_converter_ref & mc) {
         if (g.inconsistent())
             return;
@@ -193,20 +193,20 @@ struct bv_size_reduction_tactic::imp {
         {
             tactic_report report("bv-size-reduction", g);
             collect_bounds(g);
-
+            
             // create substitution
             expr_substitution subst(m);
 
             if (!(m_signed_lowers.empty() || m_signed_uppers.empty())) {
-                TRACE("bv_size_reduction",
+                TRACE("bv_size_reduction", 
                         tout << "m_signed_lowers: " << std::endl;
                         for (obj_map<app, numeral>::iterator it = m_signed_lowers.begin(); it != m_signed_lowers.end(); it++)
                             tout << mk_ismt2_pp(it->m_key, m) << " >= " << it->m_value.to_string() << std::endl;
                         tout << "m_signed_uppers: " << std::endl;
                         for (obj_map<app, numeral>::iterator it = m_signed_uppers.begin(); it != m_signed_uppers.end(); it++)
                             tout << mk_ismt2_pp(it->m_key, m) << " <= " << it->m_value.to_string() << std::endl;
-                        );
-
+                        );                    
+                
                 obj_map<app, numeral>::iterator it  = m_signed_lowers.begin();
                 obj_map<app, numeral>::iterator end = m_signed_lowers.end();
                 for (; it != end; ++it) {
@@ -246,16 +246,16 @@ struct bv_size_reduction_tactic::imp {
                                 }
                             }
                         }
-
+                    
                         if (new_def) {
                             subst.insert(v, new_def);
                             if (m_produce_models) {
-                                if (!m_mc)
+                                if (!m_mc) 
                                     m_mc = alloc(bv_size_reduction_mc, m);
                                 m_mc->insert(v->get_decl(), new_def);
-                                if (!m_fmc && new_const)
+                                if (!m_fmc && new_const) 
                                     m_fmc = alloc(filter_model_converter, m);
-                                if (new_const)
+                                if (new_const) 
                                     m_fmc->insert(new_const->get_decl());
                             }
                             num_reduced++;
@@ -263,10 +263,10 @@ struct bv_size_reduction_tactic::imp {
                     }
                 }
             }
-
-#if 0
+            
+#if 0            
             if (!(m_unsigned_lowers.empty() && m_unsigned_uppers.empty())) {
-                TRACE("bv_size_reduction",
+                TRACE("bv_size_reduction", 
                     tout << "m_unsigned_lowers: " << std::endl;
                     for (obj_map<app, numeral>::iterator it = m_unsigned_lowers.begin(); it != m_unsigned_lowers.end(); it++)
                         tout << mk_ismt2_pp(it->m_key, m) << " >= " << it->m_value.to_string() << std::endl;
@@ -281,16 +281,16 @@ struct bv_size_reduction_tactic::imp {
                     app * v = it->m_key;
                     unsigned bv_sz = m_util.get_bv_size(v);
                     numeral u = m_util.norm(it->m_value, bv_sz, false);
-                    obj_map<app, numeral>::obj_map_entry * entry = m_signed_lowers.find_core(v);
+                    obj_map<app, numeral>::obj_map_entry * entry = m_signed_lowers.find_core(v);                    
                     numeral l = (entry != 0) ? m_util.norm(entry->get_data().m_value, bv_sz, false) : numeral(0);
-
+                                        
                     obj_map<app, numeral>::obj_map_entry * lse = m_signed_lowers.find_core(v);
                     obj_map<app, numeral>::obj_map_entry * use = m_signed_uppers.find_core(v);
                     if ((lse != 0 && lse->get_data().m_value > l) &&
                         (use != 0 && use->get_data().m_value < u))
                         continue; // Skip, we had better signed bounds.
 
-                    if (lse != 0 && lse->get_data().m_value > l) l = lse->get_data().m_value;
+                    if (lse != 0 && lse->get_data().m_value > l) l = lse->get_data().m_value;                    
                     if (use != 0 && use->get_data().m_value < u) u = use->get_data().m_value;
 
                     TRACE("bv_size_reduction", tout << l << " <= " << v->get_decl()->get_name() << " <= " << u << "\n";);
@@ -312,16 +312,16 @@ struct bv_size_reduction_tactic::imp {
                             new_const = m.mk_fresh_const(0, m_util.mk_sort(u_nb));
                         }
                     }
-
+                    
                     if (new_def) {
                         subst.insert(v, new_def);
                         if (m_produce_models) {
-                            if (!m_mc)
+                            if (!m_mc) 
                                 m_mc = alloc(bv_size_reduction_mc, m);
                             m_mc->insert(v->get_decl(), new_def);
-                            if (!m_fmc && new_const)
+                            if (!m_fmc && new_const) 
                                 m_fmc = alloc(filter_model_converter, m);
-                            if (new_const)
+                            if (new_const) 
                                 m_fmc->insert(new_const->get_decl());
                         }
                         num_reduced++;
@@ -333,9 +333,9 @@ struct bv_size_reduction_tactic::imp {
 
             if (subst.empty())
                 return;
-
+            
             m_replacer->set_substitution(&subst);
-
+            
             unsigned sz = g.size();
             expr * f;
             expr_ref new_f(m);
@@ -371,9 +371,9 @@ bv_size_reduction_tactic::~bv_size_reduction_tactic() {
     dealloc(m_imp);
 }
 
-void bv_size_reduction_tactic::operator()(goal_ref const & g,
-                                          goal_ref_buffer & result,
-                                          model_converter_ref & mc,
+void bv_size_reduction_tactic::operator()(goal_ref const & g, 
+                                          goal_ref_buffer & result, 
+                                          model_converter_ref & mc, 
                                           proof_converter_ref & pc,
                                           expr_dependency_ref & core) {
     SASSERT(g->is_well_sorted());
@@ -390,7 +390,7 @@ void bv_size_reduction_tactic::set_cancel(bool f) {
     if (m_imp)
         m_imp->set_cancel(f);
 }
-
+ 
 void bv_size_reduction_tactic::cleanup() {
     imp * d = alloc(imp, m_imp->m);
     #pragma omp critical (tactic_cancel)

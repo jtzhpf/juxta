@@ -20,7 +20,7 @@ Revision History:
 #include"warning.h"
 
 cost_evaluator::cost_evaluator(ast_manager & m):
-    m_manager(m),
+    m_manager(m), 
     m_util(m) {
 }
 
@@ -34,15 +34,15 @@ float cost_evaluator::eval(expr * f) const {
             case OP_TRUE:     return 1.0f;
             case OP_FALSE:    return 0.0f;
             case OP_NOT:      return E(0) == 0.0f ? 1.0f : 0.0f;
-            case OP_AND:
+            case OP_AND:      
                 num_args = to_app(f)->get_num_args();
-                for (unsigned i = 0; i < num_args; i++)
+                for (unsigned i = 0; i < num_args; i++) 
                     if (E(i) == 0.0f)
                         return 0.0f;
                 return 1.0f;
             case OP_OR:
                 num_args = to_app(f)->get_num_args();
-                for (unsigned i = 0; i < num_args; i++)
+                for (unsigned i = 0; i < num_args; i++) 
                     if (E(i) != 0.0f)
                         return 1.0f;
                 return 0.0f;
@@ -50,7 +50,7 @@ float cost_evaluator::eval(expr * f) const {
             case OP_EQ:
             case OP_IFF:      return E(0) == E(1) ? 1.0f : 0.0f;
             case OP_XOR:      return E(0) != E(1) ? 1.0f : 0.0f;
-            case OP_IMPLIES:
+            case OP_IMPLIES:  
                 if (E(0) == 0.0f)
                     return 1.0f;
                 return E(1) != 0.0f ? 1.0f : 0.0f;
@@ -63,7 +63,7 @@ float cost_evaluator::eval(expr * f) const {
             case OP_NUM: {
                 rational r = to_app(f)->get_decl()->get_parameter(0).get_rational();
                 return static_cast<float>(numerator(r).get_int64())/static_cast<float>(denominator(r).get_int64());
-            }
+            } 
             case OP_LE:       return E(0) <= E(1) ? 1.0f : 0.0f;
             case OP_GE:       return E(0) >= E(1) ? 1.0f : 0.0f;
             case OP_LT:       return E(0) <  E(1) ? 1.0f : 0.0f;
@@ -72,7 +72,7 @@ float cost_evaluator::eval(expr * f) const {
             case OP_SUB:      return E(0) - E(1);
             case OP_UMINUS:   return - E(0);
             case OP_MUL:      return E(0) * E(1);
-            case OP_DIV: {
+            case OP_DIV: {     
                 float q = E(1);
                 if (q == 0.0f) {
                     warning_msg("cost function division by zero");

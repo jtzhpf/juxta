@@ -28,7 +28,7 @@ char *af_ten[] = {"Ten", "Eleven", "Twelve", "Thirteen", "Fourteen",
     printf(" %s %s", for_ten[tens], num[ones]);
   else
     printf(" %s", af_ten[ones]);
-
+  
   va_list jajaja;
 }
 

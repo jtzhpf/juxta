@@ -41,12 +41,12 @@ public:
 
     /**
        \brief Return two distinct values of the given sort. The results are stored in v1 and v2.
-       Return false if the intended interpretation of the given sort has only one element.
+       Return false if the intended interpretation of the given sort has only one element. 
     */
     virtual bool get_some_values(sort * s, expr_ref & v1, expr_ref & v2) = 0;
-
+    
     /**
-       \brief Return a fresh value of the given sort.
+       \brief Return a fresh value of the given sort. 
        Return 0 if it is not possible to do that (e.g., the sort is finite).
     */
     virtual expr * get_fresh_value(sort * s) = 0;
@@ -63,11 +63,11 @@ public:
 class basic_factory : public value_factory {
 public:
     basic_factory(ast_manager & m);
-
+    
     virtual expr * get_some_value(sort * s);
 
     virtual bool get_some_values(sort * s, expr_ref & v1, expr_ref & v2);
-
+    
     virtual expr * get_fresh_value(sort * s);
 
     virtual void register_value(expr * n) { }
@@ -86,9 +86,9 @@ protected:
             m_next(0) {
         }
     };
-
+    
     typedef obj_map<sort, value_set *> sort2value_set;
-
+    
     sort2value_set         m_sort2value_set;
     expr_ref_vector        m_values;
     sort_ref_vector        m_sorts;
@@ -136,11 +136,11 @@ public:
     virtual ~simple_factory() {
         std::for_each(m_sets.begin(), m_sets.end(), delete_proc<value_set>());
     }
-
+    
     virtual expr * get_some_value(sort * s) {
         value_set * set = 0;
         expr * result = 0;
-        if (m_sort2value_set.find(s, set) && !set->m_values.empty())
+        if (m_sort2value_set.find(s, set) && !set->m_values.empty()) 
             result = *(set->m_values.begin());
         else
             result = mk_value(Number(0), s);
@@ -210,7 +210,7 @@ public:
             set->m_values.insert(n);
         }
     }
-
+        
     virtual app * mk_value(Number const & val, sort * s) {
         bool is_new;
         return mk_value(val, s, is_new);
@@ -262,7 +262,7 @@ public:
     virtual bool get_some_values(sort * s, expr_ref & v1, expr_ref & v2);
 
     virtual expr * get_fresh_value(sort * s);
-
+    
     virtual void register_value(expr * n);
 };
 

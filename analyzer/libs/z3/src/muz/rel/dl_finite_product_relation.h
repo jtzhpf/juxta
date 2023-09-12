@@ -39,7 +39,7 @@ namespace datalog {
             svector<bool> m_table_cols;
 
             rel_spec() : m_inner_kind(null_family_id) {}
-            rel_spec(const svector<bool>& table_cols)
+            rel_spec(const svector<bool>& table_cols) 
                 : m_inner_kind(null_family_id), m_table_cols(table_cols) {}
 
             bool operator==(const rel_spec & o) const {
@@ -73,15 +73,15 @@ namespace datalog {
         static symbol get_name(relation_plugin & inner_plugin);
         family_id get_relation_kind(finite_product_relation & r, const bool * table_columns);
 
-        static void get_all_possible_table_columns(relation_manager & rmgr, const relation_signature & s,
+        static void get_all_possible_table_columns(relation_manager & rmgr, const relation_signature & s, 
             svector<bool> & table_columns);
         void get_all_possible_table_columns(const relation_signature & s, svector<bool> & table_columns) {
             get_all_possible_table_columns(get_manager(), s, table_columns);
         }
 
-        void split_signatures(const relation_signature & s, table_signature & table_sig,
+        void split_signatures(const relation_signature & s, table_signature & table_sig, 
             relation_signature & remaining_sig);
-        void split_signatures(const relation_signature & s, const bool * table_columns,
+        void split_signatures(const relation_signature & s, const bool * table_columns, 
             table_signature & table_sig, relation_signature & remaining_sig);
     public:
         static finite_product_relation & get(relation_base & r);
@@ -129,19 +129,19 @@ namespace datalog {
     protected:
         virtual relation_join_fn * mk_join_fn(const relation_base & t1, const relation_base & t2,
             unsigned col_cnt, const unsigned * cols1, const unsigned * cols2);
-        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_transformer_fn * mk_project_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * removed_cols);
-        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len,
+        virtual relation_transformer_fn * mk_rename_fn(const relation_base & t, unsigned permutation_cycle_len, 
             const unsigned * permutation_cycle);
-        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src,
+        virtual relation_union_fn * mk_union_fn(const relation_base & tgt, const relation_base & src, 
             const relation_base * delta);
-        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt,
+        virtual relation_mutator_fn * mk_filter_identical_fn(const relation_base & t, unsigned col_cnt, 
             const unsigned * identical_cols);
-        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value,
+        virtual relation_mutator_fn * mk_filter_equal_fn(const relation_base & t, const relation_element & value, 
             unsigned col);
         virtual relation_mutator_fn * mk_filter_interpreted_fn(const relation_base & t, app * condition);
-        virtual relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t,
-            const relation_base & negated_obj, unsigned joined_col_cnt,
+        virtual relation_intersection_filter_fn * mk_filter_by_negation_fn(const relation_base & t, 
+            const relation_base & negated_obj, unsigned joined_col_cnt, 
             const unsigned * t_cols, const unsigned * negated_cols);
 
     private:
@@ -150,14 +150,14 @@ namespace datalog {
 
            The column numbers in arrays \c table_cols and \c rel_cols must be local to the table/inner relation.
         */
-        relation_mutator_fn * mk_filter_identical_pairs(const finite_product_relation & r, unsigned col_cnt,
+        relation_mutator_fn * mk_filter_identical_pairs(const finite_product_relation & r, unsigned col_cnt, 
             const unsigned * table_cols, const unsigned * rel_cols);
 
         /**
            \brief Create a join-project operation that creates a table according to \c relation_table
            but with references to relations updated and removed according to the content of \c filtered_table.
-           \c selected_columns contains sorted indexes of data columns in \c relation_table that are also in
-           the \c filtered_table (so that the first column in \c filtered_table corresponds to
+           \c selected_columns contains sorted indexes of data columns in \c relation_table that are also in 
+           the \c filtered_table (so that the first column in \c filtered_table corresponds to 
            \c selected_columns[0] -th column in \c relation_table etc...)
 
            Signature of \c relation_table:
@@ -168,7 +168,7 @@ namespace datalog {
                 (functional column with indexes of filtered relation objects)
 
         */
-        static table_join_fn * mk_assembler_of_filter_result(const table_base & relation_table,
+        static table_join_fn * mk_assembler_of_filter_result(const table_base & relation_table, 
                 const table_base & filtered_table, const unsigned_vector & selected_columns);
 
     };
@@ -233,15 +233,15 @@ namespace datalog {
         void recycle_rel_idx(unsigned idx) const;
 
         // creates a full relation if it does not exist.
-        unsigned get_full_rel_idx();
+        unsigned get_full_rel_idx(); 
 
 
 
     public:
-        relation_base & get_inner_rel(table_element idx)
+        relation_base & get_inner_rel(table_element idx) 
         { SASSERT(idx<UINT_MAX); return get_inner_rel(static_cast<unsigned>(idx)); }
         relation_base & get_inner_rel(unsigned idx) { SASSERT(m_others[idx]); return *m_others[idx]; }
-        const relation_base & get_inner_rel(unsigned idx) const
+        const relation_base & get_inner_rel(unsigned idx) const 
         { return const_cast<finite_product_relation &>(*this).get_inner_rel(idx); }
 
         unsigned get_next_rel_idx() const;
@@ -328,7 +328,7 @@ namespace datalog {
         virtual ~finite_product_relation();
     public:
         context & get_context() const;
-        finite_product_relation_plugin & get_plugin() const {
+        finite_product_relation_plugin & get_plugin() const { 
             return static_cast<finite_product_relation_plugin &>(relation_base::get_plugin());
         }
 

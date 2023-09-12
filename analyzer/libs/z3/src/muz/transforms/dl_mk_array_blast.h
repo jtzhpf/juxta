@@ -67,7 +67,7 @@ namespace datalog {
         mk_array_blast(context & ctx, unsigned priority);
 
         virtual ~mk_array_blast();
-
+        
         rule_set * operator()(rule_set const & source);
 
     };

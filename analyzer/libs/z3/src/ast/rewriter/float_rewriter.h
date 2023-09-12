@@ -38,7 +38,7 @@ public:
 
     ast_manager & m() const { return m_util.m(); }
     family_id get_fid() const { return m_util.get_fid(); }
-
+    
     void updt_params(params_ref const & p);
     static void get_param_descrs(param_descrs & r);
 

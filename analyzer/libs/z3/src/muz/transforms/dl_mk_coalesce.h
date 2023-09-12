@@ -51,7 +51,7 @@ namespace datalog {
            \brief Create coalesced rules.
          */
         mk_coalesce(context & ctx);
-
+        
         rule_set * operator()(rule_set const & source);
     };
 

@@ -24,7 +24,7 @@ Revision History:
 namespace smt {
 
     theory_array::theory_array(ast_manager & m, theory_array_params & params):
-        theory_array_base(m),
+        theory_array_base(m), 
         m_params(params),
         m_find(*this),
         m_trail_stack(*this),
@@ -52,7 +52,7 @@ namespace smt {
             set_prop_upward(v1);
         ptr_vector<enode>::iterator it   = d2->m_stores.begin();
         ptr_vector<enode>::iterator end  = d2->m_stores.end();
-        for (; it != end; ++it)
+        for (; it != end; ++it) 
             add_store(v1, *it);
         it  = d2->m_parent_stores.begin();
         end = d2->m_parent_stores.end();
@@ -79,7 +79,7 @@ namespace smt {
         TRACE("array", tout << mk_bounded_pp(n->get_owner(), get_manager()) << "\nis_array: " << is_array_sort(n) << ", is_select: " << is_select(n) <<
               ", is_store: " << is_store(n) << "\n";);
         d->m_is_array  = is_array_sort(n);
-        if (d->m_is_array)
+        if (d->m_is_array) 
             register_sort(get_manager().get_sort(n->get_owner()));
         d->m_is_select = is_select(n);
         if (is_store(n))
@@ -89,7 +89,7 @@ namespace smt {
             instantiate_axiom1(n);
         return r;
     }
-
+    
     void theory_array::add_parent_select(theory_var v, enode * s) {
         if (m_params.m_array_cg && !s->is_cgr())
             return;
@@ -126,7 +126,7 @@ namespace smt {
         if (!m_params.m_array_weak && !m_params.m_array_delay_exp_axiom && d->m_prop_upward) {
             ptr_vector<enode>::iterator it  = d->m_parent_selects.begin();
             ptr_vector<enode>::iterator end = d->m_parent_selects.end();
-            for (; it != end; ++it)
+            for (; it != end; ++it) 
                 if (!m_params.m_array_cg || (*it)->is_cgr())
                     instantiate_axiom2b(*it, s);
         }
@@ -140,7 +140,7 @@ namespace smt {
         for (; it != end; ++it) {
             ptr_vector<enode>::iterator it2  = d->m_parent_selects.begin();
             ptr_vector<enode>::iterator end2 = d->m_parent_selects.end();
-            for (; it2 != end2; ++it2)
+            for (; it2 != end2; ++it2) 
                 if (instantiate_axiom2b(*it2, *it))
                     result = true;
         }
@@ -184,7 +184,7 @@ namespace smt {
 
 
     /**
-       \brief Return the size of the equivalence class for array terms
+       \brief Return the size of the equivalence class for array terms 
               that can be expressed as \lambda i : Index . [.. (select a i) ..]
      */
     unsigned theory_array::get_lambda_equiv_size(theory_var v, var_data* d) {
@@ -209,7 +209,7 @@ namespace smt {
             SASSERT(is_select(*it));
             instantiate_axiom2a(*it, s);
         }
-        if (m_params.m_array_always_prop_upward || lambda_equiv_class_size >= 1)
+        if (m_params.m_array_always_prop_upward || lambda_equiv_class_size >= 1) 
             set_prop_upward(s);
     }
 
@@ -243,7 +243,7 @@ namespace smt {
         TRACE("array", tout << "extensionality: #" << a1->get_owner_id() << " #" << a2->get_owner_id() << "\n";);
         SASSERT(is_array_sort(a1));
         SASSERT(is_array_sort(a2));
-        if (m_params.m_array_extensional && assert_extensionality(a1, a2))
+        if (m_params.m_array_extensional && assert_extensionality(a1, a2)) 
             m_stats.m_num_extensionality++;
     }
 
@@ -253,7 +253,7 @@ namespace smt {
 
     //
     // Internalize the term. If it has already been internalized, return false.
-    //
+    // 
     bool theory_array::internalize_term_core(app * n) {
         TRACE("array_bug", tout << mk_bounded_pp(n, get_manager()) << "\n";);
         context & ctx     = get_context();
@@ -293,7 +293,7 @@ namespace smt {
 
         if (m_params.m_array_laziness == 0) {
             theory_var v_arg = arg0->get_th_var(get_id());
-
+            
             SASSERT(v_arg != null_theory_var);
             if (is_select(n)) {
                 add_parent_select(v_arg, ctx.get_enode(n));
@@ -322,7 +322,7 @@ namespace smt {
         var_data * d1 = m_var_data[v1];
         if (d1->m_is_array) {
             SASSERT(m_var_data[v2]->m_is_array);
-            TRACE("ext", tout << "extensionality:\n" << mk_bounded_pp(get_enode(v1)->get_owner(), get_manager(), 5) << "\n" <<
+            TRACE("ext", tout << "extensionality:\n" << mk_bounded_pp(get_enode(v1)->get_owner(), get_manager(), 5) << "\n" << 
                   mk_bounded_pp(get_enode(v2)->get_owner(), get_manager(), 5) << "\n";);
             instantiate_extensionality(get_enode(v1), get_enode(v2));
         }
@@ -347,7 +347,7 @@ namespace smt {
             add_parent_store(v_arg, ctx.get_enode(n));
         }
     }
-
+     
     void theory_array::push_scope_eh() {
         theory_array_base::push_scope_eh();
         m_trail_stack.push_scope();
@@ -362,7 +362,7 @@ namespace smt {
         SASSERT(m_find.get_num_vars() == m_var_data.size());
         SASSERT(m_find.get_num_vars() == get_num_vars());
     }
-
+    
     final_check_status theory_array::final_check_eh() {
         m_final_check_idx++;
         final_check_status r;
@@ -378,7 +378,7 @@ namespace smt {
             else {
                 if (mk_interface_eqs_at_final_check() == FC_CONTINUE)
                     r = FC_CONTINUE;
-                else
+                else 
                     r = assert_delayed_axioms();
             }
         }
@@ -386,7 +386,7 @@ namespace smt {
             if (m_final_check_idx % 2 == 1) {
                 if (assert_delayed_axioms() == FC_CONTINUE)
                     r = FC_CONTINUE;
-                else
+                else 
                     r = mk_interface_eqs_at_final_check();
             }
             else {
@@ -397,7 +397,7 @@ namespace smt {
             }
         }
         TRACE("as_array", tout << "m_found_unsupported_op: " << m_found_unsupported_op << " " << r << "\n";);
-        if (r == FC_DONE && m_found_unsupported_op)
+        if (r == FC_DONE && m_found_unsupported_op) 
             r = FC_GIVEUP;
         return r;
     }

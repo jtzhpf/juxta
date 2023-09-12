@@ -45,7 +45,7 @@ bool maximise_ac_sharing::ac_plugin::reduce(func_decl * f, unsigned num_args, ex
     expr * numeral = 0;
     if (m_owner.is_numeral(args[0])) {
         numeral = args[0];
-        for (unsigned i = 1; i < num_args; i++)
+        for (unsigned i = 1; i < num_args; i++) 
             _args.push_back(args[i]);
         num_args--;
     }
@@ -77,7 +77,7 @@ bool maximise_ac_sharing::ac_plugin::reduce(func_decl * f, unsigned num_args, ex
         }
     }
 
-
+    
     // Create "tree-like circuit"
     while (true) {
         TRACE("ac_sharing_detail", tout << "tree-loop: num_args: " << num_args << "\n";);
@@ -93,7 +93,7 @@ bool maximise_ac_sharing::ac_plugin::reduce(func_decl * f, unsigned num_args, ex
         }
         num_args = j;
         if (num_args == 1) {
-            if (numeral == 0) {
+            if (numeral == 0) { 
                 result = _args[0];
             }
             else {
@@ -120,7 +120,7 @@ void maximise_ac_sharing::insert(func_decl * f, expr * arg1, expr * arg2) {
     m_manager.inc_ref(arg1);
     m_manager.inc_ref(arg2);
 }
-
+    
 maximise_ac_sharing::maximise_ac_sharing(ast_manager & m):
     m_manager(m),
     m_simplifier(m),

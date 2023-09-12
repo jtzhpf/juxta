@@ -15,9 +15,9 @@ Author:
 
 Notes:
 
-   [1] Elwyn Ralph Berlekamp. Factoring Polynomials over Finite Fields. Bell System Technical Journal,
+   [1] Elwyn Ralph Berlekamp. Factoring Polynomials over Finite Fields. Bell System Technical Journal, 
        46(8-10):1853-1859, 1967.
-   [2] Donald Ervin Knuth. The Art of Computer Programming, volume 2: Seminumerical Algorithms. Addison Wesley, third
+   [2] Donald Ervin Knuth. The Art of Computer Programming, volume 2: Seminumerical Algorithms. Addison Wesley, third 
        edition, 1997.
    [3] Henri Cohen. A Course in Computational Algebraic Number Theory. Springer Verlag, 1993.
 
@@ -39,7 +39,7 @@ namespace upolynomial {
     void zp_square_free_factor(zp_manager & zp_upm, numeral_vector const & f, zp_factors & sq_free_factors);
 
     /**
-       \brief Factor the monic square-free polynomial f from Z_p[x]. Returns true if factorization was sucesseful, or false
+       \brief Factor the monic square-free polynomial f from Z_p[x]. Returns true if factorization was sucesseful, or false 
        if f is an irreducible square-free polynomial in Z_p[x].
     */
     bool zp_factor_square_free(zp_manager & zp_upm, numeral_vector const & f, zp_factors & factors);
@@ -63,11 +63,11 @@ namespace upolynomial {
     /**
         \brief Performs a Hensel lift of A and B in Z_a to Z_b, where p is prime and and a = p^{a_k}, b = p^{b_k},
         r = (a, b), with the following assumptions:
-         * UA + VB = 1 (mod a)
+         * UA + VB = 1 (mod a) 
          * C = AB (mod b)
          * (l(A), r) = 1 (importand in order to divide by A, i.e. to invert l(A))
-        the output of is two polynomials A1, B1 (replacing A and B) such that A1 = A (mod b), B1 = B (mod b),
-        l(A1) = l(A), deg(A1) = deg(A), deg(B1) = deg(B) and C = A1 B1 (mod b*r). Such A1, B1 are unique if
+        the output of is two polynomials A1, B1 (replacing A and B) such that A1 = A (mod b), B1 = B (mod b), 
+        l(A1) = l(A), deg(A1) = deg(A), deg(B1) = deg(B) and C = A1 B1 (mod b*r). Such A1, B1 are unique if 
         r is prime. See [3] p. 138.
 
         The method will also change the zp_manager's module from b to b*r
@@ -82,7 +82,7 @@ namespace upolynomial {
     void hensel_lift(z_manager & upm, numeral_vector const & f, zp_factors const & factors_p, unsigned e, zp_factors & factors_pe);
 
     /**
-       \brief Factor the square-free polynomial f from Z[x]. Returns true if factorization was sucesseful, or false if
+       \brief Factor the square-free polynomial f from Z[x]. Returns true if factorization was sucesseful, or false if 
        f is an irreducible polynomial in Z[x]. The vector of factors is cleared.
     */
     bool factor_square_free(z_manager & upm, numeral_vector const & f, factors & fs, factor_params const & ps = factor_params());

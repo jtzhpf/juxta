@@ -25,13 +25,13 @@ Notes:
 
 class eval_cmd : public parametric_cmd {
     expr *                   m_target;
-    symbol                   m_last;
+    symbol                   m_last; 
 public:
     eval_cmd():parametric_cmd("eval") {}
 
     virtual char const * get_usage() const { return "<term> (<keyword> <value>)*"; }
-
-    virtual char const * get_main_descr() const {
+    
+    virtual char const * get_main_descr() const { 
         return "evaluate the given term in the current model.";
     }
 
@@ -40,9 +40,9 @@ public:
         insert_timeout(p);
     }
 
-    virtual void prepare(cmd_context & ctx) {
+    virtual void prepare(cmd_context & ctx) { 
         parametric_cmd::prepare(ctx);
-        m_target = 0;
+        m_target = 0; 
     }
 
     virtual cmd_arg_kind next_arg_kind(cmd_context & ctx) const {
@@ -65,7 +65,7 @@ public:
         unsigned timeout = m_params.get_uint("timeout", UINT_MAX);
         model_evaluator ev(*(md.get()), m_params);
         cancel_eh<model_evaluator> eh(ev);
-        {
+        { 
             scoped_ctrl_c ctrlc(eh);
             scoped_timer timer(timeout, &eh);
             cmd_context::scoped_watch sw(ctx);

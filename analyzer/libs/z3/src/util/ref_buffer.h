@@ -58,22 +58,22 @@ public:
         inc_ref(n);
         m_buffer.push_back(n);
     }
-
+    
     void pop_back() {
         SASSERT(!m_buffer.empty());
         T * n = m_buffer.back();
         m_buffer.pop_back();
         dec_ref(n);
     }
-
-    T * back() const {
+    
+    T * back() const { 
         return m_buffer.back();
     }
 
-    T * & back() {
+    T * & back() { 
         return m_buffer.back();
     }
-
+    
     T ** c_ptr() const {
         return m_buffer.c_ptr();
     }
@@ -104,7 +104,7 @@ public:
     void finalize() {
         dec_range_ref(m_buffer.begin(), m_buffer.end());
         m_buffer.finalize();
-    }
+    }        
 
     void append(unsigned n, T * const * elems) {
         for (unsigned i = 0; i < n; i++) {
@@ -127,7 +127,7 @@ public:
         resize(sz);
     }
 
-    // set pos idx with elem. If idx >= size, then expand.
+    // set pos idx with elem. If idx >= size, then expand. 
     void setx(unsigned idx, T * elem) {
         if (idx >= size()) {
             resize(idx+1);
@@ -160,7 +160,7 @@ public:
         super(ref_manager_wrapper<T, TManager>(other.m_manager)) {
         SASSERT(this->m_buffer.size() == 0);
         append(other);
-    }
+    }        
 };
 
 /**

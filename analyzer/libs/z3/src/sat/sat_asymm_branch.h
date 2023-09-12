@@ -28,7 +28,7 @@ namespace sat {
 
     class asymm_branch {
         struct report;
-
+        
         solver & s;
         int      m_counter;
 

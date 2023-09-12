@@ -37,7 +37,7 @@ bool expr_delta::delta_dfs(unsigned& n, app* a, expr_ref& result) {
     }
     else {
         return false;
-    }
+    }        
 }
 
 bool expr_delta::delta_dfs(unsigned& n, expr* e, expr_ref& result) {
@@ -53,7 +53,7 @@ bool expr_delta::delta_dfs(unsigned& n, expr* e, expr_ref& result) {
         result = m.mk_false();
         return true;
     }
-    else if (is_app(e)) {
+    else if (is_app(e)) {        
         if (m.is_bool(e)) {
             SASSERT(n >= 2);
             n -= 2;

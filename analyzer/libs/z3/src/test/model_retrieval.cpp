@@ -9,7 +9,7 @@
 #include "reg_decl_plugins.h"
 
 void tst_model_retrieval()
-{
+{          
     memory::initialize(0);
     smt_params params;
     params.m_model = true;
@@ -20,7 +20,7 @@ void tst_model_retrieval()
 
     family_id array_fid = m.mk_family_id(symbol("array"));
     array_util au(m);
-
+    
     // arr_s and select_fn creation copy-pasted from z3.cpp
 
     parameter sparams[2]  = { parameter(to_sort(m.mk_bool_sort())), parameter(to_sort(m.mk_bool_sort())) };
@@ -41,7 +41,7 @@ void tst_model_retrieval()
     smt::context ctx(m, params);
     ctx.assert_expr(fml);
     lbool check_result = ctx.check();
-    std::cout<<((check_result==l_true) ? "satisfiable" :
+    std::cout<<((check_result==l_true) ? "satisfiable" : 
                 (check_result==l_false) ? "unsatisfiable" : "unknown")<<"\n";
     ref<model> model;
     ctx.get_model(model);
@@ -56,6 +56,6 @@ void tst_model_retrieval()
     check_result = ctx.check();
     ctx.display(std::cout);
     std::cout<<"--------------------------\n";
-    std::cout<<((check_result==l_true) ? "satisfiable" :
+    std::cout<<((check_result==l_true) ? "satisfiable" : 
                 (check_result==l_false) ? "unsatisfiable" : "unknown")<<"\n";
 }

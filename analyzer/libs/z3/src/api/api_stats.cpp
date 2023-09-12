@@ -53,7 +53,7 @@ extern "C" {
         to_stats(s)->dec_ref();
         Z3_CATCH;
     }
-
+    
     unsigned Z3_API Z3_stats_size(Z3_context c, Z3_stats s) {
         Z3_TRY;
         LOG_Z3_stats_size(c, s);
@@ -97,7 +97,7 @@ extern "C" {
         return !to_stats_ref(s).is_uint(idx);
         Z3_CATCH_RETURN(Z3_FALSE);
     }
-
+    
     unsigned Z3_API Z3_stats_get_uint_value(Z3_context c, Z3_stats s, unsigned idx) {
         Z3_TRY;
         LOG_Z3_stats_get_uint_value(c, s, idx);

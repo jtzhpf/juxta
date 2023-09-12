@@ -56,7 +56,7 @@ void bound_manager::norm(numeral & n, decl_kind & k) {
     switch (k) {
     case OP_LE: return;
     case OP_GE: return;
-    case OP_LT:
+    case OP_LT: 
         // x < n --> x <= n-1
         n--;
         k = OP_LE;
@@ -77,7 +77,7 @@ static bool is_lower(decl_kind k) {
 
 static bool is_strict(decl_kind k) {
     return k == OP_LT || k == OP_GT;
-}
+} 
 
 void bound_manager::operator()(expr * f, expr_dependency * d) {
     TRACE("bound_manager", tout << "processing:\n" << mk_ismt2_pp(f, m()) << "\n";);
@@ -85,7 +85,7 @@ void bound_manager::operator()(expr * f, expr_dependency * d) {
     numeral n;
     if (is_disjunctive_bound(f, d))
         return;
-    bool pos = true;
+    bool pos = true;    
     while (m().is_not(f, f))
         pos = !pos;
     if (!is_app(f))
@@ -175,15 +175,15 @@ bool bound_manager::is_disjunctive_bound(expr * f, expr_dependency * d) {
     for (unsigned i = 0; i < sz; ++i) {
         expr * e = to_app(f)->get_arg(i);
         if (!m().is_eq(e, x, y)) return false;
-        if (is_uninterp_const(x) &&
-            m_util.is_numeral(y, n, is_int) && is_int &&
+        if (is_uninterp_const(x) && 
+            m_util.is_numeral(y, n, is_int) && is_int && 
             (x == v || v == 0)) {
             if (v == 0) { v = x; lo = hi = n; }
             if (n < lo) lo = n;
             if (n > hi) hi = n;
         }
-        else if (is_uninterp_const(y) &&
-                 m_util.is_numeral(x, n, is_int) && is_int &&
+        else if (is_uninterp_const(y) && 
+                 m_util.is_numeral(x, n, is_int) && is_int && 
                  (y == v || v == 0)) {
             if (v == 0) { v = y; lo = hi = n; }
             if (n < lo) lo = n;

@@ -47,7 +47,7 @@ class solver : public check_sat_result {
 public:
     virtual ~solver() {}
     /**
-       \brief Update the solver internal settings.
+       \brief Update the solver internal settings. 
     */
     virtual void updt_params(params_ref const & p) {}
 
@@ -56,15 +56,15 @@ public:
        parameters available in this solver.
     */
     virtual void collect_param_descrs(param_descrs & r) {}
-
+    
     /**
        \brief Enable/Disable model generation for this solver object.
 
-       It is invoked before init(m, logic).
+       It is invoked before init(m, logic). 
        The user may optionally invoke it after init(m, logic).
     */
     virtual void set_produce_models(bool f) {}
-
+    
     /**
        \brief Add a new formula to the assertion stack.
     */
@@ -83,7 +83,7 @@ public:
     virtual void push() = 0;
 
     /**
-       \brief Remove \c n backtracking points. All assertions between the pop and matching push are removed.
+       \brief Remove \c n backtracking points. All assertions between the pop and matching push are removed. 
     */
     virtual void pop(unsigned n) = 0;
 
@@ -94,7 +94,7 @@ public:
 
     /**
        \brief Check if the set of assertions in the assertion stack is satisfiable modulo the given assumptions.
-
+       
        If it is unsatisfiable, and unsat-core generation is enabled. Then, the unsat-core is a subset of these assumptions.
     */
     virtual lbool check_sat(unsigned num_assumptions, expr * const * assumptions) = 0;
@@ -110,11 +110,11 @@ public:
 
     /**
        \brief Set a progress callback procedure that is invoked by this solver during check_sat.
-
+       
        This is essentially for backward compatibility and integration with VCC tools.
     */
     virtual void set_progress_callback(progress_callback * callback) = 0;
-
+    
     /**
        \brief Return the number of assertions in the assertion stack.
     */

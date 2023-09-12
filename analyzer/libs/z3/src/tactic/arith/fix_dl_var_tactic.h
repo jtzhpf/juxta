@@ -9,7 +9,7 @@ Abstract:
 
     Fix a difference logic variable to 0.
     If the problem is in the difference logic fragment, that is, all arithmetic terms
-    are of the form (x + k), and the arithmetic atoms are of the
+    are of the form (x + k), and the arithmetic atoms are of the 
     form x - y <= k or x - y = k. Then, we can set one variable to 0.
 
     This is useful because, many bounds can be exposed after this operation is performed.

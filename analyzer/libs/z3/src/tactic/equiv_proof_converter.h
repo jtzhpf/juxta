@@ -9,7 +9,7 @@ Abstract:
 
     Proof converter that applies equivalence rule to leaves.
 
-    Given a proof P with occurrences of [asserted fml]
+    Given a proof P with occurrences of [asserted fml] 
     replace [asserted fml] by a proof of the form
     [mp [asserted fml'] [~ fml fml']]
 
@@ -17,7 +17,7 @@ Author:
 
     Nikolaj Bjorner (nbjorner) 2012-11-23
 
-Revision History:
+Revision History:  
 
 --*/
 

@@ -15,29 +15,31 @@ class TestParsing(unittest.TestCase):
         """ Find a c file by name, taking into account the current dir can be
             in a couple of typical places
         """
-        testdir = os.path.dirname(__file__)
-        name = os.path.join(testdir, 'c_files', name)
-        assert os.path.exists(name)
-        return name
+        fullnames = [
+            os.path.join('c_files', name),
+            os.path.join('tests', 'c_files', name)]
+        for fullname in fullnames:
+            if os.path.exists(fullname):
+                return fullname
+        assert False, "Unreachable"
 
     def test_without_cpp(self):
         ast = parse_file(self._find_file('example_c_file.c'))
         self.assertTrue(isinstance(ast, c_ast.FileAST))
 
     def test_with_cpp(self):
-        memmgr_path = self._find_file('memmgr.c')
-        c_files_path = os.path.dirname(memmgr_path)
-        ast = parse_file(memmgr_path, use_cpp=True,
+        c_files_path = os.path.join('tests', 'c_files')
+        ast = parse_file(self._find_file('memmgr.c'), use_cpp=True,
             cpp_path=CPPPATH,
             cpp_args='-I%s' % c_files_path)
         self.assertTrue(isinstance(ast, c_ast.FileAST))
-
-        fake_libc = os.path.join(c_files_path, '..', '..',
-                                 'utils', 'fake_libc_include')
+    
         ast2 = parse_file(self._find_file('year.c'), use_cpp=True,
-            cpp_path=CPPPATH,
-            cpp_args=[r'-I%s' % fake_libc])
-
+            cpp_path=CPPPATH, 
+            cpp_args=[
+                r'-Iutils/fake_libc_include',
+                r'-I../utils/fake_libc_include'])
+    
         self.assertTrue(isinstance(ast2, c_ast.FileAST))
 
     def test_cpp_funkydir(self):
@@ -58,3 +60,8 @@ class TestParsing(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+        
+
+
+

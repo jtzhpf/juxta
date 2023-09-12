@@ -91,7 +91,7 @@ class poly_isolate_roots_cmd : public cmd {
         polynomial::var             m_var;
         typedef polynomial::simple_var2value<algebraic_numbers::manager> x2v;
         x2v                         m_x2v;
-
+        
         context(ast_manager & m):
             m_util(m),
             m_pm(m_qm),
@@ -159,17 +159,17 @@ class poly_isolate_roots_cmd : public cmd {
     };
 
     scoped_ptr<context> m_ctx;
-
+    
 public:
     poly_isolate_roots_cmd(char const * name = "poly/isolate-roots"):cmd(name), m_ctx(0) {}
 
     virtual char const * get_usage() const { return "<term> (<term> <value>)*"; }
 
     virtual char const * get_descr(cmd_context & ctx) const { return "isolate the roots a multivariate polynomial modulo an assignment"; }
-
+    
     virtual unsigned get_arity() const { return VAR_ARITY; }
 
-    virtual void prepare(cmd_context & ctx) {
+    virtual void prepare(cmd_context & ctx) { 
         m_ctx = alloc(context, ctx.m());
     }
 
@@ -184,7 +184,7 @@ public:
     virtual cmd_arg_kind next_arg_kind(cmd_context & ctx) const {
         return CPK_EXPR;
     }
-
+    
     virtual void set_next_arg(cmd_context & ctx, expr * arg) {
         m_ctx->set_next_arg(ctx, arg);
     }
@@ -205,28 +205,28 @@ public:
 
     virtual char const * get_usage() const { return "<term> (<keyword> <value>)*"; }
 
-    virtual char const * get_main_descr() const {
+    virtual char const * get_main_descr() const { 
         return "factor a polynomial";
     }
-
+    
     virtual void init_pdescrs(cmd_context & ctx, param_descrs & p) {
         polynomial::factor_params::get_param_descrs(p);
     }
-
-    virtual void prepare(cmd_context & ctx) {
+    
+    virtual void prepare(cmd_context & ctx) { 
         parametric_cmd::prepare(ctx);
-        m_target   = 0;
+        m_target   = 0; 
     }
 
     virtual cmd_arg_kind next_arg_kind(cmd_context & ctx) const {
         if (m_target == 0) return CPK_EXPR;
         return parametric_cmd::next_arg_kind(ctx);
     }
-
+    
     virtual void set_next_arg(cmd_context & ctx, expr * arg) {
         m_target = arg;
     }
-
+    
     virtual void execute(cmd_context & ctx) {
         polynomial::factor_params ps;
         ps.updt_params(m_params);

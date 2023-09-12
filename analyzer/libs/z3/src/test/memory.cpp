@@ -27,12 +27,12 @@ static void hit_me(char const* wm) {
     ctx = Z3_mk_context(cfg);
     if (ctx) {
         Z3_set_error_handler(ctx, &err_handler);
-
+    
         unsigned i;
         for (i = 1; !oom ; ++i) {
             try {
-                Z3_mk_bv_sort(ctx,i);
-
+                Z3_mk_bv_sort(ctx,i);      
+                
             }
             catch (std::bad_alloc) {
                 std::cout << "caught\n";
@@ -40,11 +40,11 @@ static void hit_me(char const* wm) {
         }
         std::cout << "oom " << i << "\n";
         Z3_del_context(ctx);
-    }
+    }   
     Z3_del_config(cfg);
 }
 
-void tst_memory() {
+void tst_memory() {    
     hit_me("10");
     Z3_reset_memory();
     hit_me("20");
@@ -55,6 +55,6 @@ void tst_memory() {
 }
 
 #else
-void tst_memory() {
+void tst_memory() {    
 }
 #endif

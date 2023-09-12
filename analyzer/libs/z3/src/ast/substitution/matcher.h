@@ -42,7 +42,7 @@ public:
     /**
        \brief Return true if e2 is an instance of e1.
        In case of success (result is true), it will store the substitution that makes e1 equals to e2 into s.
-
+       
        For example:
        1) e1 = f(g(x), x), e2 = f(g(h(a)), h(a))
        The result is true, and s will contain x -> h(a)

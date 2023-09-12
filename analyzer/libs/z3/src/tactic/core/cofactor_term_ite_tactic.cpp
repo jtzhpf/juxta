@@ -53,10 +53,10 @@ public:
     virtual ~cofactor_term_ite_tactic() {}
     virtual void updt_params(params_ref const & p) { m_params = p; m_elim_ite.updt_params(p); }
     virtual void collect_param_descrs(param_descrs & r) { m_elim_ite.collect_param_descrs(r); }
-
-    virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & g, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         SASSERT(g->is_well_sorted());
@@ -70,7 +70,7 @@ public:
         TRACE("cofactor-term-ite", g->display(tout););
         SASSERT(g->is_well_sorted());
     }
-
+    
     virtual void cleanup() { return m_elim_ite.cleanup(); }
 
     virtual void set_cancel(bool f) { m_elim_ite.set_cancel(f); }

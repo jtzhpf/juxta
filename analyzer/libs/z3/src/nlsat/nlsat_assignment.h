@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Assignment: Var -> Algebraic Number
+    Assignment: Var -> Algebraic Number 
 
 Author:
 
@@ -25,7 +25,7 @@ Revision History:
 namespace nlsat {
 
     /**
-       \brief A mapping from variables to values.
+       \brief A mapping from variables to values. 
        This mapping is used to encode the current partial interpretation in nlsat.
     */
     class assignment : public polynomial::var2anum {
@@ -41,15 +41,15 @@ namespace nlsat {
         }
         void set_core(var x, anum & v) {
             m_values.reserve(x+1, anum());
-            m_assigned.reserve(x+1, false);
+            m_assigned.reserve(x+1, false); 
             m_assigned[x] = true;
-            am().swap(m_values[x], v);
+            am().swap(m_values[x], v); 
         }
         void set(var x, anum const & v) {
             m_values.reserve(x+1, anum());
-            m_assigned.reserve(x+1, false);
+            m_assigned.reserve(x+1, false); 
             m_assigned[x] = true;
-            am().set(m_values[x], v);
+            am().set(m_values[x], v); 
         }
         void reset(var x) { if (x < m_assigned.size()) m_assigned[x] = false; }
         bool is_assigned(var x) const { return m_assigned.get(x, false); }
@@ -58,7 +58,7 @@ namespace nlsat {
         virtual bool contains(var x) const { return is_assigned(x); }
         virtual anum const & operator()(var x) const { SASSERT(is_assigned(x)); return value(x); }
     };
-
+    
     /**
        \brief Wrapper for temporarily unassigning a given variable y.
        That is, given an assignment M, M' = undef_var_assignment(M, y) is identical

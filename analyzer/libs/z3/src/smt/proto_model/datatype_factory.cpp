@@ -55,7 +55,7 @@ expr * datatype_factory::get_last_fresh_value(sort * s) {
     value_set * set = get_value_set(s);
     if (set->empty())
         val = get_some_value(s);
-    else
+    else 
         val = *(set->begin());
     if (m_util.is_recursive(s))
         m_last_fresh_value.insert(s, val);
@@ -142,7 +142,7 @@ expr * datatype_factory::get_almost_fresh_value(sort * s) {
 expr * datatype_factory::get_fresh_value(sort * s) {
     TRACE("datatype_factory", tout << "generating fresh value for: " << s->get_name() << "\n";);
     value_set * set = get_value_set(s);
-    // Approach 0)
+    // Approach 0) 
     // if no value for s was generated so far, then used get_some_value
     if (set->empty()) {
         expr * val = get_some_value(s);
@@ -152,7 +152,7 @@ expr * datatype_factory::get_fresh_value(sort * s) {
         return val;
     }
     // Approach 1)
-    // Traverse constructors, and try to invoke get_fresh_value of one of the
+    // Traverse constructors, and try to invoke get_fresh_value of one of the 
     // arguments (if the argument is not a sibling datatype of s).
     // Two datatypes are siblings if they were defined together in the same mutually recursive definition.
     ptr_vector<func_decl> const * constructors = m_util.get_datatype_constructors(s);
@@ -207,10 +207,10 @@ expr * datatype_factory::get_fresh_value(sort * s) {
                 TRACE("datatype_factory", tout << "checking constructor: " << constructor->get_name() << "\n";);
                 for (unsigned i = 0; i < num; i++) {
                     sort * s_arg        = constructor->get_domain(i);
-                    TRACE("datatype_factory", tout << mk_pp(s, m_manager) << " "
-                          << mk_pp(s_arg, m_manager) << " are_siblings "
-                          << m_util.are_siblings(s, s_arg) << "  is_datatype "
-                          << m_util.is_datatype(s_arg) << " found_sibling "
+                    TRACE("datatype_factory", tout << mk_pp(s, m_manager) << " " 
+                          << mk_pp(s_arg, m_manager) << " are_siblings " 
+                          << m_util.are_siblings(s, s_arg) << "  is_datatype " 
+                          << m_util.is_datatype(s_arg) << " found_sibling " 
                           << found_sibling << "\n";);
                     if (!found_sibling && m_util.is_datatype(s_arg) && m_util.are_siblings(s, s_arg)) {
                         found_sibling = true;
@@ -222,7 +222,7 @@ expr * datatype_factory::get_fresh_value(sort * s) {
                             maybe_new_arg = get_fresh_value(s_arg);
                         }
                         if (!maybe_new_arg) {
-                            TRACE("datatype_factory",
+                            TRACE("datatype_factory", 
                                   tout << "no argument found for " << mk_pp(s_arg, m_manager) << "\n";);
                             maybe_new_arg = m_model.get_some_value(s_arg);
                             found_sibling = false;
@@ -254,7 +254,7 @@ expr * datatype_factory::get_fresh_value(sort * s) {
     // for non-recursive datatypes.
     // Search for value that was not created before.
     SASSERT(!m_util.is_recursive(s));
-
+    
     return 0;
 }
 

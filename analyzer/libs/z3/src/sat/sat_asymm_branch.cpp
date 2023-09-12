@@ -44,10 +44,10 @@ namespace sat {
             m_elim_literals(a.m_elim_literals) {
             m_watch.start();
         }
-
+        
         ~report() {
             m_watch.stop();
-            IF_VERBOSE(SAT_VB_LVL,
+            IF_VERBOSE(SAT_VB_LVL, 
                        verbose_stream() << " (sat-asymm-branch :elim-literals "
                        << (m_asymm_branch.m_elim_literals - m_elim_literals)
                        << " :cost " << m_asymm_branch.m_counter
@@ -55,7 +55,7 @@ namespace sat {
                        << " :time " << std::fixed << std::setprecision(2) << m_watch.get_seconds() << ")\n";);
         }
     };
-
+    
     void asymm_branch::operator()(bool force) {
         if (!m_asymm_branch)
             return;
@@ -153,7 +153,7 @@ namespace sat {
             s.attach_clause(c);
             return true;
         }
-        // clause can be reduced
+        // clause can be reduced 
         unsigned new_sz = i+1;
         SASSERT(new_sz >= 1);
         SASSERT(new_sz < sz);
@@ -185,7 +185,7 @@ namespace sat {
             TRACE("asymm_branch", tout << "produced unit clause: " << c[0] << "\n";);
             s.assign(c[0], justification());
             s.del_clause(c);
-            s.propagate_core(false);
+            s.propagate_core(false); 
             SASSERT(s.inconsistent() || s.m_qhead == s.m_trail.size());
             return false; // check_missed_propagation() may fail, since m_clauses is not in a consistent state.
         case 2:
@@ -201,7 +201,7 @@ namespace sat {
             return true;
         }
     }
-
+    
     void asymm_branch::updt_params(params_ref const & _p) {
         sat_asymm_branch_params p(_p);
         m_asymm_branch        = p.asymm_branch();
@@ -214,7 +214,7 @@ namespace sat {
     void asymm_branch::collect_param_descrs(param_descrs & d) {
         sat_asymm_branch_params::collect_param_descrs(d);
     }
-
+    
     void asymm_branch::collect_statistics(statistics & st) const {
         st.update("elim literals", m_elim_literals);
     }

@@ -43,7 +43,7 @@ namespace polynomial {
             return zero;
         }
     };
-
+    
 };
 
 

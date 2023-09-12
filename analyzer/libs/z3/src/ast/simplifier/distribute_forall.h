@@ -42,7 +42,7 @@ Revision History:
             (not (forall X (not Fn)))))
 
 
-   The implementation uses the visit_children/reduce1 idiom. A cache is used as usual.
+   The implementation uses the visit_children/reduce1 idiom. A cache is used as usual.   
 */
 class distribute_forall {
     typedef act_cache expr_map;

@@ -24,7 +24,7 @@ int usage(const char **argv){
 }
 
 int main(int argc, const char **argv) {
-
+    
   bool tree_mode = false;
   bool check_mode = false;
   bool profile_mode = false;
@@ -87,7 +87,7 @@ int main(int argc, const char **argv) {
     Z3_set_ast_print_mode(ctx,Z3_PRINT_SMTLIB2_COMPLIANT);
   else if(!flat_mode)
     Z3_set_ast_print_mode(ctx,Z3_PRINT_SMTLIB_COMPLIANT);
-
+  
   /* Read an interpolation problem */
 
   unsigned num;
@@ -176,9 +176,9 @@ int main(int argc, const char **argv) {
     }
     Z3_pop(ctx,1);
   }
-
+  
   switch (result) {
-
+  
     /* If UNSAT, print the interpolants */
   case Z3_L_FALSE:
     printf("unsat\n");
@@ -197,7 +197,7 @@ int main(int argc, const char **argv) {
     if(check_mode){
       std::cout << "Checking interpolant...\n";
       bool chk;
-      chk = Z3_check_interpolant(ctx,num,constraints,parents,interpolants,&error,num_theory,theory);
+      chk = Z3_check_interpolant(ctx,num,constraints,parents,interpolants,&error,num_theory,theory);  
       if(chk)
 	std::cout << "Interpolant is correct\n";
       else {
@@ -221,10 +221,10 @@ int main(int argc, const char **argv) {
     std::cout << Z3_interpolation_profile(ctx);
 
   /* Delete the model if there is one */
-
+  
   if (model)
     Z3_del_model(ctx, model);
-
+  
   /* Delete logical context. */
 
   Z3_del_context(ctx);
@@ -245,13 +245,13 @@ int test(){
 
   Z3_config cfg = Z3_mk_config();
   Z3_context ctx = iz3_mk_context(cfg);
-
+    
   int num = 2;
 
   Z3_ast *constraints = (Z3_ast *)malloc(num * sizeof(Z3_ast));
 
 #if 1
-  Z3_sort arr = Z3_mk_array_sort(ctx,Z3_mk_int_sort(ctx),Z3_mk_bool_sort(ctx));
+  Z3_sort arr = Z3_mk_array_sort(ctx,Z3_mk_int_sort(ctx),Z3_mk_bool_sort(ctx)); 
   Z3_symbol  as  = Z3_mk_string_symbol(ctx, "a");
   Z3_symbol  bs  = Z3_mk_string_symbol(ctx, "b");
   Z3_symbol  xs  = Z3_mk_string_symbol(ctx, "x");
@@ -259,7 +259,7 @@ int test(){
   Z3_ast a = Z3_mk_const(ctx,as,arr);
   Z3_ast b = Z3_mk_const(ctx,bs,arr);
   Z3_ast x = Z3_mk_const(ctx,xs,Z3_mk_int_sort(ctx));
-
+  
   Z3_ast c1 = Z3_mk_eq(ctx,a,Z3_mk_store(ctx,b,x,Z3_mk_true(ctx)));
   Z3_ast c2 = Z3_mk_not(ctx,Z3_mk_select(ctx,a,x));
 #else
@@ -272,7 +272,7 @@ int test(){
 
   constraints[0] = c1;
   constraints[1] = c2;
-
+  
   /* print out the result for grins. */
 
   // Z3_string smtout = Z3_benchmark_to_smtlib_string (ctx, "foo", "QFLIA", "sat", "", num, constraints, Z3_mk_true(ctx));
@@ -296,7 +296,7 @@ int test(){
   Z3_lbool result = iz3_interpolate(ctx, num, constraints, interpolants, &model);
 
   switch (result) {
-
+  
     /* If UNSAT, print the interpolants */
   case Z3_L_FALSE:
     printf("unsat, interpolants:\n");
@@ -313,10 +313,10 @@ int test(){
   }
 
   /* Delete the model if there is one */
-
+  
   if (model)
     Z3_del_model(ctx, model);
-
+  
   /* Delete logical context (note, we call iz3_del_context, not
      Z3_del_context */
 
@@ -343,7 +343,7 @@ int main(int argc, const char **argv) {
   Z3_config cfg = Z3_mk_config();
   Z3_context ctx = iz3_mk_context(cfg);
   Z3_set_error_handler(ctx, throw_z3_error);
-
+    
   /* Make some constraints, by parsing an smtlib formatted file given as arg 1 */
 
   try {
@@ -353,7 +353,7 @@ int main(int argc, const char **argv) {
     std::cerr << "Z3 error: " << Z3_get_error_msg(err.c) << "\n";
     std::cerr << Z3_get_smtlib_error(ctx) << "\n";
     return(1);
-  }
+  } 
 
   /* Get the constraints from the parser. */
 
@@ -412,7 +412,7 @@ int main(int argc, const char **argv) {
   Z3_lbool result = iz3_interpolate(ctx, num, constraints, interpolants, &model);
 
   switch (result) {
-
+  
     /* If UNSAT, print the interpolants */
   case Z3_L_FALSE:
     printf("unsat, interpolants:\n");
@@ -437,10 +437,10 @@ int main(int argc, const char **argv) {
   }
 
   /* Delete the model if there is one */
-
+  
   if (model)
     Z3_del_model(ctx, model);
-
+  
   /* Delete logical context (note, we call iz3_del_context, not
      Z3_del_context */
 

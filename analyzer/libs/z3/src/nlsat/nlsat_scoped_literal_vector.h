@@ -73,7 +73,7 @@ namespace nlsat {
     public:
         scoped_literal(solver & s):m_solver(s), m_lit(null_literal) {}
         ~scoped_literal() { m_solver.dec_ref(m_lit); }
-        scoped_literal & operator=(literal l) {
+        scoped_literal & operator=(literal l) { 
             m_solver.inc_ref(l);
             m_solver.dec_ref(m_lit);
             m_lit = l;

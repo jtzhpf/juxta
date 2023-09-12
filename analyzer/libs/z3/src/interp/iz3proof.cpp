@@ -40,7 +40,7 @@ Revision History:
 void iz3proof::resolve(ast pivot, std::vector<ast> &cls1, const std::vector<ast> &cls2){
 #ifdef CHECK_PROOFS
   std::vector<ast> orig_cls1 = cls1;
-#endif
+#endif  
   ast neg_pivot = pv->mk_not(pivot);
   bool found_pivot1 = false, found_pivot2 = false;
   for(unsigned i = 0; i < cls1.size(); i++){
@@ -51,7 +51,7 @@ void iz3proof::resolve(ast pivot, std::vector<ast> &cls1, const std::vector<ast>
       break;
     }
   }
-  {
+  { 
       std::set<ast> memo;
       memo.insert(cls1.begin(),cls1.end());
       for(unsigned j = 0; j < cls2.size(); j++){
@@ -64,7 +64,7 @@ void iz3proof::resolve(ast pivot, std::vector<ast> &cls1, const std::vector<ast>
   }
   if(found_pivot1 && found_pivot2)
     return;
-
+ 
 #ifdef CHECK_PROOFS
   std::cerr << "resolution anomaly: " << nodes.size()-1 << "\n";
 #if 0
@@ -111,10 +111,10 @@ iz3proof::node iz3proof::resolve_lemmas(ast pivot, node premise1, node premise2)
 
 iz3proof::node iz3proof::make_assumption(int frame, const std::vector<ast> &assumption){
 #if 0
-  std::cout << "assumption: \n";
+  std::cout << "assumption: \n"; 
   for(unsigned i = 0; i < assumption.size(); i++)
     pv->show(assumption[i]);
-  std::cout << "\n";
+  std::cout << "\n"; 
 #endif
   node res = make_node();
   node_struct &n = nodes[res];
@@ -187,7 +187,7 @@ iz3proof::node iz3proof::make_reflexivity(ast con){
   n.conclusion.push_back(con);
   return res;
 }
-
+  
 /** Make a Symmetry node. This takes a derivation of |- x = y and
     produces | y = x */
 
@@ -213,7 +213,7 @@ iz3proof::node iz3proof::make_transitivity(ast con, node prem1, node prem2){
   return res;
 }
 
-
+  
 /** Make a congruence node. This takes derivations of |- x_i = y_i
     and produces |- f(x_1,...,x_n) = f(y_1,...,y_n) */
 
@@ -267,7 +267,7 @@ bool iz3proof::pred_in_A(ast id){
     ? pv->ranges_intersect(pv->ast_range(id),rng) :
     pv->range_contained(pv->ast_range(id),rng);
 }
-
+  
 bool iz3proof::term_in_B(ast id){
   prover::range r = pv->ast_scope(id);
   if(weak) {
@@ -279,7 +279,7 @@ bool iz3proof::term_in_B(ast id){
   else
     return !pv->range_contained(r,rng);
 }
-
+  
 bool iz3proof::frame_in_A(int frame){
   return pv->in_range(frame,rng);
 }
@@ -302,7 +302,7 @@ iz3proof::ast iz3proof::get_A_lits(std::vector<ast> &cls){
       if(pv->range_max(pv->ast_scope(lit)) == pv->range_min(pv->ast_scope(lit))){
 	std::cout << "bad lit: " << pv->range_max(rng) << " : " << pv->range_max(pv->ast_scope(lit)) << " : " << (pv->ast_id(lit)) << " : ";
 	pv->show(lit);
-      }
+      }      
       foo = my_or(foo,lit);
     }
   }
@@ -471,11 +471,11 @@ void iz3proof::interpolate_lemma(node_struct &n){
 
       if(frame_in_A(n.frame)){
 	/* HypC-A */
-	if(!weak)
+	if(!weak) 
 #ifdef FACTOR_INTERPS
 	  {
 	    q = pv->mk_false();
-	    set_of_B_lits(n.conclusion,disjs[i]);
+	    set_of_B_lits(n.conclusion,disjs[i]); 
 	  }
 #else
 	  q = get_B_lits(n.conclusion);
@@ -491,7 +491,7 @@ void iz3proof::interpolate_lemma(node_struct &n){
 #ifdef FACTOR_INTERPS
 	  {
 	    q = pv->mk_true();
-	    set_of_A_lits(n.conclusion,disjs[i]);
+	    set_of_A_lits(n.conclusion,disjs[i]); 
 	  }
 #else
 	  q = pv->mk_not(get_A_lits(n.conclusion));
@@ -573,8 +573,8 @@ void iz3proof::print(std::ostream &s, int id){
   switch(n.rl){
   case Assumption:
     s << "Assumption(";
-    pv->print_clause(s,n.conclusion);
-    s << ")";
+    pv->print_clause(s,n.conclusion); 
+    s << ")"; 
     break;
   case Hypothesis:
     s << "Hyp("; pv->print_expr(s,n.conclusion[0]); s << ")"; break;
@@ -585,10 +585,10 @@ void iz3proof::print(std::ostream &s, int id){
   case Transitivity:
     s << "Trans("; print(s,n.premises[0]); s << ","; print(s,n.premises[1]); s << ")"; break;
   case Congruence:
-    s << "Cong("; pv->print_expr(s,n.conclusion[0]);
+    s << "Cong("; pv->print_expr(s,n.conclusion[0]); 
     for(unsigned i = 0; i < n.premises.size(); i++){
       s << ",";
-      print(s,n.premises[i]);
+      print(s,n.premises[i]); 
     }
     s << ")"; break;
   case EqContra:
@@ -596,21 +596,21 @@ void iz3proof::print(std::ostream &s, int id){
   case Resolution:
     s << "Res(";
     pv->print_expr(s,n.aux); s << ",";
-    print(s,n.premises[0]); s << ","; print(s,n.premises[1]); s << ")";
+    print(s,n.premises[0]); s << ","; print(s,n.premises[1]); s << ")"; 
     break;
   case Lemma:
     s << "Lemma(";
-    pv->print_clause(s,n.conclusion);
+    pv->print_clause(s,n.conclusion); 
     for(unsigned i = 0; i < n.premises.size(); i++){
       s << ",";
       print(s,n.premises[i]);
     }
-    s << ")";
+    s << ")"; 
     break;
   case Contra:
     s << "Contra(";
-    print(s,n.premises[0]);
-    s << ")";
+    print(s,n.premises[0]); 
+    s << ")"; 
     break;
   default:;
   }

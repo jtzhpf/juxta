@@ -31,7 +31,7 @@ namespace qe {
         expr_safe_replace m_replace;
         bv_util           m_bv;
     public:
-        bv_plugin(i_solver_context& ctx, ast_manager& m):
+        bv_plugin(i_solver_context& ctx, ast_manager& m): 
             qe_solver_plugin(m, m.mk_family_id("bv"), ctx),
             m_replace(m),
             m_bv(m)
@@ -69,11 +69,11 @@ namespace qe {
             return 2;
         }
 
-        bool solve(conj_enum& conjs, expr* fml) { return false; }
+        bool solve(conj_enum& conjs, expr* fml) { return false; }                   
 
         virtual bool is_uninterpreted(app* f) {
             switch(f->get_decl_kind()) {
-            case OP_BSDIV0:
+            case OP_BSDIV0: 
             case OP_BUDIV0:
             case OP_BSREM0:
             case OP_BUREM0:
@@ -90,7 +90,7 @@ namespace qe {
             return false;
         }
     };
-
+    
     qe_solver_plugin* mk_bv_plugin(i_solver_context& ctx) {
         return alloc(bv_plugin, ctx, ctx.get_manager());
     }

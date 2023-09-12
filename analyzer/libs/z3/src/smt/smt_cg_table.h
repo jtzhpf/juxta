@@ -26,7 +26,7 @@ Revision History:
 namespace smt {
 
     typedef std::pair<enode *, bool> enode_bool_pair;
-
+    
 #if 0
     /**
        \brief Congruence table.
@@ -37,7 +37,7 @@ namespace smt {
         };
 
         struct cg_chasher {
-            unsigned operator()(enode const * n, unsigned idx) const {
+            unsigned operator()(enode const * n, unsigned idx) const { 
                 return n->get_arg(idx)->get_root()->hash();
             }
         };
@@ -50,7 +50,7 @@ namespace smt {
         };
 
         struct cg_eq {
-            bool & m_commutativity;
+            bool & m_commutativity; 
             cg_eq(bool & comm):m_commutativity(comm) {}
             bool operator()(enode * n1, enode * n2) const;
         };
@@ -73,7 +73,7 @@ namespace smt {
             // it doesn't make sense to insert a constant.
             SASSERT(n->get_num_args() > 0);
             m_commutativity = false;
-            enode * n_prime = m_table.insert_if_not_there(n);
+            enode * n_prime = m_table.insert_if_not_there(n); 
             SASSERT(contains(n));
             return enode_bool_pair(n_prime, m_commutativity);
         }
@@ -109,7 +109,7 @@ namespace smt {
         bool check_invariant() const;
 #endif
     };
-#else
+#else 
     // one table per function symbol
 
     /**
@@ -133,7 +133,7 @@ namespace smt {
         };
 
         typedef chashtable<enode *, cg_unary_hash, cg_unary_eq> unary_table;
-
+        
         struct cg_binary_hash {
             unsigned operator()(enode * n) const {
                 SASSERT(n->get_num_args() == 2);
@@ -150,19 +150,19 @@ namespace smt {
                 SASSERT(n2->get_num_args() == 2);
                 SASSERT(n1->get_decl() == n2->get_decl());
 #if 1
-                return
+                return 
                     n1->get_arg(0)->get_root() == n2->get_arg(0)->get_root() &&
                     n1->get_arg(1)->get_root() == n2->get_arg(1)->get_root();
 #else
-                bool r =
+                bool r = 
                     n1->get_arg(0)->get_root() == n2->get_arg(0)->get_root() &&
                     n1->get_arg(1)->get_root() == n2->get_arg(1)->get_root();
                 static unsigned counter = 0;
                 static unsigned failed  = 0;
-                if (!r)
+                if (!r) 
                     failed++;
                 counter++;
-                if (counter % 100000 == 0)
+                if (counter % 100000 == 0) 
                     std::cerr << "[cg_eq] " << counter << " " << failed << "\n";
                 return r;
 #endif
@@ -170,7 +170,7 @@ namespace smt {
         };
 
         typedef chashtable<enode*, cg_binary_hash, cg_binary_eq> binary_table;
-
+        
         struct cg_comm_hash {
             unsigned operator()(enode * n) const {
                 SASSERT(n->get_num_args() == 2);
@@ -181,7 +181,7 @@ namespace smt {
                 return hash_u((h1 << 16) | (h2 & 0xFFFF));
             }
         };
-
+        
         struct cg_comm_eq {
             bool & m_commutativity;
             cg_comm_eq(bool & c):m_commutativity(c) {}
@@ -230,7 +230,7 @@ namespace smt {
 
         void * mk_table_for(func_decl * d);
         unsigned set_func_decl_id(enode * n);
-
+        
         void * get_table(enode * n) {
             unsigned tid = n->get_func_decl_id();
             if (tid == UINT_MAX)
@@ -253,7 +253,7 @@ namespace smt {
             // it doesn't make sense to insert a constant.
             SASSERT(n->get_num_args() > 0);
             enode * n_prime;
-            void * t = get_table(n);
+            void * t = get_table(n); 
             switch (static_cast<table_kind>(GET_TAG(t))) {
             case UNARY:
                 n_prime = UNTAG(unary_table*, t)->insert_if_not_there(n);
@@ -273,7 +273,7 @@ namespace smt {
 
         void erase(enode * n) {
             SASSERT(n->get_num_args() > 0);
-            void * t = get_table(n);
+            void * t = get_table(n); 
             switch (static_cast<table_kind>(GET_TAG(t))) {
             case UNARY:
                 UNTAG(unary_table*, t)->erase(n);
@@ -292,7 +292,7 @@ namespace smt {
 
         bool contains(enode * n) const {
             SASSERT(n->get_num_args() > 0);
-            void * t = const_cast<cg_table*>(this)->get_table(n);
+            void * t = const_cast<cg_table*>(this)->get_table(n); 
             switch (static_cast<table_kind>(GET_TAG(t))) {
             case UNARY:
                 return UNTAG(unary_table*, t)->contains(n);
@@ -308,7 +308,7 @@ namespace smt {
         enode * find(enode * n) const {
             SASSERT(n->get_num_args() > 0);
             enode * r = 0;
-            void * t = const_cast<cg_table*>(this)->get_table(n);
+            void * t = const_cast<cg_table*>(this)->get_table(n); 
             switch (static_cast<table_kind>(GET_TAG(t))) {
             case UNARY:
                 return UNTAG(unary_table*, t)->find(n, r) ? r : 0;
@@ -324,7 +324,7 @@ namespace smt {
         bool contains_ptr(enode * n) const {
             enode * r;
             SASSERT(n->get_num_args() > 0);
-            void * t = const_cast<cg_table*>(this)->get_table(n);
+            void * t = const_cast<cg_table*>(this)->get_table(n); 
             switch (static_cast<table_kind>(GET_TAG(t))) {
             case UNARY:
                 return UNTAG(unary_table*, t)->find(n, r) && n == r;
@@ -347,7 +347,7 @@ namespace smt {
 #endif
     };
 
-#endif
+#endif 
 };
 
 #endif /* _SMT_CG_TABLE_H_ */

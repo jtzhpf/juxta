@@ -7,11 +7,11 @@ Module Name:
 
 Abstract:
 
-    Expressions + Offsets.
+    Expressions + Offsets. 
     In order to avoid creating variants of terms, we use a pair (expression, offset),
     where offset is just a small integer.
     Non ground terms with different offsets are always considered
-    disequal. For example, (f x):1 is different from (f x):2, and
+    disequal. For example, (f x):1 is different from (f x):2, and 
     (f x):1 is unifiable with x:2.
 
 Author:
@@ -32,7 +32,7 @@ class expr_offset {
 public:
     expr_offset():m_expr(0), m_offset(0) {}
     expr_offset(expr * e, unsigned o):m_expr(e), m_offset(o) {}
-
+    
     expr * get_expr() const { return m_expr; }
     unsigned get_offset() const { return m_offset; }
     bool operator==(expr_offset const & other) const { return m_expr == other.m_expr && m_offset == other.m_offset; }

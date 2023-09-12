@@ -28,7 +28,7 @@ float_rewriter::~float_rewriter() {
 
 void float_rewriter::updt_params(params_ref const & p) {
 }
-
+ 
 void float_rewriter::get_param_descrs(param_descrs & r) {
 }
 
@@ -50,7 +50,7 @@ br_status float_rewriter::mk_app_core(func_decl * f, unsigned num_args, expr * c
     case OP_FLOAT_SQRT:      SASSERT(num_args == 2); st = mk_sqrt(args[0], args[1], result); break;
     case OP_FLOAT_ROUND_TO_INTEGRAL: SASSERT(num_args == 2); st = mk_round(args[0], args[1], result); break;
 
-    case OP_FLOAT_EQ:        SASSERT(num_args == 2); st = mk_float_eq(args[0], args[1], result); break;
+    case OP_FLOAT_EQ:        SASSERT(num_args == 2); st = mk_float_eq(args[0], args[1], result); break; 
     case OP_FLOAT_LT:        SASSERT(num_args == 2); st = mk_lt(args[0], args[1], result); break;
     case OP_FLOAT_GT:        SASSERT(num_args == 2); st = mk_gt(args[0], args[1], result); break;
     case OP_FLOAT_LE:        SASSERT(num_args == 2); st = mk_le(args[0], args[1], result); break;
@@ -84,10 +84,10 @@ br_status float_rewriter::mk_to_fp(func_decl * f, unsigned num_args, expr * cons
         mpf_rounding_mode rm;
         if (!m_util.is_rm_value(args[0], rm))
             return BR_FAILED;
-
+        
         rational q;
         mpf q_mpf;
-        if (m_util.au().is_numeral(args[1], q)) {
+        if (m_util.au().is_numeral(args[1], q)) {        
             TRACE("fp_rewriter", tout << "q: " << q << std::endl; );
             mpf v;
             m_util.fm().set(v, ebits, sbits, rm, q.to_mpq());
@@ -105,11 +105,11 @@ br_status float_rewriter::mk_to_fp(func_decl * f, unsigned num_args, expr * cons
             // TRACE("fp_rewriter", tout << "result: " << result << std::endl; );
             return BR_DONE;
         }
-        else
+        else 
             return BR_FAILED;
     }
-    else if (num_args == 3 &&
-             m_util.is_rm(args[0]) &&
+    else if (num_args == 3 && 
+             m_util.is_rm(args[0]) && 
              m_util.au().is_real(args[1]) &&
              m_util.au().is_int(args[2])) {
 
@@ -137,7 +137,7 @@ br_status float_rewriter::mk_to_fp(func_decl * f, unsigned num_args, expr * cons
     }
 }
 
-br_status float_rewriter::mk_add(expr * arg1, expr * arg2, expr * arg3, expr_ref & result) {
+br_status float_rewriter::mk_add(expr * arg1, expr * arg2, expr * arg3, expr_ref & result) {    
     mpf_rounding_mode rm;
     if (m_util.is_rm_value(arg1, rm)) {
         scoped_mpf v2(m_util.fm()), v3(m_util.fm());
@@ -158,7 +158,7 @@ br_status float_rewriter::mk_sub(expr * arg1, expr * arg2, expr * arg3, expr_ref
     return BR_REWRITE2;
 }
 
-br_status float_rewriter::mk_mul(expr * arg1, expr * arg2, expr * arg3, expr_ref & result) {
+br_status float_rewriter::mk_mul(expr * arg1, expr * arg2, expr * arg3, expr_ref & result) {    
     mpf_rounding_mode rm;
     if (m_util.is_rm_value(arg1, rm)) {
         scoped_mpf v2(m_util.fm()), v3(m_util.fm());
@@ -209,7 +209,7 @@ br_status float_rewriter::mk_neg(expr * arg1, expr_ref & result) {
         result = to_app(arg1)->get_arg(0);
         return BR_DONE;
     }
-
+    
     scoped_mpf v1(m_util.fm());
     if (m_util.is_value(arg1, v1)) {
         m_util.fm().neg(v1);
@@ -256,7 +256,7 @@ br_status float_rewriter::mk_min(expr * arg1, expr * arg2, expr_ref & result) {
     // expand as using ite's
     result = m().mk_ite(m().mk_or(mk_eq_nan(arg1), m().mk_and(m_util.mk_is_zero(arg1), m_util.mk_is_zero(arg2))),
                         arg2,
-                        m().mk_ite(mk_eq_nan(arg2),
+                        m().mk_ite(mk_eq_nan(arg2), 
                                    arg1,
                                    m().mk_ite(m_util.mk_lt(arg1, arg2),
                                            arg1,
@@ -276,7 +276,7 @@ br_status float_rewriter::mk_max(expr * arg1, expr * arg2, expr_ref & result) {
     // expand as using ite's
     result = m().mk_ite(m().mk_or(mk_eq_nan(arg1), m().mk_and(m_util.mk_is_zero(arg1), m_util.mk_is_zero(arg2))),
                         arg2,
-                        m().mk_ite(mk_eq_nan(arg2),
+                        m().mk_ite(mk_eq_nan(arg2), 
                                    arg1,
                                    m().mk_ite(m_util.mk_gt(arg1, arg2),
                                               arg1,
@@ -520,12 +520,12 @@ br_status float_rewriter::mk_to_ieee_bv(expr * arg1, expr_ref & result) {
     return BR_FAILED;
 }
 
-br_status float_rewriter::mk_fp(expr * arg1, expr * arg2, expr * arg3, expr_ref & result) {
+br_status float_rewriter::mk_fp(expr * arg1, expr * arg2, expr * arg3, expr_ref & result) {    
     bv_util bu(m());
     rational r1, r2, r3;
     unsigned bvs1, bvs2, bvs3;
 
-    if (bu.is_numeral(arg1, r1, bvs1) && bu.is_numeral(arg2, r2, bvs2) && bu.is_numeral(arg3, r3, bvs3)) {
+    if (bu.is_numeral(arg1, r1, bvs1) && bu.is_numeral(arg2, r2, bvs2) && bu.is_numeral(arg3, r3, bvs3)) {        
         SASSERT(m_util.fm().mpz_manager().is_one(r2.to_mpq().denominator()));
         SASSERT(m_util.fm().mpz_manager().is_one(r3.to_mpq().denominator()));
         SASSERT(m_util.fm().mpz_manager().is_int64(r3.to_mpq().numerator()));

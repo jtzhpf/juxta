@@ -9,12 +9,12 @@ Abstract:
 
     This is the old model object.
     smt::context used it during model construction and for
-    reporting the model for external consumers.
+    reporting the model for external consumers. 
     The whole value_factory "business" was due to model construction
     and unnecessary for external consumers.
-    Future solvers will not use value_factory objects for
-    helping during model construction.
-
+    Future solvers will not use value_factory objects for 
+    helping during model construction. 
+    
     After smt::context finishes building the model, it is converted
     into a new (light) model object.
 
@@ -55,21 +55,21 @@ class proto_model : public model_core {
     // Invariant: m_decls subset m_func_decls union m_const_decls union union m_value_decls
     // Invariant: m_func_decls  subset m_decls
     // Invariant: m_const_decls subset m_decls
-
+    
     void remove_aux_decls_not_in_set(ptr_vector<func_decl> & decls, func_decl_set const & s);
     void cleanup_func_interp(func_interp * fi, func_decl_set & found_aux_fs);
 
 
 public:
     proto_model(ast_manager & m, simplifier & s, params_ref const & p = params_ref());
-    virtual ~proto_model();
+    virtual ~proto_model(); 
 
     void register_factory(value_factory * f) { m_factories.register_plugin(f); }
 
     bool eval(expr * e, expr_ref & result, bool model_completion = false);
 
     bool is_array_value(expr * v) const;
-
+    
     value_factory * get_factory(family_id fid);
 
     expr * get_some_value(sort * s);
@@ -107,7 +107,7 @@ public:
     void complete_partial_funcs();
 
     //
-    // Create final model object.
+    // Create final model object. 
     // proto_model is corrupted after that.
     model * mk_model();
 };

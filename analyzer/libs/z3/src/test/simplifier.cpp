@@ -8,12 +8,12 @@
 
 static void ev_const(Z3_context ctx, Z3_ast e) {
     Z3_ast r = Z3_simplify(ctx, e);
-    TRACE("simplifier",
+    TRACE("simplifier", 
           tout << Z3_ast_to_string(ctx, e) << " -> ";
           tout << Z3_ast_to_string(ctx, r) << "\n";);
     Z3_ast_kind k = Z3_get_ast_kind(ctx, r);
     SASSERT(k == Z3_NUMERAL_AST ||
-            (k == Z3_APP_AST &&
+            (k == Z3_APP_AST && 
              (Z3_OP_TRUE  == Z3_get_decl_kind(ctx,Z3_get_app_decl(ctx, Z3_to_app(ctx, r))) ||
               Z3_OP_FALSE == Z3_get_decl_kind(ctx,Z3_get_app_decl(ctx, Z3_to_app(ctx, r))))));
 }
@@ -81,13 +81,13 @@ static void test_datatypes() {
     Z3_context ctx = Z3_mk_context(cfg);
     Z3_sort int_ty, int_list;
     Z3_func_decl nil_decl, is_nil_decl, cons_decl, is_cons_decl, head_decl, tail_decl;
-    Z3_ast nil, l1;
+    Z3_ast nil, l1;    
 
     int_ty = Z3_mk_int_sort(ctx);
 
     int_list = Z3_mk_list_sort(ctx, Z3_mk_string_symbol(ctx, "int_list"), int_ty,
                                &nil_decl, &is_nil_decl, &cons_decl, &is_cons_decl, &head_decl, &tail_decl);
-
+                    
     nil = Z3_mk_app(ctx, nil_decl, 0, 0);
 
     Z3_ast a = Z3_simplify(ctx, Z3_mk_app(ctx, is_nil_decl, 1, &nil));
@@ -99,11 +99,11 @@ static void test_datatypes() {
     Z3_ast one = Z3_mk_numeral(ctx, "1", int_ty);
     Z3_ast args[2] = { one, nil };
     l1 = Z3_mk_app(ctx, cons_decl, 2, args);
-    SASSERT(nil == Z3_simplify(ctx, Z3_mk_app(ctx, tail_decl, 1, &l1)));
-    SASSERT(one == Z3_simplify(ctx, Z3_mk_app(ctx, head_decl, 1, &l1)));
+    SASSERT(nil == Z3_simplify(ctx, Z3_mk_app(ctx, tail_decl, 1, &l1))); 
+    SASSERT(one == Z3_simplify(ctx, Z3_mk_app(ctx, head_decl, 1, &l1))); 
 
     SASSERT(Z3_mk_false(ctx) == Z3_simplify(ctx, Z3_mk_eq(ctx, nil, l1)));
-
+    
     Z3_del_config(cfg);
     Z3_del_context(ctx);
 }
@@ -124,7 +124,7 @@ static void test_skolemize_bug() {
     Z3_ast n1 = Z3_mk_numeral(ctx, "1", Real);
     Z3_ast args1[2] = { x, n1 };
     Z3_ast args2[2] = { x, y };
-    Z3_ast args[2] = { Z3_mk_eq(ctx, Z3_mk_add(ctx, 2, args1), xp),
+    Z3_ast args[2] = { Z3_mk_eq(ctx, Z3_mk_add(ctx, 2, args1), xp), 
                        Z3_mk_ge(ctx, Z3_mk_add(ctx, 2, args2), n0) };
     Z3_ast f  = Z3_mk_and(ctx, 2, args);
     Z3_ast f2 = Z3_mk_exists(ctx, 0, 0, 0, 1, &Real, &x_name, f);
@@ -151,7 +151,7 @@ static void test_bool() {
 }
 
 static void test_array() {
-
+    
     Z3_config cfg = Z3_mk_config();
     Z3_context ctx = Z3_mk_context(cfg);
     Z3_sort i = Z3_mk_int_sort(ctx);
@@ -161,7 +161,7 @@ static void test_array() {
     Z3_ast n4 = Z3_mk_numeral(ctx, "4", i);
     Z3_ast s1 = Z3_mk_const(ctx, Z3_mk_string_symbol(ctx,"s1"), i);
     Z3_ast s2 = Z3_mk_const(ctx, Z3_mk_string_symbol(ctx,"s2"), i);
-
+    
     Z3_ast c1 = Z3_mk_const_array(ctx, i, n1);
     Z3_ast x1  = Z3_mk_store(ctx, Z3_mk_store(ctx, c1, n2, n3), n1, n4);
     Z3_ast x2  = Z3_mk_store(ctx, Z3_mk_store(ctx, c1, n1, n4), n2, n3);
@@ -175,15 +175,15 @@ static void test_array() {
     TRACE("simplifier", tout << Z3_ast_to_string(ctx, Z3_simplify(ctx, Z3_mk_eq(ctx, x2, x3))) << "\n";);
     // SASSERT(rxy == Z3_mk_true(ctx));
     // SASSERT(Z3_simplify(ctx, Z3_mk_eq(ctx, x2, x3)) == Z3_mk_false(ctx));
-
+    
     for (unsigned i = 0; i < 4; ++i) {
         for (unsigned j = 0; j < 4; ++j) {
             exy  = Z3_mk_eq(ctx, xs[i], xs[j]);
             rxy  = Z3_simplify(ctx, exy);
-
-            TRACE("simplifier",
+            
+            TRACE("simplifier", 
                   tout << Z3_ast_to_string(ctx, exy);
-                  tout << " -> " << Z3_ast_to_string(ctx, rxy) << "\n";
+                  tout << " -> " << Z3_ast_to_string(ctx, rxy) << "\n";  
                   );
         }
     }
@@ -191,7 +191,7 @@ static void test_array() {
     Z3_ast sel1 = Z3_mk_select(ctx, x1, n1);
     Z3_ast sel2 = Z3_mk_select(ctx, x1, n4);
 
-    TRACE("simplifier",
+    TRACE("simplifier", 
           tout << Z3_ast_to_string(ctx,  Z3_simplify(ctx, sel1)) << "\n";
           tout << Z3_ast_to_string(ctx,  Z3_simplify(ctx, sel2)) << "\n";
           );

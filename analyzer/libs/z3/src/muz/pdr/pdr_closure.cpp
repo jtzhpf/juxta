@@ -69,7 +69,7 @@ namespace pdr {
 
 
     closure::closure(pred_transformer& p, bool is_closure):
-        m(p.get_manager()), m_pt(p), a(m),
+        m(p.get_manager()), m_pt(p), a(m), 
         m_is_closure(is_closure), m_sigma(m), m_trail(m) {}
 
 
@@ -81,7 +81,7 @@ namespace pdr {
             m_sigma.push_back(m.mk_fresh_const("sigma", a.mk_real()));
         }
 
-        unsigned sz = m_pt.sig_size();
+        unsigned sz = m_pt.sig_size();        
 
         for (unsigned i = 0; i < sz; ++i) {
             expr* var;
@@ -93,7 +93,7 @@ namespace pdr {
                 for (unsigned j = 0; j < num_vars; ++j) {
                     if (!m_vars[j].find(fn1, var)) {
                         var  = m.mk_fresh_const(fn1->get_name().str().c_str(), srt);
-                        m_trail.push_back(var);
+                        m_trail.push_back(var);               
                         m_vars[j].insert(fn1, var);
                     }
                     vars.push_back(var);
@@ -138,14 +138,14 @@ namespace pdr {
             IF_VERBOSE(1, verbose_stream() << "Cannot close: " << mk_pp(e, m) << "\n";);
             result = m.mk_true();
         }
-        return result;
+        return result;        
     }
 
     expr_ref closure::close_conjunction(expr* fml) {
         expr_ref_vector fmls(m);
         qe::flatten_and(fml, fmls);
         for (unsigned i = 0; i < fmls.size(); ++i) {
-            fmls[i] = close_fml(fmls[i].get());
+            fmls[i] = close_fml(fmls[i].get());            
         }
         return qe::mk_and(fmls);
     }

@@ -48,7 +48,7 @@ namespace nlsat {
             polynomial::cache  &    m_cache;
             polynomial_ref_vector   m_set;
             svector<char>           m_in_set;
-
+            
             todo_set(polynomial::cache & u):m_cache(u), m_set(u.pm()) {}
 
             void reset() {
@@ -59,7 +59,7 @@ namespace nlsat {
                 }
                 m_set.reset();
             }
-
+            
             void insert(poly * p) {
                 pmanager & pm = m_set.m();
                 p = m_cache.mk_unique(p);
@@ -69,9 +69,9 @@ namespace nlsat {
                 m_in_set.setx(pid, true, false);
                 m_set.push_back(p);
             }
-
+            
             bool empty() const { return m_set.empty(); }
-
+            
             // Return max variable in todo_set
             var max_var() const {
                 pmanager & pm = m_set.m();
@@ -85,7 +85,7 @@ namespace nlsat {
                 }
                 return max;
             }
-
+            
             /**
                \brief Remove the maximal polynomials from the set and store
                them in max_polys. Return the maximal variable
@@ -113,7 +113,7 @@ namespace nlsat {
                 return x;
             }
         };
-
+        
         // temporary field for store todo set of polynomials
         todo_set                m_todo;
 
@@ -134,7 +134,7 @@ namespace nlsat {
             m_atoms(atoms),
             m_x2eq(x2eq),
             m_am(x2v.am()),
-            m_cache(u),
+            m_cache(u), 
             m_pm(u.pm()),
             m_ps(m_pm),
             m_psc_tmp(m_pm),
@@ -149,14 +149,14 @@ namespace nlsat {
             m_full_dimensional = false;
             m_minimize_cores   = false;
         }
-
+        
         ~imp() {
         }
 
         void display(std::ostream & out, polynomial_ref const & p) const {
             m_pm.display(out, p, m_solver.display_proc());
         }
-
+        
         void display(std::ostream & out, polynomial_ref_vector const & ps, char const * delim = "\n") const {
             for (unsigned i = 0; i < ps.size(); i++) {
                 if (i > 0)
@@ -164,7 +164,7 @@ namespace nlsat {
                 m_pm.display(out, ps.get(i), m_solver.display_proc());
             }
         }
-
+        
         void display(std::ostream & out, literal l) const { m_solver.display(out, l); }
         void display_var(std::ostream & out, var x) const { m_solver.display(out, x); }
         void display(std::ostream & out, unsigned sz, literal const * ls) {
@@ -174,10 +174,10 @@ namespace nlsat {
             }
         }
         void display(std::ostream & out, literal_vector const & ls) {
-            display(out, ls.size(), ls.c_ptr());
+            display(out, ls.size(), ls.c_ptr()); 
         }
         void display(std::ostream & out, scoped_literal_vector const & ls) {
-            display(out, ls.size(), ls.c_ptr());
+            display(out, ls.size(), ls.c_ptr()); 
         }
 
         /**
@@ -185,7 +185,7 @@ namespace nlsat {
         */
         void add_literal(literal l) {
             SASSERT(m_result != 0);
-            SASSERT(l != true_literal);
+            SASSERT(l != true_literal); 
             if (l == false_literal)
                 return;
             unsigned lidx = l.index();
@@ -216,7 +216,7 @@ namespace nlsat {
             SASSERT(max_var(p) == null_var || m_assignment.is_assigned(max_var(p)));
             return m_am.eval_sign_at(p, m_assignment);
         }
-
+        
         /**
            \brief Wrapper for factorization
         */
@@ -236,7 +236,7 @@ namespace nlsat {
             SASSERT(max_var(p) == x);
             m_cache.psc_chain(p, q, x, result);
         }
-
+        
         /**
            \breif Store in ps the polynomials occurring in the given literals.
         */
@@ -264,7 +264,7 @@ namespace nlsat {
         void add_zero_assumption(polynomial_ref & p) {
             // If p is of the form p1^n1 * ... * pk^nk,
             // then only the factors that are zero in the current interpretation needed to be considered.
-            // I don't want to create a nested conjunction in the clause.
+            // I don't want to create a nested conjunction in the clause. 
             // Then, I assert p_i1 * ... * p_im  != 0
             factor(p, m_factors);
             unsigned num_factors = m_factors.size();
@@ -276,7 +276,7 @@ namespace nlsat {
                 if (sign(f) == 0) {
                     m_zero_fs.push_back(m_factors.get(i));
                     m_is_even.push_back(false);
-                }
+                } 
             }
             SASSERT(!m_zero_fs.empty()); // one of the factors must be zero in the current interpretation, since p is zero in it.
             literal l = m_solver.mk_ineq_literal(atom::EQ, m_zero_fs.size(), m_zero_fs.c_ptr(), m_is_even.c_ptr());
@@ -297,13 +297,13 @@ namespace nlsat {
             // TODO: factor
             add_simple_assumption(k, p, sign);
         }
-
+        
         /**
            \brief Eliminate "vanishing leading coefficients" of p.
            That is, coefficients that vanish in the current
            interpretation.  The resultant p is a reduct of p s.t. its
            leading coefficient does not vanish in the current
-           interpretation. If all coefficients of p vanish, then
+           interpretation. If all coefficients of p vanish, then 
            the resultant p is the zero polynomial.
         */
         void elim_vanishing(polynomial_ref & p) {
@@ -342,15 +342,15 @@ namespace nlsat {
                 p = reduct;
             }
         }
-
+        
         /**
            Eliminate vanishing coefficients of polynomials in ps.
-           The coefficients that are zero (i.e., vanished) are added
+           The coefficients that are zero (i.e., vanished) are added 
            as assumptions into m_result.
         */
         void elim_vanishing(polynomial_ref_vector & ps) {
             unsigned j  = 0;
-            unsigned sz = ps.size();
+            unsigned sz = ps.size(); 
             polynomial_ref p(m_pm);
             for (unsigned i = 0; i < sz; i++) {
                 p = ps.get(i);
@@ -366,14 +366,14 @@ namespace nlsat {
         /**
            Normalize literal with respect to given maximal variable.
            The basic idea is to eliminate vanishing (leading) coefficients from a (arithmetic) literal,
-           and factors from lower stages.
-
+           and factors from lower stages. 
+           
            The vanishing coefficients and factors from lower stages are added as assumptions to the lemma
            being generated.
-
-           Example 1)
-           Assume
-              - l is of the form  (y^2 - 2)*x^3 + y*x + 1 > 0
+           
+           Example 1) 
+           Assume 
+              - l is of the form  (y^2 - 2)*x^3 + y*x + 1 > 0 
               - x is the maximal variable
               - y is assigned to sqrt(2)
            Thus, (y^2 - 2) the coefficient of x^3 vanished. This method returns
@@ -384,7 +384,7 @@ namespace nlsat {
               - l is of the form (x + 2)*(y - 1) > 0
               - x is the maximal variable
               - y is assigned to 0
-           (x + 2) < 0 is returned and assumption (y - 1) < 0 is added as an assumption.
+           (x + 2) < 0 is returned and assumption (y - 1) < 0 is added as an assumption.   
 
            Remark: root atoms are not normalized
         */
@@ -406,7 +406,7 @@ namespace nlsat {
                     if (max_var(p) == max)
                         elim_vanishing(p); // eliminate vanishing coefficients of max
                     if (is_const(p) || max_var(p) < max) {
-                        int s = sign(p);
+                        int s = sign(p); 
                         if (!is_const(p)) {
                             SASSERT(max_var(p) != null_var);
                             SASSERT(max_var(p) < max);
@@ -414,7 +414,7 @@ namespace nlsat {
                             if (s == 0)
                                 add_simple_assumption(atom::EQ, p);  // add assumption p = 0
                             else if (a->is_even(i))
-                                add_simple_assumption(atom::EQ, p, true); // add assumption p != 0
+                                add_simple_assumption(atom::EQ, p, true); // add assumption p != 0 
                             else if (s < 0)
                                 add_simple_assumption(atom::LT, p); // add assumption p < 0
                             else
@@ -447,7 +447,7 @@ namespace nlsat {
                         atom_val = false;
                     else if (a->get_kind() == atom::LT)
                         atom_val = atom_sign < 0;
-                    else
+                    else 
                         atom_val = atom_sign > 0;
                     bool lit_val  = l.sign() ? !atom_val : atom_val;
                     return lit_val ? true_literal : false_literal;
@@ -503,7 +503,7 @@ namespace nlsat {
         var max_var(polynomial_ref_vector const & ps) {
             if (ps.empty())
                 return null_var;
-            var max = max_var(ps.get(0));
+            var max = max_var(ps.get(0)); 
             SASSERT(max != null_var); // there are no constant polynomials in ps
             unsigned sz = ps.size();
             for (unsigned i = 1; i < sz; i++) {
@@ -534,7 +534,7 @@ namespace nlsat {
                 if (a != 0) {
                     var x = a->max_var();
                     SASSERT(x != null_var);
-                    if (max == null_var || x > max)
+                    if (max == null_var || x > max) 
                         max = x;
                 }
             }
@@ -586,12 +586,12 @@ namespace nlsat {
                 m_todo.insert(p);
             }
         }
-
+        
         /**
            \brief Add leading coefficients of the polynomials in ps.
 
            \pre all polynomials in ps contain x
-
+           
            Remark: the leading coefficients do not vanish in the current model,
            since all polynomials in ps were pre-processed using elim_vanishing.
         */
@@ -627,7 +627,7 @@ namespace nlsat {
             unsigned sz = S.size();
             for (unsigned i = 0; i < sz; i++) {
                 s = S.get(i);
-                TRACE("nlsat_explain", tout << "processing psc(" << i << ")\n"; display(tout, s); tout << "\n";);
+                TRACE("nlsat_explain", tout << "processing psc(" << i << ")\n"; display(tout, s); tout << "\n";); 
                 if (is_zero(s)) {
                     TRACE("nlsat_explain", tout << "skipping psc is the zero polynomial\n";);
                     continue;
@@ -641,7 +641,7 @@ namespace nlsat {
                     add_zero_assumption(s);
                     continue;
                 }
-                TRACE("nlsat_explain",
+                TRACE("nlsat_explain", 
                       tout << "adding v-psc of\n";
                       display(tout, p);
                       tout << "\n";
@@ -651,10 +651,10 @@ namespace nlsat {
                       tout << "\n";);
                 // s did not vanish completely, but its leading coefficient may have vanished
                 add_factors(s);
-                return;
+                return; 
             }
         }
-
+        
         /**
            \brief For each p in ps, add v-psc(x, p, p') into m_todo
 
@@ -706,7 +706,7 @@ namespace nlsat {
                 // literal can be expressed using a linear ineq_atom
                 polynomial_ref p_prime(m_pm);
                 p_prime = p;
-                if (m_pm.m().is_neg(c))
+                if (m_pm.m().is_neg(c)) 
                     p_prime = neg(p_prime);
                 p = p_prime.get();
                 switch (k) {
@@ -734,7 +734,7 @@ namespace nlsat {
 
         /**
            Add one or two literals that specify in which cell of variable y the current interpretation is.
-           One literal is added for the cases:
+           One literal is added for the cases: 
               - y in (-oo, min) where min is the minimal root of the polynomials p2 in ps
                  We add literal
                     ! (y < root_1(p2))
@@ -743,7 +743,7 @@ namespace nlsat {
                     ! (y > root_k(p1))  where k is the number of real roots of p
               - y = r           where r is the k-th root of a polynomial p in ps
                  We add literal
-                    ! (y = root_k(p))
+                    ! (y = root_k(p)) 
            Two literals are added when
               - y in (l, u) where (l, u) does not contain any root of polynomials p in ps, and
                   l is the i-th root of a polynomial p1 in ps, and u is the j-th root of a polynomial p2 in ps.
@@ -787,7 +787,7 @@ namespace nlsat {
                     }
                     else if (s < 0) {
                         // y_val < roots[i]
-
+                        
                         // check if roots[i] is a better upper bound
                         if (upper_inf || m_am.lt(roots[i], upper)) {
                             upper_inf = false;
@@ -809,8 +809,8 @@ namespace nlsat {
                     }
                 }
             }
-
-            if (!lower_inf)
+            
+            if (!lower_inf) 
                 add_root_literal(m_full_dimensional ? atom::ROOT_GE : atom::ROOT_GT, y, i_lower, p_lower);
             if (!upper_inf)
                 add_root_literal(m_full_dimensional ? atom::ROOT_LE : atom::ROOT_LT, y, i_upper, p_upper);
@@ -830,7 +830,7 @@ namespace nlsat {
             }
             return true;
         }
-
+        
         /**
            \brief Apply model-based projection operation defined in our paper.
         */
@@ -838,7 +838,7 @@ namespace nlsat {
             if (ps.empty())
                 return;
             m_todo.reset();
-            for (unsigned i = 0; i < ps.size(); i++)
+            for (unsigned i = 0; i < ps.size(); i++) 
                 m_todo.insert(ps.get(i));
             var x = m_todo.remove_max_polys(ps);
             // Remark: after vanishing coefficients are eliminated, ps may not contain max_x anymore
@@ -870,15 +870,15 @@ namespace nlsat {
 
         /*
            Conflicting core simplification using equations.
-           The idea is to use equations to reduce the complexity of the
+           The idea is to use equations to reduce the complexity of the 
            conflicting core.
 
            Basic idea:
-           Let l be of the form
+           Let l be of the form 
              h > 0
            and eq of the form
              p = 0
-
+           
            Using pseudo-division we have that:
              lc(p)^d h = q p + r
            where q and r are the pseudo-quotient and pseudo-remainder
@@ -888,20 +888,20 @@ namespace nlsat {
                 sign(h) =  sign(r)
            Otherwise
                 sign(h) = -sign(r) flipped the sign
-
+           
            We have the following rules
-
+                
            If
               (C and h > 0) implies false
            Then
               1. (C and p = 0 and lc(p) != 0 and r > 0) implies false   if d is even
               2. (C and p = 0 and lc(p) > 0  and r > 0) implies false   if lc(p) > 0 and d is odd
               3. (C and p = 0 and lc(p) < 0  and r < 0) implies false   if lc(p) < 0 and d is odd
-
+            
            If
               (C and h = 0) implies false
            Then
-              (C and p = 0 and lc(p) != 0 and r = 0) implies false
+              (C and p = 0 and lc(p) != 0 and r = 0) implies false      
 
            If
               (C and h < 0) implies false
@@ -913,7 +913,7 @@ namespace nlsat {
            Good cases:
            - lc(p) is a constant
            - p = 0 is already in the conflicting core
-           - p = 0 is linear
+           - p = 0 is linear 
 
            We only use equations from the conflicting core and lower stages.
            Equations from lower stages are automatically added to the lemma.
@@ -973,12 +973,12 @@ namespace nlsat {
                 // adjust sign based on sign of lc of eq
                 if (d % 2 == 1 && // d is odd
                     !is_even   && // degree of the factor is odd
-                    info.m_lc_sign < 0 // lc of the eq is negative
+                    info.m_lc_sign < 0 // lc of the eq is negative 
                     ) {
                     atom_sign = -atom_sign; // flipped the sign of the current literal
                 }
                 if (is_const(new_factor)) {
-                    int s = sign(new_factor);
+                    int s = sign(new_factor); 
                     if (s == 0) {
                         bool atom_val = a->get_kind() == atom::EQ;
                         bool lit_val  = l.sign() ? !atom_val : atom_val;
@@ -994,7 +994,7 @@ namespace nlsat {
                         return;
                     }
                     else {
-                        // We have shown the current factor is a constant MODULO the sign of the leading coefficient (of the equation used to rewrite the factor).
+                        // We have shown the current factor is a constant MODULO the sign of the leading coefficient (of the equation used to rewrite the factor). 
                         if (!info.m_lc_const) {
                             // If the leading coefficient is not a constant, we must store this information as an extra assumption.
                             if (d % 2 == 0 || // d is even
@@ -1051,7 +1051,7 @@ namespace nlsat {
                 new_lit = l;
             }
         }
-
+        
         bool simplify(scoped_literal_vector & C, poly const * eq, var max) {
             bool modified_core = false;
             eq_info info;
@@ -1170,7 +1170,7 @@ namespace nlsat {
                         SASSERT(m_pm.degree(eq_p, y) > 0);
                         // TODO: create a parameter
                         // In the current experiments, using equations with non constant coefficients produces a blowup
-                        if (!m_pm.nonzero_const_coeff(eq_p, y, m_pm.degree(eq_p, y)))
+                        if (!m_pm.nonzero_const_coeff(eq_p, y, m_pm.degree(eq_p, y))) 
                             continue;
                         if (m_pm.degree(p, y) >= m_pm.degree(eq_p, y))
                             return to_ineq_atom(eq);
@@ -1179,7 +1179,7 @@ namespace nlsat {
             }
             return 0;
         }
-
+        
         /**
            \brief Simplify the core using equalities.
         */
@@ -1189,7 +1189,7 @@ namespace nlsat {
                 poly * eq = select_eq(C, max);
                 if (eq == 0)
                     break;
-                TRACE("nlsat_simplify_core", tout << "using equality for simplifying core\n";
+                TRACE("nlsat_simplify_core", tout << "using equality for simplifying core\n"; 
                       m_pm.display(tout, eq, m_solver.display_proc()); tout << "\n";);
                 if (!simplify(C, eq, max))
                     break;
@@ -1203,7 +1203,7 @@ namespace nlsat {
                 SASSERT(!eq->is_even(0));
                 poly * eq_p = eq->p(0);
                 VERIFY(simplify(C, eq_p, max));
-                // add equation as an assumption
+                // add equation as an assumption                
                 add_literal(literal(eq->bvar(), true));
             }
         }
@@ -1238,7 +1238,7 @@ namespace nlsat {
                 main(num, ls);
             }
         }
-
+        
         // Auxiliary method for core minimization.
         literal_vector m_min_newtodo;
         bool minimize_core(literal_vector & todo, literal_vector & core) {
@@ -1319,7 +1319,7 @@ namespace nlsat {
                 process2(num, ls);
             }
         }
-
+      
         void operator()(unsigned num, literal const * ls, scoped_literal_vector & result) {
             SASSERT(check_already_added());
             SASSERT(num > 0);

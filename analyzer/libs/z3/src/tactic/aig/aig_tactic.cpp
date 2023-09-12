@@ -37,7 +37,7 @@ class aig_tactic : public tactic {
                 m_owner.m_aig_manager = mng;
             }
         }
-
+        
         ~mk_aig_manager() {
             aig_manager * mng = m_owner.m_aig_manager;
             #pragma omp critical (aig_tactic)
@@ -49,10 +49,10 @@ class aig_tactic : public tactic {
     };
 
 public:
-    aig_tactic(params_ref const & p = params_ref()):m_aig_manager(0) {
-        updt_params(p);
+    aig_tactic(params_ref const & p = params_ref()):m_aig_manager(0) { 
+        updt_params(p); 
     }
-
+    
     virtual tactic * translate(ast_manager & m) {
         aig_tactic * t = alloc(aig_tactic);
         t->m_max_memory = m_max_memory;
@@ -64,10 +64,10 @@ public:
     virtual void updt_params(params_ref const & p) {
         m_max_memory        = megabytes_to_bytes(p.get_uint("max_memory", UINT_MAX));
         m_aig_gate_encoding = p.get_bool("aig_default_gate_encoding", true);
-        m_aig_per_assertion = p.get_bool("aig_per_assertion", true);
+        m_aig_per_assertion = p.get_bool("aig_per_assertion", true); 
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) { 
         insert_max_memory(r);
         r.insert("aig_per_assertion", CPK_BOOL, "(default: true) process one assertion at a time.");
     }
@@ -96,10 +96,10 @@ public:
         }
         SASSERT(g->is_well_sorted());
     }
-
-    virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & g, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         fail_if_proof_generation("aig", g);

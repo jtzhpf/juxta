@@ -24,7 +24,7 @@ Notes:
 
 class dl_rewriter {
     datalog::dl_decl_util    m_util;
-public:
+public:    
     dl_rewriter(ast_manager & m):m_util(m) {}
     family_id get_fid() const { return m_util.get_family_id(); }
     br_status mk_app_core(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result);

@@ -61,8 +61,8 @@ struct param_descrs::imp {
         }
 
         info():
-            m_kind(CPK_INVALID),
-            m_descr(0),
+            m_kind(CPK_INVALID), 
+            m_descr(0), 
             m_default(0),
             m_module(0) {
         }
@@ -89,7 +89,7 @@ struct param_descrs::imp {
     bool contains(symbol const & name) const {
         return m_info.contains(name);
     }
-
+                                    
     param_kind get_kind(symbol const & name) const {
         info i;
         if (m_info.find(name, i))
@@ -112,7 +112,7 @@ struct param_descrs::imp {
     param_kind get_kind_in_module(symbol & name) const {
         param_kind k = get_kind(name);
         symbol prefix, suffix;
-        if (k == CPK_INVALID && split_name(name, prefix, suffix)) {
+        if (k == CPK_INVALID && split_name(name, prefix, suffix)) {   
             k = get_kind(suffix);
             if (k != CPK_INVALID) {
                 if (symbol(get_module(suffix)) == prefix) {
@@ -128,7 +128,7 @@ struct param_descrs::imp {
 
     char const* get_module(symbol const& name) const {
         info i;
-        if (m_info.find(name, i))
+        if (m_info.find(name, i)) 
             return i.m_module;
         return 0;
     }
@@ -150,7 +150,7 @@ struct param_descrs::imp {
     unsigned size() const {
         return m_names.size();
     }
-
+    
     symbol get_param_name(unsigned idx) const {
         return m_names[idx];
     }
@@ -182,7 +182,7 @@ struct param_descrs::imp {
                     out << '_';
                 else if (s[i] >= 'A' && s[i] <= 'Z')
                     out << (s[i] - 'A' + 'a');
-                else
+                else 
                     out << s[i];
             }
             info d;
@@ -323,7 +323,7 @@ class params {
     typedef std::pair<symbol, value> entry;
     svector<entry> m_entries;
     unsigned       m_ref_count;
-
+    
     void del_value(entry & e);
     void del_values();
 
@@ -346,28 +346,28 @@ public:
 
 
     void validate(param_descrs const & p) {
-        svector<params::entry>::iterator it  = m_entries.begin();
+        svector<params::entry>::iterator it  = m_entries.begin();  
         svector<params::entry>::iterator end = m_entries.end();
         symbol suffix, prefix;
-        for (; it != end; ++it) {
+        for (; it != end; ++it) {                                
             param_kind expected = p.get_kind_in_module(it->first);
             if (expected == CPK_INVALID) {
                 std::stringstream strm;
-                strm << "unknown parameter '" << it->first.str() << "'\n";
+                strm << "unknown parameter '" << it->first.str() << "'\n";    
                 strm << "Legal parameters are:\n";
                 p.display(strm, 2, false, false);
                 throw default_exception(strm.str());
             }
-            if (it->second.m_kind != expected &&
+            if (it->second.m_kind != expected && 
                 !(it->second.m_kind == CPK_UINT && expected == CPK_NUMERAL)) {
                 std::stringstream strm;
                 strm << "Parameter " << it->first.str() << " was given argument of type ";
-                strm << it->second.m_kind << ", expected " << expected;
+                strm << it->second.m_kind << ", expected " << expected;                
                 throw default_exception(strm.str());
             }
         }
     }
-
+    
     // getters
     bool get_bool(symbol const & k, bool _default) const;
     bool get_bool(char const * k, bool _default) const;
@@ -378,7 +378,7 @@ public:
     char const * get_str(symbol const & k, char const * _default) const;
     char const * get_str(char const * k, char const * _default) const;
     rational get_rat(symbol const & k, rational const & _default) const;
-    rational get_rat(char const * k, rational const & _default) const;
+    rational get_rat(char const * k, rational const & _default) const; 
     symbol get_sym(symbol const & k, symbol const & _default) const;
     symbol get_sym(char const * k, symbol const & _default) const;
 
@@ -398,16 +398,16 @@ public:
     void set_str(symbol const & k, char const * v);
     void set_str(char const * k, char const * v);
     void set_rat(symbol const & k, rational const & v);
-    void set_rat(char const * k, rational const & v);
+    void set_rat(char const * k, rational const & v); 
     void set_sym(symbol const & k, symbol const & v);
     void set_sym(char const * k, symbol const & v);
 
     void display(std::ostream & out) const {
         out << "(params";
-        svector<params::entry>::const_iterator it  = m_entries.begin();
+        svector<params::entry>::const_iterator it  = m_entries.begin();  
         svector<params::entry>::const_iterator end = m_entries.end();
         for (; it != end; ++it) {
-            out << " " << it->first;
+            out << " " << it->first;            
             switch (it->second.m_kind) {
             case CPK_BOOL:
                 out << " " << (it->second.m_bool_value?"true":"false");
@@ -436,12 +436,12 @@ public:
     }
 
     void display_smt2(std::ostream & out, char const* module, param_descrs& descrs) const {
-        svector<params::entry>::const_iterator it  = m_entries.begin();
+        svector<params::entry>::const_iterator it  = m_entries.begin();  
         svector<params::entry>::const_iterator end = m_entries.end();
         for (; it != end; ++it) {
             if (!descrs.contains(it->first)) continue;
             out << "(set-option :";
-            out << module << ".";
+            out << module << ".";        
             out << it->first;
             switch (it->second.m_kind) {
             case CPK_BOOL:
@@ -471,9 +471,9 @@ public:
     }
 
     void display(std::ostream & out, symbol const & k) const {
-        svector<params::entry>::const_iterator it  = m_entries.begin();
+        svector<params::entry>::const_iterator it  = m_entries.begin();  
         svector<params::entry>::const_iterator end = m_entries.end();
-        for (; it != end; ++it) {
+        for (; it != end; ++it) {                                
             if (it->first != k)
                 continue;
             switch (it->second.m_kind) {
@@ -517,7 +517,7 @@ params_ref::params_ref(params_ref const & p):
 void params_ref::display(std::ostream & out) const {
     if (m_params)
         m_params->display(out);
-    else
+    else 
         out << "(params)";
 }
 
@@ -565,8 +565,8 @@ void params_ref::copy(params_ref const & src) {
 void params_ref::copy_core(params const * src) {
     if (src == 0)
         return;
-    svector<params::entry>::const_iterator it  = src->m_entries.begin();
-    svector<params::entry>::const_iterator end = src->m_entries.end();
+    svector<params::entry>::const_iterator it  = src->m_entries.begin();  
+    svector<params::entry>::const_iterator end = src->m_entries.end();    
     for (; it != end; ++it) {
         switch (it->second.m_kind) {
         case CPK_BOOL:
@@ -606,7 +606,7 @@ void params_ref::init() {
         copy_core(old);
         old->dec_ref();
     }
-
+    
     SASSERT(m_params->m_ref_count == 1);
 }
 
@@ -619,20 +619,20 @@ double params_ref::get_double(char const * k, double _default) const { return m_
 char const * params_ref::get_str(symbol const & k, char const * _default) const { return m_params ? m_params->get_str(k, _default) : _default; }
 char const * params_ref::get_str(char const * k, char const * _default) const { return m_params ? m_params->get_str(k, _default) : _default; }
 
-rational params_ref::get_rat(symbol const & k, rational const & _default) const {
-    return m_params ? m_params->get_rat(k, _default) : _default;
+rational params_ref::get_rat(symbol const & k, rational const & _default) const { 
+    return m_params ? m_params->get_rat(k, _default) : _default; 
 }
 
-rational params_ref::get_rat(char const * k, rational const & _default) const {
-    return m_params ? m_params->get_rat(k, _default) : _default;
+rational params_ref::get_rat(char const * k, rational const & _default) const { 
+    return m_params ? m_params->get_rat(k, _default) : _default; 
 }
 
-symbol params_ref::get_sym(symbol const & k, symbol const & _default) const {
-    return m_params ? m_params->get_sym(k, _default) : _default;
+symbol params_ref::get_sym(symbol const & k, symbol const & _default) const { 
+    return m_params ? m_params->get_sym(k, _default) : _default; 
 }
 
-symbol params_ref::get_sym(char const * k, symbol const & _default) const {
-    return m_params ? m_params->get_sym(k, _default) : _default;
+symbol params_ref::get_sym(char const * k, symbol const & _default) const { 
+    return m_params ? m_params->get_sym(k, _default) : _default; 
 }
 
 bool params_ref::get_bool(char const * k, params_ref const & fallback, bool _default) const {
@@ -790,7 +790,7 @@ void params::del_values() {
 bool params::contains(symbol const & k) const {
     CONTAINS(k);
 }
-
+ 
 bool params::contains(char const * k) const {
     CONTAINS(k);
 }
@@ -830,7 +830,7 @@ void params::reset(char const * k) {
     });                                                                         \
     return _default;                                                             \
 }
-
+    
 #define GET_SIMPLE_VALUE(FIELD_NAME, KIND) GET_VALUE(return it->second.FIELD_NAME;, KIND)
 
 bool params::get_bool(symbol const & k, bool _default) const {
@@ -866,29 +866,29 @@ char const * params::get_str(char const * k, char const * _default) const {
 }
 
 rational params::get_rat(symbol const & k, rational const & _default) const {
-    if (empty()) return _default;
+    if (empty()) return _default;                                               
     TRAVERSE_CONST_ENTRIES(if (it->first == k) {
-            if (it->second.m_kind == CPK_NUMERAL) {
+            if (it->second.m_kind == CPK_NUMERAL) {   
                 return *(it->second.m_rat_value);
             }
             if (it->second.m_kind == CPK_UINT) {
                 return rational(static_cast<int>(it->second.m_uint_value));
             }
         });
-    return _default;
+    return _default;                                                            
 }
 
 rational params::get_rat(char const * k, rational const & _default) const {
-    if (empty()) return _default;
+    if (empty()) return _default;                                               
     TRAVERSE_CONST_ENTRIES(if (it->first == k) {
-            if (it->second.m_kind == CPK_NUMERAL) {
+            if (it->second.m_kind == CPK_NUMERAL) {   
                 return *(it->second.m_rat_value);
             }
             if (it->second.m_kind == CPK_UINT) {
                 return rational(static_cast<int>(it->second.m_uint_value));
             }
         });
-    return _default;
+    return _default;                                                            
 }
 
 symbol params::get_sym(symbol const & k, symbol const & _default) const {
@@ -963,7 +963,7 @@ void params::set_bool(symbol const & k, bool v) {
 void params::set_bool(char const * k, bool  v) {
     SET_SIMPLE_VALUE(m_bool_value, CPK_BOOL);
 }
-
+ 
 void params::set_uint(symbol const & k, unsigned v) {
     SET_SIMPLE_VALUE(m_uint_value, CPK_UINT);
 }

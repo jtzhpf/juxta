@@ -42,7 +42,7 @@ struct theory_bv_params {
         m_bv_enable_int2bv2int(false) {
         updt_params(p);
     }
-
+    
     void updt_params(params_ref const & p);
 };
 

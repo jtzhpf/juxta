@@ -35,11 +35,9 @@ coming.
 
 import logging, re, os, sys
 import data, functions, util, parserdata
+from pymake import errors
 
 _log = logging.getLogger('pymake.parser')
-
-class SyntaxError(util.MakeError):
-    pass
 
 _skipws = re.compile('\S')
 class Data(object):
@@ -108,7 +106,7 @@ _alltokens = re.compile(r'''\\*\# | # hash mark preceeded by any number of backs
                             :: |
                             (?:\$(?:$|[\(\{](?:%s)\s+|.)) | # dollar sign followed by EOF, a function keyword with whitespace, or any character
                             :(?![\\/]) | # colon followed by anything except a slash (Windows path detection)
-                            [=#{}();,|'"]''' % '|'.join(functions.functionmap.iterkeys()), re.VERBOSE)
+                            [=#{}();,|'"]''' % '|'.join(functions.functionmap.keys()), re.VERBOSE)
 
 def iterdata(d, offset, tokenlist, it):
     """
@@ -141,7 +139,7 @@ def _replacemakecontinuations(m):
     start, end = m.span(1)
     if start == -1:
         return ' '
-    return ' '.rjust((end - start) / 2 + 1, '\\')
+    return ' '.rjust((end - start) // 2 + 1, '\\')
 
 def itermakefilechars(d, offset, tokenlist, it, ignorecomments=False):
     """
@@ -166,10 +164,10 @@ def itermakefilechars(d, offset, tokenlist, it, ignorecomments=False):
             # multiple backslashes before a hash are unescaped, halving their total number
             if l % 2:
                 # found a comment
-                yield starttext + token[:(l - 1) / 2], None, None, None
+                yield starttext + token[:(l - 1) // 2], None, None, None
                 return
             else:
-                yield starttext + token[-l / 2:], None, None, mend
+                yield starttext + token[-l // 2:], None, None, mend
         elif token in tokenlist or (token[0] == '$' and '$' in tokenlist):
             yield starttext, token, mstart, mend
         else:
@@ -198,11 +196,11 @@ def flattenmakesyntax(d, offset):
         elements.append(s[offset:mstart])
         if (mend - mstart) % 2:
             # even number of backslashes... it's a comment
-            elements.append(''.ljust((mend - mstart - 1) / 2, '\\'))
+            elements.append(''.ljust((mend - mstart - 1) // 2, '\\'))
             return ''.join(elements)
 
         # odd number of backslashes
-        elements.append(''.ljust((mend - mstart - 2) / 2, '\\') + '#')
+        elements.append(''.ljust((mend - mstart - 2) // 2, '\\') + '#')
         offset = mend
 
     elements.append(s[offset:])
@@ -257,7 +255,7 @@ def iterdefinelines(it, startloc):
         results.append(d.s[d.lstart:d.lend])
 
     # Falling off the end is an unterminated define!
-    raise SyntaxError("define without matching endef", startloc)
+    raise errors.SyntaxError("define without matching endef", startloc)
 
 def _ensureend(d, offset, msg):
     """
@@ -266,46 +264,46 @@ def _ensureend(d, offset, msg):
 
     s = flattenmakesyntax(d, offset)
     if s != '' and not s.isspace():
-        raise SyntaxError(msg, d.getloc(offset))
+        raise errors.SyntaxError(msg, d.getloc(offset))
 
 _eqargstokenlist = ('(', "'", '"')
 
 def ifeq(d, offset):
     if offset > d.lend - 1:
-        raise SyntaxError("No arguments after conditional", d.getloc(offset))
+        raise errors.SyntaxError("No arguments after conditional", d.getloc(offset))
 
     # the variety of formats for this directive is rather maddening
     token = d.s[offset]
     if token not in _eqargstokenlist:
-        raise SyntaxError("No arguments after conditional", d.getloc(offset))
+        raise errors.SyntaxError("No arguments after conditional", d.getloc(offset))
 
     offset += 1
 
     if token == '(':
         arg1, t, offset = parsemakesyntax(d, offset, (',',), itermakefilechars)
         if t is None:
-            raise SyntaxError("Expected two arguments in conditional", d.getloc(d.lend))
+            raise errors.SyntaxError("Expected two arguments in conditional", d.getloc(d.lend))
 
         arg1.rstrip()
 
         offset = d.skipwhitespace(offset)
         arg2, t, offset = parsemakesyntax(d, offset, (')',), itermakefilechars)
         if t is None:
-            raise SyntaxError("Unexpected text in conditional", d.getloc(offset))
+            raise errors.SyntaxError("Unexpected text in conditional", d.getloc(offset))
 
         _ensureend(d, offset, "Unexpected text after conditional")
     else:
         arg1, t, offset = parsemakesyntax(d, offset, (token,), itermakefilechars)
         if t is None:
-            raise SyntaxError("Unexpected text in conditional", d.getloc(d.lend))
+            raise errors.SyntaxError("Unexpected text in conditional", d.getloc(d.lend))
 
         offset = d.skipwhitespace(offset)
         if offset == d.lend:
-            raise SyntaxError("Expected two arguments in conditional", d.getloc(offset))
+            raise errors.SyntaxError("Expected two arguments in conditional", d.getloc(offset))
 
         token = d.s[offset]
         if token not in '\'"':
-            raise SyntaxError("Unexpected text in conditional", d.getloc(offset))
+            raise errors.SyntaxError("Unexpected text in conditional", d.getloc(offset))
 
         arg2, t, offset = parsemakesyntax(d, offset + 1, (token,), itermakefilechars)
 
@@ -336,7 +334,7 @@ _conditionkeywords = {
     'ifndef': ifndef
     }
 
-_conditiontokens = tuple(_conditionkeywords.iterkeys())
+_conditiontokens = tuple(_conditionkeywords.keys())
 _conditionre = re.compile(r'(%s)(?:$|\s+)' % '|'.join(_conditiontokens))
 
 _directivestokenlist = _conditiontokens + \
@@ -459,15 +457,15 @@ def parsestring(s, filename):
             if kword == 'endif':
                 _ensureend(d, offset, "Unexpected data after 'endif' directive")
                 if len(condstack) == 1:
-                    raise SyntaxError("unmatched 'endif' directive",
+                    raise errors.SyntaxError("unmatched 'endif' directive",
                                       d.getloc(offset))
 
                 condstack.pop().endloc = d.getloc(offset)
                 continue
-
+            
             if kword == 'else':
                 if len(condstack) == 1:
-                    raise SyntaxError("unmatched 'else' directive",
+                    raise errors.SyntaxError("unmatched 'else' directive",
                                       d.getloc(offset))
 
                 m = _conditionre.match(d.s, offset, d.lend)
@@ -477,7 +475,7 @@ def parsestring(s, filename):
                 else:
                     kword = m.group(1)
                     if kword not in _conditionkeywords:
-                        raise SyntaxError("Unexpected condition after 'else' directive.",
+                        raise errors.SyntaxError("Unexpected condition after 'else' directive.",
                                           d.getloc(offset))
 
                     startoffset = offset
@@ -494,7 +492,7 @@ def parsestring(s, filename):
                 continue
 
             if kword == 'endef':
-                raise SyntaxError("endef without matching define", d.getloc(offset))
+                raise errors.SyntaxError("endef without matching define", d.getloc(offset))
 
             if kword == 'define':
                 currule = False
@@ -534,7 +532,7 @@ def parsestring(s, filename):
                 vname.rstrip()
 
                 if token is None:
-                    raise SyntaxError("Malformed override directive, need =", d.getloc(d.lstart))
+                    raise errors.SyntaxError("Malformed override directive, need =", d.getloc(d.lstart))
 
                 value = flattenmakesyntax(d, offset).lstrip()
 
@@ -612,7 +610,7 @@ def parsestring(s, filename):
                 value = flattenmakesyntax(d, offset).lstrip()
                 condstack[-1].append(parserdata.SetVariable(e, value=value, valueloc=d.getloc(offset), token=token, targetexp=targets))
             elif token == '|':
-                raise SyntaxError('order-only prerequisites not implemented', d.getloc(offset))
+                raise errors.SyntaxError('order-only prerequisites not implemented', d.getloc(offset))
             else:
                 assert token == ':'
                 # static pattern rule
@@ -630,7 +628,7 @@ def parsestring(s, filename):
                     condstack[-1].append(parserdata.Command(e))
 
     if len(condstack) != 1:
-        raise SyntaxError("Condition never terminated with endif", condstack[-1].loc)
+        raise errors.SyntaxError("Condition never terminated with endif", condstack[-1].loc)
 
     return condstack[0]
 
@@ -674,7 +672,7 @@ def parsemakesyntax(d, offset, stopon, iterfunc):
         @see iterdata
         @see itermakefilechars
         @see itercommandchars
-
+ 
     @return a tuple (expansion, token, offset). If all the data is consumed,
     token and offset will be None
     """
@@ -691,7 +689,7 @@ def parsemakesyntax(d, offset, stopon, iterfunc):
     while True: # this is not a for loop because `di` changes during the function
         assert stacktop is not None
         try:
-            s, token, tokenoffset, offset = di.next()
+            s, token, tokenoffset, offset = next(di)
         except StopIteration:
             break
 
@@ -763,7 +761,7 @@ def parsemakesyntax(d, offset, stopon, iterfunc):
                 fn = stacktop.function
                 fn.append(stacktop.expansion.finish())
                 fn.setup()
-
+                
                 stacktop = stacktop.parent
                 stacktop.expansion.appendfunc(fn)
             else:
@@ -815,7 +813,7 @@ def parsemakesyntax(d, offset, stopon, iterfunc):
             di = iterfunc(d, offset, stacktop.tokenlist, tokeniterator)
 
     if stacktop.parent is not None:
-        raise SyntaxError("Unterminated function call", d.getloc(offset))
+        raise errors.SyntaxError("Unterminated function call", d.getloc(offset))
 
     assert stacktop.parsestate == _PARSESTATE_TOPLEVEL
 

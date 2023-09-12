@@ -142,7 +142,7 @@ bool push_app_ite::visit_children(expr * n) {
             visit(to_app(n)->get_arg(j), visited);
         }
         return visited;
-    case AST_QUANTIFIER:
+    case AST_QUANTIFIER: 
         visit(to_quantifier(n)->get_expr(), visited);
         return visited;
     default:
@@ -169,7 +169,7 @@ void push_app_ite::reduce1(expr * n) {
 
 void push_app_ite::reduce1_app(app * n) {
     m_args.reset();
-
+    
     func_decl * decl = n->get_decl();
     proof_ref p1(m_manager);
     get_args(n, m_args, p1);
@@ -179,7 +179,7 @@ void push_app_ite::reduce1_app(app * n) {
         apply(decl, m_args.size(), m_args.c_ptr(), r);
     else
         mk_app(decl, m_args.size(), m_args.c_ptr(), r);
-
+    
     if (!m_manager.fine_grain_proofs())
         cache_result(n, r, 0);
     else {
@@ -187,7 +187,7 @@ void push_app_ite::reduce1_app(app * n) {
         proof * p;
         if (n == r)
             p = 0;
-        else if (r != s)
+        else if (r != s) 
             p = m_manager.mk_transitivity(p1, m_manager.mk_rewrite(s, r));
         else
             p = p1;
@@ -199,15 +199,15 @@ void push_app_ite::reduce1_quantifier(quantifier * q) {
     expr *  new_body;
     proof * new_body_pr;
     get_cached(q->get_expr(), new_body, new_body_pr);
-
+    
     quantifier * new_q = m_manager.update_quantifier(q, new_body);
-    proof *      p     = q == new_q ? 0 : m_manager.mk_quant_intro(q, new_q, new_body_pr);
+    proof *      p     = q == new_q ? 0 : m_manager.mk_quant_intro(q, new_q, new_body_pr);   
     cache_result(q, new_q, p);
 }
 
 bool ng_push_app_ite::is_target(func_decl * decl, unsigned num_args, expr * const * args) {
     bool r = push_app_ite::is_target(decl, num_args, args);
-    if (!r)
+    if (!r) 
         return false;
     for (unsigned i = 0; i < num_args; i++)
         if (!is_ground(args[i]))

@@ -25,7 +25,7 @@
 #include"util.h"
 #include"memory_manager.h"
 
-// This string buffer will not use the heap if the data consumes less than INITIAL_SIZE bytes.
+// This string buffer will not use the heap if the data consumes less than INITIAL_SIZE bytes. 
 template<unsigned INITIAL_SIZE=64>
 class string_buffer {
     char   m_initial_buffer[INITIAL_SIZE];
@@ -44,7 +44,7 @@ class string_buffer {
         m_buffer   = new_buffer;
     }
 
-public:
+public:  
     string_buffer():
         m_buffer(m_initial_buffer),
         m_pos(0),
@@ -80,17 +80,17 @@ public:
     }
 
     void append(int n) {
-        char buffer[24];
+        char buffer[24]; 
 #ifdef _WINDOWS
         sprintf_s(buffer, ARRAYSIZE(buffer), "%d", n);
 #else
         sprintf(buffer, "%d", n);
-#endif
+#endif 
         append(buffer);
     }
 
     void append(unsigned n) {
-        char buffer[24];
+        char buffer[24]; 
 #ifdef _WINDOWS
         sprintf_s(buffer, ARRAYSIZE(buffer), "%d", n);
 #else
@@ -100,7 +100,7 @@ public:
     }
 
     void append(long n) {
-        char buffer[24];
+        char buffer[24]; 
 #ifdef _WINDOWS
         sprintf_s(buffer, ARRAYSIZE(buffer), "%ld", n);
 #else
@@ -122,10 +122,10 @@ public:
         return m_pos;
     }
 
-    bool empty() const {
+    bool empty() const { 
         return m_pos == 0;
     }
-
+    
     const char * c_str() const {
         if (m_pos >= m_capacity) {
             const_cast<string_buffer * const>(this)->expand();

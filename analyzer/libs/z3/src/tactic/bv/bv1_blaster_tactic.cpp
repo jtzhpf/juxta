@@ -10,7 +10,7 @@ Abstract:
     Rewriter for "blasting" bit-vectors of size n into bit-vectors of size 1.
     This rewriter only supports concat and extract operators.
     This transformation is useful for handling benchmarks that contain
-    many BV equalities.
+    many BV equalities. 
 
     Remark: other operators can be mapped into concat/extract by using
     the simplifiers.
@@ -46,11 +46,11 @@ class bv1_blaster_tactic : public tactic {
         ast_manager & m() const { return m_manager; }
         bv_util & butil() { return m_util; }
         bv_util const & butil() const { return m_util; }
-
+        
         void cleanup_buffers() {
             m_saved.finalize();
         }
-
+        
         rw_cfg(ast_manager & m, params_ref const & p):
             m_manager(m),
             m_util(m),
@@ -67,16 +67,16 @@ class bv1_blaster_tactic : public tactic {
             m_max_steps      = p.get_uint("max_steps", UINT_MAX);
             m_produce_models = p.get_bool("produce_models", false);
         }
-
+        
         bool rewrite_patterns() const { UNREACHABLE(); return false; }
-
-        bool max_steps_exceeded(unsigned num_steps) const {
+        
+        bool max_steps_exceeded(unsigned num_steps) const { 
             cooperate("bv1 blaster");
             if (memory::get_allocation_size() > m_max_memory)
                 throw tactic_exception(TACTIC_MAX_MEMORY_MSG);
             return num_steps > m_max_steps;
         }
-
+        
         typedef ptr_buffer<expr, 128> bit_buffer;
 
         void get_bits(expr * arg, bit_buffer & bits) {
@@ -86,7 +86,7 @@ class bv1_blaster_tactic : public tactic {
             else
                 bits.push_back(arg);
         }
-
+        
         void mk_const(func_decl * f, expr_ref & result) {
             SASSERT(f->get_family_id() == null_family_id);
             SASSERT(f->get_arity() == 0);
@@ -112,14 +112,14 @@ class bv1_blaster_tactic : public tactic {
             m_const2bits.insert(f, r);
             result = r;
         }
-
+        
         void blast_bv_term(expr * t, expr_ref & result) {
             bit_buffer bits;
             unsigned bv_size = butil().get_bv_size(t);
             if (bv_size == 1) {
                 result = t;
                 return;
-            }
+            } 
             unsigned i = bv_size;
             while (i > 0) {
                 --i;
@@ -127,7 +127,7 @@ class bv1_blaster_tactic : public tactic {
             }
             result = butil().mk_concat(bits.size(), bits.c_ptr());
         }
-
+        
         void reduce_eq(expr * arg1, expr * arg2, expr_ref & result) {
             bit_buffer bits1;
             bit_buffer bits2;
@@ -142,7 +142,7 @@ class bv1_blaster_tactic : public tactic {
             }
             result = m().mk_and(new_eqs.size(), new_eqs.c_ptr());
         }
-
+        
         void reduce_ite(expr * c, expr * t, expr * e, expr_ref & result) {
             bit_buffer t_bits;
             bit_buffer e_bits;
@@ -155,7 +155,7 @@ class bv1_blaster_tactic : public tactic {
                 new_ites.push_back(m().mk_ite(c, t_bits[i], e_bits[i]));
             result = butil().mk_concat(new_ites.size(), new_ites.c_ptr());
         }
-
+        
         void reduce_num(func_decl * f, expr_ref & result) {
             SASSERT(f->get_num_parameters() == 2);
             SASSERT(f->get_parameter(0).is_rational());
@@ -174,7 +174,7 @@ class bv1_blaster_tactic : public tactic {
             std::reverse(bits.begin(), bits.end());
             result = butil().mk_concat(bits.size(), bits.c_ptr());
         }
-
+        
         void reduce_extract(func_decl * f, expr * arg, expr_ref & result) {
             bit_buffer arg_bits;
             get_bits(arg, arg_bits);
@@ -190,7 +190,7 @@ class bv1_blaster_tactic : public tactic {
             }
             result = butil().mk_concat(bits.size(), bits.c_ptr());
         }
-
+        
         void reduce_concat(unsigned num, expr * const * args, expr_ref & result) {
             bit_buffer bits;
             bit_buffer arg_bits;
@@ -250,14 +250,14 @@ class bv1_blaster_tactic : public tactic {
             std::for_each(args_bits.begin(), args_bits.end(), delete_proc<bit_buffer>());
 #endif
         }
-
+        
         br_status reduce_app(func_decl * f, unsigned num, expr * const * args, expr_ref & result, proof_ref & result_pr) {
             result_pr = 0;
             if (num == 0 && f->get_family_id() == null_family_id && butil().is_bv_sort(f->get_range())) {
                 mk_const(f, result);
                 return BR_DONE;
             }
-
+            
             if (m().is_eq(f)) {
                 SASSERT(num == 2);
                 if (butil().is_bv(args[0])) {
@@ -266,7 +266,7 @@ class bv1_blaster_tactic : public tactic {
                 }
                 return BR_FAILED;
             }
-
+            
             if (m().is_ite(f)) {
                 SASSERT(num == 3);
                 if (butil().is_bv(args[1])) {
@@ -275,7 +275,7 @@ class bv1_blaster_tactic : public tactic {
                 }
                 return BR_FAILED;
             }
-
+            
             if (f->get_family_id() == butil().get_family_id()) {
                 switch (f->get_decl_kind()) {
                 case OP_BV_NUM:
@@ -296,18 +296,18 @@ class bv1_blaster_tactic : public tactic {
                     return BR_FAILED;
                 }
             }
-
+            
             if (butil().is_bv_sort(f->get_range())) {
                 blast_bv_term(m().mk_app(f, num, args), result);
                 return BR_DONE;
             }
-
+            
             return BR_FAILED;
         }
-
-        bool reduce_quantifier(quantifier * old_q,
-                               expr * new_body,
-                               expr * const * new_patterns,
+        
+        bool reduce_quantifier(quantifier * old_q, 
+                               expr * new_body, 
+                               expr * const * new_patterns, 
                                expr * const * new_no_patterns,
                                expr_ref & result,
                                proof_ref & result_pr) {
@@ -329,18 +329,18 @@ class bv1_blaster_tactic : public tactic {
     struct imp {
         rw                m_rw;
         unsigned          m_num_steps;
-
+        
         imp(ast_manager & m, params_ref const & p):
             m_rw(m, p) {
         }
 
         struct not_target {};
-
+        
         struct visitor {
             family_id m_bv_fid;
             visitor(family_id bv_fid):m_bv_fid(bv_fid) {}
             void operator()(var const * n) { throw not_target(); }
-            void operator()(app const * n) {
+            void operator()(app const * n) { 
                 if (n->get_family_id() == m_bv_fid) {
                     switch (n->get_decl_kind()) {
                     case OP_BV_NUM:
@@ -357,7 +357,7 @@ class bv1_blaster_tactic : public tactic {
             }
             void operator()(quantifier const * n) { throw not_target(); }
         };
-
+        
         bool is_target(goal const & g) const {
             expr_fast_mark1 visited;
             unsigned sz = g.size();
@@ -373,26 +373,26 @@ class bv1_blaster_tactic : public tactic {
             }
             return true;
         }
-
+        
         ast_manager & m() const { return m_rw.m(); }
-
+        
         void set_cancel(bool f) {
             m_rw.set_cancel(f);
         }
-
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             mc = 0; pc = 0; core = 0;
-
+            
             if (!is_target(*g))
                 throw tactic_exception("bv1 blaster cannot be applied to goal");
-
+            
             tactic_report report("bv1-blaster", *g);
             m_num_steps = 0;
-
+            
             bool proofs_enabled = g->proofs_enabled();
             expr_ref   new_curr(m());
             proof_ref  new_pr(m());
@@ -409,14 +409,14 @@ class bv1_blaster_tactic : public tactic {
                 }
                 g->update(idx, new_curr, new_pr, g->dep(idx));
             }
-
+            
             if (g->models_enabled())
                 mc = mk_bv1_blaster_model_converter(m(), m_rw.cfg().m_const2bits);
             g->inc_depth();
             result.push_back(g.get());
             m_rw.cfg().cleanup();
         }
-
+        
         unsigned get_num_steps() const { return m_num_steps; }
     };
 
@@ -441,7 +441,7 @@ public:
         m_imp->m_rw.cfg().updt_params(p);
     }
 
-    virtual void collect_param_descrs(param_descrs & r) {
+    virtual void collect_param_descrs(param_descrs & r) { 
         insert_max_memory(r);
         insert_max_steps(r);
     }
@@ -449,21 +449,21 @@ public:
     bool is_target(goal const & g) const {
         return m_imp->is_target(g);
     }
-
+    
     /**
        \brief "Blast" bit-vectors of size n in s into bit-vectors of size 1.
        If s contains other bit-vectors operators different from concat/extract, then this is method is a NO-OP.
        It also does not support quantifiers.
        Return a model_converter that converts any model for the updated set into a model for the old set.
     */
-    virtual void operator()(goal_ref const & g,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    virtual void operator()(goal_ref const & g, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         (*m_imp)(g, result, mc, pc, core);
     }
-
+    
     virtual void cleanup() {
         imp * d = alloc(imp, m_imp->m(), m_params);
         #pragma omp critical (tactic_cancel)
@@ -472,11 +472,11 @@ public:
         }
         dealloc(d);
     }
-
+    
     unsigned get_num_steps() const {
         return m_imp->get_num_steps();
     }
-
+    
 protected:
     virtual void set_cancel(bool f) {
         if (m_imp)

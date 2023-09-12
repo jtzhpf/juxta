@@ -12,58 +12,58 @@ Abstract:
 Author:
 
     Leonardo (leonardo) 2008-01-07
-
+    
 --*/
 #include"basic_simplifier_plugin.h"
 #include"ast_ll_pp.h"
 #include"bool_rewriter.h"
 
 basic_simplifier_plugin::basic_simplifier_plugin(ast_manager & m):
-    simplifier_plugin(symbol("basic"), m),
+    simplifier_plugin(symbol("basic"), m), 
     m_rewriter(alloc(bool_rewriter, m)) {
 }
 
 basic_simplifier_plugin::~basic_simplifier_plugin() {
     dealloc(m_rewriter);
 }
-
+    
 bool basic_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result) {
     set_reduce_invoked();
     SASSERT(f->get_family_id() == m_manager.get_basic_family_id());
     basic_op_kind k = static_cast<basic_op_kind>(f->get_decl_kind());
     switch (k) {
-    case OP_FALSE:
-    case OP_TRUE:
+    case OP_FALSE:     
+    case OP_TRUE:      
         return false;
-    case OP_EQ:
-        SASSERT(num_args == 2);
-        mk_eq(args[0], args[1], result);
+    case OP_EQ:        
+        SASSERT(num_args == 2); 
+        mk_eq(args[0], args[1], result); 
         return true;
     case OP_DISTINCT:
         mk_distinct(num_args, args, result);
         return true;
-    case OP_ITE:
+    case OP_ITE: 
         SASSERT(num_args == 3);
         mk_ite(args[0], args[1], args[2], result);
         return true;
-    case OP_AND:
-        mk_and(num_args, args, result);
+    case OP_AND:       
+        mk_and(num_args, args, result); 
         return true;
-    case OP_OR:
-        mk_or(num_args, args, result);
+    case OP_OR:        
+        mk_or(num_args, args, result); 
         return true;
     case OP_IMPLIES:
-        mk_implies(args[0], args[1], result);
+        mk_implies(args[0], args[1], result); 
         return true;
-    case OP_IFF:
-        mk_iff(args[0], args[1], result);
+    case OP_IFF:      
+        mk_iff(args[0], args[1], result); 
         return true;
-    case OP_XOR:
-        mk_xor(args[0], args[1], result);
+    case OP_XOR: 
+        mk_xor(args[0], args[1], result); 
         return true;
-    case OP_NOT:
+    case OP_NOT:      
         SASSERT(num_args == 1);
-        mk_not(args[0], result);
+        mk_not(args[0], result); 
         return true;
     default:
         UNREACHABLE();
@@ -130,8 +130,8 @@ void basic_simplifier_plugin::mk_and(expr * arg1, expr * arg2, expr_ref & result
 void basic_simplifier_plugin::mk_or(expr * arg1, expr * arg2, expr_ref & result) { m_rewriter->mk_or(arg1, arg2, result); }
 void basic_simplifier_plugin::mk_and(expr * arg1, expr * arg2, expr * arg3, expr_ref & result) { m_rewriter->mk_and(arg1, arg2, arg3, result); }
 void basic_simplifier_plugin::mk_or(expr * arg1, expr * arg2, expr * arg3, expr_ref & result) { m_rewriter->mk_or(arg1, arg2, arg3, result); }
-void basic_simplifier_plugin::mk_nand(unsigned num_args, expr * const * args, expr_ref & result) { m_rewriter->mk_nand(num_args, args, result); }
-void basic_simplifier_plugin::mk_nor(unsigned num_args, expr * const * args, expr_ref & result) { m_rewriter->mk_nor(num_args, args, result); }
+void basic_simplifier_plugin::mk_nand(unsigned num_args, expr * const * args, expr_ref & result) { m_rewriter->mk_nand(num_args, args, result); } 
+void basic_simplifier_plugin::mk_nor(unsigned num_args, expr * const * args, expr_ref & result) { m_rewriter->mk_nor(num_args, args, result); } 
 void basic_simplifier_plugin::mk_nand(expr * arg1, expr * arg2, expr_ref & result) { m_rewriter->mk_nand(arg1, arg2, result); }
 void basic_simplifier_plugin::mk_nor(expr * arg1, expr * arg2, expr_ref & result) { m_rewriter->mk_nor(arg1, arg2, result); }
 void basic_simplifier_plugin::mk_distinct(unsigned num_args, expr * const * args, expr_ref & result) { m_rewriter->mk_distinct(num_args, args, result); }

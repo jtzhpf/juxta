@@ -20,7 +20,7 @@ Notes:
 ast * get_ast_ref(cmd_context & ctx, symbol const & v) {
     object_ref * r = ctx.find_object_ref(v);
     SASSERT(r != 0);
-    if (r->kind() != ast_object_ref::cls_kind())
+    if (r->kind() != ast_object_ref::cls_kind()) 
         throw cmd_exception("global variable does not reference an AST");
     return static_cast<ast_object_ref*>(r)->get_ast();
 }

@@ -30,8 +30,8 @@ class cancel_eh : public event_handler {
 public:
     cancel_eh(T & o):m_obj(o) {}
     ~cancel_eh() { m_obj.reset_cancel(); }
-    virtual void operator()() {
-        m_obj.cancel();
+    virtual void operator()() { 
+        m_obj.cancel(); 
     }
 };
 

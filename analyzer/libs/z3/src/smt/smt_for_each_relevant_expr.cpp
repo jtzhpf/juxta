@@ -92,7 +92,7 @@ namespace smt {
         if (m_manager.is_and(n)) {
             for (unsigned i = 0; i < sz; ++i) {
                 count += count_at_labels_pos(a->get_arg(i));
-            }
+            }       
         }
         else if (m_manager.is_not(n)) {
             count = count_at_labels_neg(a->get_arg(0));
@@ -129,7 +129,7 @@ namespace smt {
         m_cache.reset();
     }
 
-    inline bool for_each_relevant_expr::is_relevant(expr * n) {
+    inline bool for_each_relevant_expr::is_relevant(expr * n) {        
         return m_context.is_relevant(n);
     }
 
@@ -138,7 +138,7 @@ namespace smt {
             return l_true; // assume it is a top-level label
         return m_context.get_assignment(n);
     }
-
+    
     void for_each_relevant_expr::process(expr * n) {
         TRACE("for_each_relevant_expr", tout << "processing:\n" << mk_bounded_pp(n, m_manager) << "\n";);
         TRACE("for_each_relevant_expr", tout << "processing:\n" << mk_pp(n, m_manager) << "\n";);
@@ -271,8 +271,8 @@ namespace smt {
 
 
     void collect_relevant_label_lits::operator()(expr * n) {
-        TRACE("for_each_relevant_expr",
-              tout << "label: " << m_manager.is_label_lit(n) << " " << " " << get_assignment(n)
+        TRACE("for_each_relevant_expr", 
+              tout << "label: " << m_manager.is_label_lit(n) << " " << " " << get_assignment(n) 
               << " " << mk_bounded_pp(n, m_manager) << "\n";);
         if (!m_manager.is_label_lit(n))
             return;
@@ -283,14 +283,14 @@ namespace smt {
 
     void collect_relevant_labels::operator()(expr * n) {
         bool pos;
-        TRACE("for_each_relevant_expr",
-              tout << "label: " << m_manager.is_label(n) << " " << get_assignment(n)
+        TRACE("for_each_relevant_expr", 
+              tout << "label: " << m_manager.is_label(n) << " " << get_assignment(n) 
               << " " << mk_bounded_pp(n, m_manager) << "\n";);
         if (!m_manager.is_label(n, pos))
             return;
-        if (pos && (get_assignment(n) != l_true))
+        if (pos && (get_assignment(n) != l_true)) 
             return;
-        if (!pos && (get_assignment(n) != l_false))
+        if (!pos && (get_assignment(n) != l_false)) 
             return;
         m_manager.is_label(n, pos, m_buffer); // copy symbols to buffer
     }

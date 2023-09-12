@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Sets of unsigned integers.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2006-12-07.
@@ -44,7 +44,7 @@ public:
         unsigned_vector::swap(other);
     }
 
-    // return the maximum value that can be stored in the set.
+    // return the maximum value that can be stored in the set. 
     unsigned get_max_elem() const {
         return 32 * size();
     }
@@ -78,7 +78,7 @@ public:
     }
 
     bool contains(unsigned val) const {
-        unsigned idx = val >> 5;
+        unsigned idx = val >> 5;        
         return idx < size() && ((*this)[idx] & (1 << (val & 31))) != 0;
     }
 
@@ -186,7 +186,7 @@ public:
             SASSERT(invariant());
         }
         bool contains() const { return m_set->contains(m_index); }
-        void scan() {
+        void scan() {     
             scan_idx();
             if (contains() || at_end()) {
                 return;
@@ -199,7 +199,7 @@ public:
             SASSERT(invariant());
         }
     public:
-        iterator(uint_set const& s, bool at_end):
+        iterator(uint_set const& s, bool at_end): 
             m_set(&s), m_index(at_end?s.get_max_elem():0) {
             scan();
             SASSERT(invariant());
@@ -209,7 +209,7 @@ public:
         bool operator!=(iterator const& it) const { return m_index != it.m_index; }
         iterator & operator++() { ++m_index; scan(); return *this; }
         iterator operator++(int) { iterator tmp = *this; ++*this; return tmp; }
-        iterator & operator=(iterator const& other) {
+        iterator & operator=(iterator const& other) { 
             m_set = other.m_set;
             m_index = other.m_index;
             return *this;

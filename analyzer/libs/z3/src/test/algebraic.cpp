@@ -24,19 +24,19 @@ static void display_anums(std::ostream & out, scoped_anum_vector const & rs) {
     out << "numbers in decimal:\n";
     algebraic_numbers::manager & m = rs.m();
     for (unsigned i = 0; i < rs.size(); i++) {
-        m.display_decimal(out, rs[i], 10);
+        m.display_decimal(out, rs[i], 10);  
         out << "\n";
     }
     out << "numbers as root objects\n";
     for (unsigned i = 0; i < rs.size(); i++) {
-        m.display_root(out, rs[i]);
+        m.display_root(out, rs[i]);  
         out << "\n";
-    }
+    } 
     out << "numbers as intervals\n";
     for (unsigned i = 0; i < rs.size(); i++) {
-        m.display_interval(out, rs[i]);
+        m.display_interval(out, rs[i]);  
         out << "\n";
-    }
+    } 
 }
 
 static void tst1() {
@@ -69,16 +69,16 @@ static void tst1() {
     nm.set(q, 1, 3);
     scoped_anum aq(am);
     am.set(aq, q); // create algebraic number representing 1/3
-
+    
     am.add(sqrt2, aq, aq);
-    std::cout << "sqrt(2) + 1/3: ";
-    am.display_decimal(std::cout, aq, 10); std::cout << " "; am.display_interval(std::cout, aq);
+    std::cout << "sqrt(2) + 1/3: "; 
+    am.display_decimal(std::cout, aq, 10); std::cout << " "; am.display_interval(std::cout, aq); 
     std::cout << " "; am.display_root(std::cout, aq); std::cout << "\n";
 
-    am.set(aq, q);
+    am.set(aq, q); 
     am.add(rs1[0], aq, aq);
-    std::cout << "-sqrt(2) + 1/3: ";
-    am.display_decimal(std::cout, aq, 10); std::cout << " "; am.display_interval(std::cout, aq);
+    std::cout << "-sqrt(2) + 1/3: "; 
+    am.display_decimal(std::cout, aq, 10); std::cout << " "; am.display_interval(std::cout, aq); 
     std::cout << " "; am.display_root(std::cout, aq); std::cout << "\n";
 
     p = ((x^5) - x - 1)*(x-1)*(x-2);
@@ -92,7 +92,7 @@ static void tst1() {
     am.set(gauss, rs1[1]);
 
     std::cout << "compare(" << sqrt2 << ", " << gauss << "): " << am.compare(sqrt2, gauss) << "\n";
-
+    
     statistics st;
     am.collect_statistics(st);
     st.display_smt2(std::cout);
@@ -103,7 +103,7 @@ static void tst1() {
     am.isolate_roots(p, rs1);
     display_anums(std::cout, rs1);
     SASSERT(rs1.size() == 4);
-
+    
     scoped_anum hidden_sqrt2(am);
     am.set(hidden_sqrt2, rs1[2]);
 
@@ -116,7 +116,7 @@ static void tst1() {
 
     SASSERT(is_int(power(sqrt2, 4)));
     SASSERT(power(sqrt2, 4) == 4);
-
+    
     scoped_anum sqrt2_gauss(am);
     am.add(sqrt2, gauss, sqrt2_gauss);
     std::cout << "sqrt2 + gauss: " << sqrt2_gauss << " "; am.display_root(std::cout, sqrt2_gauss); std::cout << "\n";
@@ -151,22 +151,22 @@ static void tst1() {
     am.mul(tmp, sqrt2, tmp);
     std::cout << "sqrt(2)*4*(1/sqrt2): " << tmp << "  " << root_obj_pp(tmp) << "\n";
     std::cout << "is_int(sqrt(2)*4*(1/sqrt2)): " << am.is_int(tmp) << ", after is-int: " << tmp << "\n";
-
+    
     p = (998*x - 1414)*((x^2) - 15);
     std::cout << "p: " << p << "\n";
     rs1.reset();
     am.isolate_roots(p, rs1);
-
+    
     std::cout << "is-rational(sqrt2): " << am.is_rational(sqrt2) << "\n";
-
+    
     scoped_anum qr(am);
     am.set(qr, rs1[1]);
-
+    
     std::cout << "qr: " << root_obj_pp(qr);
     std::cout << ", is-rational: " << am.is_rational(qr) << ", val: " << root_obj_pp(qr) << "\n";
 
     return;
-
+    
     std::cout << "compare(" << sqrt2 << ", " << gauss << "): " << am.compare(sqrt2, gauss) << "\n";
 
     p = (x^16) - 136*(x^14) + 6476*(x^12) - 141912*(x^10) + 1513334*(x^8) - 7453176*(x^6) + 13950764*(x^4) - 5596840*(x^2) + 46225;
@@ -216,7 +216,7 @@ void tst_mpbq_root() {
     mpbq_manager        bqm(qm);
     // scoped_mpbq q(bqm);
     // q.set(q1, 1.4142135 , 7);
-
+    
 }
 
 static void tst_wilkinson() {
@@ -227,9 +227,9 @@ static void tst_wilkinson() {
     x = m.mk_polynomial(m.mk_var());
     polynomial_ref p(m);
     for (int i = 1; i <= 20; i++) {
-        if (i > 1)
+        if (i > 1) 
             p = p*(x - i);
-        else
+        else 
             p = (x - i);
     }
     std::cout << "Wilkinson's polynomial: " << p << "\n";
@@ -248,7 +248,7 @@ static void tst_wilkinson() {
 static void tst_dejan() {
     unsynch_mpq_manager qm;
     algebraic_numbers::manager am(qm);
-
+    
     scoped_anum two101(am);
     am.set(two101, 2);
     am.root(two101, 11, two101);
@@ -256,7 +256,7 @@ static void tst_dejan() {
     scoped_anum two103(am);
     am.set(two103, 2);
     am.root(two103, 7, two103);
-
+    
     std::cout << "two101: " << two101 << " " << root_obj_pp(two101) << std::endl;
     std::cout << "two103: " << two103 << " " << root_obj_pp(two103) << std::endl;
 
@@ -351,7 +351,7 @@ static void tst_eval_sign() {
     am.set(v1,  1);
     am.set(v0, -3);
     tst_eval_sign(p, am, 0, v0, 1, v1, 2, v2, -1);
-
+    
     am.set(v0, 2);
     am.root(v0, 2, v0);
     am.set(v1, 0);
@@ -423,7 +423,7 @@ static void tst_isolate_roots() {
     x1 = pm.mk_polynomial(pm.mk_var());
     x2 = pm.mk_polynomial(pm.mk_var());
     x3 = pm.mk_polynomial(pm.mk_var());
-
+    
     polynomial_ref p(pm);
     p = x3*x1 + 1;
 
@@ -432,44 +432,44 @@ static void tst_isolate_roots() {
     tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
 
     am.set(v1, 1);
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
 
     am.set(v1, 2);
     am.root(v1, 2, v1);
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
-
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
+    
     p = (x1 + x2)*x3 + 1;
     am.set(v2, v1);
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
-
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
+    
     p = (x1 + x2)*x3 + x1*x2 + 2;
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
 
     p = (x1 + x2)*(x3^3) + x1*x2 + 2;
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
 
     p = (x1 + x2)*(x3^2) - x1*x2 - 2;
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
-
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
+    
     p = x0*(x1 + x2)*(x3^2) - x0*x1*x2 - 2;
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
 
     p = (x1 - x2)*x3 + x1*x2 - 2;
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
 
     p = (x1 - x2)*(x3^3) + x1*x2 - 2;
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
-
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
+ 
     p = (x3 - x0)*(x3 - x0 - x1);
     am.set(v0, 2);
     am.root(v0, 2, v0); // x2 -> sqrt(2)
     am.set(v1, 3);
     am.root(v1, 2, v1); // x1 -> sqrt(3)
     am.reset(v2);
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
-
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
+    
     p = (x3 - x0)*((x3 - x0 - x1)^2);
-    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
+    tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);    
 
     p = (x3 - x0)*(x3 - 2)*((x3 - 1)^2)*(x3 - x1);
     tst_isolate_roots(p, am, 0, v0, 1, v1, 2, v2);
@@ -551,7 +551,7 @@ static void tst_root() {
     am.set(v1, 4);
     am.root(v1, 4, v2);
     std::cout << "root: " << root_obj_pp(v2) << "\n";
-
+    
 }
 
 void tst_algebraic() {

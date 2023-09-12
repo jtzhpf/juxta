@@ -7,9 +7,9 @@ Module Name:
 
 Abstract:
 
-    Yet another object allocator. This allocator is supposed to be efficient
+    Yet another object allocator. This allocator is supposed to be efficient 
     when there is a collection of worker threads accessing it.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2010-06-09.
@@ -40,8 +40,8 @@ public:
 
 /**
    \brief Allocator for T objects. This allocator is supposed to be efficient even
-   when a collection of working threads are accessing it.
-
+   when a collection of working threads are accessing it. 
+   
    Assumptions:
    - T must have an empty constructor.
 
@@ -49,7 +49,7 @@ public:
 
    - The destructors are not invoked if CallDestructors == false.
 
-   - The functor ResetProc is invoked for \c ptr when recycle(ptr) or recycle(worker_id, ptr) are invoked.
+   - The functor ResetProc is invoked for \c ptr when recycle(ptr) or recycle(worker_id, ptr) are invoked. 
 
    The default ResetProc does nothing.
 */
@@ -62,7 +62,7 @@ class object_allocator : public ResetProc {
     class region {
         ptr_vector<T> m_pages;
         unsigned      m_idx;   //!< next position in the current page.
-
+        
         void allocate_new_page() {
             T * new_page = static_cast<T*>(memory::allocate(sizeof(T) * NUM_OBJECTS_PER_PAGE));
             m_pages.push_back(new_page);
@@ -86,7 +86,7 @@ class object_allocator : public ResetProc {
                     call_destructors_for_page(*it, NUM_OBJECTS_PER_PAGE);
             }
         }
-
+        
         void free_memory() {
             call_destructors();
             typename ptr_vector<T>::iterator it = m_pages.begin();
@@ -94,7 +94,7 @@ class object_allocator : public ResetProc {
             for (; it != end; ++it)
                 memory::deallocate(*it);
         }
-
+        
     public:
         region() {
             allocate_new_page();
@@ -125,13 +125,13 @@ class object_allocator : public ResetProc {
             return (m_pages.size() - 1) * NUM_OBJECTS_PER_PAGE + m_idx;
         }
     };
-
+    
 #ifdef Z3DEBUG
     bool                   m_concurrent; //!< True when the allocator can be accessed concurrently.
 #endif
     ptr_vector<region>     m_regions;
     vector<ptr_vector<T> > m_free_lists;
-
+    
     template <bool construct>
     T * allocate_core(unsigned idx) {
         ptr_vector<T> & free_list = m_free_lists[idx];
@@ -164,7 +164,7 @@ public:
     void enable_concurrent(bool flag) {
         DEBUG_CODE(m_concurrent = flag;);
     }
-
+    
     /**
        \brief Make sure that \c num_workers can access this object allocator concurrently.
        This method must only be invoked if the allocator is not in concurrent mode.
@@ -202,7 +202,7 @@ public:
     }
 
     /**
-       \brief Allocate a new object.
+       \brief Allocate a new object. 
        This method must only be invoked when the object_allocator is not in concurrent mode.
     */
     template<bool construct>
@@ -213,10 +213,10 @@ public:
 
 
     /**
-       \brief Recycle the given object.
+       \brief Recycle the given object. 
        This method must only be invoked when the object_allocator is not in concurrent mode.
 
-       \remark It is OK to recycle an object allocated by a worker when the object_allocator was
+       \remark It is OK to recycle an object allocated by a worker when the object_allocator was 
        in concurrent mode.
     */
     void recycle(T * ptr) {
@@ -235,10 +235,10 @@ public:
     }
 
     /**
-       \brief Recycle the given object.
+       \brief Recycle the given object. 
        This method must only be invoked when the object_allocator is in concurrent mode.
-
-       \remark It is OK to recycle an object allocated by a different worker, or allocated when the
+       
+       \remark It is OK to recycle an object allocated by a different worker, or allocated when the 
        object_allocator was not in concurrent mode.
     */
     void recycle(unsigned worker_id, T * ptr) {
@@ -252,7 +252,7 @@ public:
     class worker_object_allocator {
         object_allocator & m_owner;
         unsigned           m_worker_id;
-
+        
         friend class object_allocator;
 
         worker_object_allocator(object_allocator & owner, unsigned id):m_owner(owner), m_worker_id(id) {}
@@ -262,7 +262,7 @@ public:
 
         void recycle(T * ptr) { return m_owner.recycle(m_worker_id, ptr); }
     };
-
+    
     /**
        \brief Return a wrapper for allocating memory for the given worker.
        The wrapper remains valid even when the object_allocator is not in concurrent mode.

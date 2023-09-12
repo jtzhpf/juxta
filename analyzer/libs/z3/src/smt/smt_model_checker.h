@@ -39,7 +39,7 @@ namespace smt {
     class model_checker {
         ast_manager &                               m_manager;
         qi_params const &                           m_params;
-        // copy of smt_params for auxiliary context.
+        // copy of smt_params for auxiliary context. 
         // the idea is to use a different configuration for the aux context (e.g., disable relevancy)
         scoped_ptr<smt_params>                      m_fparams;
         quantifier_manager *                        m_qm;
@@ -59,7 +59,7 @@ namespace smt {
         void assert_neg_q_m(quantifier * q, expr_ref_vector & sks);
         bool add_blocking_clause(model * cex, expr_ref_vector & sks);
         bool check(quantifier * q);
-
+        
         struct instance {
             quantifier * m_q;
             unsigned     m_generation;

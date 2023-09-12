@@ -33,13 +33,13 @@ public:
     virtual void updt_params(params_ref const & p);
     static void get_param_descrs(param_descrs & r);
     virtual void collect_param_descrs(param_descrs & r) { get_param_descrs(r); }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core);
-
+    
     virtual void cleanup();
 
     unsigned get_num_steps() const;

@@ -167,8 +167,8 @@ void z3_bound_num_procs() {
     SetProcessAffinityMask(GetCurrentProcess(), numProcs);
 #endif
 #else
-    // Not bounded: Research evaluations are
-    // not reasonable if run with artificial
+    // Not bounded: Research evaluations are 
+    // not reasonable if run with artificial 
     // or hidden throttles.
 #endif
 }

@@ -54,5 +54,5 @@ void tst_heap_trie() {
     find_le(ht, 3, keys5);
 
     ht.display(std::cout);
-
+    
 }

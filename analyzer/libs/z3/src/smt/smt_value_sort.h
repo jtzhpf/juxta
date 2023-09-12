@@ -26,11 +26,11 @@ Revision History:
 
 
 namespace smt {
-
+        
     bool is_value_sort(ast_manager& m, sort* s);
 
     bool is_value_sort(ast_manager& m, expr* e);
-
+    
 };
 
 

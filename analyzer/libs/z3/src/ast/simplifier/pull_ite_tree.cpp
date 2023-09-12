@@ -27,8 +27,8 @@ pull_ite_tree::pull_ite_tree(ast_manager & m, simplifier & s):
     m_cache(m) {
 }
 
-void pull_ite_tree::cache_result(expr * n, expr * r, proof * pr) {
-    m_cache.insert(n, r, pr);
+void pull_ite_tree::cache_result(expr * n, expr * r, proof * pr) { 
+    m_cache.insert(n, r, pr); 
 }
 
 void pull_ite_tree::visit(expr * n, bool & visited) {
@@ -196,7 +196,7 @@ bool pull_ite_tree_star::get_subst(expr * n, expr_ref & r, proof_ref & p) {
 }
 
 bool pull_cheap_ite_tree_star::is_target(app * n) const {
-    bool r =
+    bool r = 
         n->get_num_args() == 2 &&
         n->get_family_id() != null_family_id &&
         m_manager.is_bool(n) &&

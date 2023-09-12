@@ -11,8 +11,8 @@ Abstract:
     TO_INT, and optionally (OP_IRRATIONAL_ALGEBRAIC_NUM).
 
     This tactic uses the simplifier for also eliminating:
-    OP_SUB, OP_UMINUS, OP_POWER (optionally), OP_REM, OP_IS_INT.
-
+    OP_SUB, OP_UMINUS, OP_POWER (optionally), OP_REM, OP_IS_INT. 
+    
     Remarks:
       - The semantics of division by zero is not specified. Thus,
         uninterpreted functions are used.  An ExRCF procedure may
@@ -33,11 +33,11 @@ Abstract:
 
       - TO_REAL is not really outside of the RCF language
         since it is only used for "casting".
-
+  
       - All quantifiers must occur with positive polarity.
-        The tactic snf (with skolemization disabled) is applied
+        The tactic snf (with skolemization disabled) is applied 
         to enforce that.
-
+   
 Author:
 
     Leonardo de Moura (leonardo) 2011-12-30.

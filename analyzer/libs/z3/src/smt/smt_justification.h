@@ -25,7 +25,7 @@ Revision History:
 #include"smt_eq_justification.h"
 
 namespace smt {
-
+    
     class conflict_resolution;
 
     typedef ptr_vector<justification> justification_vector;
@@ -33,16 +33,16 @@ namespace smt {
     /**
        \brief Pseudo-proof objects. They are mainly used to track dependencies.
        When proof generation is enabled, they are also used to produce proofs.
-
+       
        Justification objects are allocated using a stack based policy.
-       Actually, there is one exception: justification of lemmas.
+       Actually, there is one exception: justification of lemmas. 
        Lemmas created at scope level n may remain alive even after scope level n is backtracked.
        Lemmas are deleted by a GC that runs from time to time. So, a justification attached
        to a lemma will may remain alive after scope level n is backtracked.
-
+       
        So, I allow justification objects to be allocated in regions and
        in the regular heap. The method in_region() should return true if the object is
-       allocated in a region.
+       allocated in a region. 
     */
     class justification {
         unsigned m_mark:1;
@@ -52,11 +52,11 @@ namespace smt {
         virtual ~justification() {}
 
         /**
-           \brief This method should return true if the method del_eh needs to be invoked
+           \brief This method should return true if the method del_eh needs to be invoked 
            to free resources.
         */
         virtual bool has_del_eh() const {
-            return false;
+            return false; 
         }
 
         /**
@@ -67,7 +67,7 @@ namespace smt {
 
         /**
            \brief Mark the antecedents the justification object.
-           The antecedents are marked using the mark methods of the
+           The antecedents are marked using the mark methods of the 
            conflict_resolution object.
         */
         virtual void get_antecedents(conflict_resolution & cr){
@@ -85,7 +85,7 @@ namespace smt {
         void unset_mark() { SASSERT(m_mark); m_mark = false; }
 
         bool is_marked() const { return m_mark; }
-
+        
         unsigned hash() const { return get_ptr_hash(this); }
 
         virtual proof * mk_proof(conflict_resolution & cr) = 0;
@@ -93,7 +93,7 @@ namespace smt {
         bool in_region() const { return m_in_region; }
 
         virtual char const * get_name() const { return "unknown"; }
-
+        
         virtual void display_debug_info(conflict_resolution & cr, std::ostream & out) { /* do nothing */ }
     };
 
@@ -105,11 +105,11 @@ namespace smt {
         virtual bool has_del_eh() const {
             return true;
         }
-
+        
         virtual void del_eh(ast_manager & m);
-
+        
         virtual proof * mk_proof(conflict_resolution & cr);
-
+        
         virtual char const * get_name() const { return "proof-wrapper"; }
     };
 
@@ -127,9 +127,9 @@ namespace smt {
         virtual bool has_del_eh() const {
             return !in_region() && m_antecedent && m_antecedent->has_del_eh();
         }
-
+        
         virtual void del_eh(ast_manager & m) {
-            if (!in_region() && m_antecedent) m_antecedent->del_eh(m);
+            if (!in_region() && m_antecedent) m_antecedent->del_eh(m); 
         }
 
         virtual void get_antecedents(conflict_resolution & cr);
@@ -156,7 +156,7 @@ namespace smt {
 
         virtual char const * get_name() const { return "eq-conflict"; }
     };
-
+    
     /**
        \brief Justification for m_node = root
     */
@@ -171,7 +171,7 @@ namespace smt {
         virtual proof * mk_proof(conflict_resolution & cr);
 
         virtual char const * get_name() const { return "eq-root"; }
-    };
+    };        
 
     /**
        \brief Justification for m_node1 = m_node2
@@ -188,7 +188,7 @@ namespace smt {
         virtual proof * mk_proof(conflict_resolution & cr);
 
         virtual char const * get_name() const { return "eq-propagation"; }
-    };
+    };        
 
     /**
        \brief Justification for p(x) <=> p(y), p(x)  ===>  p(y)
@@ -214,7 +214,7 @@ namespace smt {
     protected:
         unsigned        m_num_literals;
         literal *       m_literals;
-
+        
         bool antecedent2proof(conflict_resolution & cr, ptr_buffer<proof> & result);
 
     public:
@@ -233,7 +233,7 @@ namespace smt {
         vector<parameter> m_params;
     public:
         simple_theory_justification(
-            family_id fid, region & r,
+            family_id fid, region & r, 
             unsigned num_lits, literal const * lits,
             unsigned num_params, parameter* params):
             simple_justification(r, num_lits, lits),
@@ -242,20 +242,20 @@ namespace smt {
 
         virtual bool has_del_eh() const { return !m_params.empty(); }
 
-        virtual void del_eh(ast_manager & m) { m_params.reset(); }
+        virtual void del_eh(ast_manager & m) { m_params.reset(); }       
 
         virtual theory_id get_from_theory() const { return m_th_id; }
-
+ 
     };
 
     class theory_axiom_justification : public simple_theory_justification {
     public:
 
-        theory_axiom_justification(family_id fid, region & r,
-                                   unsigned num_lits, literal const * lits,
+        theory_axiom_justification(family_id fid, region & r,                                    
+                                   unsigned num_lits, literal const * lits, 
                                    unsigned num_params = 0, parameter* params = 0):
             simple_theory_justification(fid, r, num_lits, lits, num_params, params)  {}
-
+        
         virtual void get_antecedents(conflict_resolution & cr) {}
 
         virtual proof * mk_proof(conflict_resolution & cr);
@@ -266,7 +266,7 @@ namespace smt {
     class theory_propagation_justification : public simple_theory_justification {
         literal        m_consequent;
     public:
-        theory_propagation_justification(family_id fid, region & r, unsigned num_lits, literal const * lits, literal consequent,
+        theory_propagation_justification(family_id fid, region & r, unsigned num_lits, literal const * lits, literal consequent, 
                                          unsigned num_params = 0, parameter* params = 0):
             simple_theory_justification(fid, r, num_lits, lits, num_params, params), m_consequent(consequent) {}
 
@@ -275,10 +275,10 @@ namespace smt {
 
         virtual char const * get_name() const { return "theory-propagation"; }
     };
-
+     
     class theory_conflict_justification : public simple_theory_justification {
     public:
-        theory_conflict_justification(family_id fid, region & r, unsigned num_lits, literal const * lits,
+        theory_conflict_justification(family_id fid, region & r, unsigned num_lits, literal const * lits, 
                                       unsigned num_params = 0, parameter* params = 0):
             simple_theory_justification(fid, r, num_lits, lits, num_params, params) {}
 
@@ -294,11 +294,11 @@ namespace smt {
     protected:
         unsigned        m_num_eqs;
         enode_pair *    m_eqs;
-
+        
         bool antecedent2proof(conflict_resolution & cr, ptr_buffer<proof> & result);
 
     public:
-        ext_simple_justification(region & r, unsigned num_lits, literal const * lits,
+        ext_simple_justification(region & r, unsigned num_lits, literal const * lits, 
                                  unsigned num_eqs, enode_pair const * eqs);
 
         virtual void get_antecedents(conflict_resolution & cr);
@@ -317,16 +317,16 @@ namespace smt {
         vector<parameter> m_params;
 
     public:
-        ext_theory_simple_justification(family_id fid, region & r, unsigned num_lits, literal const * lits,
-                                        unsigned num_eqs, enode_pair const * eqs,
+        ext_theory_simple_justification(family_id fid, region & r, unsigned num_lits, literal const * lits, 
+                                        unsigned num_eqs, enode_pair const * eqs, 
                                         unsigned num_params = 0, parameter* params = 0):
             ext_simple_justification(r, num_lits, lits, num_eqs, eqs), m_th_id(fid), m_params(num_params, params) {}
-
+            
         virtual ~ext_theory_simple_justification() {}
 
         virtual bool has_del_eh() const { return !m_params.empty(); }
 
-        virtual void del_eh(ast_manager & m) { m_params.reset(); }
+        virtual void del_eh(ast_manager & m) { m_params.reset(); }       
 
         virtual theory_id get_from_theory() const { return m_th_id; }
     };
@@ -334,12 +334,12 @@ namespace smt {
     class ext_theory_propagation_justification : public ext_theory_simple_justification {
         literal        m_consequent;
     public:
-        ext_theory_propagation_justification(family_id fid, region & r,
-                                             unsigned num_lits, literal const * lits,
+        ext_theory_propagation_justification(family_id fid, region & r, 
+                                             unsigned num_lits, literal const * lits, 
                                              unsigned num_eqs, enode_pair const * eqs,
                                              literal consequent,
                                              unsigned num_params = 0, parameter* params = 0):
-            ext_theory_simple_justification(fid, r, num_lits, lits, num_eqs, eqs, num_params, params),
+            ext_theory_simple_justification(fid, r, num_lits, lits, num_eqs, eqs, num_params, params), 
             m_consequent(consequent) {}
 
         virtual proof * mk_proof(conflict_resolution & cr);
@@ -349,7 +349,7 @@ namespace smt {
 
     class ext_theory_conflict_justification : public ext_theory_simple_justification {
     public:
-        ext_theory_conflict_justification(family_id fid, region & r, unsigned num_lits, literal const * lits,
+        ext_theory_conflict_justification(family_id fid, region & r, unsigned num_lits, literal const * lits, 
                                           unsigned num_eqs, enode_pair const * eqs,
                                           unsigned num_params = 0, parameter* params = 0):
             ext_theory_simple_justification(fid, r, num_lits, lits, num_eqs, eqs, num_params, params) {}
@@ -364,8 +364,8 @@ namespace smt {
         enode *        m_rhs;
     public:
         ext_theory_eq_propagation_justification(
-            family_id fid, region & r,
-            unsigned num_lits, literal const * lits,
+            family_id fid, region & r, 
+            unsigned num_lits, literal const * lits, 
             unsigned num_eqs, enode_pair const * eqs,
             enode * lhs, enode * rhs,
             unsigned num_params = 0, parameter* params = 0):
@@ -374,7 +374,7 @@ namespace smt {
         virtual proof * mk_proof(conflict_resolution & cr);
 
         virtual char const * get_name() const { return "ext-theory-eq-propagation"; }
-    };
+    };  
 
     /**
        \brief A theory lemma is similar to a theory axiom, but it is attached to a CLS_AUX_LEMMA clause instead of CLS_AUX.
@@ -386,9 +386,9 @@ namespace smt {
         vector<parameter> m_params;
         unsigned     m_num_literals;
         expr **      m_literals;
-
+        
     public:
-        theory_lemma_justification(family_id fid, context & ctx, unsigned num_lits, literal const * lits,
+        theory_lemma_justification(family_id fid, context & ctx, unsigned num_lits, literal const * lits, 
                                    unsigned num_params = 0, parameter* params = 0);
 
         virtual ~theory_lemma_justification();
@@ -396,16 +396,16 @@ namespace smt {
         virtual bool has_del_eh() const {
             return true;
         }
-
+        
         virtual void del_eh(ast_manager & m);
-
+        
         virtual void get_antecedents(conflict_resolution & cr) {}
 
         virtual proof * mk_proof(conflict_resolution & cr);
 
         virtual char const * get_name() const { return "theory-lemma"; }
     };
-
+      
 };
 
 #endif /* _SMT_JUSTIFICATION_H_ */

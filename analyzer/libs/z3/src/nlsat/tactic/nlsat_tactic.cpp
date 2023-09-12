@@ -31,9 +31,9 @@ class nlsat_tactic : public tactic {
         ast_manager & m;
         expr_ref_vector m_var2expr;
         expr_display_var_proc(ast_manager & _m):m(_m), m_var2expr(_m) {}
-        virtual void operator()(std::ostream & out, nlsat::var x) const {
+        virtual void operator()(std::ostream & out, nlsat::var x) const { 
             if (x < m_var2expr.size())
-                out << mk_ismt2_pp(m_var2expr.get(x), m);
+                out << mk_ismt2_pp(m_var2expr.get(x), m); 
             else
                 out << "x!" << x;
         }
@@ -52,7 +52,7 @@ class nlsat_tactic : public tactic {
             m_display_var(_m),
             m_solver(p) {
         }
-
+        
         void updt_params(params_ref const & p) {
             m_params = p;
             m_solver.updt_params(p);
@@ -62,7 +62,7 @@ class nlsat_tactic : public tactic {
             m_solver.set_cancel(f);
             m_g2nl.set_cancel(f);
         }
-
+        
         bool contains_unsupported(expr_ref_vector & b2a, expr_ref_vector & x2t) {
             for (unsigned x = 0; x < x2t.size(); x++) {
                 if (!is_uninterp_const(x2t.get(x))) {
@@ -83,7 +83,7 @@ class nlsat_tactic : public tactic {
             }
             return false;
         }
-
+        
         // Return false if nlsat assigned noninteger value to an integer variable.
         bool mk_model(expr_ref_vector & b2a, expr_ref_vector & x2t, model_converter_ref & mc) {
             bool ok = true;
@@ -119,15 +119,15 @@ class nlsat_tactic : public tactic {
             return ok;
         }
 
-        void operator()(goal_ref const & g,
-                        goal_ref_buffer & result,
-                        model_converter_ref & mc,
+        void operator()(goal_ref const & g, 
+                        goal_ref_buffer & result, 
+                        model_converter_ref & mc, 
                         proof_converter_ref & pc,
                         expr_dependency_ref & core) {
             SASSERT(g->is_well_sorted());
             mc = 0; pc = 0; core = 0;
             tactic_report report("nlsat", *g);
-
+            
             if (g->is_decided()) {
                 result.push_back(g.get());
                 return;
@@ -142,9 +142,9 @@ class nlsat_tactic : public tactic {
             m_display_var.m_var2expr.reset();
             t2x.mk_inv(m_display_var.m_var2expr);
             m_solver.set_display_var(m_display_var);
-
+            
             lbool st = m_solver.check();
-
+            
             if (st == l_undef) {
             }
             else if (st == l_true) {
@@ -153,11 +153,11 @@ class nlsat_tactic : public tactic {
                 a2b.mk_inv(b2a);
                 t2x.mk_inv(x2t);
                 if (!contains_unsupported(b2a, x2t)) {
-                    // If mk_model is false it means that the model produced by nlsat
+                    // If mk_model is false it means that the model produced by nlsat 
                     // assigns noninteger values to integer variables
                     if (mk_model(b2a, x2t, mc)) {
                         // result goal is trivially SAT
-                        g->reset();
+                        g->reset(); 
                     }
                 }
             }
@@ -171,13 +171,13 @@ class nlsat_tactic : public tactic {
             SASSERT(g->is_well_sorted());
         }
     };
-
+    
     imp *      m_imp;
     params_ref m_params;
     statistics m_stats;
-
+    
     struct scoped_set_imp {
-        nlsat_tactic & m_owner;
+        nlsat_tactic & m_owner; 
         scoped_set_imp(nlsat_tactic & o, imp & i):m_owner(o) {
             #pragma omp critical (tactic_cancel)
             {
@@ -203,7 +203,7 @@ public:
     virtual tactic * translate(ast_manager & m) {
         return alloc(nlsat_tactic, m_params);
     }
-
+        
     virtual ~nlsat_tactic() {
         SASSERT(m_imp == 0);
     }
@@ -217,10 +217,10 @@ public:
         nlsat::solver::collect_param_descrs(r);
         algebraic_numbers::manager::collect_param_descrs(r);
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         try {
@@ -236,9 +236,9 @@ public:
             throw tactic_exception(ex.msg());
         }
     }
-
+    
     virtual void cleanup() {}
-
+    
     virtual void set_cancel(bool f) {
         if (m_imp)
             m_imp->set_cancel(f);

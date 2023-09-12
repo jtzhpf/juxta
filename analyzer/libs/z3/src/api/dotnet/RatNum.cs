@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-20
 
 Notes:
-
+    
 --*/
 using System;
 using System.Diagnostics.Contracts;
@@ -86,7 +86,7 @@ namespace Microsoft.Z3
         /// <summary>
         /// Returns a string representation in decimal notation.
         /// </summary>
-        /// <remarks>The result has at most <paramref name="precision"/> decimal places.</remarks>
+        /// <remarks>The result has at most <paramref name="precision"/> decimal places.</remarks>    
         public string ToDecimalString(uint precision)
         {
             return Native.Z3_get_numeral_decimal_string(Context.nCtx, NativeObject, precision);
@@ -94,7 +94,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// Returns a string representation of the numeral.
-        /// </summary>
+        /// </summary>        
         public override string ToString()
         {
             return Native.Z3_get_numeral_string(Context.nCtx, NativeObject);

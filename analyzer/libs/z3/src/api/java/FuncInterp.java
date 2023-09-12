@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     FuncInterp.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -32,7 +32,7 @@ public class FuncInterp extends Z3Object
 	{
 		/**
 		 * Return the (symbolic) value of this entry.
-		 *
+		 * 
 		 * @throws Z3Exception
 		 **/
 		public Expr getValue() throws Z3Exception
@@ -51,7 +51,7 @@ public class FuncInterp extends Z3Object
 
 		/**
 		 * The arguments of the function entry.
-		 *
+		 * 
 		 * @throws Z3Exception
 		 **/
 		public Expr[] getArgs() throws Z3Exception
@@ -111,7 +111,7 @@ public class FuncInterp extends Z3Object
 
 	/**
 	 * The entries in the function interpretation
-	 *
+	 * 
 	 * @throws Z3Exception
 	 **/
 	public Entry[] getEntries() throws Z3Exception
@@ -126,7 +126,7 @@ public class FuncInterp extends Z3Object
 
 	/**
 	 * The (symbolic) `else' value of the function interpretation.
-	 *
+	 * 
 	 * @throws Z3Exception
 	 **/
 	public Expr getElse() throws Z3Exception

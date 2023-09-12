@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Multi precision fixed point numbers.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-09-19
@@ -59,14 +59,14 @@ void mpfx_manager::allocate(mpfx & n) {
     SASSERT(::is_zero(m_total_sz, words(n)));
 }
 
-unsigned mpfx_manager::sz(unsigned * ws) const {
+unsigned mpfx_manager::sz(unsigned * ws) const { 
     SASSERT(!::is_zero(m_total_sz, ws));
-    unsigned r = m_total_sz;
-    while (true) {
+    unsigned r = m_total_sz; 
+    while (true) { 
         SASSERT(r > 0);
-        --r;
-        if (ws[r] != 0)
-            return r + 1;
+        --r; 
+        if (ws[r] != 0) 
+            return r + 1; 
     }
 }
 
@@ -155,7 +155,7 @@ void mpfx_manager::set(mpfx & n, unsigned v) {
         allocate_if_needed(n);
         n.m_sign              = 0;
         unsigned * w          = words(n);
-        for (unsigned i = 0; i < m_total_sz; i++)
+        for (unsigned i = 0; i < m_total_sz; i++) 
             w[i] = 0;
         w[m_frac_part_sz]     = v;
     }
@@ -166,7 +166,7 @@ void mpfx_manager::set(mpfx & n, unsigned v) {
 
 void mpfx_manager::set(mpfx & n, int64 v) {
     if (m_int_part_sz == 1) {
-        if (v < -static_cast<int64>(static_cast<uint64>(UINT_MAX)) ||
+        if (v < -static_cast<int64>(static_cast<uint64>(UINT_MAX)) || 
             v > static_cast<int64>(static_cast<uint64>(UINT_MAX)))
             throw overflow_exception();
     }
@@ -201,7 +201,7 @@ void mpfx_manager::set(mpfx & n, uint64 v) {
         n.m_sign              = 0;
         unsigned * _v         = reinterpret_cast<unsigned*>(&v);
         unsigned * w          = words(n);
-        for (unsigned i = 0; i < m_total_sz; i++)
+        for (unsigned i = 0; i < m_total_sz; i++) 
             w[i] = 0;
         w[m_frac_part_sz]     = _v[0];
         if (m_int_part_sz == 1) {
@@ -259,7 +259,7 @@ void mpfx_manager::set_core(mpfx & n, mpz_manager<SYNCH> & m, mpz const & v) {
         if (sz > m_int_part_sz)
             throw overflow_exception();
         unsigned * w = words(n);
-        for (unsigned i = 0; i < m_frac_part_sz; i++)
+        for (unsigned i = 0; i < m_frac_part_sz; i++) 
             w[i] = 0;
         ::copy(sz, m_tmp_digits.c_ptr(), m_int_part_sz, w + m_frac_part_sz);
     }
@@ -316,11 +316,11 @@ bool mpfx_manager::eq(mpfx const & a, mpfx const & b) const {
         return true;
     if (is_zero(a) || is_zero(b))
         return false;
-    if (a.m_sign     != b.m_sign)
+    if (a.m_sign     != b.m_sign) 
         return false;
     unsigned * w1 = words(a);
     unsigned * w2 = words(b);
-    for (unsigned i = 0; i < m_total_sz; i++)
+    for (unsigned i = 0; i < m_total_sz; i++) 
         if (w1[i] != w2[i])
             return false;
     return true;
@@ -405,13 +405,13 @@ void mpfx_manager::add_sub(bool is_sub, mpfx const & a, mpfx const & b, mpfx & c
 void mpfx_manager::add(mpfx const & a, mpfx const & b, mpfx & c) {
     STRACE("mpfx_trace", tout << "[mpfx] "; display(tout, a); tout << " + "; display(tout, b); tout << " == ";);
     add_sub(false, a, b, c);
-    STRACE("mpfx_trace", display(tout, c); tout << "\n";);
+    STRACE("mpfx_trace", display(tout, c); tout << "\n";);  
 }
 
 void mpfx_manager::sub(mpfx const & a, mpfx const & b, mpfx & c) {
     STRACE("mpfx_trace", tout << "[mpfx] "; display(tout, a); tout << " - "; display(tout, b); tout << " == ";);
     add_sub(true, a, b, c);
-    STRACE("mpfx_trace", display(tout, c); tout << "\n";);
+    STRACE("mpfx_trace", display(tout, c); tout << "\n";);  
 }
 
 void mpfx_manager::mul(mpfx const & a, mpfx const & b, mpfx & c) {
@@ -438,12 +438,12 @@ void mpfx_manager::mul(mpfx const & a, mpfx const & b, mpfx & c) {
         for (unsigned i = 0; i < m_total_sz; i++)
             w_c[i] = _r[i];
     }
-    STRACE("mpfx_trace", display(tout, c); tout << "\n";);
+    STRACE("mpfx_trace", display(tout, c); tout << "\n";);  
     SASSERT(check(c));
 }
 
 void mpfx_manager::div(mpfx const & a, mpfx const & b, mpfx & c) {
-    if (is_zero(b))
+    if (is_zero(b)) 
         throw div0_exception();
     STRACE("mpfx_trace", tout << "[mpfx] ("; display(tout, a); tout << ") / ("; display(tout, b); tout << ") " << (m_to_plus_inf ? "<=" : ">=") << " ";);
     if (is_zero(a)) {
@@ -454,9 +454,9 @@ void mpfx_manager::div(mpfx const & a, mpfx const & b, mpfx & c) {
         c.m_sign    = a.m_sign ^ b.m_sign;
         unsigned * w_a       = words(a);
         unsigned * w_a_shft  = m_buffer0.c_ptr();
-        unsigned a_shft_sz   = sz(w_a) + m_frac_part_sz;
+        unsigned a_shft_sz   = sz(w_a) + m_frac_part_sz; 
         // copy a to buffer 0, and shift by m_frac_part_sz
-        for (unsigned i = 0; i < m_frac_part_sz; i++)
+        for (unsigned i = 0; i < m_frac_part_sz; i++) 
             w_a_shft[i] = 0;
         for (unsigned i = 0; i < m_total_sz; i++)
             w_a_shft[i+m_frac_part_sz] = w_a[i];
@@ -470,14 +470,14 @@ void mpfx_manager::div(mpfx const & a, mpfx const & b, mpfx & c) {
                 reset(c);
         }
         else {
-            unsigned q_sz        = a_shft_sz - b_sz + 1;
+            unsigned q_sz        = a_shft_sz - b_sz + 1; 
             unsigned * w_r       = m_buffer2.c_ptr();
             unsigned r_sz        = b_sz;
-            divide(w_a_shft, a_shft_sz,
+            divide(w_a_shft, a_shft_sz, 
                    w_b,      b_sz,
                    reciprocal_1_NULL,
-                   w_q,
-                   w_r,
+                   w_q, 
+                   w_r, 
                    0);
             for (unsigned i = m_total_sz; i < q_sz; i++)
                 if (w_q[i] != 0)
@@ -496,7 +496,7 @@ void mpfx_manager::div(mpfx const & a, mpfx const & b, mpfx & c) {
                         zero_q = false;
                     w_c[i] = w_q[i];
                 }
-                for (; i < m_total_sz; i++)
+                for (; i < m_total_sz; i++) 
                     w_c[i] = 0;
             }
             else {
@@ -514,7 +514,7 @@ void mpfx_manager::div(mpfx const & a, mpfx const & b, mpfx & c) {
             }
         }
     }
-    STRACE("mpfx_trace", display(tout, c); tout << "\n";);
+    STRACE("mpfx_trace", display(tout, c); tout << "\n";);  
     SASSERT(check(c));
 }
 
@@ -532,7 +532,7 @@ void mpfx_manager::div2k(mpfx & a, unsigned k) {
             reset(a);
         }
     }
-    STRACE("mpfx_trace", display(tout, a); tout << "\n";);
+    STRACE("mpfx_trace", display(tout, a); tout << "\n";);  
     SASSERT(check(a));
 }
 
@@ -576,7 +576,7 @@ void mpfx_manager::floor(mpfx & n) {
     if (::is_zero(m_int_part_sz, w + m_frac_part_sz))
         reset(n);
     SASSERT(check(n));
-    STRACE("mpfx_trace", display(tout, n); tout << "\n";);
+    STRACE("mpfx_trace", display(tout, n); tout << "\n";);  
 }
 
 void mpfx_manager::ceil(mpfx & n) {
@@ -600,7 +600,7 @@ void mpfx_manager::ceil(mpfx & n) {
     if (::is_zero(m_int_part_sz, w + m_frac_part_sz))
         reset(n);
     SASSERT(check(n));
-    STRACE("mpfx_trace", display(tout, n); tout << "\n";);
+    STRACE("mpfx_trace", display(tout, n); tout << "\n";);  
 }
 
 void mpfx_manager::power(mpfx const & a, unsigned p, mpfx & b) {

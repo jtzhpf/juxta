@@ -38,7 +38,7 @@ public:
     operator numeral&() { return m_num; }
     numeral const & get() const { return m_num; }
     numeral & get() { return m_num; }
-
+    
     _scoped_numeral & operator=(_scoped_numeral & n) {
         if (this == &n)
             return *this;
@@ -137,27 +137,27 @@ public:
         m().neg(m_num);
     }
 
-    friend _scoped_numeral operator+(_scoped_numeral const & r1, numeral const & r2) {
-        return _scoped_numeral(r1) += r2;
+    friend _scoped_numeral operator+(_scoped_numeral const & r1, numeral const & r2) { 
+        return _scoped_numeral(r1) += r2; 
+    }
+    
+    friend _scoped_numeral operator-(_scoped_numeral const & r1, numeral const & r2) { 
+        return _scoped_numeral(r1) -= r2; 
     }
 
-    friend _scoped_numeral operator-(_scoped_numeral const & r1, numeral const & r2) {
-        return _scoped_numeral(r1) -= r2;
+    friend _scoped_numeral operator*(_scoped_numeral const & r1, numeral const & r2) { 
+        return _scoped_numeral(r1) *= r2; 
     }
-
-    friend _scoped_numeral operator*(_scoped_numeral const & r1, numeral const & r2) {
-        return _scoped_numeral(r1) *= r2;
-    }
-
-    friend _scoped_numeral operator/(_scoped_numeral const & r1, numeral const & r2) {
-        return _scoped_numeral(r1) /= r2;
+    
+    friend _scoped_numeral operator/(_scoped_numeral const & r1, numeral const & r2) { 
+        return _scoped_numeral(r1) /= r2; 
     }
 
     friend std::ostream & operator<<(std::ostream & out, _scoped_numeral const & s) {
         s.m().display(out, s);
         return out;
     }
-
+                                 
 };
 
 #endif

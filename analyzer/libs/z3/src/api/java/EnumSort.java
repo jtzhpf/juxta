@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     EnumSort.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -38,7 +38,7 @@ public class EnumSort extends Sort
 	 * The constants in the enumeration.
 	 **/
 	public Expr[] getConsts() throws Z3Exception
-	{
+	{	    
 	    FuncDecl[] cds = getConstDecls();
         Expr[] t = new Expr[cds.length];
         for (int i = 0; i < t.length; i++)
@@ -67,6 +67,6 @@ public class EnumSort extends Sort
 		long[] n_testers = new long[n];
 		setNativeObject(Native.mkEnumerationSort(ctx.nCtx(),
 				name.getNativeObject(), (int) n, Symbol.arrayToNative(enumNames),
-				n_constdecls, n_testers));
+				n_constdecls, n_testers));		
 	}
 };

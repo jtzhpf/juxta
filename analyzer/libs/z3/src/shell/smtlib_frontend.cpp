@@ -55,7 +55,7 @@ static void display_statistics() {
 }
 
 static void on_timeout() {
-    #pragma omp critical (g_display_stats)
+    #pragma omp critical (g_display_stats) 
     {
         display_statistics();
         exit(0);
@@ -64,7 +64,7 @@ static void on_timeout() {
 
 static void on_ctrl_c(int) {
     signal (SIGINT, SIG_DFL);
-    #pragma omp critical (g_display_stats)
+    #pragma omp critical (g_display_stats) 
     {
         display_statistics();
     }
@@ -77,9 +77,9 @@ unsigned read_smtlib_file(char const * benchmark_file) {
     signal(SIGINT, on_ctrl_c);
     smtlib::solver solver;
     g_solver = &solver;
-
+    
     bool ok = true;
-
+    
     ok = solver.solve_smt(benchmark_file);
     if (!ok) {
         if (benchmark_file) {
@@ -89,8 +89,8 @@ unsigned read_smtlib_file(char const * benchmark_file) {
             std::cerr << "ERROR: solving input stream.\n";
         }
     }
-
-    #pragma omp critical (g_display_stats)
+    
+    #pragma omp critical (g_display_stats) 
     {
         display_statistics();
         register_on_timeout_proc(0);
@@ -115,7 +115,7 @@ unsigned read_smtlib2_commands(char const * file_name) {
 
     g_cmd_context = &ctx;
     signal(SIGINT, on_ctrl_c);
-
+    
     bool result = true;
     if (file_name) {
         std::ifstream in(file_name);
@@ -128,9 +128,9 @@ unsigned read_smtlib2_commands(char const * file_name) {
     else {
         result = parse_smt2_commands(ctx, std::cin, true);
     }
+    
 
-
-    #pragma omp critical (g_display_stats)
+    #pragma omp critical (g_display_stats) 
     {
         display_statistics();
         g_cmd_context = 0;

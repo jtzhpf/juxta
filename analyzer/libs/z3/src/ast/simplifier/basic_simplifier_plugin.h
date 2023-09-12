@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     Leonardo (leonardo) 2008-01-07
-
+    
 --*/
 #ifndef _BASIC_SIMPLIFIER_PLUGIN_H_
 #define _BASIC_SIMPLIFIER_PLUGIN_H_

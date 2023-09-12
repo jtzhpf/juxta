@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Routines for simplifying bit2int expressions.
-    This propagates bv2int over arithmetical symbols as much as possible,
+    This propagates bv2int over arithmetical symbols as much as possible, 
     converting arithmetic operations into bit-vector operations.
 
 Author:
@@ -26,7 +26,7 @@ Revision History:
 
 #define CHECK(_x_) if (!(_x_)) { UNREACHABLE(); }
 
-bit2int::bit2int(ast_manager & m) :
+bit2int::bit2int(ast_manager & m) : 
     m_manager(m), m_bv_util(m), m_arith_util(m), m_cache(m), m_bit0(m) {
     m_bit0     = m_bv_util.mk_numeral(0,1);
 }
@@ -40,8 +40,8 @@ void bit2int::operator()(expr * m, expr_ref & result, proof_ref& p) {
         // TBD: rough
         p = m_manager.mk_rewrite(m, result);
     }
-    TRACE("bit2int",
-          tout << mk_pp(m, m_manager) << "======>\n"
+    TRACE("bit2int", 
+          tout << mk_pp(m, m_manager) << "======>\n" 
           << mk_pp(result, m_manager) << "\n";);
 
 }
@@ -67,7 +67,7 @@ unsigned bit2int::get_numeral_bits(numeral const& k) {
 void bit2int::align_size(expr* e, unsigned sz, expr_ref& result) {
     unsigned sz1 = m_bv_util.get_bv_size(e);
     SASSERT(sz1 <= sz);
-    m_bv_simplifier->mk_zeroext(sz-sz1, e, result);
+    m_bv_simplifier->mk_zeroext(sz-sz1, e, result);    
 }
 
 void bit2int::align_sizes(expr_ref& a, expr_ref& b) {
@@ -75,11 +75,11 @@ void bit2int::align_sizes(expr_ref& a, expr_ref& b) {
     unsigned sz2 = m_bv_util.get_bv_size(b);
     expr_ref tmp(m_manager);
     if (sz1 > sz2) {
-        m_bv_simplifier->mk_zeroext(sz1-sz2, b, tmp);
+        m_bv_simplifier->mk_zeroext(sz1-sz2, b, tmp);    
         b = tmp;
     }
     else if (sz2 > sz1) {
-        m_bv_simplifier->mk_zeroext(sz2-sz1, a, tmp);
+        m_bv_simplifier->mk_zeroext(sz2-sz1, a, tmp);    
         a = tmp;
     }
 }
@@ -109,7 +109,7 @@ bool bit2int::mk_add(expr* e1, expr* e2, expr_ref& result) {
     unsigned sz1, sz2;
     bool sign1, sign2;
     expr_ref tmp1(m_manager), tmp2(m_manager), tmp3(m_manager);
-
+    
     if (extract_bv(e1, sz1, sign1, tmp1) && !sign1 &&
         extract_bv(e2, sz2, sign2, tmp2) && !sign2) {
         unsigned sz;
@@ -163,7 +163,7 @@ bool bit2int::mk_mul(expr* e1, expr* e2, expr_ref& result) {
     bool sign1, sign2;
     expr_ref tmp1(m_manager), tmp2(m_manager);
     expr_ref tmp3(m_manager);
-
+    
     if (extract_bv(e1, sz1, sign1, tmp1) &&
         extract_bv(e2, sz2, sign2, tmp2)) {
         align_sizes(tmp1, tmp2);
@@ -189,7 +189,7 @@ bool bit2int::is_bv_poly(expr* n, expr_ref& pos, expr_ref& neg) {
     todo.push_back(n);
     m_bv_simplifier->mk_bv2int(m_bit0, m_arith_util.mk_int(), pos);
     m_bv_simplifier->mk_bv2int(m_bit0, m_arith_util.mk_int(), neg);
-
+        
     while (!todo.empty()) {
         n = todo.back();
         todo.pop_back();
@@ -237,7 +237,7 @@ bool bit2int::is_bv_poly(expr* n, expr_ref& pos, expr_ref& neg) {
 void bit2int::visit(quantifier* q) {
     expr_ref result(m_manager);
     result = get_cached(q->get_expr());
-    result = m_manager.update_quantifier(q, result);
+    result = m_manager.update_quantifier(q, result);                                                   
     cache_result(q, result);
 }
 
@@ -252,8 +252,8 @@ void bit2int::visit(app* n) {
 
     expr* const* args = m_args.c_ptr();
 
-    bool has_b2i =
-        m_arith_util.is_le(n) || m_arith_util.is_ge(n) || m_arith_util.is_gt(n) ||
+    bool has_b2i = 
+        m_arith_util.is_le(n) || m_arith_util.is_ge(n) || m_arith_util.is_gt(n) || 
         m_arith_util.is_lt(n) || m_manager.is_eq(n);
     expr_ref result(m_manager);
     for (unsigned i = 0; !has_b2i && i < num_args; ++i) {
@@ -272,7 +272,7 @@ void bit2int::visit(app* n) {
     // bv2int(x) - bv2int(y) <= z -> bv2int(x) <= bv2int(y) + z
     // bv2int(x) <= z - bv2int(y) -> bv2int(x) + bv2int(y) <= z
     //
-
+    
     expr* e1, *e2;
     expr_ref tmp1(m_manager), tmp2(m_manager);
     expr_ref tmp3(m_manager);
@@ -299,7 +299,7 @@ void bit2int::visit(app* n) {
                 return;
             }
         }
-        cache_result(n, result);
+        cache_result(n, result);        
     }
     else if (m_arith_util.is_mul(n) && num_args >= 1) {
         result = e1;
@@ -312,9 +312,9 @@ void bit2int::visit(app* n) {
                 return;
             }
         }
-        cache_result(n, result);
+        cache_result(n, result);        
     }
-    else if (m_manager.is_eq(n) &&
+    else if (m_manager.is_eq(n) && 
              is_bv_poly(e1, pos1, neg1) &&
              is_bv_poly(e2, pos2, neg2) &&
              mk_add(pos1, neg2, tmp1) &&
@@ -322,7 +322,7 @@ void bit2int::visit(app* n) {
              mk_comp(eq, tmp1, tmp2, result)) {
         cache_result(n, result);
     }
-    else if (m_arith_util.is_le(n) &&
+    else if (m_arith_util.is_le(n) && 
              is_bv_poly(e1, pos1, neg1) &&
              is_bv_poly(e2, pos2, neg2) &&
              mk_add(pos1, neg2, tmp1) &&
@@ -330,7 +330,7 @@ void bit2int::visit(app* n) {
              mk_comp(le, tmp1, tmp2, result)) {
         cache_result(n, result);
     }
-    else if (m_arith_util.is_lt(n) &&
+    else if (m_arith_util.is_lt(n) && 
              is_bv_poly(e1, pos1, neg1) &&
              is_bv_poly(e2, pos2, neg2) &&
              mk_add(pos1, neg2, tmp1) &&
@@ -338,7 +338,7 @@ void bit2int::visit(app* n) {
              mk_comp(lt, tmp1, tmp2, result)) {
         cache_result(n, result);
     }
-    else if (m_arith_util.is_ge(n) &&
+    else if (m_arith_util.is_ge(n) && 
              is_bv_poly(e1, pos1, neg1) &&
              is_bv_poly(e2, pos2, neg2) &&
              mk_add(pos1, neg2, tmp1) &&
@@ -346,7 +346,7 @@ void bit2int::visit(app* n) {
              mk_comp(le, tmp2, tmp1, result)) {
         cache_result(n, result);
     }
-    else if (m_arith_util.is_gt(n) &&
+    else if (m_arith_util.is_gt(n) && 
              is_bv_poly(e1, pos1, neg1) &&
              is_bv_poly(e2, pos2, neg2) &&
              mk_add(pos1, neg2, tmp1) &&
@@ -410,12 +410,12 @@ void bit2int::visit(app* n) {
     }
 }
 
-expr * bit2int::get_cached(expr * n) const {
+expr * bit2int::get_cached(expr * n) const { 
     return const_cast<bit2int*>(this)->m_cache.find(n);
 }
 
-void bit2int::cache_result(expr * n, expr * r) {
+void bit2int::cache_result(expr * n, expr * r) { 
     TRACE("bit2int_verbose", tout << "caching:\n" << mk_ll_pp(n, m_manager) <<
           "======>\n" << mk_ll_pp(r, m_manager) << "\n";);
-    m_cache.insert(n, r);
+    m_cache.insert(n, r); 
 }

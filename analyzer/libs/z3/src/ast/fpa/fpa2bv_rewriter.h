@@ -26,8 +26,8 @@ Notes:
 #include"fpa2bv_converter.h"
 
 struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
-    ast_manager              & m_manager;
-    expr_ref_vector            m_out;
+    ast_manager              & m_manager;    
+    expr_ref_vector            m_out;    
     fpa2bv_converter         & m_conv;
     sort_ref_vector            m_bindings;
 
@@ -48,7 +48,7 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
             m_manager.register_plugin(s_bv, alloc(bv_decl_plugin));
     }
 
-    ~fpa2bv_rewriter_cfg() {
+    ~fpa2bv_rewriter_cfg() {        
     }
 
     void cleanup_buffers() {
@@ -60,10 +60,10 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
 
     void updt_params(params_ref const & p) {
         m_max_memory     = megabytes_to_bytes(p.get_uint("max_memory", UINT_MAX));
-        m_max_steps      = p.get_uint("max_steps", UINT_MAX);
+        m_max_steps      = p.get_uint("max_steps", UINT_MAX);        
     }
 
-    bool max_steps_exceeded(unsigned num_steps) const {
+    bool max_steps_exceeded(unsigned num_steps) const { 
         cooperate("fpa2bv");
         return num_steps > m_max_steps;
     }
@@ -104,15 +104,15 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
             }
             return BR_FAILED;
         }
-
+        
         if (m_conv.is_float_family(f)) {
-            switch (f->get_decl_kind()) {
+            switch (f->get_decl_kind()) {            
             case OP_RM_NEAREST_TIES_TO_AWAY:
             case OP_RM_NEAREST_TIES_TO_EVEN:
             case OP_RM_TOWARD_NEGATIVE:
             case OP_RM_TOWARD_POSITIVE:
-            case OP_RM_TOWARD_ZERO: m_conv.mk_rounding_mode(f, result); return BR_DONE;
-            case OP_FLOAT_VALUE: m_conv.mk_value(f, num, args, result); return BR_DONE;
+            case OP_RM_TOWARD_ZERO: m_conv.mk_rounding_mode(f, result); return BR_DONE;            
+            case OP_FLOAT_VALUE: m_conv.mk_value(f, num, args, result); return BR_DONE;                             
             case OP_FLOAT_PLUS_INF: m_conv.mk_plus_inf(f, result); return BR_DONE;
             case OP_FLOAT_MINUS_INF: m_conv.mk_minus_inf(f, result); return BR_DONE;
             case OP_FLOAT_PLUS_ZERO: m_conv.mk_pzero(f, result); return BR_DONE;
@@ -173,7 +173,7 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
                 return BR_DONE;
             }
         }
-
+        
         return BR_FAILED;
     }
 
@@ -181,8 +181,8 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
     {
         TRACE("fpa2bv", tout << "pre_visit: " << mk_ismt2_pp(t, m()) << std::endl;);
 
-        if (is_quantifier(t)) {
-            quantifier * q = to_quantifier(t);
+        if (is_quantifier(t)) {            
+            quantifier * q = to_quantifier(t);            
             TRACE("fpa2bv", tout << "pre_visit quantifier [" << q->get_id() << "]: " << mk_ismt2_pp(q->get_expr(), m()) << std::endl;);
             sort_ref_vector new_bindings(m_manager);
             for (unsigned i = 0 ; i < q->get_num_decls(); i++)
@@ -193,9 +193,9 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
         return true;
     }
 
-    bool reduce_quantifier(quantifier * old_q,
-                           expr * new_body,
-                           expr * const * new_patterns,
+    bool reduce_quantifier(quantifier * old_q, 
+                           expr * new_body, 
+                           expr * const * new_patterns, 
                            expr * const * new_no_patterns,
                            expr_ref & result,
                            proof_ref & result_pr) {
@@ -215,7 +215,7 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
                 name_buffer.reset();
                 name_buffer << n << ".bv";
                 new_decl_names.push_back(symbol(name_buffer.c_str()));
-                new_decl_sorts.push_back(m_conv.bu().mk_sort(sbits+ebits));
+                new_decl_sorts.push_back(m_conv.bu().mk_sort(sbits+ebits)); 
             }
             else {
                 new_decl_sorts.push_back(s);
@@ -226,18 +226,18 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
                                    new_body, old_q->get_weight(), old_q->get_qid(), old_q->get_skid(),
                                    old_q->get_num_patterns(), new_patterns, old_q->get_num_no_patterns(), new_no_patterns);
         result_pr = 0;
-        m_bindings.shrink(old_sz);
-        TRACE("fpa2bv", tout << "reduce_quantifier[" << old_q->get_depth() << "]: " <<
+        m_bindings.shrink(old_sz);        
+        TRACE("fpa2bv", tout << "reduce_quantifier[" << old_q->get_depth() << "]: " << 
                 mk_ismt2_pp(old_q->get_expr(), m()) << std::endl <<
                 " new body: " << mk_ismt2_pp(new_body, m()) << std::endl;
-                tout << "result = " << mk_ismt2_pp(result, m()) << std::endl;);
+                tout << "result = " << mk_ismt2_pp(result, m()) << std::endl;);                
         return true;
     }
 
-    bool reduce_var(var * t, expr_ref & result, proof_ref & result_pr) {
+    bool reduce_var(var * t, expr_ref & result, proof_ref & result_pr) { 
         if (t->get_idx() >= m_bindings.size())
             return false;
-        // unsigned inx = m_bindings.size() - t->get_idx() - 1;
+        // unsigned inx = m_bindings.size() - t->get_idx() - 1;        
 
         expr_ref new_exp(m());
         sort * s = t->get_sort();
@@ -253,10 +253,10 @@ struct fpa2bv_rewriter_cfg : public default_rewriter_cfg {
                                 new_exp);
         }
         else
-            new_exp = m().mk_var(t->get_idx(), s);
+            new_exp = m().mk_var(t->get_idx(), s);        
 
         result = new_exp;
-        result_pr = 0;
+        result_pr = 0;        
         TRACE("fpa2bv", tout << "reduce_var: " << mk_ismt2_pp(t, m()) << " -> " << mk_ismt2_pp(result, m()) << std::endl;);
         return true;
     }
@@ -267,7 +267,7 @@ template class rewriter_tpl<fpa2bv_rewriter_cfg>;
 struct fpa2bv_rewriter : public rewriter_tpl<fpa2bv_rewriter_cfg> {
     fpa2bv_rewriter_cfg m_cfg;
     fpa2bv_rewriter(ast_manager & m, fpa2bv_converter & c, params_ref const & p):
-        rewriter_tpl<fpa2bv_rewriter_cfg>(m, m.proofs_enabled(), m_cfg),
+        rewriter_tpl<fpa2bv_rewriter_cfg>(m, m.proofs_enabled(), m_cfg),        
         m_cfg(m, c, p) {
     }
 };

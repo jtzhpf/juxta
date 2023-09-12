@@ -1,4 +1,4 @@
-def_module_params(module_name='smt',
+def_module_params(module_name='smt', 
                   class_name='smt_params_helper',
                   description='smt solver based on lazy smt',
                   export=True,

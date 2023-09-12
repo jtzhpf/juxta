@@ -35,7 +35,7 @@ void expr_safe_replace::operator()(expr* e, expr_ref& res) {
     todo.push_back(e);
     expr* a, *b, *d;
     todo.push_back(e);
-
+    
     while (!todo.empty()) {
         a = todo.back();
         if (cache.contains(a)) {
@@ -96,7 +96,7 @@ void expr_safe_replace::operator()(expr* e, expr_ref& res) {
             refs.push_back(b);
             cache.insert(a, b);
             todo.pop_back();
-        }
+        }        
     }
     res = cache.find(e);
 }

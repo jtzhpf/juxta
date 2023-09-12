@@ -1,7 +1,7 @@
 ############################################
 # Copyright (c) 2012 Microsoft Corporation
-#
-# Scripts for automatically generating
+# 
+# Scripts for automatically generating 
 # Window distribution zip files.
 #
 # Author: Leonardo de Moura (leonardo)
@@ -63,7 +63,7 @@ def display_help():
 def parse_options():
     global FORCE_MK, JAVA_ENABLED, GIT_HASH
     path = BUILD_DIR
-    options, remainder = getopt.gnu_getopt(sys.argv[1:], 'b:hsf', ['build=',
+    options, remainder = getopt.gnu_getopt(sys.argv[1:], 'b:hsf', ['build=', 
                                                                    'help',
                                                                    'silent',
                                                                    'force',
@@ -105,7 +105,7 @@ def mk_build_dir(path, x64):
             opts.append('--githash=%s' % mk_util.git_hash())
         if subprocess.call(opts) != 0:
             raise MKException("Failed to generate build directory at '%s'" % path)
-
+    
 # Create build directories
 def mk_build_dirs():
     mk_build_dir(BUILD_X86_DIR, False)
@@ -142,7 +142,7 @@ def mk_z3_core(x64):
     cmds = []
     if x64:
         cmds.append('call "%VCINSTALLDIR%vcvarsall.bat" amd64')
-        cmds.append('cd %s' % BUILD_X64_DIR)
+        cmds.append('cd %s' % BUILD_X64_DIR)    
     else:
         cmds.append('call "%VCINSTALLDIR%vcvarsall.bat" x86')
         cmds.append('cd %s' % BUILD_X86_DIR)
@@ -225,7 +225,7 @@ VS_RUNTIME_PATS = [re.compile('vcomp.*\.dll'),
                    re.compile('msvcr.*\.dll')]
 
 VS_RUNTIME_FILES = []
-
+                              
 def cp_vs_runtime_visitor(pattern, dir, files):
     global VS_RUNTIME_FILES
     for filename in files:
@@ -242,7 +242,7 @@ def cp_vs_runtime_core(x64):
     global VS_RUNTIME_FILES
     if x64:
         platform = "x64"
-
+        
     else:
         platform = "x86"
     vcdir = subprocess.check_output(['echo', '%VCINSTALLDIR%'], shell=True).rstrip('\r\n')

@@ -25,7 +25,7 @@ void check_error_code (Z3_context c);
 Z3_context last_ctx;
 
 
-
+  
   value caml_final_register (value f, value v);
 
   void register_finalizer(value** closure, char* name, Z3_context ctx, value v)
@@ -64,7 +64,7 @@ Z3_context last_ctx;
     Z3_del_context(c);
     return Val_unit;
   }
-
+  
 #define camlidl_ml2c_z3_Z3_context(v,c,ctx) ml2c_Z3_context(v,c)
 
 #define camlidl_c2ml_z3_Z3_context(c,ctx) c2ml_Z3_context(c)
@@ -151,12 +151,12 @@ static intnat hash_Z3_ast (value v)
     Z3_inc_ref(last_ctx, *c);
     return v;
   }
-
+  
 #define camlidl_ml2c_z3_Z3_ast(v,c,ctx) ml2c_Z3_ast(v,c)
 
 #define camlidl_c2ml_z3_Z3_ast(c,ctx) c2ml_Z3_ast(c)
 
-#define DEFINE_SUBAST_OPS(T) void ml2c_ ## T (value v, T * a) { ml2c_Z3_ast(v, (Z3_ast*) a); } value c2ml_ ## T (T * a) { return c2ml_Z3_ast((Z3_ast*) a); }
+#define DEFINE_SUBAST_OPS(T) void ml2c_ ## T (value v, T * a) { ml2c_Z3_ast(v, (Z3_ast*) a); } value c2ml_ ## T (T * a) { return c2ml_Z3_ast((Z3_ast*) a); } 
 DEFINE_SUBAST_OPS(Z3_sort)
 #define camlidl_ml2c_z3_Z3_sort(v,c,ctx) ml2c_Z3_sort(v,c)
 
@@ -177,7 +177,7 @@ DEFINE_SUBAST_OPS(Z3_pattern)
 
 #define camlidl_c2ml_z3_Z3_pattern(c,ctx) c2ml_Z3_pattern(c)
 
-#define DEFINE_RC_OPS(T) value c2ml_ ## T (T * c) { static value* finalize_ ## T ## _closure = NULL; value v; check_error_code(last_ctx); v = caml_alloc_small(2, Abstract_tag); Field(v, 0) = (value) *c; Field(v, 1) = (value) last_ctx; register_finalizer(&finalize_ ## T ## _closure, xstr(finalize_ ## T), (Z3_context) *c, v); T ## _inc_ref(last_ctx, *c); return v; } void ml2c_ ## T (value v, T * c) { *c = (T) Field(v, 0); } value finalize_ ## T (value v) { Z3_context c; c = (Z3_context) Field(v, 1); T ## _dec_ref(c, (T) Field(v, 0)); check_error_code(c); return Val_unit; }
+#define DEFINE_RC_OPS(T) value c2ml_ ## T (T * c) { static value* finalize_ ## T ## _closure = NULL; value v; check_error_code(last_ctx); v = caml_alloc_small(2, Abstract_tag); Field(v, 0) = (value) *c; Field(v, 1) = (value) last_ctx; register_finalizer(&finalize_ ## T ## _closure, xstr(finalize_ ## T), (Z3_context) *c, v); T ## _inc_ref(last_ctx, *c); return v; } void ml2c_ ## T (value v, T * c) { *c = (T) Field(v, 0); } value finalize_ ## T (value v) { Z3_context c; c = (Z3_context) Field(v, 1); T ## _dec_ref(c, (T) Field(v, 0)); check_error_code(c); return Val_unit; } 
 DEFINE_RC_OPS(Z3_params)
 #define camlidl_ml2c_z3_Z3_params(v,c,ctx) ml2c_Z3_params(v,c)
 
@@ -8163,9 +8163,9 @@ value camlidl_z3_Z3_parse_z3_string(
   _res = Z3_parse_z3_string(c, str);
   _vres = camlidl_c2ml_z3_Z3_ast(&_res, _ctx);
   camlidl_free(_ctx);
-  /* begin user-supplied deallocation sequence
+  /* begin user-supplied deallocation sequence 
 check_error_code(c);
-  /* end user-supplied deallocation sequence
+  /* end user-supplied deallocation sequence 
   return _vres;
 }
 
@@ -8185,9 +8185,9 @@ value camlidl_z3_Z3_parse_z3_file(
   _res = Z3_parse_z3_file(c, file_name);
   _vres = camlidl_c2ml_z3_Z3_ast(&_res, _ctx);
   camlidl_free(_ctx);
-  /* begin user-supplied deallocation sequence
+  /* begin user-supplied deallocation sequence 
 check_error_code(c);
-  /* end user-supplied deallocation sequence
+  /* end user-supplied deallocation sequence 
   return _vres;
 }
 */

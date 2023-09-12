@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     Leonardo (leonardo) 2008-01-08
-
+    
 --*/
 #ifndef _ARITH_SIMPLIFIER_PLUGIN_H_
 #define _ARITH_SIMPLIFIER_PLUGIN_H_
@@ -69,7 +69,7 @@ public:
     bool is_ge(expr const * n) const { return m_util.is_ge(n); }
 
     virtual bool is_le_ge(expr * n) const { return is_le(n) || is_ge(n); }
-
+    
     void mk_le(expr * arg1, expr * arg2, expr_ref & result);
     void mk_ge(expr * arg1, expr * arg2, expr_ref & result);
     void mk_lt(expr * arg1, expr * arg2, expr_ref & result);

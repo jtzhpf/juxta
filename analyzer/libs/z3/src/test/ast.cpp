@@ -20,7 +20,7 @@ Revision History:
 
 static void tst1() {
     ast_manager m;
-
+    
     family_id fid = m.get_basic_family_id();
 
     sort_ref b(m.mk_bool_sort(), m);
@@ -133,7 +133,7 @@ static void tst5() {
 
 
 struct foo {
-    unsigned       m_id;
+    unsigned       m_id; 
     unsigned short m_ref_count;
     unsigned char  m_kind;
     unsigned char  m_arity;
@@ -142,7 +142,7 @@ struct foo {
 };
 
 void tst_ast() {
-    TRACE("ast",
+    TRACE("ast", 
           tout << "sizeof(ast):  " << sizeof(ast) << "\n";
           tout << "sizeof(expr): " << sizeof(expr) << "\n";
           tout << "sizeof(app): " << sizeof(app) << "\n";

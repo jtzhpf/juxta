@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Tactics for benchmarks containing quantifiers.
-
+    
 Author:
 
     Leonardo de Moura (leonardo) 2012-02-21.

@@ -36,11 +36,11 @@ public:
     }
 
     void add(interval const & a, interval const & b, interval & c) { super::add(a, b, c); }
-    void add(interval const & a, mpz const & b, interval & c) {
+    void add(interval const & a, mpz const & b, interval & c) { 
         m().add(a.lower(), b, c.lower());
         m().add(a.upper(), b, c.upper());
     }
-
+    
 
 };
 

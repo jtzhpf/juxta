@@ -190,13 +190,13 @@ void mpq_manager<SYNCH>::set(mpq & a, char const * val) {
     char const * str = val;
     bool sign = false;
     while (str[0] == ' ') ++str;
-    if (str[0] == '-')
+    if (str[0] == '-') 
         sign = true;
     while (str[0] && (str[0] != '/') && (str[0] != '.') && (str[0] != 'e') && (str[0] != 'E')) {
         if ('0' <= str[0] && str[0] <= '9') {
             SASSERT(str[0] - '0' <= 9);
             mul(a.m_num, ten, tmp);
-            add(tmp, this->mk_z(str[0] - '0'), a.m_num);
+            add(tmp, this->mk_z(str[0] - '0'), a.m_num); 
         }
         ++str;
     }
@@ -213,8 +213,8 @@ void mpq_manager<SYNCH>::set(mpq & a, char const * val) {
             while (str[0] && (str[0] != 'e') && (str[0] != 'E')) {
                 if ('0' <= str[0] && str[0] <= '9') {
                     mul(a.m_den, ten, tmp);
-                    add(tmp, this->mk_z(str[0] - '0'), a.m_den);
-                    if (!is_rat)
+                    add(tmp, this->mk_z(str[0] - '0'), a.m_den); 
+                    if (!is_rat) 
                         mul(tmp2, ten, tmp2);
                 }
                 ++str;
@@ -309,7 +309,7 @@ bool mpq_manager<SYNCH>::root(mpq const & a, unsigned n, mpq & r) {
 }
 
 template<bool SYNCH>
-unsigned mpq_manager<SYNCH>::prev_power_of_two(mpq const & a) {
+unsigned mpq_manager<SYNCH>::prev_power_of_two(mpq const & a) { 
     _scoped_numeral<mpz_manager<SYNCH> > _tmp(*this);
     floor(a, _tmp);
     return prev_power_of_two(_tmp);

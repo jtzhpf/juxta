@@ -34,7 +34,7 @@ public:
 
     void swap(unsigned i, unsigned j);
     void move_after(unsigned i, unsigned j);
-
+    
     void display(std::ostream & out) const;
     bool check_invariant() const;
 };
@@ -47,7 +47,7 @@ inline std::ostream & operator<<(std::ostream & out, permutation const & p) {
 /**
    \brief Apply permutation p to data.
    The algorithm does not use any extra memory.
-
+   
    Requirement: swap(T, T) must be available.
 
    This version will perform destructive updates to p.
@@ -77,7 +77,7 @@ void apply_permutation_core(unsigned sz, T * data, unsigned * p) {
 /**
    \brief Apply permutation p to data.
    The algorithm does not use any extra memory.
-
+   
    Requirement: swap(T, T) must be available.
 */
 template<typename T>
@@ -85,7 +85,7 @@ void apply_permutation(unsigned sz, T * data, unsigned const * p) {
     apply_permutation_core(sz, data, const_cast<unsigned*>(p));
     // restore p
     int * p1 = reinterpret_cast<int*>(const_cast<unsigned*>(p));
-    for (unsigned i = 0; i < sz; i++) {
+    for (unsigned i = 0; i < sz; i++) { 
         p1[i] = - p1[i] - 1;
     }
 }

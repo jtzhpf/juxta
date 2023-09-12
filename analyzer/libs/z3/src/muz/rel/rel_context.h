@@ -45,9 +45,9 @@ namespace datalog {
         class scoped_query;
 
         void reset_negated_tables();
-
+        
         relation_plugin & get_ordinary_relation_plugin(symbol relation_name);
-
+        
         void reset_tables();
 
         lbool saturate(scoped_query& sq);
@@ -63,8 +63,8 @@ namespace datalog {
         virtual const relation_manager & get_rmanager() const;
         ast_manager& get_manager() const { return m; }
         context&     get_context() const { return m_context; }
-        virtual relation_base & get_relation(func_decl * pred);
-        virtual relation_base * try_get_relation(func_decl * pred) const;
+        virtual relation_base & get_relation(func_decl * pred); 
+        virtual relation_base * try_get_relation(func_decl * pred) const; 
         virtual bool is_empty_relation(func_decl* pred) const;
         virtual expr_ref try_get_formula(func_decl * pred) const;
         virtual expr_ref get_answer() { return m_answer; }
@@ -74,9 +74,9 @@ namespace datalog {
         virtual lbool query(expr* q);
         virtual lbool query(unsigned num_rels, func_decl * const* rels);
 
-        virtual void set_predicate_representation(func_decl * pred, unsigned relation_name_cnt,
+        virtual void set_predicate_representation(func_decl * pred, unsigned relation_name_cnt, 
                                           symbol const * relation_names);
-
+        
         virtual void inherit_predicate_kind(func_decl* new_pred, func_decl* orig_pred);
 
 
@@ -110,7 +110,7 @@ namespace datalog {
         /** \brief check if facts were added to relation
         */
         virtual bool has_facts(func_decl * pred) const;
-
+        
         /**
            \brief Store the relation \c rel under the predicate \c pred. The \c context object
            takes over the ownership of the relation object.

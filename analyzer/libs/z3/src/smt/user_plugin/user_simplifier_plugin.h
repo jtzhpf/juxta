@@ -40,7 +40,7 @@ public:
     void set_reduce_app_fptr(reduce_app_fptr ptr) {
         m_reduce_app_fptr = ptr;
     }
-
+    
     void set_reduce_eq_fptr(reduce_eq_fptr ptr) {
         m_reduce_eq_fptr = ptr;
     }
@@ -48,9 +48,9 @@ public:
     void set_reduce_distinct_fptr(reduce_distinct_fptr ptr) {
         m_reduce_distinct_fptr = ptr;
     }
-
+    
     void enable(bool flag) { m_enabled = flag; }
-
+    
     void set_owner(void * ptr) { m_owner = ptr; }
 
     virtual bool reduce(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result);

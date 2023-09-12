@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     TupleSort.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -24,7 +24,7 @@ public class TupleSort extends Sort
 {
     /**
      * The constructor function of the tuple.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public FuncDecl mkDecl() throws Z3Exception
     {
@@ -43,7 +43,7 @@ public class TupleSort extends Sort
 
     /**
      * The field declarations.
-     * @throws Z3Exception
+     * @throws Z3Exception 
      **/
     public FuncDecl[] getFieldDecls() throws Z3Exception
     {

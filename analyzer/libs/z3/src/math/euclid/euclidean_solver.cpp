@@ -21,7 +21,7 @@ Revision History:
 #include"heap.h"
 
 struct euclidean_solver::imp {
-    typedef unsigned                             var;
+    typedef unsigned                             var; 
     typedef unsigned                             justification;
     typedef unsynch_mpq_manager                  numeral_manager;
     typedef numeral_buffer<mpz, numeral_manager> mpz_buffer;
@@ -65,7 +65,7 @@ struct euclidean_solver::imp {
             }
         }
     }
-
+    
     /**
        Equation as[0]*xs[0] + ... + as[n-1]*xs[n-1] + c = 0 with justification bs[0]*js[0] + ... + bs[m-1]*js[m-1]
     */
@@ -92,7 +92,7 @@ struct euclidean_solver::imp {
 
         unsigned pos_x(unsigned x_i) const { return pos(m_xs, x_i); }
     };
-
+    
     typedef ptr_vector<equation>   equations;
     typedef svector<unsigned>      occs;
 
@@ -102,11 +102,11 @@ struct euclidean_solver::imp {
 
     equations          m_equations;
     equations          m_solution;
-
+    
     svector<bool>      m_parameter;
     unsigned_vector    m_solved; // null_eq_idx if var is not solved, otherwise the position in m_solution
     vector<occs>       m_occs; // occurrences of the variable in m_equations.
-
+    
     unsigned           m_inconsistent; // null_eq_idx if not inconsistent, otherwise it is the index of an unsatisfiable equality in m_equations.
     unsigned           m_next_justification;
     mpz_buffer         m_decompose_buffer;
@@ -116,7 +116,7 @@ struct euclidean_solver::imp {
     var_vector         m_tmp_xs;
     mpz_buffer         m_tmp_as;
     mpq_buffer         m_tmp_bs;
-
+    
     var_vector         m_norm_xs_vector;
     mpz_vector         m_norm_as_vector;
     mpq_vector         m_norm_bs_vector;
@@ -141,7 +141,7 @@ struct euclidean_solver::imp {
             m().swap(as[i], buffer[xs[i]]);
         }
     }
-
+    
     template<typename Numeral>
     void sort(svector<Numeral> & as, unsigned_vector & xs, numeral_buffer<Numeral, numeral_manager> & buffer) {
         unsigned num = as.size();
@@ -196,7 +196,7 @@ struct euclidean_solver::imp {
             }
             return;
         }
-
+        
         mpz g;
         mpz a;
         m().set(g, eq.a(0));
@@ -253,15 +253,15 @@ struct euclidean_solver::imp {
                 m_next_x  = eq.x(i);
                 m_next_eq = eq_idx;
                 m_next_pos_a = m().is_pos(a);
-            }
+            } 
         }
         m().del(abs_a);
     }
-
+    
     /**
        \brief Select next variable to be eliminated.
        Return false if there is not variable to eliminate.
-
+       
        The result is in
        m_next_x   variable to be eliminated
        m_next_eq  id of the equation containing x
@@ -282,7 +282,7 @@ struct euclidean_solver::imp {
             // stop as soon as possible
             // TODO: use heuristics
             if (m_next_x != null_var && m().is_one(m_next_a))
-                return true;
+                return true; 
         }
         CTRACE("euclidean_solver_bug", m_next_x == null_var, display(tout););
         SASSERT(m_next_x != null_var);
@@ -296,7 +296,7 @@ struct euclidean_solver::imp {
             m().del(as[i]);
         as.reset();
     }
-
+    
     void del_eq(equation * eq) {
         m().del(eq->c());
         del_nums(eq->m_as);
@@ -307,7 +307,7 @@ struct euclidean_solver::imp {
     void del_equations(equations & eqs) {
         unsigned sz = eqs.size();
         for (unsigned i = 0; i < sz; i++) {
-            if (eqs[i])
+            if (eqs[i]) 
                 del_eq(eqs[i]);
         }
     }
@@ -325,17 +325,17 @@ struct euclidean_solver::imp {
     void schedule_var_subst(var_vector const & xs) {
         schedule_var_subst(xs.size(), xs.c_ptr());
     }
-
+    
     /**
        \brief Store as1*xs1 + k*as2*xs2 into new_as*new_xs
 
        If UpdateOcc == true,
-       Then,
+       Then, 
        1) for each variable x occurring in xs2 but not in xs1:
-             - eq_idx is added to m_occs[x]
+             - eq_idx is added to m_occs[x]  
        2) for each variable that occurs in xs1 and xs2 and the resultant coefficient is zero,
              - eq_idx is removed from m_occs[x]  IF x != except_var
-
+       
        If UpdateQueue == true
        Then,
        1) for each variable x occurring in xs2 but not in xs1:
@@ -391,7 +391,7 @@ struct euclidean_solver::imp {
                 i1++;
             }
             else if (x1 > x2) {
-                if (UpdateOcc)
+                if (UpdateOcc) 
                     m_occs[x2].push_back(eq_idx);
                 if (UpdateQueue && solved(x2))
                     m_var_queue.insert(x2);
@@ -421,9 +421,9 @@ struct euclidean_solver::imp {
         }
         m().del(new_a);
     }
-
+    
     template<bool UpdateOcc, bool UpdateQueue>
-    void apply_solution(var x, mpz_vector & as, var_vector & xs, mpz & c, mpq_vector & bs, justification_vector & js,
+    void apply_solution(var x, mpz_vector & as, var_vector & xs, mpz & c, mpq_vector & bs, justification_vector & js, 
                         unsigned eq_idx = null_eq_idx, var except_var = null_var) {
         SASSERT(solved(x));
         unsigned idx = pos(xs, x);
@@ -434,7 +434,7 @@ struct euclidean_solver::imp {
         equation const & eq2 = *(m_solution[m_solved[x]]);
         SASSERT(eq2.pos_x(x) != UINT_MAX);
         SASSERT(m().is_minus_one(eq2.a(eq2.pos_x(x))));
-        TRACE("euclidean_solver_apply",
+        TRACE("euclidean_solver_apply", 
               tout << "applying: " << m().to_string(a1) << " * "; display(tout, eq2); tout << "\n";
               for (unsigned i = 0; i < xs.size(); i++) tout << m().to_string(as[i]) << "*x" << xs[i] << " "; tout << "\n";);
         addmul<mpz, UpdateOcc, UpdateQueue>(as, xs, a1, eq2.m_as, eq2.m_xs, m_tmp_as, m_tmp_xs, eq_idx, except_var);
@@ -474,7 +474,7 @@ struct euclidean_solver::imp {
         for (unsigned i = 0; i < num; i++) {
             out << m().to_string(eq.a(i)) << "*x" << eq.x(i) << " + ";
         }
-        out << m().to_string(eq.c()) << " = 0";
+        out << m().to_string(eq.c()) << " = 0"; 
     }
 
     void display(std::ostream & out, equations const & eqs) const {
@@ -511,12 +511,12 @@ struct euclidean_solver::imp {
         m_owns_m(m == 0),
         m_decompose_buffer(*m_manager),
         m_as_buffer(*m_manager),
-        m_bs_buffer(*m_manager),
+        m_bs_buffer(*m_manager), 
         m_tmp_as(*m_manager),
         m_tmp_bs(*m_manager),
         m_var_queue(16, elim_order_lt(m_solved)) {
         m_inconsistent       = null_eq_idx;
-        m_next_justification = 0;
+        m_next_justification = 0; 
         m_cancel             = false;
         m_next_x             = null_var;
         m_next_eq            = null_eq_idx;
@@ -627,7 +627,7 @@ struct euclidean_solver::imp {
         if (!pos_a_i)
             m().neg(abs_a_i);
         bool new_pos_a_i = pos_a_i;
-        if (pos_a)
+        if (pos_a) 
             new_pos_a_i  = !new_pos_a_i;
         m().div(abs_a_i, abs_a, new_a_i);
         if (m().divides(abs_a, a_i)) {
@@ -636,7 +636,7 @@ struct euclidean_solver::imp {
         else {
             if (pos_a_i)
                 m().submul(a_i, abs_a, new_a_i, r_i);
-            else
+            else 
                 m().addmul(a_i, abs_a, new_a_i, r_i);
         }
         if (!new_pos_a_i)
@@ -706,7 +706,7 @@ struct euclidean_solver::imp {
         m().del(new_a_i);
         m().del(new_c);
     }
-
+    
     bool solve() {
         if (inconsistent()) return false;
         TRACE("euclidean_solver", tout << "solving...\n"; display(tout););
@@ -717,7 +717,7 @@ struct euclidean_solver::imp {
                 elim_unit();
             else
                 decompose_and_elim();
-            TRACE("euclidean_solver_step", display(tout););
+            TRACE("euclidean_solver_step", display(tout);); 
             if (inconsistent()) return false;
         }
         return true;
@@ -730,7 +730,7 @@ struct euclidean_solver::imp {
     bool is_parameter(var x) const {
         return m_parameter[x];
     }
-
+    
     void normalize(unsigned num, mpz const * as, var const * xs, mpz const & c, mpz & a_prime, mpz & c_prime, justification_vector & js) {
         TRACE("euclidean_solver", tout << "before applying solution set\n";
               for (unsigned i = 0; i < num; i++) {
@@ -772,7 +772,7 @@ struct euclidean_solver::imp {
             }
             m().del(a);
         }
-        // REMARK: m_norm_bs_vector contains the linear combination of the justifications. It may be useful if we
+        // REMARK: m_norm_bs_vector contains the linear combination of the justifications. It may be useful if we 
         // decided (one day) to generate detailed proofs for this step.
         del_nums(m_norm_as_vector);
         del_nums(m_norm_bs_vector);
@@ -787,7 +787,7 @@ struct euclidean_solver::imp {
 euclidean_solver::euclidean_solver(numeral_manager * m):
     m_imp(alloc(imp, m)) {
 }
-
+    
 euclidean_solver::~euclidean_solver() {
     dealloc(m_imp);
 }
@@ -835,8 +835,8 @@ bool euclidean_solver::inconsistent() const {
 bool euclidean_solver::is_parameter(var x) const {
     return m_imp->is_parameter(x);
 }
-
-void euclidean_solver::normalize(unsigned num, mpz const * as, var const * xs, mpz const & c, mpz & a_prime, mpz & c_prime,
+    
+void euclidean_solver::normalize(unsigned num, mpz const * as, var const * xs, mpz const & c, mpz & a_prime, mpz & c_prime, 
                                  justification_vector & js) {
     return m_imp->normalize(num, as, xs, c, a_prime, c_prime, js);
 }

@@ -16,7 +16,7 @@ def cleanup_API(inf, outf):
     pat1  = re.compile(".*def_API.*")
     pat2  = re.compile(".*extra_API.*")
     _inf  = open(inf, 'r')
-    _outf = open(outf, 'w')
+    _outf = open(outf, 'w') 
     for line in _inf:
         if not pat1.match(line) and not pat2.match(line):
             _outf.write(line)
@@ -31,7 +31,7 @@ try:
     cleanup_API('../src/api/z3_polynomial.h', 'tmp/z3_polynomial.h')
     cleanup_API('../src/api/z3_rcf.h', 'tmp/z3_rcf.h')
     cleanup_API('../src/api/z3_interp.h', 'tmp/z3_interp.h')
-
+    
     print "Removed annotations from z3_api.h."
     try:
         if subprocess.call(['doxygen', 'z3api.dox']) != 0:
@@ -47,9 +47,9 @@ try:
     os.remove('tmp/z3_rcf.h')
     os.remove('tmp/z3_interp.h')
     print "Removed temporary file z3_api.h."
-    os.remove('tmp/website.dox')
+    os.remove('tmp/website.dox')	
     print "Removed temporary file website.dox"
-    os.remove('tmp/z3py.py')
+    os.remove('tmp/z3py.py')	
     print "Removed temporary file z3py.py"
     os.removedirs('tmp')
     print "Removed temporary directory tmp."

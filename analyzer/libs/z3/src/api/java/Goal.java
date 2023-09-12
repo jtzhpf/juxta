@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Goal.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -73,7 +73,7 @@ public class Goal extends Z3Object
 
     /**
      * Adds the <paramref name="constraints"/> to the given goal.
-     *
+     * 
      * @throws Z3Exception
      **/
     public void add(BoolExpr ... constraints) throws Z3Exception
@@ -121,7 +121,7 @@ public class Goal extends Z3Object
 
     /**
      * The formulas in the goal.
-     *
+     * 
      * @throws Z3Exception
      **/
     public BoolExpr[] getFormulas() throws Z3Exception
@@ -164,7 +164,7 @@ public class Goal extends Z3Object
     /**
      * Translates (copies) the Goal to the target Context <paramref
      * name="ctx"/>.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Goal translate(Context ctx) throws Z3Exception
@@ -187,7 +187,7 @@ public class Goal extends Z3Object
         else
             return res.getSubgoals()[0];
     }
-
+    
     /**
      * Simplifies the goal. <remarks>Essentially invokes the `simplify' tactic
      * on the goal.</remarks>
@@ -205,7 +205,7 @@ public class Goal extends Z3Object
 
     /**
      * Goal to string conversion.
-     *
+     * 
      * @return A string representation of the Goal.
      **/
     public String toString()

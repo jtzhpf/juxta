@@ -50,7 +50,7 @@ void cooperation_ctx::checkpoint(char const * task) {
     }
     // this critical section is used to force the owner thread to give a chance to
     // another thread to get the lock
-    #pragma omp critical (z3_cooperate)
+    #pragma omp critical (z3_cooperate) 
     {
         omp_set_nest_lock(&(g_lock.m_lock));
         TRACE("cooperate_detail", tout << task << ", tid: " << tid << "\n";);

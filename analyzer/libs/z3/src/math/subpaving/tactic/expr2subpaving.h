@@ -8,8 +8,8 @@ Module Name:
 Abstract:
 
     Translator from Z3 expressions into generic subpaving data-structure.
-
-
+    
+    
 Author:
 
     Leonardo (leonardo) 2012-08-08
@@ -35,17 +35,17 @@ public:
     ast_manager & m() const;
 
     subpaving::context & s() const;
-
+    
     /**
        \brief Return true if t was encoded as a variable by the translator.
     */
     bool is_var(expr * t) const;
-
+    
     /**
        \brief Cancel/Interrupt execution.
     */
     void set_cancel(bool f);
-
+    
     /**
        \brief Internalize a Z3 arithmetical expression into the subpaving data-structure.
 

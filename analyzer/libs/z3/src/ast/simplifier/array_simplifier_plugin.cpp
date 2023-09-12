@@ -30,10 +30,10 @@ Notes TODO:
 
 
 array_simplifier_plugin::array_simplifier_plugin(
-    ast_manager & m,
-    basic_simplifier_plugin& s,
+    ast_manager & m, 
+    basic_simplifier_plugin& s, 
     simplifier& simp,
-    array_simplifier_params const& p) :
+    array_simplifier_params const& p) : 
     simplifier_plugin(symbol("array"),m),
     m_util(m),
     m_simp(s),
@@ -83,7 +83,7 @@ bool array_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
         );
     SASSERT(f->get_family_id() == m_fid);
     switch(f->get_decl_kind()) {
-    case OP_SELECT:
+    case OP_SELECT: 
         mk_select(num_args, args, result);
         break;
     case OP_STORE:
@@ -159,7 +159,7 @@ bool array_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
         SASSERT(f->get_parameter(0).is_ast());
         SASSERT(is_func_decl(f->get_parameter(0).get_ast()));
         //
-        // map_d (store a j v) = (store (map_f a) v (d v))
+        // map_d (store a j v) = (store (map_f a) v (d v)) 
         //
         if (num_args == 1 && is_store(args[0])) {
             app* store_expr = to_app(args[0]);
@@ -169,7 +169,7 @@ bool array_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
             func_decl* d = to_func_decl(p.get_ast());
             expr* a = store_expr->get_arg(0);
             expr* v = store_expr->get_arg(num_args-1);
-            // expr*const* args = store_expr->get_args()+1;
+            // expr*const* args = store_expr->get_args()+1;            
             expr_ref r1(m_manager), r2(m_manager);
             ptr_vector<expr> new_args;
 
@@ -183,9 +183,9 @@ bool array_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
             mk_store(store_expr->get_decl(), num_args, new_args.c_ptr(), result);
             break;
         }
-
+ 
        //
-        // map_d (store a j v) (store b j w) = (store (map_f a b) j (d v w))
+        // map_d (store a j v) (store b j w) = (store (map_f a b) j (d v w)) 
         //
         if (num_args > 1 && same_store(num_args, args)) {
             app* store_expr1 = to_app(args[0]);
@@ -199,7 +199,7 @@ bool array_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
                 arrays.push_back(to_app(args[i])->get_arg(0));
                 values.push_back(to_app(args[i])->get_arg(num_indices-1));
             }
-
+            
             expr_ref r1(m_manager), r2(m_manager);
             reduce(f, arrays.size(), arrays.c_ptr(), r1);
             m_simplifier.mk_app(d, values.size(), values.c_ptr(), r2);
@@ -222,7 +222,7 @@ bool array_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
             func_decl* d = to_func_decl(p.get_ast());
             expr* v = const_expr->get_arg(0);
             expr_ref r1(m_manager);
-
+            
             m_simplifier.mk_app(d, 1, &v, r1);
             expr* arg = r1.get();
             parameter param(f->get_range());
@@ -240,7 +240,7 @@ bool array_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
                 values.push_back(to_app(args[i])->get_arg(0));
             }
             expr_ref r1(m_manager);
-
+            
             m_simplifier.mk_app(d, values.size(), values.c_ptr(), r1);
             expr* arg = r1.get();
             parameter param(f->get_range());
@@ -248,14 +248,14 @@ bool array_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
             break;
         }
         result = m_manager.mk_app(f, num_args, args);
-
+        
         break;
     }
     default:
         result = m_manager.mk_app(f, num_args, args);
         break;
     }
-    TRACE("array_simplifier",
+    TRACE("array_simplifier", 
           tout << mk_pp(result.get(), m_manager) << "\n";);
 
     return true;
@@ -302,7 +302,7 @@ bool array_simplifier_plugin::all_values(unsigned num_args, expr* const* args) c
 
 bool array_simplifier_plugin::lex_lt(unsigned num_args, expr* const* args1, expr* const* args2) {
     for (unsigned i = 0; i < num_args; ++i) {
-    TRACE("array_simplifier",
+    TRACE("array_simplifier", 
           tout << mk_pp(args1[i], m_manager) << "\n";
           tout << mk_pp(args2[i], m_manager) << "\n";
           tout << args1[i]->get_id() << " " << args2[i]->get_id() << "\n";
@@ -401,7 +401,7 @@ lbool array_simplifier_plugin::eq_stores(expr* def, unsigned arity, unsigned num
     if (!table2.empty() || !table1.empty()) {
         return l_undef;
     }
-    return l_true;
+    return l_true;    
 }
 
 
@@ -417,17 +417,17 @@ bool array_simplifier_plugin::reduce_eq(expr * lhs, expr * rhs, expr_ref & resul
         c2 = to_app(c2)->get_arg(0);
         if (c1 == c2) {
             lbool eq = eq_stores(c1, arity, st1.size(), st1.c_ptr(), st2.size(), st2.c_ptr());
-            TRACE("array_simplifier",
-                  tout << mk_pp(lhs, m_manager) << " = "
+            TRACE("array_simplifier", 
+                  tout << mk_pp(lhs, m_manager) << " = " 
                   << mk_pp(rhs, m_manager) << " := " << eq << "\n";);
             switch(eq) {
-            case l_false:
-                result = m_manager.mk_false();
+            case l_false: 
+                result = m_manager.mk_false(); 
                 return true;
-            case l_true:
-                result = m_manager.mk_true();
+            case l_true: 
+                result = m_manager.mk_true(); 
                 return true;
-            default:
+            default: 
                 return false;
             }
         }
@@ -438,12 +438,12 @@ bool array_simplifier_plugin::reduce_eq(expr * lhs, expr * rhs, expr_ref & resul
     }
     return false;
 }
-
+    
 bool array_simplifier_plugin::reduce_distinct(unsigned num_args, expr * const * args, expr_ref & result) {
     set_reduce_invoked();
     return false;
 }
-
+    
 
 array_simplifier_plugin::const_select_result
 array_simplifier_plugin::mk_select_const(expr* m, app* index, expr_ref& result) {
@@ -454,20 +454,20 @@ array_simplifier_plugin::mk_select_const(expr* m, app* index, expr_ref& result) 
     }
     if (!m_store_cache.find(m, info)) {
         return NOT_CACHED;
-    }
+    }       
     if (info->m_map.find(index, r)) {
         result = r;
         return FOUND_VALUE;
     }
     a = info->m_default.get();
 
-    //
+    // 
     // Unfold and cache the store while searching for value of index.
-    //
+    //     
     while (is_store(a) && m_manager.is_unique_value(to_app(a)->get_arg(1))) {
         app* b = to_app(a);
         app* c = to_app(b->get_arg(1));
-
+        
         if (!info->m_map.contains(c)) {
             info->m_map.insert(c, b->get_arg(2));
             m_manager.inc_ref(b->get_arg(2));
@@ -475,7 +475,7 @@ array_simplifier_plugin::mk_select_const(expr* m, app* index, expr_ref& result) 
         }
         a = b->get_arg(0);
         info->m_default = a;
-
+        
         if (c == index) {
             result = b->get_arg(2);
             return FOUND_VALUE;
@@ -485,7 +485,7 @@ array_simplifier_plugin::mk_select_const(expr* m, app* index, expr_ref& result) 
     return FOUND_DEFAULT;
 }
 
-void array_simplifier_plugin::cache_store(unsigned num_stores, expr* store_term)
+void array_simplifier_plugin::cache_store(unsigned num_stores, expr* store_term) 
 {
     if (num_stores <= m_const_store_threshold) {
         return;
@@ -597,7 +597,7 @@ void array_simplifier_plugin::mk_store(func_decl* f, unsigned num_args, expr * c
 
     //
     // store(store(a,i,v),i,w) = store(a,i,w)
-    //
+    // 
     if (is_store(arg0) &&
         same_args(num_args-2, args+1, to_app(arg0)->get_args()+1)) {
         expr_ref_buffer new_args(m_manager);
@@ -620,10 +620,10 @@ void array_simplifier_plugin::mk_store(func_decl* f, unsigned num_args, expr * c
         return;
     }
 
-    //
+    // 
     // store(a, i, select(a, i)) = a
     //
-    if (is_select(argn) &&
+    if (is_select(argn) && 
         (to_app(argn)->get_num_args() == num_args - 1) &&
         same_args(num_args-1, args, to_app(argn)->get_args())) {
         TRACE("dummy_store", tout << "dummy store simplified mk_store(\n";
@@ -635,12 +635,12 @@ void array_simplifier_plugin::mk_store(func_decl* f, unsigned num_args, expr * c
         return;
     }
 
-    //
+    // 
     // store(store(a,i,v),j,w) -> store(store(a,j,w),i,v)
     // if i, j are values, i->get_id() < j->get_id()
-    //
+    // 
     if (m_params.m_array_canonize_simplify &&
-        is_store(arg0) &&
+        is_store(arg0) && 
         all_values(num_args-2, args+1) &&
         all_values(num_args-2, to_app(arg0)->get_args()+1) &&
         lex_lt(num_args-2, args+1, to_app(arg0)->get_args()+1)) {
@@ -660,7 +660,7 @@ void array_simplifier_plugin::mk_store(func_decl* f, unsigned num_args, expr * c
         TRACE("array_simplifier", tout << mk_pp(result.get(), m_manager) << "\n";);
         return;
     }
-
+        
 
     result = m_manager.mk_app(m_fid, OP_STORE, num_args, args);
     TRACE("array_simplifier", tout << "default: " << mk_pp(result.get(), m_manager) << "\n";);
@@ -717,7 +717,7 @@ void array_simplifier_plugin::mk_select_as_array_tree(unsigned num_args, expr * 
 
 void array_simplifier_plugin::mk_select(unsigned num_args, expr * const * args, expr_ref & result) {
     expr * r = 0;
-
+    
     if (is_as_array(args[0])) {
         mk_select_as_array(num_args, args, result);
         return;
@@ -822,7 +822,7 @@ void array_simplifier_plugin::mk_select(unsigned num_args, expr * const * args, 
             entry[0] = m;
             TRACE("array_simplifier", {
                     for (unsigned i = 0; i < entry.size(); ++i) {
-                        tout << mk_bounded_pp(entry[i], m_manager) << ": "
+                        tout << mk_bounded_pp(entry[i], m_manager) << ": " 
                              << mk_bounded_pp(m_manager.get_sort(entry[i]), m_manager) << "\n";
                     }}
                     );
@@ -841,9 +841,9 @@ void array_simplifier_plugin::mk_select(unsigned num_args, expr * const * args, 
     result = r;
     prune_select_cache();
     prune_store_cache();
-    TRACE("mk_select",
-          for (unsigned i = 0; i < num_args; i++) {
-              ast_ll_pp(tout, m_manager, args[i]); tout << "\n";
+    TRACE("mk_select", 
+          for (unsigned i = 0; i < num_args; i++) { 
+              ast_ll_pp(tout, m_manager, args[i]); tout << "\n"; 
           };
           tout << "is_store: " << is_store(args[0]) << "\n";
           ast_ll_pp(tout, m_manager, r););

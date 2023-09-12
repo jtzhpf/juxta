@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     Leonardo (leonardo) 2008-01-08
-
+    
 --*/
 #include"arith_simplifier_plugin.h"
 #include"ast_pp.h"
@@ -59,7 +59,7 @@ void arith_simplifier_plugin::get_monomial_gcd(expr_ref_vector& monomials, numer
             g = gcd(abs(n), g);
         }
         else if (is_mul(e) && is_numeral(to_app(e)->get_arg(0), n)) {
-            g = gcd(abs(n), g);
+            g = gcd(abs(n), g);        
         }
         else {
             g = numeral::one();
@@ -102,7 +102,7 @@ void arith_simplifier_plugin::gcd_reduce_monomial(expr_ref_vector& monomials, nu
 
     k = k / g;
     div_monomial(monomials, g);
-
+    
 }
 
 template<arith_simplifier_plugin::op_kind Kind>
@@ -124,7 +124,7 @@ void arith_simplifier_plugin::mk_le_ge_eq_core(expr * arg1, expr * arg2, expr_re
             case LE:
                 //
                 //   g*monmials' <= k
-                // <=>
+                // <=> 
                 //   monomials' <= floor(k/g)
                 //
                 k = floor(k/g);
@@ -132,7 +132,7 @@ void arith_simplifier_plugin::mk_le_ge_eq_core(expr * arg1, expr * arg2, expr_re
             case GE:
                 //
                 //   g*monmials' >= k
-                // <=>
+                // <=> 
                 //   monomials' >= ceil(k/g)
                 //
                 k = ceil(k/g);
@@ -159,7 +159,7 @@ void arith_simplifier_plugin::mk_le_ge_eq_core(expr * arg1, expr * arg2, expr_re
             result = m_manager.mk_false();
     }
     else {
-
+        
         if (is_neg_poly(lhs)) {
             expr_ref neg_lhs(m_manager);
             mk_uminus(lhs, neg_lhs);
@@ -168,7 +168,7 @@ void arith_simplifier_plugin::mk_le_ge_eq_core(expr * arg1, expr * arg2, expr_re
             expr * rhs = m_util.mk_numeral(k, is_int);
             switch (Kind) {
             case LE:
-                result = m_util.mk_ge(lhs, rhs);
+                result = m_util.mk_ge(lhs, rhs); 
                 break;
             case GE:
                 result = m_util.mk_le(lhs, rhs);
@@ -182,7 +182,7 @@ void arith_simplifier_plugin::mk_le_ge_eq_core(expr * arg1, expr * arg2, expr_re
             expr * rhs = m_util.mk_numeral(k, is_int);
             switch (Kind) {
             case LE:
-                result = m_util.mk_le(lhs, rhs);
+                result = m_util.mk_le(lhs, rhs); 
                 break;
             case GE:
                 result = m_util.mk_ge(lhs, rhs);
@@ -212,7 +212,7 @@ void arith_simplifier_plugin::mk_lt(expr * arg1, expr * arg2, expr_ref & result)
     mk_le(arg2, arg1, tmp);
     m_bsimp.mk_not(tmp, result);
 }
-
+ 
 void arith_simplifier_plugin::mk_gt(expr * arg1, expr * arg2, expr_ref & result) {
     expr_ref tmp(m_manager);
     mk_le(arg1, arg2, tmp);
@@ -236,8 +236,8 @@ void arith_simplifier_plugin::gcd_normalize(numeral & coeff, expr_ref& term) {
             return;
         }
         monomials[0] = mk_numeral(k, true);
-        coeff = coeff1;
-        mk_sum_of_monomials(monomials, term);
+        coeff = coeff1;        
+        mk_sum_of_monomials(monomials, term);        
     }
 }
 
@@ -253,7 +253,7 @@ void arith_simplifier_plugin::mk_div(expr * arg1, expr * arg2, expr_ref & result
         else {
             numeral k(1);
             k /= v2;
-
+            
             expr_ref inv_arg2(m_util.mk_numeral(k, false), m_manager);
             mk_mul(inv_arg2, arg1, result);
         }
@@ -268,7 +268,7 @@ void arith_simplifier_plugin::mk_idiv(expr * arg1, expr * arg2, expr_ref & resul
     bool is_int;
     if (m_util.is_numeral(arg1, v1, is_int) && m_util.is_numeral(arg2, v2, is_int) && !v2.is_zero())
         result = m_util.mk_numeral(div(v1, v2), is_int);
-    else
+    else 
         result = m_util.mk_idiv(arg1, arg2);
 }
 
@@ -361,9 +361,9 @@ void arith_simplifier_plugin::mk_to_int(expr * arg, expr_ref & result) {
     numeral v;
     if (m_util.is_numeral(arg, v))
         result = m_util.mk_numeral(floor(v), true);
-    else if (m_util.is_to_real(arg))
+    else if (m_util.is_to_real(arg)) 
         result = to_app(arg)->get_arg(0);
-    else
+    else 
         result = m_util.mk_to_int(arg);
 }
 
@@ -371,16 +371,16 @@ void arith_simplifier_plugin::mk_is_int(expr * arg, expr_ref & result) {
     numeral v;
     if (m_util.is_numeral(arg, v))
         result = v.is_int()?m_manager.mk_true():m_manager.mk_false();
-    else if (m_util.is_to_real(arg))
+    else if (m_util.is_to_real(arg)) 
         result = m_manager.mk_true();
-    else
+    else 
         result = m_util.mk_is_int(arg);
 }
 
 bool arith_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * const * args, expr_ref & result) {
     set_reduce_invoked();
     SASSERT(f->get_family_id() == m_fid);
-    TRACE("arith_simplifier_plugin", tout << mk_pp(f, m_manager) << "\n";
+    TRACE("arith_simplifier_plugin", tout << mk_pp(f, m_manager) << "\n"; 
           for (unsigned i = 0; i < num_args; i++) tout << mk_pp(args[i], m_manager) << "\n";);
     arith_op_kind k = static_cast<arith_op_kind>(f->get_decl_kind());
     switch (k) {
@@ -392,9 +392,9 @@ bool arith_simplifier_plugin::reduce(func_decl * f, unsigned num_args, expr * co
     case OP_ADD:      mk_add(num_args, args, result); break;
     case OP_SUB:      mk_sub(num_args, args, result); break;
     case OP_UMINUS:   SASSERT(num_args == 1); mk_uminus(args[0], result); break;
-    case OP_MUL:
-        mk_mul(num_args, args, result);
-        TRACE("arith_simplifier_plugin", tout << mk_pp(result, m_manager) << "\n";);
+    case OP_MUL:      
+        mk_mul(num_args, args, result); 
+        TRACE("arith_simplifier_plugin", tout << mk_pp(result, m_manager) << "\n";); 
         break;
     case OP_DIV:      SASSERT(num_args == 2); mk_div(args[0], args[1], result); break;
     case OP_IDIV:     SASSERT(num_args == 2); mk_idiv(args[0], args[1], result); break;
@@ -441,7 +441,7 @@ bool arith_simplifier_plugin::reduce_eq(expr * lhs, expr * rhs, expr_ref & resul
     }
 
     if (m_params.m_arith_process_all_eqs || is_arith_term(lhs) || is_arith_term(rhs)) {
-        mk_arith_eq(lhs, rhs, result);
+        mk_arith_eq(lhs, rhs, result); 
         return true;
     }
     return false;

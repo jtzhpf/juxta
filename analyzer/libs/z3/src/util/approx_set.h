@@ -49,7 +49,7 @@ protected:
     R u2s(unsigned u) const { return (approx_set_traits<R>::one << (u & (approx_set_traits<R>::capacity - 1))); }
 
     R e2s(T const & e) const { return u2s(e2u(e)); }
-
+    
     static approx_set_tpl r2s(R const & s) { approx_set_tpl r; r.m_set = s; return r; }
 
 public:
@@ -78,17 +78,17 @@ public:
     bool may_contain(T const & e) const {
         return (m_set & e2s(e)) != approx_set_traits<R>::zero;
     }
-
+    
     bool must_not_contain(T const & e) const {
-        return !may_contain(e);
+        return !may_contain(e); 
     }
 
-    friend inline approx_set_tpl mk_union(approx_set_tpl const & s1, approx_set_tpl const & s2) {
-        return r2s(s1.m_set | s2.m_set);
+    friend inline approx_set_tpl mk_union(approx_set_tpl const & s1, approx_set_tpl const & s2) { 
+        return r2s(s1.m_set | s2.m_set); 
     }
-
-    friend inline approx_set_tpl mk_intersection(approx_set_tpl const & s1, approx_set_tpl const & s2) {
-        return r2s(s1.m_set & s2.m_set);
+    
+    friend inline approx_set_tpl mk_intersection(approx_set_tpl const & s1, approx_set_tpl const & s2) { 
+        return r2s(s1.m_set & s2.m_set); 
     }
 
     void operator|=(approx_set_tpl const & other) {
@@ -128,9 +128,9 @@ public:
     }
 
     friend inline bool must_not_eq(approx_set_tpl const & s1, approx_set_tpl const & s2) { return s1.m_set != s2.m_set; }
-
+    
     friend inline bool may_eq(approx_set_tpl const & s1, approx_set_tpl const & s2) { return s1.m_set == s2.m_set; }
-
+    
     /**
        \brief Return if s1 and s2 are the same approximated set.
     */
@@ -143,7 +143,7 @@ public:
     friend inline bool approx_subset(approx_set_tpl const & s1, approx_set_tpl const & s2) {
         return s2.equiv(mk_union(s1, s2));
     }
-
+    
     void reset() {
         m_set = approx_set_traits<R>::zero;
     }
@@ -192,22 +192,22 @@ public:
         iterator & operator++() {
             m_val++;
             m_set = m_set >> 1;
-            move_to_next();
+            move_to_next(); 
             return *this;
         }
 
-        iterator operator++(int) {
-            iterator tmp = *this;
-            ++*this;
-            return tmp;
+        iterator operator++(int) { 
+            iterator tmp = *this; 
+            ++*this; 
+            return tmp; 
         }
 
-        bool operator==(iterator const & it) const {
+        bool operator==(iterator const & it) const { 
             return m_set == it.m_set;
         }
-
-        bool operator!=(iterator const & it) const {
-            return m_set != it.m_set;
+        
+        bool operator!=(iterator const & it) const { 
+            return m_set != it.m_set; 
         }
     };
 
@@ -222,7 +222,7 @@ public:
     void display(std::ostream & out) const;
 
     unsigned size() const;
-
+    
     // for backward compatibility
     friend inline bool operator==(approx_set const & s1, approx_set const & s2) { return may_eq(s1, s2); }
 };

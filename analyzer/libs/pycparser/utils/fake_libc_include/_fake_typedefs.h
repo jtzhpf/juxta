@@ -12,8 +12,6 @@ typedef int __int_least16_t;
 typedef int __uint_least16_t;
 typedef int __int32_t;
 typedef int __uint32_t;
-typedef int __int64_t;
-typedef int __uint64_t;
 typedef int __int_least32_t;
 typedef int __uint_least32_t;
 typedef int _LOCK_T;
@@ -73,7 +71,6 @@ typedef int div_t;
 typedef int ldiv_t;
 typedef int lldiv_t;
 typedef int sigset_t;
-typedef int __sigset_t;
 typedef int _sig_func_ptr;
 typedef int sig_atomic_t;
 typedef int __tzrule_type;
@@ -94,10 +91,8 @@ typedef int pthread_spinlock_t;
 typedef int pthread_barrier_t;
 typedef int pthread_barrierattr_t;
 typedef int jmp_buf;
-typedef int sigjmp_buf;
-typedef int stack_t;
 
-/* C99 exact-width integer types */
+/* C99 integer types */
 typedef int int8_t;
 typedef int uint8_t;
 typedef int int16_t;
@@ -106,34 +101,6 @@ typedef int int32_t;
 typedef int uint32_t;
 typedef int int64_t;
 typedef int uint64_t;
-
-/* C99 minimum-width integer types */
-typedef int int_least8_t;
-typedef int uint_least8_t;
-typedef int int_least16_t;
-typedef int uint_least16_t;
-typedef int int_least32_t;
-typedef int uint_least32_t;
-typedef int int_least64_t;
-typedef int uint_least64_t;
-
-/* C99 fastest minimum-width integer types */
-typedef int int_fast8_t;
-typedef int uint_fast8_t;
-typedef int int_fast16_t;
-typedef int uint_fast16_t;
-typedef int int_fast32_t;
-typedef int uint_fast32_t;
-typedef int int_fast64_t;
-typedef int uint_fast64_t;
-
-/* C99 integer types capable of holding object pointers */
-typedef int intptr_t;
-typedef int uintptr_t;
-
-/* C99 greatest-width integer types */
-typedef int intmax_t;
-typedef int uintmax_t;
 
 /* C99 stdbool.h bool type. _Bool is built-in in C99 */
 typedef _Bool bool;

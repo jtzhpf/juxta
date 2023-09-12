@@ -10,7 +10,7 @@ Abstract:
     The mapping between Z3 expressions and (low level) variables.
     Example of low level variables:
        - SAT solver
-       - Polynomial
+       - Polynomial 
        - etc.
 
 Author:
@@ -47,18 +47,18 @@ public:
     ast_manager & m() const { return m_manager; }
 
     void insert(expr * n, var v);
-
+    
     var to_var(expr * n) const;
-
+    
     bool is_var(expr * n) const { return m_mapping.contains(n); }
 
     void display(std::ostream & out) const;
-
+    
     void mk_inv(expr_ref_vector & var2expr) const;
 
     // return true if the mapping contains interpreted vars.
     bool interpreted_vars() const { return m_interpreted_vars; }
-
+    
     iterator begin() const { return m_mapping.begin(); }
     iterator end() const { return m_mapping.end(); }
 
@@ -68,7 +68,7 @@ public:
     // The set of recent registered expressions is reset by using reset_recent().
     recent_iterator begin_recent() const { return m_recent_exprs.begin(); }
     recent_iterator end_recent() const { return m_recent_exprs.end(); }
-
+    
     void reset();
 };
 

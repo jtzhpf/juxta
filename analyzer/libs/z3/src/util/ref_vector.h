@@ -32,7 +32,7 @@ template<typename T, typename Ref>
 class ref_vector_core : public Ref {
 protected:
     ptr_vector<T> m_nodes;
-
+    
     void inc_ref(T * o) { Ref::inc_ref(o); }
     void dec_ref(T * o) { Ref::dec_ref(o); }
 
@@ -45,11 +45,11 @@ public:
     typedef T * data;
 
     ref_vector_core(Ref const & r = Ref()):Ref(r) {}
-
+    
     ~ref_vector_core() {
         dec_range_ref(m_nodes.begin(), m_nodes.end());
     }
-
+    
     void reset() {
         dec_range_ref(m_nodes.begin(), m_nodes.end());
         m_nodes.reset();
@@ -69,7 +69,7 @@ public:
     void resize(unsigned sz, T * d) {
         if (sz < m_nodes.size()) {
             dec_range_ref(m_nodes.begin() + sz, m_nodes.end());
-            m_nodes.shrink(sz);
+            m_nodes.shrink(sz); 
         }
         else {
             for (unsigned i = m_nodes.size(); i < sz; i++)
@@ -149,7 +149,7 @@ public:
                 return true;
         return false;
     }
-
+    
     T * operator[](unsigned idx) const {
         return m_nodes[idx];
     }
@@ -200,8 +200,8 @@ public:
     ref_vector(TManager & m):
         super(ref_manager_wrapper<T, TManager>(m)) {
     }
-
-    ref_vector(ref_vector const & other):
+    
+    ref_vector(ref_vector const & other): 
         super(ref_manager_wrapper<T, TManager>(other.m_manager)) {
         this->append(other);
     }
@@ -210,12 +210,12 @@ public:
         super(ref_manager_wrapper<T, TManager>(m)) {
         this->append(sz, data);
     }
-
+    
     TManager & get_manager() const {
         return this->m_manager;
     }
-
-    TManager & m() const {
+    
+    TManager & m() const { 
         return get_manager();
     }
 
@@ -223,7 +223,7 @@ public:
         SASSERT(&(this->m_manager) == &(other.m_manager));
         this->m_nodes.swap(other.m_nodes);
     }
-
+    
     class element_ref {
         T * &       m_ref;
         TManager &  m_manager;
@@ -250,15 +250,15 @@ public:
             return m_ref;
         }
 
-        T * operator->() const {
-            return m_ref;
+        T * operator->() const { 
+            return m_ref; 
         }
-
+        
         T const & operator*() const {
             SASSERT(m_ref);
             return *m_ref;
         }
-
+        
         bool operator==(T * n) const {
             return m_ref == n;
         }
@@ -280,7 +280,7 @@ public:
         }
         return *this;
     }
-
+    
 private:
     // prevent abuse:
     ref_vector & operator=(ref_vector const & other);
@@ -296,7 +296,7 @@ public:
 /**
    \brief Vector of unmanaged references.
 */
-template<typename T>
+template<typename T> 
 class sref_vector : public ref_vector_core<T, ref_unmanaged_wrapper<T> > {
 };
 

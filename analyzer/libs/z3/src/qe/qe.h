@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    Quantifier-elimination procedures
+    Quantifier-elimination procedures 
 
 Author:
 
@@ -82,7 +82,7 @@ namespace qe {
 
         // set of atoms in current formula.
         virtual atom_set const& pos_atoms() const = 0;
-        virtual atom_set const& neg_atoms() const = 0;
+        virtual atom_set const& neg_atoms() const = 0;        
 
         // Access current set of variables to solve
         virtual unsigned      get_num_vars() const = 0;
@@ -92,7 +92,7 @@ namespace qe {
         virtual contains_app& contains(unsigned idx) = 0;
 
         // callback to replace variable at index 'idx' with definition 'def' and updated formula 'fml'
-        virtual void          elim_var(unsigned idx, expr* fml, expr* def) = 0;
+        virtual void          elim_var(unsigned idx, expr* fml, expr* def) = 0;        
 
         // callback to add new variable to branch.
         virtual void          add_var(app* x) = 0;
@@ -104,7 +104,7 @@ namespace qe {
         virtual void blast_or(app* var, expr_ref& fml) = 0;
 
         i_expr_pred& get_is_relevant() { return m_is_relevant; }
-
+        
         i_nnf_atom& get_mk_atom() { return m_mk_atom; }
     };
 
@@ -134,21 +134,21 @@ namespace qe {
 
     //
     // interface for plugins to eliminate quantified variables.
-    //
+    // 
     class qe_solver_plugin {
     protected:
         ast_manager&      m;
         family_id         m_fid;
         i_solver_context& m_ctx;
     public:
-        qe_solver_plugin(ast_manager& m, family_id fid, i_solver_context& ctx) :
-            m(m),
+        qe_solver_plugin(ast_manager& m, family_id fid, i_solver_context& ctx) : 
+            m(m), 
             m_fid(fid),
             m_ctx(ctx)
         {}
-
+        
         virtual ~qe_solver_plugin() {}
-
+        
         family_id get_family_id() { return m_fid; }
 
         /**
@@ -163,10 +163,10 @@ namespace qe {
 
 
         /**
-           \brief The case splits associated with 'vl' are satisfiable.
+           \brief The case splits associated with 'vl' are satisfiable. 
            Apply the elimination for fml corresponding to case split.
            If def is non-null, then retrieve the realizer corresponding to the case split.
-        */
+        */                     
         virtual void subst(contains_app& x, rational const& vl, expr_ref& fml, expr_ref* def) = 0;
 
 
@@ -184,7 +184,7 @@ namespace qe {
 
            - fml' -> fml
            - model |= fml'
-           - fml' does not contain x
+           - fml' does not contain x           
 
            return false if the method is not implemented.
         */
@@ -254,7 +254,7 @@ namespace qe {
        to terms such that:
        1. The original formula (exists (vars) fml) is equivalent to the disjunction of guards.
        2. Each guard is equivalent to fml where 'vars' are replaced by the substitution associated
-          with the guard.
+          with the guard.       
     */
 
     class guarded_defs {
@@ -271,7 +271,7 @@ namespace qe {
         void project(unsigned num_vars, app* const* vars);
     };
 
-    class quant_elim;
+    class quant_elim; 
 
     class expr_quant_elim {
         ast_manager&            m;
@@ -283,7 +283,7 @@ namespace qe {
         expr*                   m_assumption;
     public:
         expr_quant_elim(ast_manager& m, smt_params const& fp, params_ref const& p = params_ref());
-        ~expr_quant_elim();
+        ~expr_quant_elim(); 
 
         void operator()(expr* assumption, expr* fml, expr_ref& result);
 
@@ -296,7 +296,7 @@ namespace qe {
         /**
            \brief try to eliminate 'vars' and find first satisfying assignment.
 
-           return l_true if satisfiable, l_false if unsatisfiable, l_undef if
+           return l_true if satisfiable, l_false if unsatisfiable, l_undef if 
            the formula could not be satisfied modulo eliminating the quantified variables.
         */
         lbool first_elim(unsigned num_vars, app* const* vars, expr_ref& fml, def_vector& defs);
@@ -351,7 +351,7 @@ namespace qe {
 
     void mk_exists(unsigned num_vars, app* const* vars, expr_ref& fml);
 
-    void get_nnf(expr_ref& fml, i_expr_pred& pred, i_nnf_atom& mk_atom, atom_set& pos, atom_set& neg);
+    void get_nnf(expr_ref& fml, i_expr_pred& pred, i_nnf_atom& mk_atom, atom_set& pos, atom_set& neg); 
 
     class simplify_rewriter_cfg : public default_rewriter_cfg {
         class impl;
@@ -360,28 +360,28 @@ namespace qe {
         simplify_rewriter_cfg(ast_manager& m);
 
         ~simplify_rewriter_cfg();
-
+        
         bool reduce_quantifier(
-            quantifier * old_q,
-            expr * new_body,
-            expr * const * new_patterns,
+            quantifier * old_q, 
+            expr * new_body, 
+            expr * const * new_patterns, 
             expr * const * new_no_patterns,
             expr_ref & result,
             proof_ref & result_pr);
-
+        
         bool pre_visit(expr* e);
 
         void updt_params(params_ref const& p);
 
     };
-
+    
     class simplify_rewriter_star : public rewriter_tpl<simplify_rewriter_cfg> {
         simplify_rewriter_cfg m_cfg;
     public:
         simplify_rewriter_star(ast_manager& m):
             rewriter_tpl<simplify_rewriter_cfg>(m, false, m_cfg),
             m_cfg(m) {}
-
+         
         void updt_params(params_ref const& p) { m_cfg.updt_params(p); }
     };
 

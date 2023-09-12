@@ -24,12 +24,12 @@ Revision History:
 seq_decl_plugin::seq_decl_plugin(): m_init(false) {}
 
 void seq_decl_plugin::finalize() {
-    for (unsigned i = 0; i < m_sigs.size(); ++i)
+    for (unsigned i = 0; i < m_sigs.size(); ++i) 
         dealloc(m_sigs[i]);
 }
 
 bool seq_decl_plugin::is_sort_param(sort* s, unsigned& idx) {
-    return
+    return 
         s->get_name().is_numerical() &&
         (idx = s->get_name().get_num(), true);
 }
@@ -43,7 +43,7 @@ bool seq_decl_plugin::match(ptr_vector<sort>& binding, sort* s, sort* sP) {
         binding[i] = s;
         return true;
     }
-
+   
     if (s->get_family_id() == sP->get_family_id() &&
         s->get_decl_kind() == sP->get_decl_kind() &&
         s->get_name() == sP->get_name()) {
@@ -136,7 +136,7 @@ void seq_decl_plugin::init() {
     m_sigs.resize(LAST_SEQ_OP);
     // TBD: have (par ..) construct and load parameterized signature from premable.
     m_sigs[OP_SEQ_UNIT]      = alloc(psig, m, "seq-unit",   1, 1, &A, seqA);
-    m_sigs[OP_SEQ_EMPTY]     = alloc(psig, m, "seq-empty",  1, 0, 0, seqA);
+    m_sigs[OP_SEQ_EMPTY]     = alloc(psig, m, "seq-empty",  1, 0, 0, seqA); 
     m_sigs[OP_SEQ_CONCAT]    = alloc(psig, m, "seq-concat", 1, 2, seqAseqA, seqA);
     m_sigs[OP_SEQ_CONS]      = alloc(psig, m, "seq-cons",   1, 2, AseqA, seqA);
     m_sigs[OP_SEQ_REV_CONS]  = alloc(psig, m, "seq-rev-cons",   1, 2, seqAA, seqA);
@@ -194,7 +194,7 @@ sort * seq_decl_plugin::mk_sort(decl_kind k, unsigned num_parameters, parameter 
     }
 }
 
-func_decl * seq_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters,
+func_decl * seq_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, parameter const * parameters, 
                                           unsigned arity, sort * const * domain, sort * range) {
     init();
     ast_manager& m = *m_manager;
@@ -224,7 +224,7 @@ func_decl * seq_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, 
     case OP_RE_COMPLEMENT:
     case OP_RE_EMPTY_SEQ:
     case OP_RE_EMPTY_SET:
-    case OP_RE_OF_SEQ:
+    case OP_RE_OF_SEQ:   
     case OP_RE_OF_PRED:
     case OP_RE_MEMBER:
         match(*m_sigs[k], arity, domain, range, rng);
@@ -239,7 +239,7 @@ func_decl * seq_decl_plugin::mk_func_decl(decl_kind k, unsigned num_parameters, 
         if (num_parameters != 2 || !parameters[0].is_int() || !parameters[1].is_int()) {
             m.raise_exception("Expecting two numeral parameters to function re-loop");
         }
-        return m.mk_func_decl(m_sigs[k]->m_name, arity, domain, rng, func_decl_info(m_family_id, k, num_parameters, parameters));
+        return m.mk_func_decl(m_sigs[k]->m_name, arity, domain, rng, func_decl_info(m_family_id, k, num_parameters, parameters));        
     default:
         UNREACHABLE();
         return 0;

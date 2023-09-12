@@ -50,7 +50,7 @@ namespace smt {
     }
 
     bool theory_dummy::use_diseqs() const {
-        return false;
+        return false; 
     }
 
     void theory_dummy::new_diseq_eh(theory_var v1, theory_var v2) {
@@ -66,8 +66,8 @@ namespace smt {
         return m_theory_exprs ? FC_GIVEUP : FC_DONE;
     }
 
-    char const * theory_dummy::get_name() const {
-        return m_name;
+    char const * theory_dummy::get_name() const { 
+        return m_name; 
     }
 
 };

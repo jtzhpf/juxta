@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-22
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -23,7 +23,7 @@ using System.Diagnostics.Contracts;
 namespace Microsoft.Z3
 {
     /// <summary>
-    /// Objects of this class track statistical information about solvers.
+    /// Objects of this class track statistical information about solvers. 
     /// </summary>
     [ContractVerification(true)]
     public class Statistics : Z3Object
@@ -103,7 +103,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// A string representation of the statistical data.
-        /// </summary>
+        /// </summary>    
         public override string ToString()
         {
             return Native.Z3_stats_to_string(Context.nCtx, NativeObject);
@@ -165,7 +165,7 @@ namespace Microsoft.Z3
 
         /// <summary>
         /// The value of a particular statistical counter.
-        /// </summary>
+        /// </summary>        
         /// <remarks>Returns null if the key is unknown.</remarks>
         public Entry this[string key]
         {

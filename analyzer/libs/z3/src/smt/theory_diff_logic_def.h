@@ -33,13 +33,13 @@ using namespace smt;
 
 
 template<typename Ext>
-std::ostream& theory_diff_logic<Ext>::atom::display(theory_diff_logic const& th, std::ostream& out) const {
+std::ostream& theory_diff_logic<Ext>::atom::display(theory_diff_logic const& th, std::ostream& out) const { 
     context& ctx = th.get_context();
     lbool asgn = ctx.get_assignment(m_bvar);
     //SASSERT(asgn == l_undef || ((asgn == l_true) == m_true));
     bool sign = (l_undef == asgn) || m_true;
-    return out << literal(m_bvar, sign)
-               << " " << mk_pp(ctx.bool_var2expr(m_bvar), th.get_manager()) << " ";
+    return out << literal(m_bvar, sign) 
+               << " " << mk_pp(ctx.bool_var2expr(m_bvar), th.get_manager()) << " "; 
     if (l_undef == asgn) {
         out << "unassigned\n";
     }
@@ -98,7 +98,7 @@ class diff_logic_bounds {
     numeral m_inf_w;
     numeral m_sup_w;
     numeral m_w;
-
+    
 public:
     diff_logic_bounds() {
         reset(numeral(0));
@@ -143,15 +143,15 @@ public:
         l = m_sup_l;
         return m_sup_is_set;
     }
-
+    
     bool get_eq(literal& l) const {
         l = m_eq_l;
         return m_eq_found;
     }
-
+    
 };
 
-//
+// 
 // Atoms are of the form x +  -1*y <= k, or x + -1*y = k
 //
 
@@ -198,7 +198,7 @@ bool theory_diff_logic<Ext>::internalize_atom(app * n, bool gate_ctx) {
         y = to_app(lhs->get_arg(1));
     }
 
-    if (is_add && is_negative(x, z)) {
+    if (is_add && is_negative(x, z)) {  
         target = mk_var(y);
         source = mk_var(z);
     }
@@ -219,7 +219,7 @@ bool theory_diff_logic<Ext>::internalize_atom(app * n, bool gate_ctx) {
     ctx.set_var_theory(bv, get_id());
     literal l(bv);
 
-    //
+    // 
     // Create axioms for situations as:
     // x - y <= 5 => x - y <= 7
     //
@@ -254,17 +254,17 @@ bool theory_diff_logic<Ext>::internalize_atom(app * n, bool gate_ctx) {
     }
     else {
         m_is_lia = false;
-        k -= this->m_epsilon;
+        k -= this->m_epsilon; 
     }
     edge_id neg = m_graph.add_edge(target, source, k, ~l);
     atom * a = alloc(atom, bv, pos, neg);
     m_atoms.push_back(a);
     m_bool_var2atom.insert(bv, a);
 
-    TRACE("arith",
+    TRACE("arith", 
           tout << mk_pp(n, get_manager()) << "\n";
-          m_graph.display_edge(tout << "pos: ", pos);
-          m_graph.display_edge(tout << "neg: ", neg);
+          m_graph.display_edge(tout << "pos: ", pos); 
+          m_graph.display_edge(tout << "neg: ", neg); 
           );
 
     return true;
@@ -276,14 +276,14 @@ void theory_diff_logic<Ext>::internalize_eq_eh(app * atom, bool_var v) {
     app * lhs      = to_app(atom->get_arg(0));
     app * rhs      = to_app(atom->get_arg(1));
     app * s;
-    if (m_util.is_add(lhs) && to_app(lhs)->get_num_args() == 2 &&
+    if (m_util.is_add(lhs) && to_app(lhs)->get_num_args() == 2 && 
         is_negative(to_app(to_app(lhs)->get_arg(1)), s) && m_util.is_numeral(rhs)) {
         // force axioms for (= (+ x (* -1 y)) k)
         // this is necessary because (+ x (* -1 y)) is not a diff logic term.
         m_arith_eq_adapter.mk_axioms(ctx.get_enode(lhs), ctx.get_enode(rhs));
         return;
     }
-
+    
     if (m_params.m_arith_eager_eq_axioms) {
         enode * n1 = ctx.get_enode(lhs);
         enode * n2 = ctx.get_enode(rhs);
@@ -301,7 +301,7 @@ void theory_diff_logic<Ext>::assign_eh(bool_var v, bool is_true) {
     VERIFY (m_bool_var2atom.find(v, a));
     SASSERT(a);
     SASSERT(get_context().get_assignment(v) != l_undef);
-    SASSERT((get_context().get_assignment(v) == l_true) == is_true);
+    SASSERT((get_context().get_assignment(v) == l_true) == is_true);    
     a->assign_eh(is_true);
     m_asserted_atoms.push_back(a);
 }
@@ -356,7 +356,7 @@ final_check_status theory_diff_logic<Ext>::final_check_eh() {
     m_graph.set_to_zero(m_zero_int, m_zero_real);
     SASSERT(is_consistent());
     if (m_non_diff_logic_exprs) {
-        return FC_GIVEUP;
+        return FC_GIVEUP; 
     }
 
     return FC_DONE;
@@ -373,14 +373,14 @@ void theory_diff_logic<Ext>::del_atoms(unsigned old_size) {
         bool_var bv  = a->get_bool_var();
         m_bool_var2atom.erase(bv);
         dealloc(a);
-    }
+    }    
     m_atoms.shrink(old_size);
 }
 
 
 
 template<typename Ext>
-bool theory_diff_logic<Ext>::is_negative(app* n, app*& m) {
+bool theory_diff_logic<Ext>::is_negative(app* n, app*& m) { 
     expr* a0, *a1, *a2;
     rational r;
     if (!m_util.is_mul(n, a0, a1)) {
@@ -412,11 +412,11 @@ void theory_diff_logic<Ext>::propagate() {
         case ARITH_PROP_PROPORTIONAL: {
 
             ++m_num_propagation_calls;
-            if (m_num_propagation_calls * (m_stats.m_num_conflicts + 1) >
+            if (m_num_propagation_calls * (m_stats.m_num_conflicts + 1) > 
                 m_params.m_arith_adaptive_propagation_threshold * get_context().m_stats.m_num_conflicts) {
                 m_num_propagation_calls = 1;
                 TRACE("arith_prop", tout << "propagating: " << m_num_propagation_calls << "\n";);
-                propagate_core();
+                propagate_core();            
             }
             else {
                 TRACE("arith_prop", tout << "skipping propagation " << m_num_propagation_calls << "\n";);
@@ -430,11 +430,11 @@ void theory_diff_logic<Ext>::propagate() {
             while (m_num_core_conflicts < get_context().m_stats.m_num_conflicts) {
                 m_agility = m_agility*g;
                 ++m_num_core_conflicts;
-            }
+            }        
             ++m_num_propagation_calls;
             bool do_propagate = (m_num_propagation_calls * m_agility > m_params.m_arith_adaptive_propagation_threshold);
-            TRACE("arith_prop", tout << (do_propagate?"propagating: ":"skipping ")
-                  << " " << m_num_propagation_calls
+            TRACE("arith_prop", tout << (do_propagate?"propagating: ":"skipping ") 
+                  << " " << m_num_propagation_calls 
                   << " agility: " << m_agility << "\n";);
             if (do_propagate) {
                 m_num_propagation_calls = 0;
@@ -448,13 +448,13 @@ void theory_diff_logic<Ext>::propagate() {
         }
     }
     else {
-        propagate_core();
+        propagate_core();            
     }
 }
 
 template<typename Ext>
 void theory_diff_logic<Ext>::inc_conflicts() {
-     m_stats.m_num_conflicts++;
+     m_stats.m_num_conflicts++;   
      if (m_params.m_arith_adaptive) {
          double g = m_params.m_arith_adaptive_propagation_threshold;
          m_agility = m_agility*g + 1 - g;
@@ -515,8 +515,8 @@ void theory_diff_logic<Ext>::new_edge(dl_var src, dl_var dst, unsigned num_edges
         le = m_util.mk_le(m_util.mk_add(n1,n2), n3);
     }
     else {
-        //     x - y < w
-        // <=>
+        //     x - y < w 
+        // <=> 
         //     not (x - y >= w)
         // <=>
         //     not (y - x <= -w)
@@ -538,11 +538,11 @@ void theory_diff_logic<Ext>::new_edge(dl_var src, dl_var dst, unsigned num_edges
 
     literal_vector lits;
     for (unsigned i = 0; i < num_edges; ++i) {
-        lits.push_back(~m_graph.get_explanation(edges[i]));
+        lits.push_back(~m_graph.get_explanation(edges[i]));        
     }
     lits.push_back(lit);
 
-    TRACE("dl_activity",
+    TRACE("dl_activity", 
           tout << mk_pp(le, get_manager()) << "\n";
           tout << "edge: " << e_id << "\n";
           ctx.display_literals_verbose(tout, lits.size(), lits.c_ptr());
@@ -554,8 +554,8 @@ void theory_diff_logic<Ext>::new_edge(dl_var src, dl_var dst, unsigned num_edges
         vector<parameter> params;
         params.push_back(parameter(symbol("farkas")));
         params.resize(lits.size()+1, parameter(rational(1)));
-        js = new (ctx.get_region()) theory_lemma_justification(get_id(), ctx,
-                   lits.size(), lits.c_ptr(),
+        js = new (ctx.get_region()) theory_lemma_justification(get_id(), ctx, 
+                   lits.size(), lits.c_ptr(), 
                    params.size(), params.c_ptr());
     }
     ctx.mk_clause(lits.size(), lits.c_ptr(), js, CLS_AUX_LEMMA, 0);
@@ -576,7 +576,7 @@ void theory_diff_logic<Ext>::new_edge(dl_var src, dl_var dst, unsigned num_edges
               if (i + 1 < num_edges) {
                   dl_var tgt2 = m_graph.get_target(edges[i+1]);
                   SASSERT(src == tgt2);
-              }
+              }        
               tout << "$" << tgt << " <= $" << src << " + " << w << "\n";
           }
           {
@@ -597,7 +597,7 @@ void theory_diff_logic<Ext>::set_neg_cycle_conflict() {
     inc_conflicts();
     literal_vector const& lits = m_nc_functor.get_lits();
     context & ctx = get_context();
-    TRACE("arith_conflict",
+    TRACE("arith_conflict", 
           tout << "conflict: ";
           for (unsigned i = 0; i < lits.size(); ++i) {
               ctx.display_literal_info(tout, lits[i]);
@@ -614,12 +614,12 @@ void theory_diff_logic<Ext>::set_neg_cycle_conflict() {
     if (get_manager().proofs_enabled()) {
         params.push_back(parameter(symbol("farkas")));
         params.resize(lits.size()+1, parameter(rational(1)));
-    }
-
+    } 
+   
     ctx.set_conflict(
         ctx.mk_justification(
             ext_theory_conflict_justification(
-                get_id(), ctx.get_region(),
+                get_id(), ctx.get_region(), 
                 lits.size(), lits.c_ptr(), 0, 0, params.size(), params.c_ptr())));
 
 }
@@ -663,9 +663,9 @@ theory_var theory_diff_logic<Ext>::mk_term(app* n) {
         e = get_context().mk_enode(n, false, false, true);
         target = mk_var(e);
         numeral k(r);
-        // target - source <= k, source - target <= -k
+        // target - source <= k, source - target <= -k 
         m_graph.enable_edge(m_graph.add_edge(source, target, k, null_literal));
-        m_graph.enable_edge(m_graph.add_edge(target, source, -k, null_literal));
+        m_graph.enable_edge(m_graph.add_edge(target, source, -k, null_literal));        
         return target;
     }
     else if (m_util.is_add(n)) {
@@ -745,7 +745,7 @@ theory_var theory_diff_logic<Ext>::mk_var(app* n) {
     }
     if (v == null_theory_var) {
         v = mk_var(e);
-    }
+    }      
     if (is_interpreted(n)) {
         TRACE("non_diff_logic", tout << "Variable should not be interpreted\n";);
         found_non_diff_logic_expr(n);
@@ -796,7 +796,7 @@ void theory_diff_logic<Ext>::compute_delta() {
         rational k_y = m_graph.get_assignment(src).get_infinitesimal().to_rational();
         rational n_c = w.get_rational().to_rational();
         rational k_c = w.get_infinitesimal().to_rational();
-        TRACE("epsilon", tout << "(n_x,k_x): " << n_x << ", " << k_x << ", (n_y,k_y): "
+        TRACE("epsilon", tout << "(n_x,k_x): " << n_x << ", " << k_x << ", (n_y,k_y): " 
               << n_y << ", " << k_y << ", (n_c,k_c): " << n_c << ", " << k_c << "\n";);
         if (n_x < n_y + n_c && k_x > k_y + k_c) {
             rational new_delta = (n_y + n_c - n_x) / (k_x - k_y - k_c);
@@ -815,7 +815,7 @@ void theory_diff_logic<Ext>::init_model(smt::model_generator & m) {
     m.register_factory(m_factory);
     compute_delta();
 }
-
+        
 
 template<typename Ext>
 model_value_proc * theory_diff_logic<Ext>::mk_value(enode * n, model_generator & mg) {
@@ -848,7 +848,7 @@ bool theory_diff_logic<Ext>::is_consistent() const {
     for (unsigned i = 0; i < m_atoms.size(); ++i) {
         atom* a = m_atoms[i];
         bool_var bv = a->get_bool_var();
-        lbool asgn = ctx.get_assignment(bv);
+        lbool asgn = ctx.get_assignment(bv);        
         if (ctx.is_relevant(ctx.bool_var2expr(bv)) && asgn != l_undef) {
             SASSERT((asgn == l_true) == a->is_true());
             int edge_id = a->get_asserted_edge();
@@ -871,7 +871,7 @@ theory_var theory_diff_logic<Ext>::expand(bool pos, theory_var v, rational & k) 
             app* x = to_app(n->get_arg(0));
             app* y = to_app(n->get_arg(1));
             if (m_util.is_numeral(x, r)) {
-                e = ctx.get_enode(y);
+                e = ctx.get_enode(y);                
             }
             else if (m_util.is_numeral(y, r)) {
                 e = ctx.get_enode(x);
@@ -907,7 +907,7 @@ void theory_diff_logic<Ext>::new_eq_or_diseq(bool is_eq, theory_var v1, theory_v
         if (is_eq != k.is_zero()) {
             // conflict 0 /= k;
             inc_conflicts();
-            ctx.set_conflict(&eq_just);
+            ctx.set_conflict(&eq_just);            
         }
     }
     else {
@@ -924,15 +924,15 @@ void theory_diff_logic<Ext>::new_eq_or_diseq(bool is_eq, theory_var v1, theory_v
         t2 = m_util.mk_numeral(k, m.get_sort(s2.get()));
         // t1 - s1 = k
         eq = m.mk_eq(s2.get(), t2.get());
-
-        TRACE("diff_logic",
+        
+        TRACE("diff_logic", 
               tout << v1 << " .. " << v2 << "\n";
               tout << mk_pp(eq.get(), m) <<"\n";);
 
         if (!internalize_atom(eq.get(), false)) {
             UNREACHABLE();
         }
-
+                
         literal l(ctx.get_literal(eq.get()));
         if (!is_eq) {
             l = ~l;
@@ -954,7 +954,7 @@ template<typename Ext>
 void theory_diff_logic<Ext>::new_diseq_eh(
     theory_var v1, theory_var v2, justification& j) {
     m_stats.m_num_core2th_diseqs++;
-    new_eq_or_diseq(false, v1, v2, j);
+    new_eq_or_diseq(false, v1, v2, j);    
 }
 
 

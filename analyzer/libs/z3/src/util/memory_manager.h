@@ -61,7 +61,7 @@ void deallocf(char const* file, int line, T * ptr) {
     memory::deallocate(file, line, ptr);
 }
 
-#else
+#else 
 
 #define alloc(T,...) new (memory::allocate(sizeof(T))) T(__VA_ARGS__)
 
@@ -78,7 +78,7 @@ template<typename T>
 T * alloc_vect(unsigned sz) {
     T * r = static_cast<T*>(memory::allocate(sizeof(T) * sz));
     T * curr = r;
-    for (unsigned i = 0; i < sz; i++, curr++)
+    for (unsigned i = 0; i < sz; i++, curr++) 
         new (curr) T();
     return r;
 }

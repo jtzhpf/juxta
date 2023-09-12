@@ -26,10 +26,10 @@ class echo_tactic : public skip_tactic {
     bool          m_newline;
 public:
     echo_tactic(cmd_context & ctx, char const * msg, bool newline):m_ctx(ctx), m_msg(msg), m_newline(newline) {}
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         #pragma omp critical (echo_tactic)
@@ -54,16 +54,16 @@ class probe_value_tactic : public skip_tactic {
 public:
     probe_value_tactic(cmd_context & ctx, char const * msg, probe * p, bool newline):m_ctx(ctx), m_msg(msg), m_p(p), m_newline(newline) {
         SASSERT(m_p);
-        m_p->inc_ref();
+        m_p->inc_ref(); 
     }
-
+    
     ~probe_value_tactic() {
         m_p->dec_ref();
     }
-
-    virtual void operator()(goal_ref const & in,
-                            goal_ref_buffer & result,
-                            model_converter_ref & mc,
+    
+    virtual void operator()(goal_ref const & in, 
+                            goal_ref_buffer & result, 
+                            model_converter_ref & mc, 
                             proof_converter_ref & pc,
                             expr_dependency_ref & core) {
         double val = (*m_p)(*(in.get())).get_value();

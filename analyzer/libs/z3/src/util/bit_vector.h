@@ -29,15 +29,15 @@ COMPILE_TIME_ASSERT(sizeof(unsigned) == 4);
 
 class bit_vector {
 protected:
-    unsigned    m_num_bits;
+    unsigned    m_num_bits; 
     unsigned    m_capacity; //!< in words
     unsigned *  m_data;
 
     static unsigned get_pos_mask(unsigned bit_idx) {
         return 1 << (bit_idx % 32);
     }
-
-    static unsigned num_words(unsigned num_bits) {
+    
+    static unsigned num_words(unsigned num_bits) { 
         // return (num_bits % 32) == 0 ? (num_bits / 32) : ((num_bits / 32) + 1);
         return (num_bits + 31) / 32;
     }
@@ -78,7 +78,7 @@ public:
         m_data(alloc_svect(unsigned, source.m_capacity)) {
         memcpy(m_data, source.m_data, source.m_capacity * sizeof(unsigned));
     }
-
+    
     bit_vector(unsigned const * source, int num_bits):
         m_num_bits(num_bits),
         m_capacity(num_words(num_bits)),
@@ -91,7 +91,7 @@ public:
             dealloc_svect(m_data);
         }
     }
-
+    
     void reset() {
         memset(m_data, 0, m_capacity * sizeof(unsigned));
         m_num_bits = 0;
@@ -110,22 +110,22 @@ public:
         memset(m_data, 0, m_capacity * sizeof(unsigned));
     }
 
-    unsigned size() const {
-        return m_num_bits;
+    unsigned size() const { 
+        return m_num_bits; 
     }
 
     bool empty() const {
         return m_num_bits == 0;
     }
 
-    unsigned num_words() const {
-        return num_words(m_num_bits);
+    unsigned num_words() const { 
+        return num_words(m_num_bits); 
     }
 
     unsigned get_word(unsigned word_idx) const {
         return m_data[word_idx];
     }
-
+    
     bool get(unsigned bit_idx) const {
         SASSERT(bit_idx < size());
         bool r = (get_bit_word(bit_idx) & get_pos_mask(bit_idx)) != 0;
@@ -141,7 +141,7 @@ public:
         SASSERT(bit_idx < size());
         get_bit_word(bit_idx) &= ~get_pos_mask(bit_idx);
     }
-
+    
     void set(unsigned bit_idx, bool val) {
         SASSERT(bit_idx < size());
         int _val = static_cast<int>(val);
@@ -176,7 +176,7 @@ public:
     void resize(unsigned new_size, bool val = false);
 
     void reserve(unsigned sz, bool val = false) {
-        if (sz > size())
+        if (sz > size()) 
             resize(sz, val);
     }
 
@@ -198,7 +198,7 @@ public:
     bit_vector & operator|=(bit_vector const & source);
 
     bit_vector & operator&=(bit_vector const & source);
-
+    
     void display(std::ostream & out) const;
 };
 
@@ -231,7 +231,7 @@ public:
             m_one_idxs.push_back(idx);
         bit_vector::set(idx, val);
     }
-
+    
     void push_back(bool val) {
         if (val)
             m_one_idxs.push_back(size());

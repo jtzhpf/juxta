@@ -1,4 +1,4 @@
-def_module_params(module_name='sat',
+def_module_params(module_name='sat', 
                   class_name='sat_asymm_branch_params',
                   export=True,
                   params=(('asymm_branch', BOOL, True, 'asymmetric branching'),

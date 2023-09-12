@@ -73,7 +73,7 @@ protected:
                  DERIVED,    // implied
                  DECISION    // internal case-split
     };
-
+                
     struct bound {
         mpq        m_k;
         double     m_approx_k;
@@ -88,9 +88,9 @@ protected:
             unsigned     m_constraint_idx;
         };
         bound *      m_prev;
-        bound(numeral_manager & m, mpq const & k, double approx_k, bool lower, bool strict, unsigned lvl, unsigned ts, bkind bk,
+        bound(numeral_manager & m, mpq const & k, double approx_k, bool lower, bool strict, unsigned lvl, unsigned ts, bkind bk, 
               unsigned c_idx, assumption a, bound * prev);
-
+        
         bound * at(unsigned timestamp);
         bkind kind() const { return static_cast<bkind>(m_kind); }
         bool is_lower() const { return m_lower != 0; }
@@ -121,7 +121,7 @@ protected:
     unsigned            m_timestamp;
     var                 m_conflict;
     mpq                 m_tmp;
-
+    
     struct scope {
         unsigned       m_trail_limit;
         unsigned       m_qhead_old;
@@ -177,7 +177,7 @@ protected:
 public:
     bound_propagator(numeral_manager & m, allocator & a, params_ref const & p);
     ~bound_propagator();
-
+    
     void updt_params(params_ref const & p);
     static void get_param_descrs(param_descrs & r);
 
@@ -185,7 +185,7 @@ public:
     void reset_statistics();
 
     double strict2double() const { return m_strict2double; }
-
+    
     bool is_int(var x) const { return m_is_int[x] != 0; }
 
     unsigned scope_lvl() const { return m_scopes.size(); }
@@ -224,13 +224,13 @@ public:
     mpq const & upper(var x, bool & strict) const { SASSERT(has_upper(x)); bound * b = m_uppers[x]; strict = b->m_strict; return b->m_k; }
     mpq const & lower(var x) const { SASSERT(has_lower(x)); return m_lowers[x]->m_k; }
     mpq const & upper(var x) const { SASSERT(has_upper(x)); return m_uppers[x]->m_k; }
-    double approx_lower(var x) const {
-        SASSERT(has_lower(x));
+    double approx_lower(var x) const { 
+        SASSERT(has_lower(x)); 
         return m_lowers[x]->m_strict ? m_lowers[x]->m_approx_k + m_strict2double : m_lowers[x]->m_approx_k;
     }
-    double approx_upper(var x) const {
-        SASSERT(has_upper(x));
-        return m_uppers[x]->m_strict ? m_uppers[x]->m_approx_k - m_strict2double : m_uppers[x]->m_approx_k;
+    double approx_upper(var x) const { 
+        SASSERT(has_upper(x)); 
+        return m_uppers[x]->m_strict ? m_uppers[x]->m_approx_k - m_strict2double : m_uppers[x]->m_approx_k; 
     }
     bool is_zero(var x) const { return has_lower(x) && has_upper(x) && m.is_zero(lower(x)) && m.is_zero(upper(x)); }
     void explain_lower(var x, unsigned ts, assumption_vector & ex) const { explain(x, m_lowers[x], ts, ex); }
@@ -239,7 +239,7 @@ public:
     void explain_upper(var x, assumption_vector & ex) const { explain_upper(x, m_timestamp, ex); }
     var  conflict_var() const { return m_conflict; }
     bool inconsistent() const { return m_conflict != null_var; }
-
+    
     unsigned trail_size() const { return m_trail.size(); }
     unsigned qhead() const { return m_qhead; }
 

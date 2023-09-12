@@ -30,7 +30,7 @@ public:
     static unsigned g_num_allocated_cells;
     static unsigned g_num_deallocated_cells;
     static unsigned g_num_recycled_cells;
-
+    
     cell() {
         g_num_allocated_cells++;
     }
@@ -53,13 +53,13 @@ typedef object_allocator<cell, true, simple_reset_proc<cell> > cell_allocator;
 
 static void tst1() {
     cell_allocator m;
-
+    
     cell * c1 = m.allocate<true>();
     /* cell * c2 = */ m.allocate<true>();
 
     c1->m_coeff = rational(10);
     m.recycle(c1);
-
+    
     cell * c3 = m.allocate<true>();
     SASSERT(c3->m_coeff.is_zero());
 }
@@ -78,9 +78,9 @@ static void tst2() {
         unsigned idx = rand() % 6;
         if (idx < 4) {
             cell * c;
-            if (idx < 2)
+            if (idx < 2) 
                 c = m1.allocate<true>();
-            else
+            else 
                 c = m2.allocate<true>();
             SASSERT(c->m_coeff.is_zero());
             int val = rand();
@@ -95,7 +95,7 @@ static void tst2() {
                 SASSERT(c->m_coeff == rational(object_coeff_pairs[idx].second));
                 if (idx < 5)
                     m1.recycle(c);
-                else
+                else 
                     m2.recycle(c);
                 object_coeff_pairs.erase(object_coeff_pairs.begin() + idx);
             }
@@ -115,7 +115,7 @@ static void tst2() {
 void tst_object_allocator() {
     tst1();
     tst2();
-    TRACE("object_allocator", tout << "num. allocated cells: " << cell::g_num_allocated_cells << "\nnum. deallocated cells: " << cell::g_num_deallocated_cells <<
+    TRACE("object_allocator", tout << "num. allocated cells: " << cell::g_num_allocated_cells << "\nnum. deallocated cells: " << cell::g_num_deallocated_cells << 
           "\nnum. recycled cells: " << cell::g_num_recycled_cells << "\n";);
     SASSERT(cell::g_num_allocated_cells == cell::g_num_deallocated_cells);
 }

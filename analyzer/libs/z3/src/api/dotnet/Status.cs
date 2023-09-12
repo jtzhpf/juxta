@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -25,7 +25,7 @@ namespace Microsoft.Z3
   /// Status values.
   /// </summary>
   public enum Status
-  {
+  {    
     /// <summary>
     /// Used to signify an unsatisfiable status.
     /// </summary>

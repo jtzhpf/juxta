@@ -37,13 +37,13 @@ class expr_offset_map {
 public:
     expr_offset_map():
         m_timestamp(1) {}
-
+    
     bool contains(expr_offset const & n) const {
         unsigned off = n.get_offset();
         if (off < m_map.size()) {
             svector<data> const & v = m_map[off];
             unsigned id             = n.get_expr()->get_id();
-            if (id < v.size())
+            if (id < v.size()) 
                 return v[id].m_timestamp == m_timestamp;
         }
         return false;

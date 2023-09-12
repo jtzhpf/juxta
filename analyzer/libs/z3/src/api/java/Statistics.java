@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     Statistics.java
@@ -12,8 +12,8 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
-**/
+    
+**/ 
 
 package com.microsoft.z3;
 
@@ -67,7 +67,7 @@ public class Statistics extends Z3Object
 
         /**
          * The string representation of the the entry's value.
-         *
+         * 
          * @throws Z3Exception
          **/
         public String getValueString() throws Z3Exception
@@ -138,7 +138,7 @@ public class Statistics extends Z3Object
 
     /**
      * The data entries.
-     *
+     * 
      * @throws Z3Exception
      **/
     public Entry[] getEntries() throws Z3Exception
@@ -178,7 +178,7 @@ public class Statistics extends Z3Object
     /**
      * The value of a particular statistical counter. <remarks>Returns null if
      * the key is unknown.</remarks>
-     *
+     * 
      * @throws Z3Exception
      **/
     public Entry get(String key) throws Z3Exception

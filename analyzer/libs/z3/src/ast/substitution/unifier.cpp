@@ -86,7 +86,7 @@ void unifier::union2(expr_offset n1, expr_offset n2) {
     unsigned sz2 = 1;
     m_size.find(n1, sz1);
     m_size.find(n2, sz2);
-    if (sz1 > sz2)
+    if (sz1 > sz2) 
         std::swap(n1, n2);
     m_find.insert(n1, n2);
     m_size.insert(n2, sz1 + sz2);
@@ -143,7 +143,7 @@ bool unifier::operator()(unsigned num_exprs, expr ** es, substitution & s, bool 
     SASSERT(num_exprs > 0);
     unsigned num_offsets = use_offsets ? num_exprs : 1;
     reset(num_offsets);
-    m_subst = &s;
+    m_subst = &s;    
 #if 1
     TRACE("unifier", for (unsigned i = 0; i < num_exprs; ++i) tout << mk_pp(es[i], m_manager) << "\n";);
     for (unsigned i = s.get_num_bindings(); i > 0; ) {
@@ -165,13 +165,13 @@ bool unifier::operator()(unsigned num_exprs, expr ** es, substitution & s, bool 
     }
 #endif
     for (unsigned i = 0; i < num_exprs - 1; i++) {
-        if (!unify_core(expr_offset(es[i], use_offsets ? i : 0),
+        if (!unify_core(expr_offset(es[i], use_offsets ? i : 0), 
                         expr_offset(es[i+1], use_offsets ? i + 1 : 0))) {
             m_last_call_succeeded = false;
             return m_last_call_succeeded;
         }
     }
-
+    
     m_last_call_succeeded = m_subst->acyclic();
     return m_last_call_succeeded;
 }
@@ -180,4 +180,4 @@ bool unifier::operator()(expr * e1, expr * e2, substitution & s, bool use_offset
     expr * es[2] = { e1, e2 };
     return operator()(2, es, s, use_offsets);
 }
-
+    

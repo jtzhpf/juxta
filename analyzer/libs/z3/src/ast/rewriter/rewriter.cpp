@@ -48,7 +48,7 @@ void rewriter_core::cache_result(expr * k, expr * v) {
     verbose_stream() << "1 " << k->get_id() << std::endl;
 #endif
     SASSERT(!m_proof_gen);
-
+    
     TRACE("rewriter_cache_result", tout << mk_ismt2_pp(k, m()) << "\n--->\n" << mk_ismt2_pp(v, m()) << "\n";);
 
     m_cache->insert(k, v);
@@ -56,7 +56,7 @@ void rewriter_core::cache_result(expr * k, expr * v) {
     static unsigned num_cached = 0;
     num_cached ++;
     if (num_cached % 100000 == 0)
-        verbose_stream() << "[rewriter] :num-cached " << num_cached << " :capacity " << m_cache->capacity() << " :size " << m_cache->size()
+        verbose_stream() << "[rewriter] :num-cached " << num_cached << " :capacity " << m_cache->capacity() << " :size " << m_cache->size() 
                   << " :frame-stack-size " << m_frame_stack.size() << std::endl;
 #endif
 }
@@ -392,11 +392,11 @@ void inv_var_shifter::process_var(var * v) {
         m_result_stack.push_back(v);
     }
     else {
-        SASSERT(vidx >= m_num_qvars + m_shift);
+        SASSERT(vidx >= m_num_qvars + m_shift); 
         vidx -= m_shift;
         m_result_stack.push_back(m().mk_var(vidx, v->get_sort()));
         set_new_child_flag(v);
     }
 }
-
+    
 template class rewriter_tpl<beta_reducer_cfg>;

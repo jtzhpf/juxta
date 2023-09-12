@@ -19,10 +19,10 @@ Revision History:
 #include"elim_term_ite.h"
 #include"ast_smt2_pp.h"
 
-void elim_term_ite::operator()(expr * n,
-                               expr_ref_vector & new_defs,
+void elim_term_ite::operator()(expr * n,                        
+                               expr_ref_vector & new_defs,        
                                proof_ref_vector & new_def_proofs,
-                               expr_ref & r,
+                               expr_ref & r,                     
                                proof_ref & pr) {
 
     m_coarse_proofs.reset();
@@ -78,7 +78,7 @@ bool elim_term_ite::visit_children(expr * n) {
             visit(to_app(n)->get_arg(j), visited);
         }
         return visited;
-    case AST_QUANTIFIER:
+    case AST_QUANTIFIER: 
         visit(to_quantifier(n)->get_expr(), visited);
         return visited;
     default:
@@ -105,7 +105,7 @@ void elim_term_ite::reduce1(expr * n) {
 
 void elim_term_ite::reduce1_app(app * n) {
     m_args.reset();
-
+    
     func_decl * decl = n->get_decl();
     proof_ref p1(m_manager);
     get_args(n, m_args, p1);
@@ -128,7 +128,7 @@ void elim_term_ite::reduce1_app(app * n) {
                 new_pr = m_manager.mk_transitivity(p1, new_pr);
             }
             else {
-                // [Leo] This looks fishy... why do we add 0 into m_coarse_proofs when fine_grain_proofs are disabled?
+                // [Leo] This looks fishy... why do we add 0 into m_coarse_proofs when fine_grain_proofs are disabled? 
                 new_pr = 0;
                 if (m_manager.proofs_enabled())
                     m_coarse_proofs.push_back(new_pr);
@@ -150,9 +150,9 @@ void elim_term_ite::reduce1_quantifier(quantifier * q) {
     expr *  new_body;
     proof * new_body_pr;
     get_cached(q->get_expr(), new_body, new_body_pr);
-
+    
     quantifier * new_q = m_manager.update_quantifier(q, new_body);
-    proof *      p     = q == new_q ? 0 : m_manager.mk_oeq_quant_intro(q, new_q, new_body_pr);
+    proof *      p     = q == new_q ? 0 : m_manager.mk_oeq_quant_intro(q, new_q, new_body_pr);   
     cache_result(q, new_q, p);
 }
 

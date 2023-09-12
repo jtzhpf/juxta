@@ -48,7 +48,7 @@ static void bug_set_int() {
 
     fm.set(a, 8, 24, -1);
     SASSERT(fm.to_float(a) == -1.0);
-    SASSERT(fm.to_double(a) == -1.0);
+    SASSERT(fm.to_double(a) == -1.0);    
 
     fm.set(a, 8, 24, INT_MIN);
     SASSERT(fm.to_float(a) == (float)INT_MIN);

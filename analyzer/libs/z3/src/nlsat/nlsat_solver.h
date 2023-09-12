@@ -38,7 +38,7 @@ namespace nlsat {
            \brief Return reference to rational manager.
         */
         unsynch_mpq_manager & qm();
-
+        
         /**
            \brief Return reference to algebraic number manager.
         */
@@ -58,16 +58,16 @@ namespace nlsat {
         // -----------------------
 
         /**
-           \brief Create a fresh boolean variable that is not associated with any
+           \brief Create a fresh boolean variable that is not associated with any 
                   nonlinear arithmetic atom.
         */
         bool_var mk_bool_var();
-
+    
         /**
            \brief Create a real/integer variable.
         */
         var mk_var(bool is_int);
-
+        
         /**
            \brief Create an atom of the form: p=0, p<0, p>0
            Where p = ps[0]^e[0]*...*ps[sz-1]^e[sz-1]
@@ -98,7 +98,7 @@ namespace nlsat {
         void inc_ref(literal l) { inc_ref(l.var()); }
         void dec_ref(bool_var b);
         void dec_ref(literal l) { dec_ref(l.var()); }
-
+        
         /**
            \brief Create a new clause.
         */
@@ -114,7 +114,7 @@ namespace nlsat {
            \brief Return the number of Boolean variables.
         */
         unsigned num_bool_vars() const;
-
+        
         /**
            \brief Get atom associated with Boolean variable. Return 0 if there is none.
         */
@@ -163,7 +163,7 @@ namespace nlsat {
         // Pretty printing
         //
         // -----------------------
-
+   
         /**
            \brief Display solver's state.
         */
@@ -178,7 +178,7 @@ namespace nlsat {
            \brief Display variable
         */
         void display(std::ostream & out, var x) const;
-
+        
         display_var_proc const & display_proc() const;
     };
 

@@ -10,7 +10,7 @@ Abstract:
     The mapping between Z3 expressions and (low level) variables.
     Example of low level variables:
        - SAT solver
-       - Polynomial
+       - Polynomial 
        - etc.
 
 Author:

@@ -36,7 +36,7 @@ class double_manager {
 public:
     typedef double numeral;
     static bool precise() { return false; }
-
+    
     double_manager(params_ref const & p = params_ref()) { updt_params(p); }
 
     void updt_params(params_ref const & p) {
@@ -58,9 +58,9 @@ public:
     static void inv(double & a) { a = 1 / a; }
     static void neg(double & a) { a = -a; }
     static void abs(double & a) { if (a < 0.0) neg(a); }
-    static void power(double a, unsigned p, double & b) {
+    static void power(double a, unsigned p, double & b) { 
         SASSERT(p <= INT_MAX);
-        b = ::pow(a, static_cast<int>(p));
+        b = ::pow(a, static_cast<int>(p)); 
     }
     static void floor(double a, double & b) { b = ::floor(a); }
     static void ceil(double a, double & b) { b = ::ceil(a); }
@@ -86,13 +86,13 @@ public:
     static bool is_one(double a) { return a == 1.0; }
     static bool is_minus_one(double a) { return a == -1.0; }
     static bool is_int(double a) { return a == ::floor(a); }
-    static std::string to_string(double a) {
+    static std::string to_string(double a) { 
         std::ostringstream sstream;
         sstream << std::setprecision(12) << a;
         return sstream.str();
     }
 
-    static unsigned hash(double a) {
+    static unsigned hash(double a) { 
         return hash_ull(static_cast<uint64>(a));
     }
 };

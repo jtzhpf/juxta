@@ -25,7 +25,7 @@ Revision History:
 #include"region.h"
 
 namespace smt {
-
+    
     /**
        \brief Store statistics for quantifiers. This information is
        used to implement heuristics for quantifier instantiation.
@@ -47,18 +47,18 @@ namespace smt {
         quantifier_stat(unsigned generation);
     public:
 
-        unsigned get_size() const {
-            return m_size;
+        unsigned get_size() const { 
+            return m_size; 
         }
-
-        unsigned get_depth() const {
-            return m_depth;
+        
+        unsigned get_depth() const { 
+            return m_depth; 
         }
-
+        
         unsigned get_generation() const {
-            return m_generation;
+            return m_generation; 
         }
-
+        
         unsigned get_case_split_factor() const {
             return m_case_split_factor;
         }
@@ -78,7 +78,7 @@ namespace smt {
         unsigned & get_num_instances_curr_branch() {
             return m_num_instances_curr_branch;
         }
-
+        
         void inc_num_instances() {
             m_num_instances++;
             m_num_instances_curr_search++;
@@ -128,7 +128,7 @@ namespace smt {
         svector<entry>          m_todo;
         approx_nat              m_case_split_factor;
         void reset();
-
+        
     public:
         quantifier_stat_gen(ast_manager & m, region & r);
         quantifier_stat * operator()(quantifier * q, unsigned generation);

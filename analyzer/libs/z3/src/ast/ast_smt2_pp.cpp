@@ -85,10 +85,10 @@ bool smt2_pp_environment::is_indexed_fdecl(func_decl * f) const {
 }
 
 bool smt2_pp_environment::is_sort_param(func_decl * f) const {
-    return
+    return 
         f->get_family_id() != null_family_id &&
-        f->get_num_parameters() == 1 &&
-        f->get_parameter(0).is_ast() &&
+        f->get_num_parameters() == 1 && 
+        f->get_parameter(0).is_ast() && 
         is_sort(f->get_parameter(0).get_ast()) &&
         f->get_range() == to_sort(f->get_parameter(0).get_ast());
 }
@@ -116,7 +116,7 @@ format * smt2_pp_environment::pp_fdecl_params(format * fname, func_decl * f) {
 
 format * smt2_pp_environment::pp_fdecl(func_decl * f, unsigned & len) {
     format * fname = pp_fdecl_name(f, len);
-    if (f->get_family_id() == null_family_id)
+    if (f->get_family_id() == null_family_id) 
         return fname;
     if (is_sort_param(f)) {
         len = UINT_MAX;
@@ -319,7 +319,7 @@ format * smt2_pp_environment::pp_arith_literal(app * t, bool decimal, unsigned d
             am.display_decimal(buffer, abs_val, decimal_prec);
         }
         else {
-            am.display_root_smt2(buffer, val);
+            am.display_root_smt2(buffer, val); 
         }
         vf = mk_string(get_manager(), buffer.str().c_str());
         return is_neg ? mk_neg(vf) : vf;
@@ -339,7 +339,7 @@ format_ns::format * smt2_pp_environment::pp_sort(sort * s) {
     // This method is redefined in cmd_context::pp_env: support for parametric sorts.
     // Here, we just pretty print builtin sorts: Bool, Int, Real, BitVec and Array.
     ast_manager & m = get_manager();
-    if (m.is_bool(s))
+    if (m.is_bool(s)) 
         return mk_string(m, "Bool");
     if (get_autil().is_int(s))
         return mk_string(m, "Int");
@@ -370,7 +370,7 @@ format_ns::format * smt2_pp_environment::pp_sort(sort * s) {
         fs.push_back(mk_unsigned(m, sbits));
         return mk_seq1(m, fs.begin(), fs.end(), f2f(), "_");
     }
-    return format_ns::mk_string(get_manager(), s->get_name().str().c_str());
+    return format_ns::mk_string(get_manager(), s->get_name().str().c_str()); 
 }
 
 typedef app_ref_vector format_ref_vector;
@@ -388,8 +388,8 @@ class smt2_printer {
     expr2alias *                          m_expr2alias; // expr -> position @ m_aliased_exprs, m_aliased_pps, m_aliased_lvls_names.
     ptr_vector<expr>                      m_aliased_exprs;
     format_ref_vector                     m_aliased_pps;
-    svector<std::pair<unsigned, symbol> > m_aliased_lvls_names;
-    unsigned                              m_next_alias_idx;
+    svector<std::pair<unsigned, symbol> > m_aliased_lvls_names; 
+    unsigned                              m_next_alias_idx; 
     struct scope {
         unsigned m_aliased_exprs_lim;
         unsigned m_old_next_alias_idx;
@@ -400,7 +400,7 @@ class smt2_printer {
     svector<symbol>                       m_var_names;
     typedef hashtable<symbol, symbol_hash_proc, symbol_eq_proc> symbol_set;
     symbol_set                            m_var_names_set;
-
+    
     struct frame {
         expr *   m_curr;
         unsigned m_idx;
@@ -408,7 +408,7 @@ class smt2_printer {
         bool     m_use_alias; // if new aliases can be created
         frame(expr * c, unsigned i, unsigned s, bool use_alias):m_curr(c), m_idx(i), m_spos(s), m_use_alias(use_alias) {}
     };
-
+    
     svector<frame>                        m_frame_stack;
     format_ref_vector                     m_format_stack;
     struct info {
@@ -455,7 +455,7 @@ class smt2_printer {
         SASSERT(m_aliased_exprs.size() == m_aliased_pps.size());
         SASSERT(m_aliased_exprs.size() == m_aliased_lvls_names.size());
         unsigned idx = m_aliased_exprs.size();
-        m_expr2alias->insert(n, idx);
+        m_expr2alias->insert(n, idx); 
         m_aliased_exprs.push_back(n);
         m_aliased_pps.push_back(nf);
         m_aliased_lvls_names.push_back(std::make_pair(lvl, name));
@@ -505,12 +505,12 @@ class smt2_printer {
             buf.append(")");
             f = mk_string(m(), buf.c_str());
         }
-        m_format_stack.push_back(f);
+        m_format_stack.push_back(f); 
         m_info_stack.push_back(info(0, 1, 1));
     }
 
     format * pp_attribute(char const * attr, format * f) {
-        return mk_compose(m(),
+        return mk_compose(m(), 
                           mk_string(m(), attr),
                           mk_indent(m(), static_cast<unsigned>(strlen(attr)), f));
     }
@@ -574,7 +574,7 @@ class smt2_printer {
         }
         return false;
     }
-
+    
     void process_var(var * v) {
         pp_var(v);
         pop_frame();
@@ -586,7 +586,7 @@ class smt2_printer {
             expr * arg = t->get_arg(fr.m_idx);
             fr.m_idx++;
             if (pp_aliased(arg))
-                continue;
+                continue; 
             switch (arg->get_kind()) {
             case AST_VAR:
                 pp_var(to_var(arg));
@@ -614,11 +614,11 @@ class smt2_printer {
         m_format_stack.shrink(fr.m_spos);
         m_info_stack.shrink(fr.m_spos);
         if (fr.m_use_alias && m_root != t &&
-            ((f_info.m_depth >= m_pp_max_depth) ||
+            ((f_info.m_depth >= m_pp_max_depth) || 
              ((f_info.m_weight >= m_pp_min_alias_size || is_quantifier(t)) && m_soccs.is_shared(t)))) {
             symbol a = next_alias();
-            TRACE("smt2_pp", tout << "a: " << a << " depth: " << f_info.m_depth << ", weight: " << f_info.m_weight
-                  << ", lvl: " << f_info.m_lvl << " t: #" << t->get_id() << "\n" << mk_ll_pp(t, m())
+            TRACE("smt2_pp", tout << "a: " << a << " depth: " << f_info.m_depth << ", weight: " << f_info.m_weight 
+                  << ", lvl: " << f_info.m_lvl << " t: #" << t->get_id() << "\n" << mk_ll_pp(t, m()) 
                   << ", is-shared: " << m_soccs.is_shared(t) << "\n";);
             register_alias(t, f, f_info.m_lvl, a);
             m_format_stack.push_back(mk_string(m(), a.str().c_str()));
@@ -680,7 +680,7 @@ class smt2_printer {
                 f = mk_group(m(), mk_compose(m(),
                                              mk_indent(m(), 1, mk_compose(m(), mk_string(m(), "("), fname)),
                                              mk_indent(m(), SMALL_INDENT, mk_compose(m(),
-                                                                                     mk_seq<format**, f2f>(m(), it, end, f2f()),
+                                                                                     mk_seq<format**, f2f>(m(), it, end, f2f()), 
                                                                                      mk_string(m(), ")")))));
             }
             else {
@@ -691,7 +691,7 @@ class smt2_printer {
                                              mk_indent(m(), len + 2, mk_compose(m(),
                                                                                 mk_string(m(), " "),
                                                                                 first,
-                                                                                mk_seq<format**, f2f>(m(), it, end, f2f()),
+                                                                                mk_seq<format**, f2f>(m(), it, end, f2f()), 
                                                                                 mk_string(m(), ")")))));
             }
         }
@@ -767,7 +767,7 @@ class smt2_printer {
         m_expr2alias = m_expr2alias_stack[lvl];
         m_next_alias_idx = 1;
     }
-
+    
     void end_scope() {
         TRACE("pp_scope", tout << "[end-scope] before sz: " << m_aliased_exprs.size() << ", m_root: " << m_root << "\n";);
         m_expr2alias->reset();
@@ -788,7 +788,7 @@ class smt2_printer {
     void register_var_names(quantifier * q) {
         unsigned num_decls = q->get_num_decls();
         for (unsigned i = 0; i < num_decls; i++) {
-            symbol name = ensure_quote_sym(q->get_decl_name(i));
+            symbol name = ensure_quote_sym(q->get_decl_name(i));            
             if (name.is_numerical()) {
                 unsigned idx = 1;
                 name = next_name("x", idx);
@@ -849,7 +849,7 @@ class smt2_printer {
         format * f_body = pp_let(m_format_stack.back(), num_lets);
         // The current SMT2 frontend uses weight 1 as default.
 #define MIN_WEIGHT 1
-        if (q->has_patterns() || q->get_weight() > MIN_WEIGHT ||
+        if (q->has_patterns() || q->get_weight() > MIN_WEIGHT || 
             q->get_skid() != symbol::null || (q->get_qid() != symbol::null && !q->get_qid().is_numerical())) {
             ptr_buffer<format> buf;
             buf.push_back(f_body);
@@ -887,12 +887,12 @@ class smt2_printer {
         format * fs[2] = { f_decls, f_body };
         char const * header = q->is_forall() ? "forall" : "exists";
         format * f = mk_seq3<format**, f2f>(m(), fs, fs+2, f2f(), header, 1, SMALL_INDENT);
-
+        
         info f_info = m_info_stack.back();
         f_info.m_lvl     = 0; // quantifiers don't depend on any let-decls, pp_let added all dependencies for the body.
         f_info.m_depth++;
         f_info.m_weight += q->get_num_decls()*2 + num_lets*8;
-
+        
         unregister_var_names(q);
         end_scope();
 
@@ -937,7 +937,7 @@ class smt2_printer {
         reset_stacks();
         SASSERT(&(r.get_manager()) == &(fm()));
         m_soccs(n);
-        TRACE("smt2_pp_shared",
+        TRACE("smt2_pp_shared", 
               tout << "shared terms for:\n" << mk_pp(n, m()) << "\n";
               tout << "------>\n";
               shared_occs::iterator it  = m_soccs.begin_shared();
@@ -978,7 +978,7 @@ public:
         m_env(env),
         m_soccs(m_manager),
         m_root(0),
-        m_aliased_pps(fm()),
+        m_aliased_pps(fm()), 
         m_next_alias_idx(1),
         m_format_stack(fm()) {
         init_expr2alias_stack();
@@ -1042,7 +1042,7 @@ public:
 
 };
 
-void mk_smt2_format(expr * n, smt2_pp_environment & env, params_ref const & p,
+void mk_smt2_format(expr * n, smt2_pp_environment & env, params_ref const & p, 
                     unsigned num_vars, char const * var_prefix,
                     format_ref & r, sbuffer<symbol> & var_names) {
     smt2_printer pr(env, p);
@@ -1059,13 +1059,13 @@ void mk_smt2_format(func_decl * f, smt2_pp_environment & env, params_ref const &
     pr(f, r);
 }
 
-std::ostream & ast_smt2_pp(std::ostream & out, expr * n, smt2_pp_environment & env, params_ref const & p, unsigned indent,
+std::ostream & ast_smt2_pp(std::ostream & out, expr * n, smt2_pp_environment & env, params_ref const & p, unsigned indent, 
                             unsigned num_vars, char const * var_prefix) {
     ast_manager & m = env.get_manager();
     format_ref r(fm(m));
     sbuffer<symbol> var_names;
     mk_smt2_format(n, env, p, num_vars, var_prefix, r, var_names);
-    if (indent > 0)
+    if (indent > 0) 
         r = mk_indent(m, indent, r.get());
     pp(out, r.get(), m, p);
     return out;
@@ -1076,7 +1076,7 @@ std::ostream & ast_smt2_pp(std::ostream & out, sort * s, smt2_pp_environment & e
     format_ref r(fm(m));
     sbuffer<symbol> var_names;
     mk_smt2_format(s, env, p, r);
-    if (indent > 0)
+    if (indent > 0) 
         r = mk_indent(m, indent, r.get());
     pp(out, r.get(), m, p);
     return out;
@@ -1087,7 +1087,7 @@ std::ostream & ast_smt2_pp(std::ostream & out, func_decl * f, smt2_pp_environmen
     format_ref r(fm(m));
     sbuffer<symbol> var_names;
     mk_smt2_format(f, env, p, r);
-    if (indent > 0)
+    if (indent > 0) 
         r = mk_indent(m, indent, r.get());
     pp(out, r.get(), m, p);
     return out;

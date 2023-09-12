@@ -21,7 +21,7 @@ static void test_table(mk_table_fn mk_table) {
     smt_params params;
     ast_manager ast_m;
     datalog::register_engine re;
-    datalog::context ctx(ast_m, re, params);
+    datalog::context ctx(ast_m, re, params);    
     datalog::relation_manager & m = ctx.get_rel_context()->get_rmanager();
 
     m.register_plugin(alloc(datalog::bitvector_table_plugin, m));

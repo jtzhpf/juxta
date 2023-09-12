@@ -116,7 +116,7 @@ namespace smt {
         SASSERT(get_manager().is_and(n));
         return mk_relevancy_eh(and_relevancy_eh(n));
     }
-
+    
     relevancy_eh * relevancy_propagator::mk_ite_relevancy_eh(app * n) {
         SASSERT(get_manager().is_ite(n));
         return mk_relevancy_eh(ite_relevancy_eh(n));
@@ -125,10 +125,10 @@ namespace smt {
     relevancy_eh * relevancy_propagator::mk_term_ite_relevancy_eh(app * c, app * t, app * e) {
         return mk_relevancy_eh(ite_term_relevancy_eh(c, t, e));
     }
-
+    
     struct relevancy_propagator_imp : public relevancy_propagator {
         unsigned                       m_qhead;
-        expr_ref_vector                m_relevant_exprs;
+        expr_ref_vector                m_relevant_exprs; 
         obj_hashtable<expr>            m_is_relevant;
         typedef list<relevancy_eh *>   relevancy_ehs;
         obj_map<expr, relevancy_ehs *> m_relevant_ehs;
@@ -187,7 +187,7 @@ namespace smt {
             get_manager().inc_ref(t.get_node());
             m_trail.push_back(t);
         }
-
+        
         virtual void add_handler(expr * source, relevancy_eh * eh) {
             if (!enabled())
                 return;
@@ -200,7 +200,7 @@ namespace smt {
                 set_handlers(source, new (get_region()) relevancy_ehs(eh, get_handlers(source)));
             }
         }
-
+        
         virtual void add_watch(expr * n, bool val, relevancy_eh * eh) {
             if (!enabled())
                 return;
@@ -238,9 +238,9 @@ namespace smt {
                 break;
             }
         }
-
+        
         bool is_relevant_core(expr * n) const { return m_is_relevant.contains(n); }
-
+        
         virtual bool is_relevant(expr * n) const {
             return !enabled() || is_relevant_core(n);
         }
@@ -320,7 +320,7 @@ namespace smt {
 
         /**
            \brief Mark the given expression as relevant if it is not
-           already marked.
+           already marked. 
         */
         virtual void mark_as_relevant(expr * n) {
             if (!enabled())
@@ -340,10 +340,10 @@ namespace smt {
                 }
             }
         }
-
+        
         /**
            \brief Marks the children of n as relevant.
-
+           
            \pre n is marked as relevant.
         */
         void propagate_relevant_app(app * n) {
@@ -354,13 +354,13 @@ namespace smt {
                 mark_as_relevant(n->get_arg(j));
             }
         }
-
+        
         /**
            \brief Propagate relevancy for an or-application.
         */
         void propagate_relevant_or(app * n) {
             SASSERT(get_manager().is_or(n));
-
+            
             lbool val    = m_context.find_assignment(n);
             // If val is l_undef, then the expression
             // is a root, and no boolean variable was created for it.
@@ -389,7 +389,7 @@ namespace smt {
                 break;
             } }
         }
-
+        
         /**
            \brief Propagate relevancy for an and-application.
         */
@@ -403,7 +403,7 @@ namespace smt {
                     expr * arg  = n->get_arg(i);
                     if (m_context.find_assignment(arg) == l_false) {
                         if (is_relevant_core(arg))
-                            return;
+                            return; 
                         else if (!false_arg)
                             false_arg = arg;
                     }
@@ -440,11 +440,11 @@ namespace smt {
                 break;
             }
         }
-
+        
         /**
            \brief Propagate relevancy to the arguments of recently marked
            expressions. That is, expressions that are located at positions
-           [m_qhead, m_relevant_exprs.size()) in the stack of
+           [m_qhead, m_relevant_exprs.size()) in the stack of 
            relevant expressions.
         */
         virtual void propagate() {
@@ -477,7 +477,7 @@ namespace smt {
                         propagate_relevant_app(to_app(n));
                     }
                 }
-
+                
                 relevancy_ehs * ehs = get_handlers(n);
                 while (ehs != 0) {
                     ehs->head()->operator()(*this, n);
@@ -528,7 +528,7 @@ namespace smt {
             }
             return true;
         }
-
+        
         virtual bool check_relevancy_or(app * n, bool root) const {
             lbool val    = root ? l_true : m_context.find_assignment(n);
             if (val == l_false)
@@ -545,7 +545,7 @@ namespace smt {
             }
             return true;
         }
-
+        
         bool check_relevancy_and(app * n) const {
             lbool val = m_context.find_assignment(n);
             if (val == l_true)
@@ -561,7 +561,7 @@ namespace smt {
             }
             return true;
         }
-
+        
         bool check_relevancy_ite(app * n) const {
             SASSERT(is_relevant(n->get_arg(0)));
             switch (m_context.find_assignment(n->get_arg(0))) {
@@ -591,7 +591,7 @@ namespace smt {
             }
             return true;
         }
-
+        
         bool check_relevancy(expr_ref_vector const & v) const {
             SASSERT(!can_propagate());
             ast_manager & m = get_manager();

@@ -23,7 +23,7 @@ Revision History:
 
 namespace sat {
     class solver;
-
+    
     class elim_eqs {
         solver & m_solver;
         void save_elim(literal_vector const & roots, bool_var_vector const & to_elim);

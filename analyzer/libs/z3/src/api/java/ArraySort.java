@@ -1,6 +1,6 @@
 /**
 Copyright (c) 2012-2014 Microsoft Corporation
-
+   
 Module Name:
 
     ArraySort.java
@@ -12,7 +12,7 @@ Author:
     @author Christoph Wintersteiger (cwinter) 2012-03-15
 
 Notes:
-
+    
 **/
 
 package com.microsoft.z3;
@@ -24,7 +24,7 @@ public class ArraySort extends Sort
 {
 	/**
 	 * The domain of the array sort.
-	 * @throws Z3Exception
+	 * @throws Z3Exception 
 	 **/
 	public Sort getDomain() throws Z3Exception
 	{
@@ -34,7 +34,7 @@ public class ArraySort extends Sort
 
 	/**
 	 * The range of the array sort.
-	 * @throws Z3Exception
+	 * @throws Z3Exception 
 	 **/
 	public Sort getRange() throws Z3Exception
 	{

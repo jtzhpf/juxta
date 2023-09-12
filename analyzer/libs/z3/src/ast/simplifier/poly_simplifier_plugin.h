@@ -12,7 +12,7 @@ Abstract:
 Author:
 
     Leonardo (leonardo) 2008-01-08
-
+    
 --*/
 #ifndef _POLY_SIMPLIFIER_PLUGIN_H_
 #define _POLY_SIMPLIFIER_PLUGIN_H_
@@ -65,15 +65,15 @@ public:
     poly_simplifier_plugin(symbol const & fname, ast_manager & m, decl_kind add, decl_kind mul, decl_kind uminus, decl_kind sub, decl_kind num);
     virtual ~poly_simplifier_plugin() {}
 
-    /**
+    /** 
         \brief Return true if the given expression is a numeral, and store its value in \c val.
     */
     virtual bool is_numeral(expr * n, numeral & val) const = 0;
     bool is_numeral(expr * n) const { return is_app_of(n, m_fid, m_NUM); }
-    bool is_zero(expr * n) const {
+    bool is_zero(expr * n) const { 
         SASSERT(m_curr_sort_zero != 0);
-        SASSERT(m_manager.get_sort(n) == m_manager.get_sort(m_curr_sort_zero));
-        return n == m_curr_sort_zero;
+        SASSERT(m_manager.get_sort(n) == m_manager.get_sort(m_curr_sort_zero)); 
+        return n == m_curr_sort_zero; 
     }
     bool is_zero_safe(expr * n) {
         set_curr_sort(m_manager.get_sort(n));
@@ -81,7 +81,7 @@ public:
     }
     virtual bool is_minus_one(expr * n) const = 0;
     virtual expr * get_zero(sort * s) const = 0;
-
+    
 
     /**
        \brief Return true if n is of the form (* -1 r)
@@ -93,12 +93,12 @@ public:
         }
         return false;
     }
-
+    
     /**
        \brief Return true if n is of the form: a <= b or a >= b.
     */
     virtual bool is_le_ge(expr * n) const = 0;
-
+    
     /**
        \brief Return a constant representing the giving numeral and sort m_curr_sort.
     */
@@ -106,18 +106,18 @@ public:
     app * mk_zero() { return mk_numeral(numeral::zero()); }
     app * mk_one() { return mk_numeral(numeral::one()); }
     app * mk_minus_one() { return mk_numeral(numeral::minus_one()); }
-
+    
     /**
        \brief Normalize the given numeral with respect to m_curr_sort
     */
     virtual numeral norm(numeral const & n) = 0;
 
-    void set_curr_sort(sort * s) {
-        if (s != m_curr_sort) {
+    void set_curr_sort(sort * s) { 
+        if (s != m_curr_sort) { 
             // avoid virtual function call
-            m_curr_sort = s;
-            m_curr_sort_zero = get_zero(m_curr_sort);
-        }
+            m_curr_sort = s; 
+            m_curr_sort_zero = get_zero(m_curr_sort); 
+        } 
     }
     void set_curr_sort(expr * n) { set_curr_sort(m_manager.get_sort(n)); }
 
@@ -130,7 +130,7 @@ public:
     void mk_uminus(expr * arg, expr_ref & result);
     void mk_mul(unsigned num_args, expr * const * args, expr_ref & result);
     void mk_mul(expr * arg1, expr * arg2, expr_ref & result);
-
+    
     virtual bool reduce_distinct(unsigned num_args, expr * const * args, expr_ref & result);
 
     virtual bool reduce(func_decl * f, unsigned num_args, rational const * mults, expr * const * args, expr_ref & result);

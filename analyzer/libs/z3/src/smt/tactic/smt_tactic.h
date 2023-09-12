@@ -28,7 +28,7 @@ tactic * mk_smt_tactic(params_ref const & p = params_ref());
 tactic * mk_smt_tactic_using(bool auto_config = true, params_ref const & p = params_ref());
 
 /*
-  ADD_TACTIC("smt", "apply a SAT based SMT solver.", "mk_smt_tactic(p)")
+  ADD_TACTIC("smt", "apply a SAT based SMT solver.", "mk_smt_tactic(p)") 
 */
 
 #endif

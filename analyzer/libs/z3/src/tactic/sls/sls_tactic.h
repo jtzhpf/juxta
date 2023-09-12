@@ -7,7 +7,7 @@ Module Name:
 
 Abstract:
 
-    A Stochastic Local Search (SLS) tactic
+    A Stochastic Local Search (SLS) tactic 
 
 Author:
 

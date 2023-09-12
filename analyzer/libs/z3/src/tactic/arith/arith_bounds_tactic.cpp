@@ -14,7 +14,7 @@ struct arith_bounds_tactic : public tactic {
         a(m),
         m_cancel(false)
     {
-    }
+    }        
 
     ast_manager& get_manager() { return m; }
 
@@ -26,39 +26,39 @@ struct arith_bounds_tactic : public tactic {
         m_cancel = false;
     }
 
-    virtual void operator()(/* in */  goal_ref const & in,
-                            /* out */ goal_ref_buffer & result,
-                            /* out */ model_converter_ref & mc,
+    virtual void operator()(/* in */  goal_ref const & in, 
+                            /* out */ goal_ref_buffer & result, 
+                            /* out */ model_converter_ref & mc, 
                             /* out */ proof_converter_ref & pc,
-                            /* out */ expr_dependency_ref & core) {
+                            /* out */ expr_dependency_ref & core) {        
         bounds_arith_subsumption(in, result);
     }
-
+    
     virtual tactic* translate(ast_manager& m) {
         return alloc(arith_bounds_tactic, m);
     }
-
+    
     void checkpoint() {
         if (m_cancel) {
             throw tactic_exception(TACTIC_CANCELED_MSG);
         }
     }
-
-
+    
+    
     struct info { rational r; unsigned idx; bool is_strict;};
-
+    
     /**
        \brief Basic arithmetic subsumption simplification based on bounds.
     */
-
+    
     void mk_proof(proof_ref& pr, goal_ref const& s, unsigned i, unsigned j) {
         if (s->proofs_enabled()) {
             proof* th_lemma = m.mk_th_lemma(a.get_family_id(), m.mk_implies(s->form(i), s->form(j)), 0, 0);
             pr = m.mk_modus_ponens(s->pr(i), th_lemma);
-        }
+        }        
     }
-
-
+    
+    
     bool is_le_or_lt(expr* e, expr*& e1, expr*& e2, bool& is_strict) {
         bool is_negated = m.is_not(e, e);
         if ((!is_negated && (a.is_le(e, e1, e2) || a.is_ge(e, e2, e1))) ||
@@ -102,8 +102,8 @@ struct arith_bounds_tactic : public tactic {
                 continue;
             }
             proof_ref new_pr(m);
-
-            if (is_lower && upper.find(e1, inf)) {
+            
+            if (is_lower && upper.find(e1, inf)) {            
                 if (inf.r > r || (inf.r == r && is_strict && !inf.is_strict)) {
                     mk_proof(new_pr, s, i, inf.idx);
                     s->update(inf.idx, m.mk_true(), new_pr);
@@ -141,8 +141,8 @@ struct arith_bounds_tactic : public tactic {
                 inf.r = r;
                 inf.is_strict = is_strict;
                 inf.idx = i;
-                lower.insert(e2, inf);
-            }
+                lower.insert(e2, inf);                
+            }            
         }
         s->elim_true();
         result.push_back(s.get());

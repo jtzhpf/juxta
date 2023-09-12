@@ -9,7 +9,7 @@ Abstract:
 
     Delta debugging support for specifications.
     A specification is a list of assumptions.
-
+   
 Author:
 
     Nikolaj Bjorner (nbjorner) 2008-21-06
@@ -30,7 +30,7 @@ public:
 
     // Assert a constraint.
     void assert_cnstr(expr* e);
-
+    
     //
     // Create the n'th delta in dfs mode.
     // resturn 'true' if a delta was obtained.
@@ -39,13 +39,13 @@ public:
 
 private:
 
-    // perform delta
+    // perform delta 
     bool delta_dfs(unsigned& n, expr* e, expr_ref& result);
 
     bool delta_dfs(unsigned& n, app* a, expr_ref& result);
 
     bool delta_dfs(unsigned& n, unsigned sz, expr* const* exprs, expr_ref_vector& result);
-
+    
 };
 
 

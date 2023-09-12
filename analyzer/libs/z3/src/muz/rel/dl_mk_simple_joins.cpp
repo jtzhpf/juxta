@@ -60,7 +60,7 @@ namespace datalog {
                 return m_consumers > 0;
             }
 
-            cost get_cost() const {
+            cost get_cost() const { 
                 SASSERT(m_consumers > 0);
                 cost amortized = m_total_cost/m_consumers;
                 if (m_stratified) {
@@ -77,7 +77,7 @@ namespace datalog {
                The \c pl.m_rule_content entry of the rule has to be properly filled in
                by the time of a call to this function
              */
-            void add_rule(join_planner & pl, app * t1, app * t2, rule * r,
+            void add_rule(join_planner & pl, app * t1, app * t2, rule * r, 
                           const var_idx_set & non_local_vars_normalized,
                           const var_idx_set & non_local_vars) {
                 if (m_rules.empty()) {
@@ -114,7 +114,7 @@ namespace datalog {
             pair_info & operator=(const pair_info &); //to avoid the implicit one
         };
         typedef std::pair<app*, app*> app_pair;
-        typedef map<app_pair, pair_info *,
+        typedef map<app_pair, pair_info *, 
             pair_hash<obj_ptr_hash<app>, obj_ptr_hash<app> >, default_eq<app_pair> > cost_map;
         typedef map<rule *, ptr_vector<app>, ptr_hash<rule>, ptr_eq<rule> > rule_pred_map;
 
@@ -135,10 +135,10 @@ namespace datalog {
 
     public:
         join_planner(context & ctx, rule_set & rs_aux_copy)
-            : m_context(ctx), m(ctx.get_manager()),
+            : m_context(ctx), m(ctx.get_manager()), 
               rm(ctx.get_rule_manager()),
               m_var_subst(ctx.get_var_subst()),
-              m_rs_aux_copy(rs_aux_copy),
+              m_rs_aux_copy(rs_aux_copy), 
               m_introduced_rules(ctx.get_rule_manager()),
               m_pinned(ctx.get_manager())
         {
@@ -214,7 +214,7 @@ namespace datalog {
                     }
                     unsigned v1_idx = v1->get_idx();
                     unsigned v2_idx = v2->get_idx();
-                    //since the rules already went through the mk_filter_rules transformer,
+                    //since the rules already went through the mk_filter_rules transformer, 
                     //variables must be linear
                     SASSERT(norm1[v1_idx]==-1);
                     SASSERT(norm2[v2_idx]==-1);
@@ -253,7 +253,7 @@ namespace datalog {
             }
             m_pinned.push_back(t1n);
             m_pinned.push_back(t2n);
-
+            
             /*
               IF_VERBOSE(0,
               print_renaming(norm_subst, verbose_stream());
@@ -296,7 +296,7 @@ namespace datalog {
                   vit = non_local_vars.begin();
                   for (; vit != vend; ++vit) tout << *vit << " ";
                   tout << "\n";
-                  r->display(m_context, tout);
+                  r->display(m_context, tout); 
                   if (inf.can_be_joined()) tout << "cost: " << inf.get_cost() << "\n";);
 
         }
@@ -318,7 +318,7 @@ namespace datalog {
             rule_counter counter;
             counter.count_rule_vars(m, r, 1);
 
-            ptr_vector<app> & rule_content =
+            ptr_vector<app> & rule_content = 
                 m_rules_content.insert_if_not_there2(r, ptr_vector<app>())->get_data().m_value;
             SASSERT(rule_content.empty());
 
@@ -345,7 +345,7 @@ namespace datalog {
             }
         }
 
-        bool extract_argument_info(unsigned var_idx, app * t, expr_ref_vector & args,
+        bool extract_argument_info(unsigned var_idx, app * t, expr_ref_vector & args, 
                 ptr_vector<sort> & domain) {
             unsigned n=t->get_num_args();
             for(unsigned i=0; i<n; i++) {
@@ -398,7 +398,7 @@ namespace datalog {
             }
 
             func_decl * decl = m_context.mk_fresh_head_predicate(
-                symbol(parent_name.c_str()), symbol("split"),
+                symbol(parent_name.c_str()), symbol("split"), 
                 arity, domain.c_ptr(), parent_head);
 
             app_ref head(m.mk_app(decl, arity, args.c_ptr()), m);
@@ -412,8 +412,8 @@ namespace datalog {
 
             m_introduced_rules.push_back(new_rule);
 
-            //here we copy the inf.m_rules vector because inf.m_rules will get changed
-            //in the iteration. Also we use hashtable instead of vector because we do
+            //here we copy the inf.m_rules vector because inf.m_rules will get changed 
+            //in the iteration. Also we use hashtable instead of vector because we do 
             //not want to process one rule twice.
             typedef ptr_hashtable<rule, ptr_hash<rule>, default_eq<rule *> > rule_hashtable;
             rule_hashtable relevant_rules;
@@ -427,7 +427,7 @@ namespace datalog {
             // SASSERT(!m_costs.contains(pair_key));
         }
 
-        void replace_edges(rule * r, const ptr_vector<app> & removed_tails,
+        void replace_edges(rule * r, const ptr_vector<app> & removed_tails, 
                 const ptr_vector<app> & added_tails0, const ptr_vector<app> & rule_content) {
             SASSERT(removed_tails.size()>=added_tails0.size());
             unsigned len = rule_content.size();
@@ -544,7 +544,7 @@ namespace datalog {
                     removed_tails.push_back(rt1);
                     removed_tails.push_back(rt2);
                     added_tails.push_back(new_lit);
-                    //this exits the inner loop, the outer one continues in case there will
+                    //this exits the inner loop, the outer one continues in case there will 
                     //be other matches
                     break;
                 }
@@ -621,13 +621,13 @@ namespace datalog {
             }
             // remove contributions from projected columns.
             for (unsigned i = 0; i < t1->get_num_args(); ++i) {
-                if (is_var(t1->get_arg(i)) &&
+                if (is_var(t1->get_arg(i)) && 
                     !non_local_vars.contains(to_var(t1->get_arg(i))->get_idx())) {
                     inters_size *= get_domain_size(t1_pred, i);
                 }
             }
             for (unsigned i = 0; i < t2->get_num_args(); ++i) {
-                if (is_var(t2->get_arg(i)) &&
+                if (is_var(t2->get_arg(i)) && 
                     !non_local_vars.contains(to_var(t2->get_arg(i))->get_idx())) {
                     inters_size *= get_domain_size(t2_pred, i);
                 }
@@ -642,7 +642,7 @@ namespace datalog {
                 unsigned t2_strat = get_stratum(t2_pred);
                 SASSERT(t2_strat<=m_head_stratum);
                 if (t2_strat<m_head_stratum) {
-                    //the rule of this predicates would depend on predicates
+                    //the rule of this predicates would depend on predicates 
                     //in lower stratum than the head, which is a good thing, since
                     //then the rule code will not need to appear in a loop
                     if (res>0) {
@@ -654,7 +654,7 @@ namespace datalog {
                 }
             }*/
 
-            TRACE("report_costs",
+            TRACE("report_costs",                  
                   display_predicate(m_context, t1, tout);
                   display_predicate(m_context, t2, tout);
                   tout << res << "\n";);
@@ -727,7 +727,7 @@ namespace datalog {
                     negs.push_back(orig_r->is_neg_tail(i));
                 }
 
-                rule * new_rule = m_context.get_rule_manager().mk(orig_r->get_head(), tail.size(), tail.c_ptr(),
+                rule * new_rule = m_context.get_rule_manager().mk(orig_r->get_head(), tail.size(), tail.c_ptr(), 
                     negs.c_ptr());
 
                 new_rule->set_accounting_parent_object(m_context, orig_r);

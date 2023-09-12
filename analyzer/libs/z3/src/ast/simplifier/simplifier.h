@@ -28,17 +28,17 @@ Notes:
 /**
    \brief Local simplifier.
    Proof production can be enabled/disabled.
-
+   
    The simplifier can also apply substitutions during the
    simplification. A substitution is a mapping from expression
-   to expression+proof, where for each entry e_1->(e_2,p) p is
+   to expression+proof, where for each entry e_1->(e_2,p) p is 
    a proof for (= e_1 e_2).
-
+   
    The simplifier can also generate coarse grain proofs. In a coarse
    proof, local rewrite steps are omitted, and only the substitutions
    used are tracked.
 
-   Example:
+   Example: 
 
    Consider the expression (+ a b), and the substitution b->(0, p)
    When fine grain proofs are enabled, the simplifier will produce the
@@ -85,18 +85,18 @@ protected:
       Simplifier uses an idiom for rewriting ASTs without using recursive calls.
 
       - It uses a cache (field m_cache in base_simplifier) and a todo-stack (field m_todo in base_simplifier).
-
+      
       - The cache is a mapping from AST to (AST + Proof). An entry [n -> (n',pr)] is used to store the fact
       that n and n' are equivalent and pr is a proof for that. If proofs are disabled, then pr is 0.
       We say n' is the result of the simplification of n.
       Note: Some simplifications do not preserve equivalence, but equisatisfiability.
       For saving space, we use pr = 0 also to represent the reflexivity proof [n -> (n, 0)].
 
-
+     
       - The simplifier can be extended using plugin (subclasses of the class simplifier_plugin).
       Each theory has a family ID. All operators (func_decls) and sorts from a given theory have
       the same family_id. Given an application (object of the class app), we use the method
-      get_family_id() to obtain the family id of the operator in this application.
+      get_family_id() to obtain the family id of the operator in this application. 
       The simplifier uses plugin to apply theory specific simplifications. The basic idea is:
       whenever an AST with family_id X is found, invoke the plugin for this family_id.
       A simplifier_plugin implements the following API:
@@ -109,11 +109,11 @@ protected:
          2) bool reduce(func_decl * f, unsigned num_args, rational const * mults, expr * const * args, expr_ref & result);
          This method is a similar to the previous one, and it is used to handle associative operators.
          A plugin does not need to implement this method, the default implementation will use the previous one.
-         The arguments mults indicates the multiplicity of every argument in args.
+         The arguments mults indicates the multiplicity of every argument in args. 
          For example, suppose this reduce is invoked with the arguments (f, 2, [3, 2], [a, b], result).
-         This represents the application (f a a a b b).
+         This represents the application (f a a a b b). 
          Some theory simplifiers may have efficient ways to encode this multiplicity. For example,
-         the arithmetic solver, if f is "+", the multiplicity can be encoded using "*".
+         the arithmetic solver, if f is "+", the multiplicity can be encoded using "*". 
          This optimization is used because some benchmarks can create term that are very huge when
          flattened. One "real" example (that motivated this optimization) is:
              let a1 = x1 + x1
@@ -186,7 +186,7 @@ protected:
     virtual void reduce1_quantifier(quantifier * q);
     void dump_rewrite_lemma(func_decl * decl, unsigned num_args, expr * const * args, expr* result);
     void ac_top_sort(app * n, ptr_buffer<expr> & result);
-
+    
 public:
     simplifier(ast_manager & manager);
     virtual ~simplifier();
@@ -229,4 +229,4 @@ public:
 
 void push_assertion(ast_manager & m, expr * e, proof * pr, expr_ref_vector & result, proof_ref_vector & result_prs);
 
-#endif
+#endif 

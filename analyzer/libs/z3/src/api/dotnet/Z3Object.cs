@@ -14,7 +14,7 @@ Author:
     Christoph Wintersteiger (cwinter) 2012-03-21
 
 Notes:
-
+    
 --*/
 
 using System;
@@ -35,7 +35,7 @@ namespace Microsoft.Z3
         /// </summary>
         ~Z3Object()
         {
-            Dispose();
+            Dispose();            
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Microsoft.Z3
             if (m_n_obj != IntPtr.Zero)
             {
                 DecRef(m_n_obj);
-                m_n_obj = IntPtr.Zero;
+                m_n_obj = IntPtr.Zero;                
             }
 
             if (m_ctx != null)
@@ -60,7 +60,7 @@ namespace Microsoft.Z3
         }
 
         #region Object Invariant
-
+        
         [ContractInvariantMethod]
         private void ObjectInvariant()
         {
@@ -115,11 +115,11 @@ namespace Microsoft.Z3
 
         internal Context Context
         {
-            get
+            get 
             {
                 Contract.Ensures(Contract.Result<Context>() != null);
-                return m_ctx;
-            }
+                return m_ctx; 
+            }            
         }
 
         [Pure]

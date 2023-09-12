@@ -8,7 +8,7 @@ Module Name:
 Abstract:
 
     Procedure for quantifier satisfiability using quantifier projection.
-    Based on generalizations by Bjorner & Monniaux
+    Based on generalizations by Bjorner & Monniaux 
     (see tvm\papers\z3qe\altqe.tex)
 
 Author:
@@ -47,7 +47,7 @@ namespace qe {
     class mk_atom_default : public i_nnf_atom {
     public:
         virtual void operator()(expr* e, bool pol, expr_ref& result) {
-            if (pol) result = e;
+            if (pol) result = e; 
             else result = result.get_manager().mk_not(e);
         }
     };
@@ -78,7 +78,7 @@ namespace qe {
         expr_strong_context_simplifier m_ctx_rewriter;
 
         class solver_context : public i_solver_context {
-
+ 
             ast_manager&   m;
             sat_tactic&    m_super;
             smt::kernel&   m_solver;
@@ -86,14 +86,14 @@ namespace qe {
             atom_set       m_neg;
             app_ref_vector m_vars;
             expr_ref       m_fml;
-            ptr_vector<contains_app> m_contains_app;
+            ptr_vector<contains_app> m_contains_app; 
             bool           m_projection_mode_param;
         public:
-            solver_context(sat_tactic& s, unsigned idx):
+            solver_context(sat_tactic& s, unsigned idx):                 
                 m(s.m),
-                m_super(s),
+                m_super(s), 
                 m_solver(*s.m_solvers[idx+1]),
-                m_vars(m),
+                m_vars(m), 
                 m_fml(m),
                 m_projection_mode_param(true) {}
 
@@ -118,7 +118,7 @@ namespace qe {
             // set of atoms in current formula.
             virtual atom_set const& pos_atoms() const { return m_pos; }
             virtual atom_set const& neg_atoms() const { return m_neg; }
-
+            
             // Access current set of variables to solve
             virtual unsigned      get_num_vars() const { return m_vars.size(); }
             virtual app*          get_var(unsigned idx) const {  return m_vars[idx]; }
@@ -141,13 +141,13 @@ namespace qe {
                 dealloc(m_contains_app[idx]);
                 m_contains_app.erase(m_contains_app.c_ptr() + idx);
             }
-
+            
             // callback to add new variable to branch.
             virtual void add_var(app* x) {
                 m_vars.push_back(x);
-                m_contains_app.push_back(alloc(contains_app, m, x));
+                m_contains_app.push_back(alloc(contains_app, m, x)); 
             }
-
+            
             // callback to add constraints in branch.
             virtual void add_constraint(bool use_var, expr* l1 = 0, expr* l2 = 0, expr* l3 = 0) {
                 ptr_buffer<expr> args;
@@ -158,7 +158,7 @@ namespace qe {
                 m_solver.assert_expr(cnstr);
                 TRACE("qe", tout << "add_constraint " << mk_pp(cnstr,m) << "\n";);
             }
-
+            
             // eliminate finite domain variable 'var' from fml.
             virtual void blast_or(app* var, expr_ref& fml) {
                 expr_ref result(m);
@@ -174,7 +174,7 @@ namespace qe {
                 m_super.check_success(has_plugin(x));
                 qe_solver_plugin& p = plugin(m.get_sort(x)->get_family_id());
                 model_ref model;
-                m_solver.get_model(model);
+                m_solver.get_model(model);                
                 m_super.check_success(p.project(contains(i), model, m_fml));
                 m_super.m_rewriter(m_fml);
                 TRACE("qe", model_v2_pp(tout, *model); tout << "\n";
@@ -201,7 +201,7 @@ namespace qe {
                 else {
                     project_var_partial(i);
                 }
-            }
+            }            
         };
 
     public:
@@ -220,7 +220,7 @@ namespace qe {
             m_assignments(m),
             m_rewriter(m),
             m_qe_rw(m),
-            m_ctx_rewriter(m_fparams, m) {
+            m_ctx_rewriter(m_fparams, m) {            
             m_fparams.m_model = true;
         }
 
@@ -234,8 +234,8 @@ namespace qe {
             }
         }
 
-        virtual void set_cancel(bool f) {
-            m_cancel = f;
+        virtual void set_cancel(bool f) { 
+            m_cancel = f; 
             // not thread-safe when solvers are reset.
             // TBD: lock - this, reset() and init_Ms.
             for (unsigned i = 0; i < m_solvers.size(); ++i) {
@@ -246,19 +246,19 @@ namespace qe {
         }
 
         virtual void operator()(
-            goal_ref const& goal,
-            goal_ref_buffer& result,
-            model_converter_ref& mc,
-            proof_converter_ref & pc,
-            expr_dependency_ref& core)
+            goal_ref const& goal,  
+            goal_ref_buffer& result, 
+            model_converter_ref& mc, 
+            proof_converter_ref & pc, 
+            expr_dependency_ref& core) 
         {
             try {
                 checkpoint();
-                reset();
+                reset();            
                 ptr_vector<expr> fmls;
                 goal->get_formulas(fmls);
                 m_fml = m.mk_and(fmls.size(), fmls.c_ptr());
-                TRACE("qe", tout << "input: " << mk_pp(m_fml,m) << "\n";);
+                TRACE("qe", tout << "input: " << mk_pp(m_fml,m) << "\n";);               
                 expr_ref tmp(m);
                 m_qe_rw(m_fml, tmp);
                 m_fml = tmp;
@@ -294,14 +294,14 @@ namespace qe {
         virtual void reset_statistics() {
             for (unsigned i = 0; i < m_solvers.size(); ++i) {
                 m_solvers[i]->reset_statistics();
-            }
+            }            
             m_solver.reset_statistics();
             m_ctx_rewriter.reset_statistics();
         }
 
-        virtual void cleanup() {}
+        virtual void cleanup() {}   
 
-        virtual void updt_params(params_ref const & p) {
+        virtual void updt_params(params_ref const & p) {            
             m_extrapolate_strategy_param = p.get_uint("extrapolate_strategy", m_extrapolate_strategy_param);
             m_projection_mode_param = p.get_bool("projection_mode", m_projection_mode_param);
             m_strong_context_simplify_param = p.get_bool("strong_context_simplify", m_strong_context_simplify_param);
@@ -319,16 +319,16 @@ namespace qe {
 
 
     private:
-
+                        
         unsigned num_alternations() const { return m_vars.size(); }
-
+            
         void init_Ms() {
             for (unsigned i = 0; i < num_alternations(); ++i) {
                 m_Ms.push_back(m.mk_true());
                 m_solvers.push_back(alloc(smt::kernel, m, m_fparams, m_params));
             }
             m_Ms.push_back(m_fml);
-            m_solvers.push_back(alloc(smt::kernel, m, m_fparams, m_params));
+            m_solvers.push_back(alloc(smt::kernel, m, m_fparams, m_params));   
             m_solvers.back()->assert_expr(m_fml);
         }
 
@@ -349,21 +349,21 @@ namespace qe {
             expr_ref result(m);
             app_ref_vector vars(m);
             hoist.pull_exists(m_fml, vars, result);
-            m_fml = result;
+            m_fml = result;            
         }
 
         //
         // fa x ex y fa z . phi
         // fa x ! fa y ! fa z ! (!phi)
-        //
+        // 
         void extract_alt_form(expr* fml) {
             quantifier_hoister hoist(m);
             expr_ref result(m);
-            bool is_fa;
+            bool is_fa;   
             unsigned parity = 0;
             m_fml = fml;
             while (true) {
-                app_ref_vector vars(m);
+                app_ref_vector vars(m);                
                 hoist(m_fml, vars, is_fa, result);
                 if (vars.empty()) {
                     break;
@@ -379,15 +379,15 @@ namespace qe {
 
                 m_vars.push_back(vars);
                 m_fml = result;
-            }
+            } 
             //
             // negate formula if the last quantifier is universal.
-            // so that normal form fa x ! fa y ! fa z ! psi
+            // so that normal form fa x ! fa y ! fa z ! psi 
             // is obtained.
             //
             if ((parity & 0x1) == 1) {
                 m_fml = m.mk_not(m_fml);
-            }
+            }            
             init_Ms();
             checkpoint();
         }
@@ -425,10 +425,10 @@ namespace qe {
 
         /**
            \brief compute extrapolant
-
+           
            Assume A & B is sat.
-           Compute C, such that
-           1. A & C is sat,
+           Compute C, such that 
+           1. A & C is sat, 
            2. not B & C is unsat.
            (C strengthens B and is still satisfiable with A).
         */
@@ -451,15 +451,15 @@ namespace qe {
         }
 
         /**
-
+           
            Set C = nnf(B), That is, C is the NNF version of B.
            For each literal in C in order, replace the literal by False and
            check the conditions for extrapolation:
-              1. not B & C is unsat,
+              1. not B & C is unsat, 
               2. A & C is sat.
-           The first check holds by construction, so it is redundant.
+           The first check holds by construction, so it is redundant. 
            The second is not redundant.
-           Instead of replacing literals in an NNF formula,
+           Instead of replacing literals in an NNF formula, 
            one simply asserts the negation of that literal.
         */
         expr_ref nnf_strengthening_extrapolate(unsigned i, expr* A, expr* B) {
@@ -505,10 +505,10 @@ namespace qe {
                 TRACE("qe", tout << "is sat: " << is_sat << "\n";);
                 SASSERT(is_sat == l_true);
                 solver.pop(1););
-
+                       
             return Bnnf;
         }
-
+      
         void nnf_strengthen(smt::kernel& solver, atom_set& atoms, expr* value, expr_substitution& sub) {
             atom_set::iterator it = atoms.begin(), end = atoms.end();
             for (; it != end; ++it) {
@@ -522,7 +522,7 @@ namespace qe {
                     solver.assert_expr(m.mk_iff(*it, value));
                 }
                 checkpoint();
-            }
+            }            
         }
 
         void remove_duplicates(atom_set& pos, atom_set& neg) {
@@ -543,7 +543,7 @@ namespace qe {
            Set C = nnf(B), That is, C is the NNF version of B.
            For each literal in C in order, replace the literal by True and
            check the conditions for extrapolation
-              1. not B & C is unsat,
+              1. not B & C is unsat, 
               2. A & C is sat.
            The second holds by construction and is redundant.
            The first is not redundant.
@@ -554,7 +554,7 @@ namespace qe {
             get_nnf(Bnnf, m_is_relevant, m_mk_atom, pos, neg);
             remove_duplicates(pos, neg);
             expr_substitution sub(m);
-
+                        
             m_solver.push();
             m_solver.assert_expr(A);
             m_solver.assert_expr(m.mk_not(B));
@@ -581,18 +581,18 @@ namespace qe {
                 }
                 solver.pop(1);
                 checkpoint();
-            }
+            }            
         }
 
 
         /**
-           Use the model for A & B to extrapolate.
-           Initially, C is conjunction of literals from B
+           Use the model for A & B to extrapolate. 
+           Initially, C is conjunction of literals from B 
            that are in model of A & B.
-           The model is a conjunction of literals.
+           The model is a conjunction of literals. 
            Let us denote this set $C$. We see that the conditions
-           for extrapolation are satisfied. Furthermore,
-           C can be generalized by removing literals
+           for extrapolation are satisfied. Furthermore, 
+           C can be generalized by removing literals 
            from C as long as !B & A & C is unsatisfiable.
         */
 
@@ -601,7 +601,7 @@ namespace qe {
             obj_map<expr, expr*> proxy_map;
 
             checkpoint();
-
+            
             m_solver.push();
             m_solver.assert_expr(m.mk_not(B));
             for (unsigned i = 0; i < m_assignments.size(); ++i) {
@@ -625,7 +625,7 @@ namespace qe {
         }
 
         /**
-           \brief project vars(idx) from fml relative to M(idx).
+           \brief project vars(idx) from fml relative to M(idx).                      
         */
         void project(unsigned idx, expr* _fml) {
             SASSERT(idx < num_alternations());
@@ -637,7 +637,7 @@ namespace qe {
                 m_ctx_rewriter.pop();
                 TRACE("qe", tout << mk_pp(_fml, m) << "\n-- context simplify -->\n" << mk_pp(fml, m) << "\n";);
             }
-            solver_context ctx(*this, idx);
+            solver_context ctx(*this, idx);            
             ctx.add_plugin(mk_arith_plugin(ctx, false, m_fparams));
             ctx.add_plugin(mk_bool_plugin(ctx));
             ctx.add_plugin(mk_bv_plugin(ctx));
@@ -646,9 +646,9 @@ namespace qe {
             m_solvers[idx+1]->push();
             while (ctx.get_num_vars() > 0) {
                 VERIFY(l_true == m_solvers[idx+1]->check());
-                ctx.project_var(ctx.get_num_vars()-1);
+                ctx.project_var(ctx.get_num_vars()-1);               
             }
-            m_solvers[idx+1]->pop(1);
+            m_solvers[idx+1]->pop(1);            
             expr_ref not_fml(m.mk_not(ctx.fml()), m);
             m_rewriter(not_fml);
             if (m_strong_context_simplify_param && !m_ctx_simplify_local_param) {
@@ -660,8 +660,8 @@ namespace qe {
             expr_ref tmp(m.mk_and(M(idx), not_fml), m);
             m_rewriter(tmp);
             m_Ms[idx] = tmp;
-            m_solvers[idx]->assert_expr(not_fml);
-            TRACE("qe",
+            m_solvers[idx]->assert_expr(not_fml);            
+            TRACE("qe", 
                   tout << mk_pp(fml, m) << "\n--->\n";
                   tout << mk_pp(tmp, m) << "\n";);
         }
@@ -704,11 +704,11 @@ namespace qe {
                 out << mk_pp(m_Ms[i+1].get(), m) << "\n";
                 is_fa = !is_fa;
             }
-        }
-    };
-
+        }        
+    };    
+        
     tactic * mk_sat_tactic(ast_manager& m, params_ref const& p) {
         return alloc(sat_tactic, m, p);
     }
-
+    
 };

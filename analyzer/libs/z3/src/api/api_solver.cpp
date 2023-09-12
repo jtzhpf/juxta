@@ -40,7 +40,7 @@ extern "C" {
         params_ref p = s->m_params;
         mk_c(c)->params().get_solver_params(mk_c(c)->m(), p, proofs_enabled, models_enabled, unsat_core_enabled);
         s->m_solver = (*(s->m_solver_factory))(mk_c(c)->m(), p, proofs_enabled, models_enabled, unsat_core_enabled, s->m_logic);
-
+        
         param_descrs r;
         s->m_solver->collect_param_descrs(r);
         context_params::collect_solver_param_descrs(r);
@@ -152,7 +152,7 @@ extern "C" {
         to_solver(s)->m_params.append(to_param_ref(p));
         Z3_CATCH;
     }
-
+    
     void Z3_API Z3_solver_inc_ref(Z3_context c, Z3_solver s) {
         Z3_TRY;
         LOG_Z3_solver_inc_ref(c, s);
@@ -199,7 +199,7 @@ extern "C" {
         to_solver(s)->m_solver = 0;
         Z3_CATCH;
     }
-
+    
     unsigned Z3_API Z3_solver_get_num_scopes(Z3_context c, Z3_solver s) {
         Z3_TRY;
         LOG_Z3_solver_get_num_scopes(c, s);
@@ -208,7 +208,7 @@ extern "C" {
         return to_solver_ref(s)->get_scope_level();
         Z3_CATCH_RETURN(0);
     }
-
+    
     void Z3_API Z3_solver_assert(Z3_context c, Z3_solver s, Z3_ast a) {
         Z3_TRY;
         LOG_Z3_solver_assert(c, s, a);
@@ -229,7 +229,7 @@ extern "C" {
         to_solver_ref(s)->assert_expr(to_expr(a), to_expr(p));
         Z3_CATCH;
     }
-
+    
     Z3_ast_vector Z3_API Z3_solver_get_assertions(Z3_context c, Z3_solver s) {
         Z3_TRY;
         LOG_Z3_solver_get_assertions(c, s);
@@ -271,7 +271,7 @@ extern "C" {
         }
         return static_cast<Z3_lbool>(result);
     }
-
+    
     Z3_lbool Z3_API Z3_solver_check(Z3_context c, Z3_solver s) {
         Z3_TRY;
         LOG_Z3_solver_check(c, s);
@@ -289,7 +289,7 @@ extern "C" {
         return _solver_check(c, s, num_assumptions, assumptions);
         Z3_CATCH_RETURN(Z3_L_UNDEF);
     }
-
+    
     Z3_model Z3_API Z3_solver_get_model(Z3_context c, Z3_solver s) {
         Z3_TRY;
         LOG_Z3_solver_get_model(c, s);
@@ -301,7 +301,7 @@ extern "C" {
             SET_ERROR_CODE(Z3_INVALID_USAGE);
             RETURN_Z3(0);
         }
-        Z3_model_ref * m_ref = alloc(Z3_model_ref);
+        Z3_model_ref * m_ref = alloc(Z3_model_ref); 
         m_ref->m_model = _m;
         mk_c(c)->save_object(m_ref);
         RETURN_Z3(of_model(m_ref));
@@ -338,7 +338,7 @@ extern "C" {
         RETURN_Z3(of_ast_vector(v));
         Z3_CATCH_RETURN(0);
     }
-
+    
     Z3_string Z3_API Z3_solver_get_reason_unknown(Z3_context c, Z3_solver s) {
         Z3_TRY;
         LOG_Z3_solver_get_reason_unknown(c, s);
@@ -347,7 +347,7 @@ extern "C" {
         return mk_c(c)->mk_external_string(to_solver_ref(s)->reason_unknown());
         Z3_CATCH_RETURN("");
     }
-
+    
     Z3_stats Z3_API Z3_solver_get_statistics(Z3_context c, Z3_solver s) {
         Z3_TRY;
         LOG_Z3_solver_get_statistics(c, s);
@@ -373,7 +373,7 @@ extern "C" {
     }
 
 
-    Z3_lbool Z3_API Z3_get_implied_equalities(Z3_context c,
+    Z3_lbool Z3_API Z3_get_implied_equalities(Z3_context c, 
                                               Z3_solver s,
                                               unsigned num_terms,
                                               Z3_ast const terms[],
@@ -385,7 +385,7 @@ extern "C" {
         CHECK_SEARCHING(c);
         init_solver(c, s);
         lbool result = smt::implied_equalities(m, *to_solver_ref(s), num_terms, to_exprs(terms), class_ids);
-        return static_cast<Z3_lbool>(result);
+        return static_cast<Z3_lbool>(result); 
         Z3_CATCH_RETURN(Z3_L_UNDEF);
     }
 

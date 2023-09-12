@@ -55,11 +55,11 @@ class free_func_visitor {
   ast_manager& m;
   func_decl_set m_funcs;
   obj_hashtable<class sort> m_sorts;
-public:
+public:        
   free_func_visitor(ast_manager& m): m(m) {}
   void operator()(var * n)        { }
-  void operator()(app * n)        {
-    m_funcs.insert(n->get_decl());
+  void operator()(app * n)        { 
+    m_funcs.insert(n->get_decl()); 
     class sort* s = m.get_sort(n);
     if (s->get_family_id() == null_family_id) {
       m_sorts.insert(s);
@@ -72,7 +72,7 @@ public:
 
 class iz3pp_helper : public iz3mgr {
 public:
-
+  
   void print_tree(const ast &tree, hash_map<expr*,symbol> &cnames, std::ostream &out){
     hash_map<expr*,symbol>::iterator foo = cnames.find(to_expr(tree.raw()));
     if(foo != cnames.end()){
@@ -119,16 +119,16 @@ void iz3pp(ast_manager &m,
   free_func_visitor visitor(m);
   expr_mark visited;
   bool print_low_level = true; // m_params.print_low_level_smt2();
-
+  
 #define PP(_e_) if (print_low_level) out << mk_smt_pp(_e_, m); else ast_smt2_pp(out, _e_, env);
-
+  
   smt2_pp_environment_dbg env(m);
 
   for (unsigned i = 0; i < sz; ++i) {
     expr* e = cnsts[i];
     for_each_expr(visitor, visited, e);
   }
-
+  
   // name all the constraints
   hash_map<expr *, symbol> cnames;
   int ctr = 1;
@@ -138,19 +138,19 @@ void iz3pp(ast_manager &m,
     s << "f!" << (ctr++);
     cnames[cnsts[i]] = symbol(s.str().c_str());
   }
-
+  
   func_decl_set &funcs = visitor.funcs();
   func_decl_set::iterator it  = funcs.begin(), end = funcs.end();
-
+  
   obj_hashtable<class sort>& sorts = visitor.sorts();
   obj_hashtable<class sort>::iterator sit = sorts.begin(), send = sorts.end();
+  
 
-
-
+  
   for (; sit != send; ++sit) {
     PP(*sit);
   }
-
+  
   for (; it != end; ++it) {
     func_decl* f = *it;
     if(f->get_family_id() == null_family_id){
@@ -158,8 +158,8 @@ void iz3pp(ast_manager &m,
       out << "\n";
     }
   }
-
-  for (unsigned i = 0; i < sz; ++i) {
+  
+  for (unsigned i = 0; i < sz; ++i) {            
     out << "(assert ";
     expr* r = cnsts[i];
     symbol nm = cnames[r];

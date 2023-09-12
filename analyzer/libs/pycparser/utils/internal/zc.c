@@ -35,7 +35,7 @@ int main (int argc, char *argv[]) {
    case 'n':
     N = atoi(optarg);
     if(N > MAXGRAM || N < 2) {
-     fprintf(stderr, "%s: Error - Ngram length `%d' out of range `0-%d'\n",
+     fprintf(stderr, "%s: Error - Ngram length `%d' out of range `0-%d'\n", 
        PACKAGE, N, MAXGRAM);
      return 1;
     }
@@ -55,7 +55,7 @@ int main (int argc, char *argv[]) {
   } /* switch */
  } /* while */
 
- /* start reading lines from file pointer, add all entrys to **strarray */
+ /* start reading lines from file pointer, add all entrys to **strarray */ 
  while((fgets(line, MAXLINE, fp)) != NULL) {
   if(strlen(line) < 2)
    continue;
@@ -69,7 +69,7 @@ int main (int argc, char *argv[]) {
  }
 
  if(word_flag == 0) {
-  /*
+  /* 
   // print the array of strings, jumping back each time
   // (N - 1) positions if a whole ngram of words has been printed
   */

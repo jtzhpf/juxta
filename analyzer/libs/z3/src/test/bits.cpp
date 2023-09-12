@@ -5,7 +5,7 @@
 #include"mpz.h"
 #include"bit_util.h"
 
-static void tst_shl(unsigned src_sz, unsigned const * src, unsigned k,
+static void tst_shl(unsigned src_sz, unsigned const * src, unsigned k, 
                     unsigned dst_sz, unsigned const * dst, bool trace = true) {
     if (trace) {
         std::cout << "shl({";
@@ -112,7 +112,7 @@ static void tst_shl() {
     }
 }
 
-static void tst_shr(unsigned src_sz, unsigned const * src, unsigned k,
+static void tst_shr(unsigned src_sz, unsigned const * src, unsigned k, 
                     unsigned const * dst, bool trace = true) {
     if (trace) {
         std::cout << "shr({";
@@ -148,7 +148,7 @@ static void tst_shl_rand(unsynch_mpz_manager & m, unsigned sz, unsigned k, bool 
     // convert src into a mpz number
     scoped_mpz _src(m);
     scoped_mpz tmp(m);
-    unsigned i = sz;
+    unsigned i = sz; 
     while (i > 0) {
         --i;
         m.mul2k(_src, 32);
@@ -183,7 +183,7 @@ static void tst_shl_rand(unsigned N, unsigned sz, unsigned k, bool trace = false
     unsynch_mpz_manager m;
     for (unsigned i = 0; i < N; i++) {
         unsigned _sz = rand() % sz;
-        if (_sz == 0)
+        if (_sz == 0) 
             _sz = 1;
         unsigned _k  = rand() % k;
         if (_k == 0)
