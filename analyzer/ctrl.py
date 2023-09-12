@@ -220,7 +220,7 @@ def cmd_merge_vfs(opts, args):
 def cmd_merge_vfs_all(opts, _):
     """merge all fs (e.g. 'merge_all')"""
 
-    print "will implement it soon"
+    print("will implement it soon")
     pass
 
 def cmd_pickle_all(opts, args):
@@ -322,7 +322,8 @@ def cmd_status(opts, args):
         one = _get_merged_file(fs)
         fss = _get_fss_file(fs)
 
-        print "%-10s %10s B %10s B" % (fs, _get_size(one), _get_size(fss))
+        print("{:<10} {:>10} B {:>10} B".format(fs, _get_size(one), _get_size(fss)))
+
 
 
 if __name__ == '__main__':
