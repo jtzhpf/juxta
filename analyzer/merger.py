@@ -405,7 +405,7 @@ def preprocess_headers(fs, src_d, code, headers):
 
             # NOTE. include ".c" (by minix)
             if inc.endswith('.c'):
-                print "> inlining %s" % inc
+                print("> inlining {}".format(inc))
 
                 # inlining .c code
                 yield "/* inlined: " + inc + "*"*40 + "/"
@@ -562,11 +562,13 @@ def merge_vfs_fs(opts, fs):
 
 
 if __name__ == "__main__":
-    parser = optparse.OptionParser("%s {-l %s} [fs]" % (LINUX, sys.argv[0]))
+    parser = optparse.OptionParser("%s {-l %s} [fs]" % (sys.argv[0], LINUX))
     parser.add_option("--linux", "-l", help="Linux kernel", default=LINUX)
     parser.add_option("--test", "-t", help="Build after merged", 
                       action="store_true", default=False)
     (opts, args) = parser.parse_args()
+    print(opts)
+    print(args)
 
     if len(args) == 0:
         parser.error("need to provie a fs name")
