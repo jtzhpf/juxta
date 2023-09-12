@@ -1,8 +1,9 @@
-LINX := linux-3.17
+LINX := linux-4.0-rc2
 CONF := config/config-x86_64-full-fs-4.0
 NJOB := ${shell nproc}
 ARGS := 
 
+COMPILER := -DCMAKE_CXX_COMPILER=g++-4.8 -DCMAKE_C_COMPILER=gcc-4.8
 LLVM_SRC  := $(PWD)/llvm
 LLVM_DIR  := $(PWD)/bin/llvm
 CLANG_BIN := $(LLVM_DIR)/bin/clang
@@ -54,14 +55,14 @@ clang:
 clang-full:
 	@mkdir -p ${LLVM_DIR}
 	(cd ${LLVM_DIR} \
-	  && cmake ${LLVM_SRC} -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_BUILD_TYPE=${CLANG_BUILD_TYPE} \
+	  && cmake ${LLVM_SRC} ${COMPILER} -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_BUILD_TYPE=${CLANG_BUILD_TYPE} \
 	  && make ${CLANG_MAKE_ARGS})
 	${CLANG_BIN} -v
 
 ${CLANG_BIN}:
 	@mkdir -p ${LLVM_DIR}
 	(cd ${LLVM_DIR} \
-	  && cmake ${LLVM_SRC} -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_BUILD_TYPE=${CLANG_BUILD_TYPE} \
+	  && cmake ${LLVM_SRC} ${COMPILER} -DLLVM_TARGETS_TO_BUILD=X86 -DCMAKE_BUILD_TYPE=${CLANG_BUILD_TYPE} \
 	  && make ${CLANG_MAKE_ARGS})
 	${CLANG_BIN} -v
 
