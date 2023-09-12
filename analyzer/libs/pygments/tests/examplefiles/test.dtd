@@ -46,7 +46,7 @@
 
 <!ENTITY Pub-Status "This is a pre-release of the
  specification.">
-
+ 
  <!ENTITY open-hatch
          SYSTEM "http://www.textuality.com/boilerplate/OpenHatch.xml">
 <!ENTITY open-hatch
@@ -55,7 +55,7 @@
 <!ENTITY hatch-pic
          SYSTEM "../grafix/OpenHatch.gif"
          NDATA gif >
-
+         
 <!NOTATION gif PUBLIC "gif viewer">
 
 <!ENTITY % YN '"Yes"' >

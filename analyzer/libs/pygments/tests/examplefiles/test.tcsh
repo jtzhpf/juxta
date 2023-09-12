@@ -111,7 +111,7 @@ if ($?complete) then
     complete which	n/*/c/
     complete where	n/*/c/
     complete skill 	p/1/c/
-    complete dde	p/1/c/
+    complete dde	p/1/c/ 
     complete adb	c/-I/d/ n/-/c/ N/-/"(core)"/ p/1/c/ p/2/"(core)"/
     complete sdb	p/1/c/
     complete dbx	c/-I/d/ n/-/c/ N/-/"(core)"/ p/1/c/ p/2/"(core)"/
@@ -248,7 +248,7 @@ complete nm	'c/--radix=/x:<radix: _o_ctal _d_ecimal he_x_adecimal>/' \
 		'n/*/f:^*.{h,c,cc,s,S}/'
 endif
 
-    complete finger	c/*@/\$hosts/ n/*/u/@
+    complete finger	c/*@/\$hosts/ n/*/u/@ 
     complete ping	p/1/\$hosts/
     complete traceroute	p/1/\$hosts/
 
@@ -259,7 +259,7 @@ endif
 
     # this one is simple...
     #complete rcp c/*:/f/ C@[./\$~]*@f@ n/*/\$hosts/:
-    # From Michael Schroeder <mlschroe@immd4.informatik.uni-erlangen.de>
+    # From Michael Schroeder <mlschroe@immd4.informatik.uni-erlangen.de> 
     # This one will rsh to the file to fetch the list of files!
     complete rcp 'c%*@*:%`set q=$:-0;set q="$q:s/@/ /";set q="$q:s/:/ /";set q=($q " ");rsh $q[2] -l $q[1] ls -dp $q[3]\*`%' 'c%*:%`set q=$:-0;set q="$q:s/:/ /";set q=($q " ");rsh $q[1] ls -dp $q[2]\*`%' 'c%*@%$hosts%:' 'C@[./$~]*@f@'  'n/*/$hosts/:'
 
@@ -330,7 +330,7 @@ endif
     complete setenv	'p/1/e/' 'c/*:/f/'
 
     # these and method of setting hosts from Kimmo Suominen <kim@tac.nyc.ny.us>
-    if ( -f $HOME/.mh_profile && -x "`which folders`" ) then
+    if ( -f $HOME/.mh_profile && -x "`which folders`" ) then 
 
     if ( ! $?FOLDERS ) setenv FOLDERS "`folders -fast -recurse`"
     if ( ! $?MHA )     setenv MHA     "`ali | sed -e '/^ /d' -e 's/:.*//'`"
@@ -408,10 +408,10 @@ endif
         'n,*,`(mark | sed "s/:.*//";echo next cur prev first last)|tr " " "\12" | sort -u`,'
 
     complete msgchk \
-        'c/-/(nodate date nonotify notify help)/'
+        'c/-/(nodate date nonotify notify help)/' 
 
     complete msh \
-        'c/-/(prompt noscan scan notopcur topcur help)/'
+        'c/-/(prompt noscan scan notopcur topcur help)/' 
 
     complete next \
         'c/-/(draft form moreproc nomoreproc length width showproc noshowproc header noheader help)/' \
@@ -438,7 +438,7 @@ endif
         'n,-form,f,'
 
     complete prompter \
-        'c/-/(erase kill noprepend prepend norapid rapid nodoteof doteof help)/'
+        'c/-/(erase kill noprepend prepend norapid rapid nodoteof doteof help)/' 
 
     complete refile \
         'c/-/(draft nolink link nopreserve preserve src file help)/' \
@@ -448,7 +448,7 @@ endif
 
     complete rmf \
         'c/-/(nointeractive interactive help)/' \
-        'c,+,$folders,'
+        'c,+,$folders,'  
 
     complete rmm \
         'c/-/(help)/' \
@@ -482,10 +482,10 @@ endif
 
     complete vmh \
         'c/-/(prompt vmhproc novmhproc help)/' \
-        'n,-vmhproc,c,'
+        'n,-vmhproc,c,'  
 
     complete whatnow \
-        'c/-/(draftfolder draftmessage nodraftfolder editor noedit prompt help)/'
+        'c/-/(draftfolder draftmessage nodraftfolder editor noedit prompt help)/' 
 
     complete whom \
         'c/-/(alias nocheck check draft draftfolder draftmessage nodraftfolder help)/' \

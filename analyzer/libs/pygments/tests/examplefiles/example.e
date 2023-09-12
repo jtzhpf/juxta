@@ -1,9 +1,9 @@
 note
 	description : "[
 						This is use to have almost every language element."
-
+						
 						That way, I can correctly test the lexer. %]"
-
+						
 						Don't try to understand what it does. It's not even compilling.
 					]"
 	date        : "August 6, 2013"

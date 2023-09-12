@@ -4,11 +4,11 @@
  * by Brad Chamberlain and Steve Deitz
  * 07/13/2006 in Knoxville airport while waiting for flight home from
  *            HPLS workshop
- * compiles and runs with chpl compiler version 1.7.0
+ * compiles and runs with chpl compiler version 1.12.0
  * for more information, contact: chapel_info@cray.com
+ * 
  *
- *
- * Notes:
+ * Notes: 
  * o as in all good parallel computations, boundary conditions
  *   constitute the vast bulk of complexity in this code (invite Brad to
  *   tell you about his zany boundary condition simplification scheme)
@@ -16,29 +16,29 @@
  * o relies on integer->string coercions
  * o uses named argument passing (for documentation purposes only)
  ***********************************************************************/
-
-// allow executable command-line specification of number of bottles
+ 
+// allow executable command-line specification of number of bottles 
 // (e.g., ./a.out -snumBottles=999999)
 config const numBottles = 99;
 const numVerses = numBottles+1;
-
+ 
 // a domain to describe the space of lyrics
 var LyricsSpace: domain(1) = {1..numVerses};
-
+ 
 // array of lyrics
 var Lyrics: [LyricsSpace] string;
-
+ 
 // parallel computation of lyrics array
 [verse in LyricsSpace] Lyrics(verse) = computeLyric(verse);
-
+ 
 // as in any good parallel language, I/O to stdout is serialized.
 // (Note that I/O to a file could be parallelized using a parallel
 // prefix computation on the verse strings' lengths with file seeking)
 writeln(Lyrics);
-
-
+ 
+ 
 // HELPER FUNCTIONS:
-
+ 
 proc computeLyric(verseNum) {
   var bottleNum = numBottles - (verseNum - 1);
   var nextBottle = (bottleNum + numVerses - 1)%numVerses;
@@ -48,20 +48,20 @@ proc computeLyric(verseNum) {
     + computeAction(bottleNum)
     + describeBottles(nextBottle) + " on the wall.\n";
 }
-
-
+ 
+ 
 proc describeBottles(bottleNum, startOfVerse:bool = false) {
   // NOTE: bool should not be necessary here (^^^^); working around bug
-  var bottleDescription = if (bottleNum) then bottleNum:string
-    else (if startOfVerse then "N"
-            else "n")
+  var bottleDescription = if (bottleNum) then bottleNum:string 
+    else (if startOfVerse then "N" 
+            else "n") 
            + "o more";
-  return bottleDescription
-    + " bottle" + (if (bottleNum == 1) then "" else "s")
+  return bottleDescription 
+    + " bottle" + (if (bottleNum == 1) then "" else "s") 
     + " of beer";
 }
-
-
+ 
+ 
 proc computeAction(bottleNum) {
   return if (bottleNum == 0) then "Go to the store and buy some more, "
     else "Take one down and pass it around, ";
@@ -71,10 +71,13 @@ proc computeAction(bottleNum) {
 // Modules...
 module M1 {
   var x = 10;
+
+  var y = 13.0;
 }
 
 module M2 {
-  use M1;
+  use M1 except y;
+  use M1 only y;
   proc main() {
     writeln("M2 -> M1 -> x " + x);
   }
@@ -88,9 +91,9 @@ record Point {
   var x, y: real;
 }
 var p: Point;
-writeln("Distance from origin: " + sqrt(p.x ** 2 + p.y ** 2));
+writeln("Distance from origin: " + sqrt(p.x ** 2 + p.y ** 2)); 
 p = new Point(1.0, 2.0);
-writeln("Distance from origin: " + sqrt(p.x ** 2 + p.y ** 2));
+writeln("Distance from origin: " + sqrt(p.x ** 2 + p.y ** 2)); 
 
 class Circle {
   var p: Point;
@@ -148,10 +151,10 @@ class IntPair {
 var ip = new IntPair(17,2);
 write(ip);
 
-var targetDom: {1..10},
+var targetDom = {1..10},
   target: [targetDom] int;
 coforall i in targetDom with (ref target) {
-  targetDom[i] = i ** 3;
+  target[i] = i ** 3;
 }
 
 var wideOpen = 0o777,
@@ -159,3 +162,45 @@ var wideOpen = 0o777,
   clique_y = 0O660,
   zeroOct = 0o0,
   minPosOct = 0O1;
+
+private module M3 {
+  private proc foo() {
+
+  }
+
+  private iter bar() {
+    for i in 1..10 {
+      yield i;
+    }
+  }
+
+  private var x: int;
+
+}
+prototype module X {
+
+  proc f() throws {
+    throw new Error();
+  }
+
+  proc g() {
+    try {
+      f();
+      try! f();
+    } catch e {
+      writeln("Caught ", e);
+    }
+  }
+
+  proc int.add() { }
+
+  g();
+
+  override proc test() throws {
+    var a = new borrowed IntPair();
+    var b = new owned IntPair();
+    var c = new shared IntPair();
+    throw new unmanaged Error();
+  }
+}
+

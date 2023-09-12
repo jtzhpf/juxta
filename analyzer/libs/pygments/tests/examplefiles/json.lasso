@@ -9,11 +9,11 @@
 	// <http://json-rpc.org/>
 	// <http://www.ietf.org/rfc/rfc4627.txt?number=4627>
 	//
-
+	
 If: (Lasso_TagExists: 'Encode_JSON') == False;
 
 	Define_Tag: 'JSON', -Namespace='Encode_', -Required='value', -Optional='options';
-
+	
 		Local: 'escapes' = Map('\\' = '\\', '"'  = '"', '\r' = 'r', '\n' = 'n', '\t' = 't', '\f' = 'f', '\b' = 'b');
 		Local: 'output' = '';
 		Local: 'newoptions' = (Array: -Internal);
@@ -89,7 +89,7 @@ If: (Lasso_TagExists: 'Encode_JSON') == False;
 			#output += (Encode_JSON: (Map: '__jsonclass__'=(Array:'deserialize',(Array:'<LassoNativeType>' + #value->Serialize + '</LassoNativeType>'))));
 		/If;
 		Return: @#output;
-
+		
 	/Define_Tag;
 
 /If;
@@ -99,7 +99,7 @@ If: (Lasso_TagExists: 'Decode_JSON') == False;
 	Define_Tag: 'JSON', -Namespace='Decode_', -Required='value';
 
 		(#value == '') ? Return: Null;
-
+		
 		Define_Tag: 'consume_string', -Required='ibytes';
 			Local: 'unescapes' = (map: 34 = '"', 92 = '\\', 98 = '\b', 102 = '\f', 110 = '\n', 114 = '\r', 116 = '\t');
 			Local: 'temp' = 0, 'obytes' = Bytes;
@@ -131,7 +131,7 @@ If: (Lasso_TagExists: 'Decode_JSON') == False;
 				Local: 'output' = (Date: #output, -Format='%QT%TZ');
 			Else: (Valid_Date: #output, -Format='%QT%T');
 				Local: 'output' = (Date: #output, -Format='%QT%T');
-			/If;
+			/If;			
 			Return: @#output;
 		/Define_Tag;
 
@@ -158,7 +158,7 @@ If: (Lasso_TagExists: 'Decode_JSON') == False;
 			local: 'temp' = 0;
 			While: ((#temp := #ibytes->export8bits) != 93); // ]
 				If: (#delimit >> #temp);
-					// Discard whitespace
+					// Discard whitespace 
 				Else: (#temp == 34); // "
 					#output->(insert: (consume_string: @#ibytes));
 				Else: (#temp == 91); // [
@@ -181,7 +181,7 @@ If: (Lasso_TagExists: 'Decode_JSON') == False;
 			local: 'val' = null;
 			While: ((#temp := #ibytes->export8bits) != 125); // }
 				If: (#delimit >> #temp);
-					// Discard whitespace
+					// Discard whitespace 
 				Else: (#key !== null) && (#temp == 34); // "
 					#output->(insert: #key = (consume_string: @#ibytes));
 					#key = null;
@@ -209,7 +209,7 @@ If: (Lasso_TagExists: 'Decode_JSON') == False;
 			/If;
 			Return: @#output;
 		/Define_Tag;
-
+		
 		Local: 'ibytes' = (bytes: #value);
 		Local: 'start' = 1;
  	  	#ibytes->removeLeading(BOM_UTF8);
@@ -221,27 +221,27 @@ If: (Lasso_TagExists: 'Decode_JSON') == False;
 			Local: 'output' = (consume_object: @#ibytes);
 			Return: @#output;
 		/If;
-
+		
 	/Define_Tag;
 
 /If;
-
+	
 If: (Lasso_TagExists: 'Literal') == False;
 
 	Define_Type: 'Literal', 'String';
 	/Define_Type;
 
 /If;
-
+	
 If: (Lasso_TagExists: 'Object') == False;
-
+	
 	Define_Type: 'Object', 'Map';
 	/Define_Type;
-
+	
 /If;
 
 If: (Lasso_TagExists: 'JSON_RPCCall') == False;
-
+	
 	Define_Tag: 'RPCCall', -Namespace='JSON_',
 			-Required='method',
 			-Optional='params',
@@ -257,7 +257,7 @@ If: (Lasso_TagExists: 'JSON_RPCCall') == False;
 		Return: @#result;
 
 	/Define_Tag;
-
+	
 /If;
 
 If: (Lasso_TagExists: 'JSON_Records') == False;

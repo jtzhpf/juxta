@@ -143,3 +143,90 @@ a way to iterate over all styles:
 
     >>> from pygments.styles import get_all_styles
     >>> styles = list(get_all_styles())
+
+
+.. _AnsiTerminalStyle:
+
+Terminal Styles
+===============
+
+.. versionadded:: 2.2
+
+Custom styles used with the 256-color terminal formatter can also map colors to
+use the 8 default ANSI colors.  To do so, use ``ansigreen``, ``ansibrightred`` or
+any other colors defined in :attr:`pygments.style.ansicolors`.  Foreground ANSI
+colors will be mapped to the corresponding `escape codes 30 to 37
+<https://en.wikipedia.org/wiki/ANSI_escape_code#Colors>`_ thus respecting any
+custom color mapping and themes provided by many terminal emulators.  Light
+variants are treated as foreground color with and an added bold flag.
+``bg:ansi<color>`` will also be respected, except the light variant will be the
+same shade as their dark variant.
+
+See the following example where the color of the string ``"hello world"`` is
+governed by the escape sequence ``\x1b[34;01m`` (Ansi bright blue, Bold, 41 being red
+background) instead of an extended foreground & background color.
+
+.. sourcecode:: pycon
+
+    >>> from pygments import highlight
+    >>> from pygments.style import Style
+    >>> from pygments.token import Token
+    >>> from pygments.lexers import Python3Lexer
+    >>> from pygments.formatters import Terminal256Formatter
+
+    >>> class MyStyle(Style):
+            styles = {
+                Token.String:     'ansibrightblue bg:ansibrightred',
+            }
+
+    >>> code = 'print("Hello World")'
+    >>> result = highlight(code, Python3Lexer(), Terminal256Formatter(style=MyStyle))
+    >>> print(result.encode())
+    b'\x1b[34;41;01m"\x1b[39;49;00m\x1b[34;41;01mHello World\x1b[39;49;00m\x1b[34;41;01m"\x1b[39;49;00m'
+
+Colors specified using ``ansi*`` are converted to a default set of RGB colors
+when used with formatters other than the terminal-256 formatter.
+
+By definition of ANSI, the following colors are considered "light" colors, and
+will be rendered by most terminals as bold:
+
+- "brightblack" (darkgrey), "brightred", "brightgreen", "brightyellow", "brightblue",
+  "brightmagenta", "brightcyan", "white"
+
+The following are considered "dark" colors and will be rendered as non-bold:
+
+- "black", "red", "green", "yellow", "blue", "magenta", "cyan",
+  "gray"
+
+Exact behavior might depends on the terminal emulator you are using, and its
+settings.
+
+.. _new-ansi-color-names:
+
+.. versionchanged:: 2.4
+
+The definition of the ANSI color names has changed.
+New names are easier to understand and align to the colors used in other projects.
+
+===================== ====================
+New names             Pygments up to 2.3
+===================== ====================
+``ansiblack``         ``#ansiblack``
+``ansired``           ``#ansidarkred``
+``ansigreen``         ``#ansidarkgreen``
+``ansiyellow``        ``#ansibrown``
+``ansiblue``          ``#ansidarkblue``
+``ansimagenta``       ``#ansipurple``
+``ansicyan``          ``#ansiteal``
+``ansigray``          ``#ansilightgray``
+``ansibrightblack``   ``#ansidarkgray``
+``ansibrightred``     ``#ansired``
+``ansibrightgreen``   ``#ansigreen``
+``ansibrightyellow``  ``#ansiyellow``
+``ansibrightblue``    ``#ansiblue``
+``ansibrightmagenta`` ``#ansifuchsia``
+``ansibrightcyan``    ``#ansiturquoise``
+``ansiwhite``         ``#ansiwhite``
+===================== ====================
+
+Old ANSI color names are deprecated but will still work.

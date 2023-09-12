@@ -33,8 +33,8 @@ NA_foo_ <- NULL
 123456.78901
 123e3
 123E3
-6.02e23
-1.6e-35
+6.02e23	
+1.6e-35	
 1.E12
 .1234
 ## integers
@@ -175,7 +175,7 @@ numeric()
 vector(servo)
 data.frame()
 list1 <- list(time = 1:40)
-# multidimensional array
+# multidimensional array 
 array(c(c(c(2,300,4),c(8,9,0)),c(c(5,60,0),c(66,7,847))), dim=c(3,2,2))
 
 ## Namespace

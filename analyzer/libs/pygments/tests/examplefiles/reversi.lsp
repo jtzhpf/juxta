@@ -9,15 +9,15 @@
 ;; this now does not work with newLISP version 9!
 ;;
 ;; This is my first attempt at writing a simple application using newLISP-GS.
-;; The game algorithms are basically by
+;; The game algorithms are basically by 
 ;; Peter Norvig http://norvig.com/paip/othello.lisp
 ;; and all I've done is translate to newLISP and add the interface...
 ;;
 ;; To-Do: work out how to handle the end of the game properly...
 ;; To-Do: complete newlispdoc for the functions
 
-(constant 'empty 0)
-(constant 'black 1)
+(constant 'empty 0) 
+(constant 'black 1) 
 (constant 'white 2)
 (constant 'outer 3) ; squares outside the 8x8 board
 
@@ -74,9 +74,9 @@ result))
 
 (define (player-name player)
   (if (= player white) "white" "black"))
-
+  
 (define (valid-move? move)
-  (and
+  (and 
      (integer? move)
      (<= 11 move 88)
      (<= 1 (mod move 10) 8)))
@@ -85,25 +85,25 @@ result))
   (and
      (valid-move? square)
      (= (*board* square) empty)))
-
+     
 ; test whether a move is legal. The square must be empty
 ; and it must flip at least one of the opponent's piece
 
 (define (legal-move? move player)
-  (and
+  (and 
      (empty-square? move)
      (exists (fn (dir) (would-flip? move player dir)) all-directions)))
 
 ; would this move by player result in any flips in the given direction?
 ; if so, return the number of the 'opposite' (bracketing) piece's square
 
-(define (would-flip? move player dir)
-  (let
+(define (would-flip? move player dir) 
+  (let 
      ((c (+ move dir)))
-     (and
+     (and 
         (= (*board* c) (opponent player))
         (find-bracketing-piece (+ c dir) player dir))))
-
+  
 (define (find-bracketing-piece square player dir)
   ; return the square of the bracketing piece, if any
   (cond
@@ -113,7 +113,7 @@ result))
      (true nil)))
 
 (define (make-flips move player dir)
-  (let
+  (let 
      ((bracketer (would-flip? move player dir))
       (c (+ move dir)))
   (if bracketer
@@ -139,10 +139,10 @@ result))
            (println (player-name opp) " has no moves")
            previous-player)
         (true nil))))
-
+        
 ; are there any legal moves (returns first) for this player?
 (define (any-legal-move? player)
-  (exists (fn (move) (legal-move? move player))
+  (exists (fn (move) (legal-move? move player)) 
      (all-squares)))
 
 ; a list of all legal moves might be useful
@@ -154,7 +154,7 @@ result))
   (unique result)))
 
 ; define any number of strategies that can be called on to calculate
-; the next computer move. This is the only one I've done... - make
+; the next computer move. This is the only one I've done... - make 
 ; any legal move at random!
 
 (define (random-strategy player)
@@ -170,7 +170,7 @@ result))
         (valid-move? move)
         (legal-move? move player))
             (make-move move player))
-     (true
+     (true  
         (println "no valid or legal move for " (player-name player) )
         nil))
   move))
@@ -218,7 +218,7 @@ result))
   (setf (*board* 44) white)
   (setf (*board* 55) white)
   (setf (*board* 45) black)
-  (setf (*board* 54) black)
+  (setf (*board* 54) black)  
 )
 
 ; draw a graphical repesentation of the board
@@ -227,8 +227,8 @@ result))
   (local (x y)
      (dolist (i (all-squares))
         (map set '(x y) (square-to-xy i))
-        (gs:draw-rect
-           (string x y)
+        (gs:draw-rect 
+           (string x y) 
            (- (* y size) width ) ; !!!!!!
            (- (* x size) width )
            (* width 2)
@@ -248,8 +248,8 @@ result))
      (set 'legal-move-list (legal-moves player))
      (dolist (m (all-squares))
         (map set '(x y) (square-to-xy m))
-        (gs:draw-rect
-           (string x y)
+        (gs:draw-rect 
+           (string x y) 
            (- (* y size) width ) ; !!!!!!
            (- (* x size) width )
            (* width 2)
@@ -262,7 +262,7 @@ result))
 
 ; convert the number of a square on the master board to coordinates
 
-(define (square-to-xy square)
+(define (square-to-xy square) 
   (list (/ square 10) (mod square 10)))
 
 ; draw one of the pieces
@@ -270,27 +270,27 @@ result))
 (define (draw-piece square colour)
   (local (x y)
   (map set '(x y) (square-to-xy square))
-  (cond
-     ((= colour "white")
-        (gs:fill-circle
-           (string x y)
+  (cond 
+     ((= colour "white") 
+        (gs:fill-circle 
+           (string x y) 
            (* y size)  ; !!!!!!! y first, cos y is x ;-)
-           (* x size)
+           (* x size) 
            width
            gs:white))
-
-     ((= colour "black")
-        (gs:fill-circle
-           (string x y)
-           (* y size)
-           (* x size)
+     
+     ((= colour "black") 
+        (gs:fill-circle 
+           (string x y) 
+           (* y size) 
+           (* x size) 
            width
            gs:black))
-
-     ((= colour "empty")
-        (gs:draw-rect
-           (string x y)
-           (- (* y size) width )
+     
+     ((= colour "empty") 
+        (gs:draw-rect 
+           (string x y) 
+           (- (* y size) width ) 
            (- (* x size) width )
            (* width 2)
            (* width 2)
@@ -300,20 +300,20 @@ result))
 ; animate the pieces flipping
 
 (define (flip-piece square player)
-; flip by drawing thinner and fatter ellipses
+; flip by drawing thinner and fatter ellipses 
 ; go from full disk in opposite colour to invisible
 ; then from invisible to full disk in true colour
   (local (x y colour)
      (map set '(x y) (square-to-xy square))
      ; delete original piece
      (gs:delete-tag (string x y))
-     (set 'colour (if (= player 2) gs:black gs:white ))
+     (set 'colour (if (= player 2) gs:black gs:white )) 
      (for (i width  1 -3)
-        (gs:fill-ellipse
-           (string x y {flip} i)
-           (* y size) ; y first :-) !!!
-           (* x size)
-           i
+        (gs:fill-ellipse 
+           (string x y {flip} i) 
+           (* y size) ; y first :-) !!! 
+           (* x size) 
+           i 
            width
            colour)
         (sleep 20)  ; this might need adjusting...
@@ -321,33 +321,33 @@ result))
      )
      (set 'colour (if (= player 2) gs:white gs:black))
      (for (i 1 width 3)
-        (gs:fill-ellipse
-           (string x y {flip} i)
-           (* y size) ; :-) !!!
-           (* x size)
-           i
+        (gs:fill-ellipse 
+           (string x y {flip} i) 
+           (* y size) ; :-) !!! 
+           (* x size) 
+           i 
            width
            colour)
-        (sleep 20)
+        (sleep 20)  
         (gs:delete-tag (string x y {flip} i))
      )
      ; draw the piece again
-     (gs:fill-circle
-           (string x y)
+     (gs:fill-circle 
+           (string x y) 
            (* y size)
-           (* x size)
+           (* x size) 
            width
            colour)
   )
 )
 
 (define (do-move move player)
-  (cond
+  (cond 
      ; check if the move is good ...
      ((and (!= player nil)
            (valid-move? move)
            (legal-move? move player))
-
+           
            ; ... play it
               ; make move on board
               (make-move move player)
@@ -355,26 +355,26 @@ result))
               (draw-piece move (player-name player))
               (gs:update)
               ; do flipping stuff
-
+              
               ; wait for a while
               (sleep 1000)
-
+  
               ; then do flipping
               (dolist (f *flips*)
                  (flip-piece f player))
-
+              
               (inc *move-number*)
               (draw-piece move (player-name player))
               (gs:update)
 
               ; update scores
-              (gs:set-text 'WhiteScore
+              (gs:set-text 'WhiteScore 
                  (string "White: " (first (count (list white) *board*))))
               (gs:set-text 'BlackScore
                  (string "Black: " (first (count (list black) *board*))))
               )
      ; or return nil
-     (true
+     (true 
            nil)))
 
 ; the game is driven by the mouse clicks of the user
@@ -391,7 +391,7 @@ result))
         ; you can uncomment the next line...
         ; (show-legal-moves player)
         (gs:update)
-
+        
         ; wait for black's reply
         (gs:set-cursor 'Reversi "wait")
         (gs:set-text 'Start "black's move - thinking...")

@@ -40,13 +40,13 @@ void codegenInit() {
 	finishedMethodsBuffer = newStringBuffer();
 	mainBuffer            = newStringBuffer();
 
-	stringBufferAppend(mainBuffer, "; ------- Header --------------------------------------------");
+	stringBufferAppend(mainBuffer, "; ------- Header --------------------------------------------"); 
 	sprintf(tempString, ".class  public synchronized %s", className);
 	stringBufferAppend(mainBuffer, tempString);
 	stringBufferAppend(mainBuffer, ".super  java/lang/Object");
 	stringBufferAppend(mainBuffer, "; -----------------------------------------------------------");
 	stringBufferAppend(mainBuffer, "");
-
+	
 	stringBufferAppend(finishedMethodsBuffer, "; ------- Constructor ---------------------------------------");
 	stringBufferAppend(finishedMethodsBuffer, ".method public <init>()V");
 	stringBufferAppend(finishedMethodsBuffer, "\t.limit stack 1");
@@ -119,7 +119,7 @@ void codegenEnterFunction(symtabEntry* entry) {
 	currentMethodStackSizeMax = 0;
 	labelCounter = 1;
 	global = 0;
-
+	
 	if (strcmp(entry->name, "main") == 0) {
 		if (entry->idtype != TYPE_VOID) yyerror("main has to be void.\n");
 		currentMethodNumberOfLocals = 1;
@@ -170,7 +170,7 @@ void codegenFinishCode() {
 	stringBufferAppend(classInitBuffer, "\treturn");
 	stringBufferAppend(classInitBuffer, ".end method");
 	stringBufferAppend(classInitBuffer, "; -----------------------------------------------------------");
-
+	
 	stringBufferConcatenate(mainBuffer, staticVariableBuffer);
 	stringBufferConcatenate(mainBuffer, finishedMethodsBuffer);
 	stringBufferConcatenate(mainBuffer, classInitBuffer);
@@ -345,7 +345,7 @@ ary_new(klass, len)
 	rb_raise(rb_eArgError, "array size too big");
     }
     if (len == 0) len++;
-
+    
     ary = ary_alloc(klass);
     RARRAY(ary)->ptr = ALLOC_N(VALUE, len);
     RARRAY(ary)->aux.capa = len;
@@ -554,22 +554,22 @@ static VALUE rb_ary_replace _((VALUE, VALUE));
  *     Array.new
  *     Array.new(2)
  *     Array.new(5, "A")
- *
+ * 
  *     # only one copy of the object is created
  *     a = Array.new(2, Hash.new)
  *     a[0]['cat'] = 'feline'
  *     a
  *     a[1]['cat'] = 'Felix'
  *     a
- *
+ * 
  *     # here multiple copies are created
  *     a = Array.new(2) { Hash.new }
  *     a[0]['cat'] = 'feline'
  *     a
- *
+ * 
  *     squares = Array.new(5) {|i| i*i}
  *     squares
- *
+ * 
  *     copy = Array.new(squares)
  */
 
@@ -630,8 +630,8 @@ rb_ary_initialize(argc, argv, ary)
 }
 
 
-/*
-* Returns a new array populated with the given objects.
+/* 
+* Returns a new array populated with the given objects. 
 *
 *   Array.[]( 1, 'a', /^A/ )
 *   Array[ 1, 'a', /^A/ ]
@@ -731,7 +731,7 @@ ary_shared_last(argc, argv, ary)
 /*
  *  call-seq:
  *     array << obj            -> array
- *
+ *  
  *  Append---Pushes the given object on to the end of this array. This
  *  expression returns the array itself, so several appends
  *  may be chained together.
@@ -750,16 +750,16 @@ rb_ary_push(ary, item)
     return ary;
 }
 
-/*
+/* 
  *  call-seq:
  *     array.push(obj, ... )   -> array
- *
+ *  
  *  Append---Pushes the given object(s) on to the end of this array. This
  *  expression returns the array itself, so several appends
  *  may be chained together.
  *
  *     a = [ "a", "b", "c" ]
- *     a.push("d", "e", "f")
+ *     a.push("d", "e", "f")  
  *             #=> ["a", "b", "c", "d", "e", "f"]
  */
 
@@ -793,10 +793,10 @@ rb_ary_pop(ary)
 /*
  *  call-seq:
  *     array.pop  -> obj or nil
- *
+ *  
  *  Removes the last element from <i>self</i> and returns it, or
  *  <code>nil</code> if the array is empty.
- *
+ *     
  *     a = [ "a", "b", "c", "d" ]
  *     a.pop     #=> "d"
  *     a.pop(2)  #=> ["b", "c"]
@@ -841,11 +841,11 @@ rb_ary_shift(ary)
 /*
  *  call-seq:
  *     array.shift   ->   obj or nil
- *
+ *  
  *  Returns the first element of <i>self</i> and removes it (shifting all
  *  other elements down by one). Returns <code>nil</code> if the array
  *  is empty.
- *
+ *     
  *     args = [ "-m", "-q", "filename" ]
  *     args.shift     #=> "-m"
  *     args           #=> ["-q", "filename"]
@@ -904,10 +904,10 @@ rb_ary_unshift(ary, item)
 /*
  *  call-seq:
  *     array.unshift(obj, ...)  -> array
- *
+ *  
  *  Prepends objects to the front of <i>array</i>.
  *  other elements up one.
- *
+ *     
  *     a = [ "b", "c", "d" ]
  *     a.unshift("a")   #=> ["a", "b", "c", "d"]
  *     a.unshift(1, 2)  #=> [ 1, 2, "a", "b", "c", "d"]
@@ -929,7 +929,7 @@ rb_ary_unshift_m(argc, argv, ary)
     /* sliding items */
     MEMMOVE(RARRAY(ary)->ptr + argc, RARRAY(ary)->ptr, VALUE, len);
     MEMCPY(RARRAY(ary)->ptr, argv, VALUE, argc);
-
+    
     return ary;
 }
 
@@ -987,7 +987,7 @@ rb_ary_subseq(ary, beg, len)
     return ary2;
 }
 
-/*
+/* 
  *  call-seq:
  *     array[index]                -> obj      or nil
  *     array[start, length]        -> an_array or nil
@@ -1056,7 +1056,7 @@ rb_ary_aref(argc, argv, ary)
     return rb_ary_entry(ary, NUM2LONG(arg));
 }
 
-/*
+/* 
  *  call-seq:
  *     array.at(index)   ->   obj  or nil
  *
@@ -1082,10 +1082,10 @@ rb_ary_at(ary, pos)
  *  call-seq:
  *     array.first     ->   obj or nil
  *     array.first(n)  ->   an_array
- *
+ *  
  *  Returns the first element of the array. If the array is empty,
  *  returns <code>nil</code>.
- *
+ *     
  *     a = [ "q", "r", "s", "t" ]
  *     a.first     #=> "q"
  *     a.first(2)  #=> ["q", "r"]
@@ -1110,10 +1110,10 @@ rb_ary_first(argc, argv, ary)
  *  call-seq:
  *     array.last     ->  obj or nil
  *     array.last(n)  ->  an_array
- *
+ *  
  *  Returns the last element(s) of <i>self</i>. If the array is empty,
  *  the first form returns <code>nil</code>.
- *
+ *     
  *     a = [ "w", "x", "y", "z" ]
  *     a.last     #=> "z"
  *     a.last(2)  #=> ["y", "z"]
@@ -1139,14 +1139,14 @@ rb_ary_last(argc, argv, ary)
  *     array.fetch(index)                    -> obj
  *     array.fetch(index, default )          -> obj
  *     array.fetch(index) {|index| block }   -> obj
- *
+ *  
  *  Tries to return the element at position <i>index</i>. If the index
  *  lies outside the array, the first form throws an
  *  <code>IndexError</code> exception, the second form returns
  *  <i>default</i>, and the third form returns the value of invoking
  *  the block, passing in the index. Negative values of <i>index</i>
  *  count from the end of the array.
- *
+ *     
  *     a = [ 11, 22, 33, 44 ]
  *     a.fetch(1)               #=> 22
  *     a.fetch(-1)              #=> 44
@@ -1188,12 +1188,12 @@ rb_ary_fetch(argc, argv, ary)
  *  call-seq:
  *     array.index(obj)           ->  int or nil
  *     array.index {|item| block} ->  int or nil
- *
+ *  
  *  Returns the index of the first object in <i>self</i> such that is
  *  <code>==</code> to <i>obj</i>. If a block is given instead of an
  *  argument, returns first object for which <em>block</em> is true.
  *  Returns <code>nil</code> if no match is found.
- *
+ *     
  *     a = [ "a", "b", "c" ]
  *     a.index("b")        #=> 1
  *     a.index("z")        #=> nil
@@ -1228,12 +1228,12 @@ rb_ary_index(argc, argv, ary)
 /*
  *  call-seq:
  *     array.rindex(obj)    ->  int or nil
- *
+ *  
  *  Returns the index of the last object in <i>array</i>
  *  <code>==</code> to <i>obj</i>. If a block is given instead of an
  *  argument, returns first object for which <em>block</em> is
  *  true. Returns <code>nil</code> if no match is found.
- *
+ *     
  *     a = [ "a", "b", "b", "b", "c" ]
  *     a.rindex("b")        #=> 3
  *     a.rindex("z")        #=> nil
@@ -1348,7 +1348,7 @@ rb_ary_splice(ary, beg, len, rpl)
     }
 }
 
-/*
+/* 
  *  call-seq:
  *     array[index]         = obj                     ->  obj
  *     array[start, length] = obj or an_array or nil  ->  obj or an_array or nil
@@ -1364,7 +1364,7 @@ rb_ary_splice(ary, beg, len, rpl)
  *  zero. An +IndexError+ is raised if a negative index points
  *  past the beginning of the array. See also
  *  <code>Array#push</code>, and <code>Array#unshift</code>.
- *
+ * 
  *     a = Array.new
  *     a[4] = "4";                 #=> [nil, nil, nil, nil, "4"]
  *     a[0, 3] = [ 'a', 'b', 'c' ] #=> ["a", "b", "c", nil, "4"]
@@ -1410,10 +1410,10 @@ fixnum:
 /*
  *  call-seq:
  *     array.insert(index, obj...)  -> array
- *
+ *  
  *  Inserts the given values before the element with the given index
  *  (which may be negative).
- *
+ *     
  *     a = %w{ a b c d }
  *     a.insert(2, 99)         #=> ["a", "b", 99, "c", "d"]
  *     a.insert(-2, 1, 2, 3)   #=> ["a", "b", 99, "c", 1, 2, 3, "d"]
@@ -1446,15 +1446,15 @@ rb_ary_insert(argc, argv, ary)
 /*
  *  call-seq:
  *     array.each {|item| block }   ->   array
- *
+ *  
  *  Calls <i>block</i> once for each element in <i>self</i>, passing that
  *  element as a parameter.
- *
+ *     
  *     a = [ "a", "b", "c" ]
  *     a.each {|x| print x, " -- " }
- *
+ *     
  *  produces:
- *
+ *     
  *     a -- b -- c --
  */
 
@@ -1473,15 +1473,15 @@ rb_ary_each(ary)
 /*
  *  call-seq:
  *     array.each_index {|index| block }  ->  array
- *
+ *  
  *  Same as <code>Array#each</code>, but passes the index of the element
  *  instead of the element itself.
- *
+ *     
  *     a = [ "a", "b", "c" ]
  *     a.each_index {|x| print x, " -- " }
- *
+ *     
  *  produces:
- *
+ *     
  *     0 -- 1 -- 2 --
  */
 
@@ -1499,16 +1499,16 @@ rb_ary_each_index(ary)
 
 /*
  *  call-seq:
- *     array.reverse_each {|item| block }
- *
+ *     array.reverse_each {|item| block } 
+ *  
  *  Same as <code>Array#each</code>, but traverses <i>self</i> in reverse
  *  order.
- *
+ *     
  *     a = [ "a", "b", "c" ]
  *     a.reverse_each {|x| print x, " " }
- *
+ *     
  *  produces:
- *
+ *     
  *     c b a
  */
 
@@ -1530,9 +1530,9 @@ rb_ary_reverse_each(ary)
 /*
  *  call-seq:
  *     array.length -> int
- *
+ *  
  *  Returns the number of elements in <i>self</i>. May be zero.
- *
+ *     
  *     [ 1, 2, 3, 4, 5 ].length   #=> 5
  */
 
@@ -1546,9 +1546,9 @@ rb_ary_length(ary)
 /*
  *  call-seq:
  *     array.empty?   -> true or false
- *
+ *  
  *  Returns <code>true</code> if <i>self</i> array contains no elements.
- *
+ *     
  *     [].empty?   #=> true
  */
 
@@ -1637,10 +1637,10 @@ rb_ary_join(ary, sep)
 /*
  *  call-seq:
  *     array.join(sep=$,)    -> str
- *
+ *  
  *  Returns a string created by converting each element of the array to
  *  a string, separated by <i>sep</i>.
- *
+ *     
  *     [ "a", "b", "c" ].join        #=> "abc"
  *     [ "a", "b", "c" ].join("-")   #=> "a-b-c"
  */
@@ -1655,16 +1655,16 @@ rb_ary_join_m(argc, argv, ary)
 
     rb_scan_args(argc, argv, "01", &sep);
     if (NIL_P(sep)) sep = rb_output_fs;
-
+    
     return rb_ary_join(ary, sep);
 }
 
 /*
  *  call-seq:
  *     array.to_s -> string
- *
+ *  
  *  Returns _self_<code>.join</code>.
- *
+ *     
  *     [ "a", "e", "i", "o" ].to_s   #=> "aeio"
  *
  */
@@ -1674,7 +1674,7 @@ rb_ary_to_s(ary)
     VALUE ary;
 {
     if (RARRAY(ary)->len == 0) return rb_str_new(0, 0);
-
+    
     return rb_ary_join(ary, rb_output_fs);
 }
 
@@ -1719,7 +1719,7 @@ rb_ary_inspect(ary)
 /*
  *  call-seq:
  *     array.to_a     -> array
- *
+ *  
  *  Returns _self_. If called on a subclass of Array, converts
  *  the receiver to an Array object.
  */
@@ -1739,7 +1739,7 @@ rb_ary_to_a(ary)
 /*
  *  call-seq:
  *     array.to_ary -> array
- *
+ *  
  *  Returns _self_.
  */
 
@@ -1773,10 +1773,10 @@ rb_ary_reverse(ary)
 
 /*
  *  call-seq:
- *     array.reverse!   -> array
- *
+ *     array.reverse!   -> array 
+ *  
  *  Reverses _self_ in place.
- *
+ *     
  *     a = [ "a", "b", "c" ]
  *     a.reverse!       #=> ["c", "b", "a"]
  *     a                #=> ["c", "b", "a"]
@@ -1792,9 +1792,9 @@ rb_ary_reverse_bang(ary)
 /*
  *  call-seq:
  *     array.reverse -> an_array
- *
+ *  
  *  Returns a new array containing <i>self</i>'s elements in reverse order.
- *
+ *     
  *     [ "a", "b", "c" ].reverse   #=> ["c", "b", "a"]
  *     [ 1 ].reverse               #=> [1]
  */
@@ -1883,14 +1883,14 @@ sort_unlock(ary)
 /*
  *  call-seq:
  *     array.sort!                   -> array
- *     array.sort! {| a,b | block }  -> array
- *
+ *     array.sort! {| a,b | block }  -> array 
+ *  
  *  Sorts _self_. Comparisons for
  *  the sort will be done using the <code><=></code> operator or using
  *  an optional code block. The block implements a comparison between
  *  <i>a</i> and <i>b</i>, returning -1, 0, or +1. See also
  *  <code>Enumerable#sort_by</code>.
- *
+ *     
  *     a = [ "d", "a", "e", "c", "b" ]
  *     a.sort                    #=> ["a", "b", "c", "d", "e"]
  *     a.sort {|x,y| y <=> x }   #=> ["e", "d", "c", "b", "a"]
@@ -1910,15 +1910,15 @@ rb_ary_sort_bang(ary)
 
 /*
  *  call-seq:
- *     array.sort                   -> an_array
- *     array.sort {| a,b | block }  -> an_array
- *
+ *     array.sort                   -> an_array 
+ *     array.sort {| a,b | block }  -> an_array 
+ *  
  *  Returns a new array created by sorting <i>self</i>. Comparisons for
  *  the sort will be done using the <code><=></code> operator or using
  *  an optional code block. The block implements a comparison between
  *  <i>a</i> and <i>b</i>, returning -1, 0, or +1. See also
  *  <code>Enumerable#sort_by</code>.
- *
+ *     
  *     a = [ "d", "a", "e", "c", "b" ]
  *     a.sort                    #=> ["a", "b", "c", "d", "e"]
  *     a.sort {|x,y| y <=> x }   #=> ["e", "d", "c", "b", "a"]
@@ -1937,11 +1937,11 @@ rb_ary_sort(ary)
  *  call-seq:
  *     array.collect {|item| block }  -> an_array
  *     array.map     {|item| block }  -> an_array
- *
- *  Invokes <i>block</i> once for each element of <i>self</i>. Creates a
+ *  
+ *  Invokes <i>block</i> once for each element of <i>self</i>. Creates a 
  *  new array containing the values returned by the block.
  *  See also <code>Enumerable#collect</code>.
- *
+ *     
  *     a = [ "a", "b", "c", "d" ]
  *     a.collect {|x| x + "!" }   #=> ["a!", "b!", "c!", "d!"]
  *     a                          #=> ["a", "b", "c", "d"]
@@ -1965,7 +1965,7 @@ rb_ary_collect(ary)
     return collect;
 }
 
-/*
+/* 
  *  call-seq:
  *     array.collect! {|item| block }   ->   array
  *     array.map!     {|item| block }   ->   array
@@ -1973,7 +1973,7 @@ rb_ary_collect(ary)
  *  Invokes the block once for each element of _self_, replacing the
  *  element with the value returned by _block_.
  *  See also <code>Enumerable#collect</code>.
- *
+ *   
  *     a = [ "a", "b", "c", "d" ]
  *     a.collect! {|x| x + "!" }
  *     a             #=>  [ "a!", "b!", "c!", "d!" ]
@@ -2025,15 +2025,15 @@ rb_get_values_at(obj, olen, argc, argv, func)
     return result;
 }
 
-/*
+/* 
  *  call-seq:
  *     array.values_at(selector,... )  -> an_array
  *
  *  Returns an array containing the elements in
  *  _self_ corresponding to the given selector(s). The selectors
- *  may be either integer indices or ranges.
+ *  may be either integer indices or ranges. 
  *  See also <code>Array#select</code>.
- *
+ * 
  *     a = %w{ a b c d e f }
  *     a.values_at(1, 3, 5)
  *     a.values_at(1, 3, 5, 7)
@@ -2053,11 +2053,11 @@ rb_ary_values_at(argc, argv, ary)
 /*
  *  call-seq:
  *     array.select {|item| block } -> an_array
- *
+ *  
  *  Invokes the block passing in successive elements from <i>array</i>,
  *  returning an array containing those elements for which the block
  *  returns a true value (equivalent to <code>Enumerable#select</code>).
- *
+ *     
  *     a = %w{ a b c d e f }
  *     a.select {|v| v =~ /[aeiou]/}   #=> ["a", "e"]
  */

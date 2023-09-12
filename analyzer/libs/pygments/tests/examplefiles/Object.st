@@ -7,14 +7,14 @@
 !Object methodsFor: '*39Deprecated' stamp: 'gk 2/24/2004 08:49'!
 beep
 	"Deprecated."
-
+	
 	self deprecated: 'Use Beeper class>>beep instead.'.
 	Beeper beep! !
 
 !Object methodsFor: '*39Deprecated' stamp: 'gk 2/24/2004 08:50'!
 beepPrimitive
 	"Deprecated. Beep in the absence of sound support."
-
+	
 	self deprecated: 'Use Beeper class>>beep or Beeper class>>beepPrimitive instead.'.
 	Beeper beepPrimitive! !
 
@@ -29,7 +29,7 @@ beep: soundName
 
 !Object methodsFor: '*39Deprecated' stamp: 'sd 11/19/2004 16:57'!
 contentsGetz: x
-	self deprecated: 'there is no method named contents in object and in addition only one sender in a method not called'.
+	self deprecated: 'there is no method named contents in object and in addition only one sender in a method not called'. 
 	self contents: x! !
 
 !Object methodsFor: '*39Deprecated' stamp: 'sd 11/13/2003 21:10'!
@@ -41,7 +41,7 @@ deprecatedExplanation: aString
 		[Deprecation signal: ('{1} has been deprecated. {2}' translated format: {thisContext sender printString. aString})]! !
 
 !Object methodsFor: '*39Deprecated' stamp: 'sd 11/13/2003 21:11'!
-deprecated: aBlock explanation: aString
+deprecated: aBlock explanation: aString 
 	 "This method is OBSOLETE.  Use #deprecated:block: instead."
 	self deprecated: 'Use Object>>deprecated:block: instead of deprecated:explanation:.'.
 
@@ -154,14 +154,14 @@ firstSessionFromStack
 
 !Object methodsFor: '*Aida' stamp: 'mivsek 1/10/2008 18:14'!
 forLanguage: aLanguageCodeSymbol
-	"for multilingual support: returns an apropriate instance of itself for that language.
-	Langage is defined by ISO 639 2-letter language code, see
+	"for multilingual support: returns an apropriate instance of itself for that language. 
+	Langage is defined by ISO 639 2-letter language code, see 
 	http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes"
 	^false! !
 
 !Object methodsFor: '*Aida' stamp: 'mivsek 1/10/2008 18:14'!
 isMultilingual
-	"for multilingual support: override this if your domain object responds
+	"for multilingual support: override this if your domain object responds 
 	to #forLanguage: and returns an apropriate instance of itself for that language"
 	^false! !
 
@@ -185,29 +185,29 @@ modifiedTimestamp
 
 !Object methodsFor: '*Aida' stamp: 'JM 4/22/2007 15:28'!
 preferedUrl
-	"override with a suggestion for url of this method!! If not already used,
+	"override with a suggestion for url of this method!! If not already used, 
 	it will be considered by URLResolver during automatic url generation"
 	^nil! !
 
 !Object methodsFor: '*Aida' stamp: 'JM 4/22/2007 15:28'!
-printWebAppNotFoundFor: aSession
+printWebAppNotFoundFor: aSession 
 	| page |
 	page := WebPage new.
 	page addText: 'Cannot find aWebApplication for object a', self class name.
 	^page! !
 
 !Object methodsFor: '*Aida' stamp: 'JM 4/22/2007 15:28'!
-printWebPageFor: aSession
+printWebPageFor: aSession 
 	"find appropriate web application to represent self as web page"
 
 	| webApp |
 	webApp := self webAppFor: aSession.
-	^webApp notNil
+	^webApp notNil 
 		ifTrue: [webApp printWebPage]
 		ifFalse: [self printWebAppNotFoundFor: aSession]! !
 
 !Object methodsFor: '*Aida' stamp: 'JM 4/22/2007 15:29'!
-sendOver: aStream
+sendOver: aStream 
 	"from Wiki rendering"
 	self printOn: aStream! !
 
@@ -230,10 +230,10 @@ binding
 
 !Object methodsFor: '*DynamicBindings' stamp: 'svp 4/29/2003 00:35'!
 binding: anObject
-	"Set the dynamic binding for the receiver, if anObject is nil, then
+	"Set the dynamic binding for the receiver, if anObject is nil, then 
 	remove the receiver's dynamic binding (if any)"
 
-	^anObject
+	^anObject 
 		ifNil: [self removeBinding]
 		ifNotNil: [Bindings bind: self to: anObject]! !
 
@@ -253,15 +253,15 @@ removeBinding
 !Object methodsFor: '*KomHttpServer' stamp: 'SVP 8/23/1999 19:17'!
 asHtmlDocumentForRequest: aNetworkRequest
 
-	self error:
-		('The requested object (',
-		self asString,
+	self error: 
+		('The requested object (', 
+		self asString, 
 		'), could not be converted into HTML for your browser.')! !
 
 !Object methodsFor: '*KomHttpServer' stamp: 'SVP 8/23/1999 19:23'!
 asHttpResponseTo: anHttpRequest
 
-	^(self asHtmlDocumentForRequest: anHttpRequest)
+	^(self asHtmlDocumentForRequest: anHttpRequest) 
 		asHttpResponseTo: anHttpRequest
 ! !
 
@@ -287,7 +287,7 @@ when: anEventSelector
 send: aMessageSelector
 to: anObject
 exclusive: aValueHolder
-
+ 
 	self
 		when: anEventSelector
 		evaluate: ((ExclusiveWeakMessageSend
@@ -301,7 +301,7 @@ send: aMessageSelector
 to: anObject
 with: anArg
 exclusive: aValueHolder
-
+ 
     self
         when: anEventSelector
         evaluate: ((ExclusiveWeakMessageSend
@@ -316,7 +316,7 @@ send: aMessageSelector
 to: anObject
 withArguments: anArgArray
 exclusive: aValueHolder
-
+ 
     self
         when: anEventSelector
         evaluate: ((ExclusiveWeakMessageSend
@@ -329,7 +329,7 @@ exclusive: aValueHolder
 when: anEventSelector
 sendOnce: aMessageSelector
 to: anObject
-
+ 
     self
         when: anEventSelector
         evaluate: (NonReentrantWeakMessageSend
@@ -341,7 +341,7 @@ when: anEventSelector
 sendOnce: aMessageSelector
 to: anObject
 with: anArg
-
+ 
     self
         when: anEventSelector
         evaluate: (NonReentrantWeakMessageSend
@@ -354,7 +354,7 @@ when: anEventSelector
 sendOnce: aMessageSelector
 to: anObject
 withArguments: anArgArray
-
+ 
     self
         when: anEventSelector
         evaluate: (NonReentrantWeakMessageSend
@@ -367,7 +367,7 @@ withArguments: anArgArray
 okToClose
 	"Sent to models when a window closing.
 	Allows this check to be independent of okToChange."
-
+	
 	^true! !
 
 !Object methodsFor: '*Pinesoft-Widgets' stamp: 'gvc 4/17/2007 17:41'!
@@ -393,7 +393,7 @@ toString
 !Object methodsFor: '*Tools-Explorer' stamp: 'stephaneducasse 9/17/2005 21:52'!
 exploreAndYourself
 	"i.e. explore; yourself. Thisway i can peek w/o typing all the parentheses"
-	self explore.
+	self explore. 
      ^self! !
 
 !Object methodsFor: '*Tools-Explorer' stamp: 'stephaneducasse 9/17/2005 21:48'!
@@ -412,17 +412,17 @@ deprecated
 
 
 !Object methodsFor: '*kernel-extensions-flexibility' stamp: 'kph 1/27/2008 19:21'!
-askFor: selector
+askFor: selector 
 
     "returns true or false"
-
+	
 	^ (self askFor: selector ifAbsent: nil) == true! !
 
 !Object methodsFor: '*kernel-extensions-flexibility' stamp: 'kph 10/17/2007 14:01'!
 askFor: selector ifAbsent: aBlock
 
    "enables a default value to be specified in order to be tolerant of potentially missing methods
-
+	
 	e.g.
 	(myPoint askFor: #originOffset) ifAbsent: [ 0@0 ].
 	"
@@ -433,12 +433,12 @@ askFor: selector ifAbsent: aBlock
 !Object methodsFor: '*kernel-extensions-logging' stamp: 'mtf 1/26/2008 23:52'!
 log
 	"This method provides the univeral entry point fo all logging mechanisms"
-
+	
 	"Options:
 	1. Null for null logging
 	2. A LogRouter instance wih a FrameworkAdaptor.
 	3. CurrentLog a process local variable supplying a LogRouter"
-
+	
 	^ (Smalltalk at: #CurrentLog ifAbsent: [ Null default ]) value
 		sender: thisContext sender; beginEntry; yourself! !
 
@@ -508,7 +508,7 @@ orNull
 !Object methodsFor: '*ob-tools-inspector' stamp: 'lr 6/5/2008 11:07'!
 basicInspectorNodes
 	<inspector: #'1' priority: 600>
-
+	
 	| nodes |
 	nodes := OrderedCollection new: self class instSize + self basicSize + 5.
 	nodes add: self selfInspectorNode.
@@ -667,10 +667,10 @@ addInstanceVarNamed: aName withValue: aValue
 	self instVarAt: self class instSize put: aValue! !
 
 !Object methodsFor: 'accessing' stamp: 'yo 6/29/2004 11:39'!
-at: index
-	"Primitive. Assumes receiver is indexable. Answer the value of an
-	indexable element in the receiver. Fail if the argument index is not an
-	Integer or is out of bounds. Essential. See Object documentation
+at: index 
+	"Primitive. Assumes receiver is indexable. Answer the value of an 
+	indexable element in the receiver. Fail if the argument index is not an 
+	Integer or is out of bounds. Essential. See Object documentation 
 	whatIsAPrimitive."
 
 	<primitive: 60>
@@ -688,11 +688,11 @@ at: index modify: aBlock
 	^ self at: index put: (aBlock value: (self at: index))! !
 
 !Object methodsFor: 'accessing' stamp: 'yo 6/29/2004 13:08'!
-at: index put: value
-	"Primitive. Assumes receiver is indexable. Store the argument value in
-	the indexable element of the receiver indicated by index. Fail if the
-	index is not an Integer or is out of bounds. Or fail if the value is not of
-	the right type for this kind of collection. Answer the value that was
+at: index put: value 
+	"Primitive. Assumes receiver is indexable. Store the argument value in 
+	the indexable element of the receiver indicated by index. Fail if the 
+	index is not an Integer or is out of bounds. Or fail if the value is not of 
+	the right type for this kind of collection. Answer the value that was 
 	stored. Essential. See Object documentation whatIsAPrimitive."
 
 	<primitive: 61>
@@ -713,10 +713,10 @@ basicAddInstanceVarNamed: aName withValue: aValue
 	self instVarAt: self class instSize put: aValue! !
 
 !Object methodsFor: 'accessing'!
-basicAt: index
-	"Primitive. Assumes receiver is indexable. Answer the value of an
-	indexable element in the receiver. Fail if the argument index is not an
-	Integer or is out of bounds. Essential. Do not override in a subclass. See
+basicAt: index 
+	"Primitive. Assumes receiver is indexable. Answer the value of an 
+	indexable element in the receiver. Fail if the argument index is not an 
+	Integer or is out of bounds. Essential. Do not override in a subclass. See 
 	Object documentation whatIsAPrimitive."
 
 	<primitive: 60>
@@ -726,12 +726,12 @@ basicAt: index
 		ifFalse: [self errorNonIntegerIndex]! !
 
 !Object methodsFor: 'accessing'!
-basicAt: index put: value
-	"Primitive. Assumes receiver is indexable. Store the second argument
-	value in the indexable element of the receiver indicated by index. Fail
-	if the index is not an Integer or is out of bounds. Or fail if the value is
-	not of the right type for this kind of collection. Answer the value that
-	was stored. Essential. Do not override in a subclass. See Object
+basicAt: index put: value 
+	"Primitive. Assumes receiver is indexable. Store the second argument 
+	value in the indexable element of the receiver indicated by index. Fail 
+	if the index is not an Integer or is out of bounds. Or fail if the value is 
+	not of the right type for this kind of collection. Answer the value that 
+	was stored. Essential. Do not override in a subclass. See Object 
 	documentation whatIsAPrimitive."
 
 	<primitive: 61>
@@ -745,8 +745,8 @@ basicAt: index put: value
 
 !Object methodsFor: 'accessing'!
 basicSize
-	"Primitive. Answer the number of indexable variables in the receiver.
-	This value is the same as the largest legal subscript. Essential. Do not
+	"Primitive. Answer the number of indexable variables in the receiver. 
+	This value is the same as the largest legal subscript. Essential. Do not 
 	override in any subclass. See Object documentation whatIsAPrimitive."
 
 	<primitive: 62>
@@ -758,7 +758,7 @@ bindWithTemp: aBlock
 	^ aBlock value: self value: nil! !
 
 !Object methodsFor: 'accessing' stamp: 'md 10/7/2004 15:43'!
-ifNil: nilBlock ifNotNilDo: aBlock
+ifNil: nilBlock ifNotNilDo: aBlock 
 	"Evaluate aBlock with the receiver as its argument."
 
 	^ aBlock value: self
@@ -799,8 +799,8 @@ readFromString: aString
 
 !Object methodsFor: 'accessing' stamp: 'di 3/29/1999 13:10'!
 size
-	"Primitive. Answer the number of indexable variables in the receiver.
-	This value is the same as the largest legal subscript. Essential. See Object
+	"Primitive. Answer the number of indexable variables in the receiver. 
+	This value is the same as the largest legal subscript. Essential. See Object 
 	documentation whatIsAPrimitive."
 
 	<primitive: 62>
@@ -870,7 +870,7 @@ caseOf: aBlockAssociationCollection otherwise: aBlock
 
 !Object methodsFor: 'class membership'!
 class
-	"Primitive. Answer the object which is the receiver's class. Essential. See
+	"Primitive. Answer the object which is the receiver's class. Essential. See 
 	Object documentation whatIsAPrimitive."
 
 	<primitive: 111>
@@ -882,7 +882,7 @@ inheritsFromAnyIn: aList
 
 	| aClass |
 	aList do:
-		[:elem | Symbol hasInterned: elem asString ifTrue:
+		[:elem | Symbol hasInterned: elem asString ifTrue: 
 			[:elemSymbol | (((aClass _ Smalltalk at: elemSymbol ifAbsent: [nil]) isKindOf: Class)
 						and: [self isKindOf: aClass])
 				ifTrue:
@@ -899,7 +899,7 @@ inheritsFromAnyIn: aList
 "! !
 
 !Object methodsFor: 'class membership'!
-isKindOf: aClass
+isKindOf: aClass 
 	"Answer whether the class, aClass, is a superclass or class of the receiver."
 
 	self class == aClass
@@ -912,14 +912,14 @@ isKindOf: aClass orOf: anotherClass
 	^ (self isKindOf: aClass) or: [self isKindOf: anotherClass]! !
 
 !Object methodsFor: 'class membership'!
-isMemberOf: aClass
+isMemberOf: aClass 
 	"Answer whether the receiver is an instance of the class, aClass."
 
 	^self class == aClass! !
 
 !Object methodsFor: 'class membership'!
-respondsTo: aSymbol
-	"Answer whether the method dictionary of the receiver's class contains
+respondsTo: aSymbol 
+	"Answer whether the method dictionary of the receiver's class contains 
 	aSymbol as a message selector."
 
 	^self class canUnderstand: aSymbol! !
@@ -971,16 +971,16 @@ literalEqual: other
 	^ self class == other class and: [self = other]! !
 
 !Object methodsFor: 'comparing'!
-= anObject
-	"Answer whether the receiver and the argument represent the same
-	object. If = is redefined in any subclass, consider also redefining the
+= anObject 
+	"Answer whether the receiver and the argument represent the same 
+	object. If = is redefined in any subclass, consider also redefining the 
 	message hash."
 
 	^self == anObject! !
 
 !Object methodsFor: 'comparing'!
-~= anObject
-	"Answer whether the receiver and the argument do not represent the
+~= anObject 
+	"Answer whether the receiver and the argument do not represent the 
 	same object."
 
 	^self = anObject == false! !
@@ -1138,39 +1138,39 @@ copyTwoLevel
 	newObject _ self clone.
 	newObject == self ifTrue: [^ self].
 	class isVariable
-		ifTrue:
+		ifTrue: 
 			[index _ self basicSize.
 			[index > 0]
-				whileTrue:
+				whileTrue: 
 					[newObject basicAt: index put: (self basicAt: index) shallowCopy.
 					index _ index - 1]].
 	index _ class instSize.
 	[index > 0]
-		whileTrue:
+		whileTrue: 
 			[newObject instVarAt: index put: (self instVarAt: index) shallowCopy.
 			index _ index - 1].
 	^newObject! !
 
 !Object methodsFor: 'copying'!
 deepCopy
-	"Answer a copy of the receiver with its own copy of each instance
+	"Answer a copy of the receiver with its own copy of each instance 
 	variable."
 
 	| newObject class index |
 	class _ self class.
 	(class == Object) ifTrue: [^self].
 	class isVariable
-		ifTrue:
+		ifTrue: 
 			[index _ self basicSize.
 			newObject _ class basicNew: index.
 			[index > 0]
-				whileTrue:
+				whileTrue: 
 					[newObject basicAt: index put: (self basicAt: index) deepCopy.
 					index _ index - 1]]
 		ifFalse: [newObject _ class basicNew].
 	index _ class instSize.
 	[index > 0]
-		whileTrue:
+		whileTrue: 
 			[newObject instVarAt: index put: (self instVarAt: index) deepCopy.
 			index _ index - 1].
 	^newObject! !
@@ -1194,17 +1194,17 @@ shallowCopy
 	<primitive: 148>
 	class _ self class.
 	class isVariable
-		ifTrue:
+		ifTrue: 
 			[index _ self basicSize.
 			newObject _ class basicNew: index.
 			[index > 0]
-				whileTrue:
+				whileTrue: 
 					[newObject basicAt: index put: (self basicAt: index).
 					index _ index - 1]]
 		ifFalse: [newObject _ class basicNew].
 	index _ class instSize.
 	[index > 0]
-		whileTrue:
+		whileTrue: 
 			[newObject instVarAt: index put: (self instVarAt: index).
 			index _ index - 1].
 	^ newObject! !
@@ -1217,7 +1217,7 @@ veryDeepCopy
 	copier _ DeepCopier new initialize: self initialDeepCopierSize.
 	new _ self veryDeepCopyWith: copier.
 	copier mapUniClasses.
-	copier references associationsDo: [:assoc |
+	copier references associationsDo: [:assoc | 
 		assoc value veryDeepFixupWith: copier].
 	copier fixDependents.
 	^ new! !
@@ -1231,7 +1231,7 @@ veryDeepCopySibling
 	copier newUniClasses: false.
 	new _ self veryDeepCopyWith: copier.
 	copier mapUniClasses.
-	copier references associationsDo: [:assoc |
+	copier references associationsDo: [:assoc | 
 		assoc value veryDeepFixupWith: copier].
 	copier fixDependents.
 	^ new! !
@@ -1245,12 +1245,12 @@ veryDeepCopyUsing: copier
 	| new refs newDep newModel |
 	new _ self veryDeepCopyWith: copier.
 	copier mapUniClasses.
-	copier references associationsDo: [:assoc |
+	copier references associationsDo: [:assoc | 
 		assoc value veryDeepFixupWith: copier].
 	"Fix dependents"
 	refs _ copier references.
 	DependentsFields associationsDo: [:pair |
-		pair value do: [:dep |
+		pair value do: [:dep | 
 			(newDep _ refs at: dep ifAbsent: [nil]) ifNotNil: [
 				newModel _ refs at: pair key ifAbsent: [pair key].
 				newModel addDependent: newDep]]].
@@ -1272,9 +1272,9 @@ veryDeepCopyWith: deepCopier
 		new _ uc new.
 		new copyFrom: self].	"copy inst vars in case any are weak"
 	deepCopier references at: self put: new.	"remember"
-	(class isVariable and: [class isPointers]) ifTrue:
+	(class isVariable and: [class isPointers]) ifTrue: 
 		[index _ self basicSize.
-		[index > 0] whileTrue:
+		[index > 0] whileTrue: 
 			[sub _ self basicAt: index.
 			(subAss _ deepCopier references associationAt: sub ifAbsent: [nil])
 				ifNil: [new basicAt: index put: (sub veryDeepCopyWith: deepCopier)]
@@ -1293,7 +1293,7 @@ veryDeepCopyWith: deepCopier
 				sub _ self instVarAt: index.
 				(subAss _ deepCopier references associationAt: sub ifAbsent: [nil])
 						"use association, not value, so nil is an exceptional value"
-					ifNil: [new instVarAt: index put:
+					ifNil: [new instVarAt: index put: 
 								(sub veryDeepCopyWith: deepCopier)]
 					ifNotNil: [new instVarAt: index put: subAss value].
 				index _ index - 1]].
@@ -1342,7 +1342,7 @@ openAsMorph
 
 !Object methodsFor: 'debugging' stamp: 'md 11/24/2004 11:45'!
 haltIf: condition
-	"This is the typical message to use for inserting breakpoints during
+	"This is the typical message to use for inserting breakpoints during 
 	debugging.  Param can be a block or expression, halt if true.
 	If the Block has one arg, the receiver is bound to that.
  	If the condition is a selector, we look up in the callchain. Halt if
@@ -1353,14 +1353,14 @@ haltIf: condition
 		"only halt if a method with selector symbol is in callchain"
 		cntxt := thisContext.
 		[cntxt sender isNil] whileFalse: [
-			cntxt := cntxt sender.
+			cntxt := cntxt sender. 
 			(cntxt selector = condition) ifTrue: [Halt signal].
 			].
 		^self.
 	].
-	(condition isBlock
-			ifTrue: [condition valueWithPossibleArgument: self]
-			ifFalse: [condition]
+	(condition isBlock 
+			ifTrue: [condition valueWithPossibleArgument: self] 
+			ifFalse: [condition] 
 	) ifTrue: [
 		Halt signal
 	].! !
@@ -1414,7 +1414,7 @@ doExpiredInspectCount
 	self inspect! !
 
 !Object methodsFor: 'debugging-haltOnce' stamp: 'sbw 6/2/2004 08:43'!
-haltOnCount: int
+haltOnCount: int 
 	self haltOnceEnabled
 		ifTrue: [self hasHaltCount
 				ifTrue: [self decrementAndCheckHaltCount
@@ -1437,14 +1437,14 @@ haltOnceEnabled
 		ifAbsent: [false]! !
 
 !Object methodsFor: 'debugging-haltOnce' stamp: 'sbw 5/19/2004 19:05'!
-haltOnce: aString
+haltOnce: aString 
 	"Halt unless we have already done it once."
 	self haltOnceEnabled
 		ifTrue: [self clearHaltOnce.
 			^ self halt: aString]! !
 
 !Object methodsFor: 'debugging-haltOnce' stamp: 'sbw 6/2/2004 08:45'!
-halt: aString onCount: int
+halt: aString onCount: int 
 	self haltOnceEnabled
 		ifTrue: [self hasHaltCount
 				ifTrue: [self decrementAndCheckHaltCount
@@ -1459,7 +1459,7 @@ hasHaltCount
 				includesKey: #HaltCount! !
 
 !Object methodsFor: 'debugging-haltOnce' stamp: 'sbw 6/2/2004 08:46'!
-inspectOnCount: int
+inspectOnCount: int 
 	self haltOnceEnabled
 		ifTrue: [self hasHaltCount
 				ifTrue: [self decrementAndCheckHaltCount
@@ -1476,7 +1476,7 @@ inspectOnce
 			^ self inspect]! !
 
 !Object methodsFor: 'debugging-haltOnce' stamp: 'sbw 6/2/2004 13:20'!
-inspectUntilCount: int
+inspectUntilCount: int 
 	self haltOnceEnabled
 		ifTrue: [self hasHaltCount
 				ifTrue: [self decrementAndCheckHaltCount
@@ -1575,8 +1575,8 @@ myDependents: aCollectionOrNil
 
 !Object methodsFor: 'dependents access' stamp: 'reThink 2/18/2001 17:06'!
 release
-	"Remove references to objects that may refer to the receiver. This message
-	should be overridden by subclasses with any cycles, in which case the
+	"Remove references to objects that may refer to the receiver. This message 
+	should be overridden by subclasses with any cycles, in which case the 
 	subclass should also include the expression super release."
 
 	self releaseActionMap! !
@@ -1592,16 +1592,16 @@ removeDependent: anObject
 
 
 !Object methodsFor: 'drag and drop' stamp: 'bh 9/16/2001 18:10'!
-acceptDroppingMorph: transferMorph event: evt inMorph: dstListMorph
-
+acceptDroppingMorph: transferMorph event: evt inMorph: dstListMorph 
+	
 	^false.! !
 
 !Object methodsFor: 'drag and drop' stamp: 'mir 5/16/2000 11:35'!
-dragAnimationFor: item transferMorph: transferMorph
+dragAnimationFor: item transferMorph: transferMorph 
 	"Default do nothing"! !
 
 !Object methodsFor: 'drag and drop' stamp: 'panda 4/28/2000 16:20'!
-dragPassengerFor: item inMorph: dragSource
+dragPassengerFor: item inMorph: dragSource 
 	^item! !
 
 !Object methodsFor: 'drag and drop' stamp: 'panda 4/28/2000 16:11'!
@@ -1609,11 +1609,11 @@ dragTransferType
 	^nil! !
 
 !Object methodsFor: 'drag and drop' stamp: 'panda 4/28/2000 16:05'!
-dragTransferTypeForMorph: dragSource
+dragTransferTypeForMorph: dragSource 
 	^nil! !
 
 !Object methodsFor: 'drag and drop' stamp: 'mir 5/8/2000 17:19'!
-wantsDroppedMorph: aMorph event: anEvent inMorph: destinationLM
+wantsDroppedMorph: aMorph event: anEvent inMorph: destinationLM 
 	^false! !
 
 
@@ -1651,8 +1651,8 @@ caseError
 
 !Object methodsFor: 'error handling' stamp: 'rbb 3/1/2005 09:26'!
 confirm: queryString
-	"Put up a yes/no menu with caption queryString. Answer true if the
-	response is yes, false if no. This is a modal question--the user must
+	"Put up a yes/no menu with caption queryString. Answer true if the 
+	response is yes, false if no. This is a modal question--the user must 
 	respond yes or no."
 
 	"nil confirm: 'Are you hungry?'"
@@ -1661,8 +1661,8 @@ confirm: queryString
 
 !Object methodsFor: 'error handling' stamp: 'rbb 3/1/2005 09:27'!
 confirm: aString orCancel: cancelBlock
-	"Put up a yes/no/cancel menu with caption aString. Answer true if
-	the response is yes, false if no. If cancel is chosen, evaluate
+	"Put up a yes/no/cancel menu with caption aString. Answer true if  
+	the response is yes, false if no. If cancel is chosen, evaluate  
 	cancelBlock. This is a modal question--the user must respond yes or no."
 
 	^ UIManager default confirm: aString orCancel: cancelBlock! !
@@ -1675,7 +1675,7 @@ deprecated: anExplanationString
 		[Deprecation signal: thisContext sender printString, ' has been deprecated. ', anExplanationString]! !
 
 !Object methodsFor: 'error handling' stamp: 'dew 10/7/2003 00:26'!
-deprecated: anExplanationString block: aBlock
+deprecated: anExplanationString block: aBlock 
 	 "Warn that the sender has been deprecated.  Answer the value of aBlock on resumption.  (Note that #deprecated: is usually the preferred method.)"
 
 	Preferences showDeprecationWarnings ifTrue:
@@ -1685,11 +1685,11 @@ deprecated: anExplanationString block: aBlock
 ! !
 
 !Object methodsFor: 'error handling' stamp: 'md 2/22/2006 21:21'!
-doesNotUnderstand: aMessage
+doesNotUnderstand: aMessage 
 	 "Handle the fact that there was an attempt to send the given message to the receiver but the receiver does not understand this message (typically sent from the machine when a message is sent to the receiver and no method is defined for that selector)."
 	"Testing: (3 activeProcess)"
 
-	MessageNotUnderstood new
+	MessageNotUnderstood new 
 		message: aMessage;
 		receiver: self;
 		signal.
@@ -1697,10 +1697,10 @@ doesNotUnderstand: aMessage
 ! !
 
 !Object methodsFor: 'error handling' stamp: 'TRee 11/4/2003 16:47'!
-dpsTrace: reportObject
+dpsTrace: reportObject  
 	Transcript myDependents isNil ifTrue: [^self].
 	self dpsTrace: reportObject levels: 1 withContext: thisContext
-
+		
 " nil dpsTrace: 'sludder'. "! !
 
 !Object methodsFor: 'error handling' stamp: 'TRee 11/4/2003 16:49'!
@@ -1712,10 +1712,10 @@ dpsTrace: reportObject levels: anInt
 !Object methodsFor: 'error handling' stamp: 'TRee 11/4/2003 17:02'!
 dpsTrace: reportObject levels: anInt withContext: currentContext
 	| reportString context displayCount |
-	reportString := (reportObject respondsTo: #asString)
+	reportString := (reportObject respondsTo: #asString) 
 			ifTrue: [reportObject asString] ifFalse: [reportObject printString].
-	(Smalltalk at: #Decompiler ifAbsent: [nil])
-	ifNil:
+	(Smalltalk at: #Decompiler ifAbsent: [nil]) 
+	ifNil: 
 		[Transcript cr; show: reportString]
 	ifNotNil:
 		[context := currentContext.
@@ -1725,10 +1725,10 @@ dpsTrace: reportObject levels: anInt withContext: currentContext
 			Transcript cr.
 			displayCount
 				ifTrue: [Transcript show: count printString, ': '].
-
+			
 			reportString notNil
 			ifTrue:
-				[Transcript show: context home class name
+				[Transcript show: context home class name 
 			, '/' , context sender selector,  ' (' , reportString , ')'.
 				context := context sender.
 				reportString := nil]
@@ -1744,7 +1744,7 @@ error
 	^self error: 'Error!!'.! !
 
 !Object methodsFor: 'error handling' stamp: 'tfei 4/12/1999 12:55'!
-error: aString
+error: aString 
 	"Throw a generic Error exception."
 
 	^Error new signal: aString! !
@@ -1755,19 +1755,19 @@ explicitRequirement
 
 !Object methodsFor: 'error handling' stamp: 'al 2/13/2006 22:20'!
 halt
-	"This is the typical message to use for inserting breakpoints during
-	debugging. It behaves like halt:, but does not call on halt: in order to
-	avoid putting this message on the stack. Halt is especially useful when
+	"This is the typical message to use for inserting breakpoints during 
+	debugging. It behaves like halt:, but does not call on halt: in order to 
+	avoid putting this message on the stack. Halt is especially useful when 
 	the breakpoint message is an arbitrary one."
 
 	Halt signal! !
 
 !Object methodsFor: 'error handling' stamp: 'tfei 4/12/1999 12:59'!
-halt: aString
-	"This is the typical message to use for inserting breakpoints during
-	debugging. It creates and schedules a Notifier with the argument,
+halt: aString 
+	"This is the typical message to use for inserting breakpoints during 
+	debugging. It creates and schedules a Notifier with the argument, 
 	aString, as the label."
-
+	
 	Halt new signal: aString! !
 
 !Object methodsFor: 'error handling' stamp: 'md 1/20/2006 16:24'!
@@ -1777,7 +1777,7 @@ handles: exception
 	^ false! !
 
 !Object methodsFor: 'error handling' stamp: 'ar 9/27/2005 20:24'!
-notifyWithLabel: aString
+notifyWithLabel: aString 
 	"Create and schedule a Notifier with aString as the window label as well as the contents of the window, in  order to request confirmation before a process can proceed."
 
 	ToolSet
@@ -1788,8 +1788,8 @@ notifyWithLabel: aString
 	"nil notifyWithLabel: 'let us see if this works'"! !
 
 !Object methodsFor: 'error handling' stamp: 'hg 10/2/2001 20:49'!
-notify: aString
-	"Create and schedule a Notifier with the argument as the message in
+notify: aString 
+	"Create and schedule a Notifier with the argument as the message in 
 	order to request confirmation before a process can proceed."
 
 	Warning signal: aString
@@ -1798,7 +1798,7 @@ notify: aString
 
 !Object methodsFor: 'error handling'!
 notify: aString at: location
-	"Create and schedule a Notifier with the argument as the message in
+	"Create and schedule a Notifier with the argument as the message in 
 	order to request confirmation before a process can proceed. Subclasses can
 	override this and insert an error message at location within aString."
 
@@ -1808,7 +1808,7 @@ notify: aString at: location
 
 !Object methodsFor: 'error handling'!
 primitiveFailed
-	"Announce that a primitive has failed and there is no appropriate
+	"Announce that a primitive has failed and there is no appropriate 
 	Smalltalk code to run."
 
 	self error: 'a primitive has failed'! !
@@ -1825,7 +1825,7 @@ shouldBeImplemented
 
 !Object methodsFor: 'error handling'!
 shouldNotImplement
-	"Announce that, although the receiver inherits this message, it should
+	"Announce that, although the receiver inherits this message, it should 
 	not implement it."
 
 	self error: 'This message is not appropriate for this object'! !
@@ -1946,13 +1946,13 @@ updateableActionMap
 
 
 !Object methodsFor: 'events-registering' stamp: 'reThink 2/18/2001 15:04'!
-when: anEventSelector evaluate: anAction
+when: anEventSelector evaluate: anAction 
 
 	| actions |
 	actions := self actionSequenceForEvent: anEventSelector.
 	(actions includes: anAction)
 		ifTrue: [^ self].
-	self
+	self 
 		setActionSequence: (actions copyWith: anAction)
 		forEvent: anEventSelector! !
 
@@ -1960,7 +1960,7 @@ when: anEventSelector evaluate: anAction
 when: anEventSelector
 send: aMessageSelector
 to: anObject
-
+ 
     self
         when: anEventSelector
         evaluate: (WeakMessageSend
@@ -1972,7 +1972,7 @@ when: anEventSelector
 send: aMessageSelector
 to: anObject
 withArguments: anArgArray
-
+ 
     self
         when: anEventSelector
         evaluate: (WeakMessageSend
@@ -1985,7 +1985,7 @@ when: anEventSelector
 send: aMessageSelector
 to: anObject
 with: anArg
-
+ 
     self
         when: anEventSelector
         evaluate: (WeakMessageSend
@@ -2019,7 +2019,7 @@ removeActionsSatisfying: aBlock
 		]! !
 
 !Object methodsFor: 'events-removing' stamp: 'reThink 2/18/2001 15:31'!
-removeActionsSatisfying: aOneArgBlock
+removeActionsSatisfying: aOneArgBlock 
 forEvent: anEventSelector
 
     self
@@ -2068,7 +2068,7 @@ triggerEvent: anEventSelector
 ifNotHandled: anExceptionBlock
 	"Evaluate all actions registered for <anEventSelector>. Return the value of the last registered action."
 
-    ^(self
+    ^(self 
 		actionForEvent: anEventSelector
 		ifAbsent: [^anExceptionBlock value]) value
 ! !
@@ -2085,7 +2085,7 @@ triggerEvent: anEventSelector
 withArguments: anArgumentList
 ifNotHandled: anExceptionBlock
 
-    ^(self
+    ^(self 
 		actionForEvent: anEventSelector
 		ifAbsent: [^anExceptionBlock value])
         valueWithArguments: anArgumentList! !
@@ -2094,7 +2094,7 @@ ifNotHandled: anExceptionBlock
 triggerEvent: anEventSelector
 with: anObject
 
-    ^self
+    ^self 
 		triggerEvent: anEventSelector
 		withArguments: (Array with: anObject)! !
 
@@ -2103,7 +2103,7 @@ triggerEvent: anEventSelector
 with: anObject
 ifNotHandled: anExceptionBlock
 
-    ^self
+    ^self 
 		triggerEvent: anEventSelector
 		withArguments: (Array with: anObject)
 		ifNotHandled: anExceptionBlock! !
@@ -2233,7 +2233,7 @@ logExit
 
 
 !Object methodsFor: 'graph model' stamp: 'dgd 9/18/2004 15:07'!
-addModelYellowButtonMenuItemsTo: aCustomMenu forMorph: aMorph hand: aHandMorph
+addModelYellowButtonMenuItemsTo: aCustomMenu forMorph: aMorph hand: aHandMorph 
 	"The receiver serves as the model for aMorph; a menu is being constructed for the morph, and here the receiver is able to add its own items"
 	Preferences cmdGesturesEnabled ifTrue: [ "build mode"
 		aCustomMenu add: 'inspect model' translated target: self action: #inspect.
@@ -2249,7 +2249,7 @@ hasModelYellowButtonMenuItems
 
 !Object methodsFor: 'inspecting' stamp: 'ar 9/27/2005 18:31'!
 basicInspect
-	"Create and schedule an Inspector in which the user can examine the
+	"Create and schedule an Inspector in which the user can examine the 
 	receiver's variables. This method should not be overriden."
 	^ToolSet basicInspect: self! !
 
@@ -2260,7 +2260,7 @@ inspect
 
 !Object methodsFor: 'inspecting' stamp: 'apb 7/14/2004 12:19'!
 inspectorClass
-	"Answer the class of the inspector to be used on the receiver.  Called by inspect;
+	"Answer the class of the inspector to be used on the receiver.  Called by inspect; 
 	use basicInspect to get a normal (less useful) type of inspector."
 
 	^ Inspector! !
@@ -2305,8 +2305,8 @@ currentVocabulary
 currentWorld
 	"Answer a morphic world that is the current UI focus.
 		If in an embedded world, it's that world.
-		If in a morphic project, it's that project's world.
-		If in an mvc project, it is the topmost morphic-mvc-window's worldMorph.
+		If in a morphic project, it's that project's world.  
+		If in an mvc project, it is the topmost morphic-mvc-window's worldMorph. 
 		If in an mvc project that has no morphic-mvc-windows, then it's just some existing worldmorph instance.
 		If in an mvc project in a Squeak that has NO WorldMorph instances, one is created.
 
@@ -2378,7 +2378,7 @@ executeMethod: compiledMethod
 	^ self withArgs: #() executeMethod: compiledMethod! !
 
 !Object methodsFor: 'message handling' stamp: 'di 3/26/1999 07:52'!
-perform: aSymbol
+perform: aSymbol 
 	"Send the unary selector, aSymbol, to the receiver.
 	Fail if the number of arguments expected by the selector is not zero.
 	Primitive. Optional. See Object documentation whatIsAPrimitive."
@@ -2392,9 +2392,9 @@ perform: selector orSendTo: otherTarget
 	^ (self respondsTo: selector) ifTrue: [self perform: selector] ifFalse: [otherTarget perform: selector]! !
 
 !Object methodsFor: 'message handling' stamp: 'di 3/26/1999 07:55'!
-perform: selector withArguments: argArray
+perform: selector withArguments: argArray 
 	"Send the selector, aSymbol, to the receiver with arguments in argArray.
-	Fail if the number of arguments expected by the selector
+	Fail if the number of arguments expected by the selector 
 	does not match the size of argArray.
 	Primitive. Optional. See Object documentation whatIsAPrimitive."
 
@@ -2436,7 +2436,7 @@ perform: selector withEnoughArguments: anArray
 	^ self perform: selector withArguments: args! !
 
 !Object methodsFor: 'message handling' stamp: 'di 3/26/1999 07:52'!
-perform: aSymbol with: anObject
+perform: aSymbol with: anObject 
 	"Send the selector, aSymbol, to the receiver with anObject as its argument.
 	Fail if the number of arguments expected by the selector is not one.
 	Primitive. Optional. See Object documentation whatIsAPrimitive."
@@ -2445,7 +2445,7 @@ perform: aSymbol with: anObject
 	^ self perform: aSymbol withArguments: (Array with: anObject)! !
 
 !Object methodsFor: 'message handling' stamp: 'di 3/26/1999 07:52'!
-perform: aSymbol with: firstObject with: secondObject
+perform: aSymbol with: firstObject with: secondObject 
 	"Send the selector, aSymbol, to the receiver with the given arguments.
 	Fail if the number of arguments expected by the selector is not two.
 	Primitive. Optional. See Object documentation whatIsAPrimitive."
@@ -2454,7 +2454,7 @@ perform: aSymbol with: firstObject with: secondObject
 	^ self perform: aSymbol withArguments: (Array with: firstObject with: secondObject)! !
 
 !Object methodsFor: 'message handling' stamp: 'di 3/26/1999 07:51'!
-perform: aSymbol with: firstObject with: secondObject with: thirdObject
+perform: aSymbol with: firstObject with: secondObject with: thirdObject 
 	"Send the selector, aSymbol, to the receiver with the given arguments.
 	Fail if the number of arguments expected by the selector is not three.
 	Primitive. Optional. See Object documentation whatIsAPrimitive."
@@ -2553,7 +2553,7 @@ readDataFrom: aDataStream size: varsOnDisk
 	1 to: cntIndexedVars do:
 		[:i | self basicAt: i put: aDataStream next].
 	"Total number read MUST be equal to varsOnDisk!!"
-	^ self	"If we ever return something other than self, fix calls
+	^ self	"If we ever return something other than self, fix calls 
 			on (super readDataFrom: aDataStream size: anInteger)"! !
 
 !Object methodsFor: 'objects from disk' stamp: 'CdG 10/17/2005 20:32'!
@@ -2562,7 +2562,7 @@ saveOnFile
 
 	| aFileName fileStream |
 	aFileName := self class name asFileName.	"do better?"
-	aFileName := UIManager default
+	aFileName := UIManager default 
 				request: 'File name?' translated initialAnswer: aFileName.
 	aFileName size == 0 ifTrue: [^ Beeper beep].
 
@@ -2582,7 +2582,7 @@ storeDataOn: aDataStream
 	1 to: cntInstVars do:
 		[:i | aDataStream nextPut: (self instVarAt: i)].
 
-	"Write fields of a variable length object.  When writing to a dummy
+	"Write fields of a variable length object.  When writing to a dummy 
 		stream, don't bother to write the bytes"
 	((aDataStream byteStream class == DummyStream) and: [self class isBits]) ifFalse: [
 		1 to: cntIndexedVars do:
@@ -2610,14 +2610,14 @@ fullPrintString
 
 !Object methodsFor: 'printing'!
 isLiteral
-	"Answer whether the receiver has a literal text form recognized by the
+	"Answer whether the receiver has a literal text form recognized by the 
 	compiler."
 
 	^false! !
 
 !Object methodsFor: 'printing' stamp: 'sma 6/1/2000 09:28'!
 longPrintOn: aStream
-	"Append to the argument, aStream, the names and values of all
+	"Append to the argument, aStream, the names and values of all 
 	of the receiver's instance variables."
 
 	self class allInstVarNames doWithIndex:
@@ -2640,14 +2640,14 @@ longPrintOn: aStream limitedTo: sizeLimit indent: indent
 		 nextPut: $:;
 		 space;
 		 tab;
-		 nextPutAll:
+		 nextPutAll: 
 			((self instVarAt: index) printStringLimitedTo: (sizeLimit -3 -title size max: 1));
 		 cr]! !
 
 !Object methodsFor: 'printing' stamp: 'tk 10/16/2001 19:41'!
 longPrintString
 	"Answer a String whose characters are a description of the receiver."
-
+	
 	| str |
 	str _ String streamContents: [:aStream | self longPrintOn: aStream].
 	"Objects without inst vars should return something"
@@ -2656,7 +2656,7 @@ longPrintString
 !Object methodsFor: 'printing' stamp: 'BG 11/7/2004 13:39'!
 longPrintStringLimitedTo: aLimitValue
 	"Answer a String whose characters are a description of the receiver."
-
+	
 	| str |
 	str _ String streamContents: [:aStream | self longPrintOn: aStream limitedTo: aLimitValue indent: 0].
 	"Objects without inst vars should return something"
@@ -2676,7 +2676,7 @@ This will serve two purposes:
 
 !Object methodsFor: 'printing' stamp: 'sma 6/1/2000 09:31'!
 printOn: aStream
-	"Append to the argument, aStream, a sequence of characters that
+	"Append to the argument, aStream, a sequence of characters that  
 	identifies the receiver."
 
 	| title |
@@ -2687,7 +2687,7 @@ printOn: aStream
 
 !Object methodsFor: 'printing' stamp: 'sma 6/1/2000 09:22'!
 printString
-	"Answer a String whose characters are a description of the receiver.
+	"Answer a String whose characters are a description of the receiver. 
 	If you want to print without a character limit, use fullPrintString."
 
 	^ self printStringLimitedTo: 50000! !
@@ -2715,8 +2715,8 @@ reportableSize
 	^ (self basicSize + self class instSize) printString! !
 
 !Object methodsFor: 'printing'!
-storeOn: aStream
-	"Append to the argument aStream a sequence of characters that is an
+storeOn: aStream 
+	"Append to the argument aStream a sequence of characters that is an 
 	expression whose evaluation creates an object similar to the receiver."
 
 	aStream nextPut: $(.
@@ -2744,7 +2744,7 @@ storeOn: aStream
 
 !Object methodsFor: 'printing' stamp: 'di 6/20/97 09:12'!
 storeString
-	"Answer a String representation of the receiver from which the receiver
+	"Answer a String representation of the receiver from which the receiver 
 	can be reconstructed."
 
 	^ String streamContents: [:s | self storeOn: s]! !
@@ -2871,9 +2871,9 @@ universalTilesForInterface: aMethodInterface
 	itsSelector _ aMethodInterface selector.
 	argList _ OrderedCollection new.
 	aMethodInterface argumentVariables doWithIndex:
-		[:anArgumentVariable :anIndex |
+		[:anArgumentVariable :anIndex | 
 			argTile _ ScriptingSystem tileForArgType: (aType _ aMethodInterface typeForArgumentNumber: anIndex).
-			argList add: (aType == #Player
+			argList add: (aType == #Player 
 				ifTrue: [argTile actualObject]
 				ifFalse: [argTile literal]).	"default value for each type"].
 
@@ -2889,16 +2889,16 @@ isSelfEvaluating
 
 !Object methodsFor: 'system primitives'!
 asOop
-	"Primitive. Answer a SmallInteger whose value is half of the receiver's
-	object pointer (interpreting object pointers as 16-bit signed quantities).
-	Fail if the receiver is a SmallInteger. Essential. See Object documentation
+	"Primitive. Answer a SmallInteger whose value is half of the receiver's 
+	object pointer (interpreting object pointers as 16-bit signed quantities). 
+	Fail if the receiver is a SmallInteger. Essential. See Object documentation 
 	whatIsAPrimitive."
 
 	<primitive: 75>
 	self primitiveFailed! !
 
 !Object methodsFor: 'system primitives' stamp: 'di 1/9/1999 15:19'!
-becomeForward: otherObject
+becomeForward: otherObject 
 	"Primitive. All variables in the entire system that used to point
 	to the receiver now point to the argument.
 	Fails if either argument is a SmallInteger."
@@ -2931,10 +2931,10 @@ creationStamp
 	^ '<no creation stamp>'! !
 
 !Object methodsFor: 'system primitives'!
-instVarAt: index
-	"Primitive. Answer a fixed variable in an object. The numbering of the
-	variables corresponds to the named instance variables. Fail if the index
-	is not an Integer or is not the index of a fixed variable. Essential. See
+instVarAt: index 
+	"Primitive. Answer a fixed variable in an object. The numbering of the 
+	variables corresponds to the named instance variables. Fail if the index 
+	is not an Integer or is not the index of a fixed variable. Essential. See 
 	Object documentation whatIsAPrimitive."
 
 	<primitive: 73>
@@ -2942,13 +2942,13 @@ instVarAt: index
 	^self basicAt: index - self class instSize		! !
 
 !Object methodsFor: 'system primitives'!
-instVarAt: anInteger put: anObject
-	"Primitive. Store a value into a fixed variable in the receiver. The
-	numbering of the variables corresponds to the named instance variables.
-	Fail if the index is not an Integer or is not the index of a fixed variable.
-	Answer the value stored as the result. Using this message violates the
-	principle that each object has sovereign control over the storing of
-	values into its instance variables. Essential. See Object documentation
+instVarAt: anInteger put: anObject 
+	"Primitive. Store a value into a fixed variable in the receiver. The 
+	numbering of the variables corresponds to the named instance variables. 
+	Fail if the index is not an Integer or is not the index of a fixed variable. 
+	Answer the value stored as the result. Using this message violates the 
+	principle that each object has sovereign control over the storing of 
+	values into its instance variables. Essential. See Object documentation 
 	whatIsAPrimitive."
 
 	<primitive: 74>
@@ -3240,7 +3240,7 @@ isWebBrowser
 !Object methodsFor: 'testing' stamp: 'sw 10/27/2000 06:58'!
 knownName
 	"If a formal name has been handed out for this object, answer it, else nil"
-
+	
 	^ Preferences capitalizedReferences
 		ifTrue:
 			[References keyAtValue: self ifAbsent: [nil]]
@@ -3289,7 +3289,7 @@ WatchMorph new openInstanceBrowserWithTiles
 "! !
 
 !Object methodsFor: 'testing' stamp: 'tk 7/28/2005 04:50'!
-renameInternal: newName
+renameInternal: newName 
 	"Change the internal name (because of a conflict) but leave the external name unchanged.  Change Player class name, but do not change the names that appear in tiles.  Any object that might be pointed to in the References dictionary might get this message sent to it upon reload"
 
 	^ nil	"caller will renameTo:.  new name may be different"! !
@@ -3316,12 +3316,12 @@ stepIn: aWindow
 
 !Object methodsFor: 'testing' stamp: 'sw 10/19/1999 08:21'!
 stepTime
-
+	
 	^ 1000 "milliseconds -- default backstop for objects serving as models of system windows"! !
 
 !Object methodsFor: 'testing' stamp: 'sw 10/19/1999 08:22'!
 stepTimeIn: aSystemWindow
-
+	
 	^ 1000 "milliseconds -- default backstop for objects serving as models of system windows"! !
 
 !Object methodsFor: 'testing' stamp: 'sw 5/3/2001 18:22'!
@@ -3345,12 +3345,12 @@ wantsSteps
 
 !Object methodsFor: 'testing' stamp: 'sw 10/19/1999 08:26'!
 wantsStepsIn: aSystemWindow
-
+	
 	^ self wantsSteps! !
 
 
 !Object methodsFor: 'thumbnail' stamp: 'dgd 9/25/2004 23:17'!
-iconOrThumbnailOfSize: aNumberOrPoint
+iconOrThumbnailOfSize: aNumberOrPoint 
 	"Answer an appropiate form to represent the receiver"
 	^ nil! !
 
@@ -3386,14 +3386,14 @@ purgeAllCommands
 ! !
 
 !Object methodsFor: 'undo' stamp: 'di 9/12/2000 08:15'!
-redoFromCapturedState: st
+redoFromCapturedState: st 
 	"May be overridden in subclasses.  See also capturedState"
 
 	self undoFromCapturedState: st  "Simple cases are symmetric"
 ! !
 
 !Object methodsFor: 'undo' stamp: 'sw 11/16/2000 14:42'!
-refineRedoTarget: target selector: aSymbol arguments: arguments in: refineBlock
+refineRedoTarget: target selector: aSymbol arguments: arguments in: refineBlock 
 	"Any object can override this method to refine its redo specification"
 
 	^ refineBlock
@@ -3402,7 +3402,7 @@ refineRedoTarget: target selector: aSymbol arguments: arguments in: refineBlock
 		value: arguments! !
 
 !Object methodsFor: 'undo' stamp: 'sw 11/16/2000 14:42'!
-refineUndoTarget: target selector: aSymbol arguments: arguments in: refineBlock
+refineUndoTarget: target selector: aSymbol arguments: arguments in: refineBlock 
 	"Any object can override this method to refine its undo specification"
 
 	^ refineBlock
@@ -3427,7 +3427,7 @@ rememberUndoableAction: actionBlock named: caption
 	^ result! !
 
 !Object methodsFor: 'undo' stamp: 'di 9/11/2000 20:32'!
-undoFromCapturedState: st
+undoFromCapturedState: st 
 	"May be overridden in subclasses.  See also capturedState"
 
 	self copyFrom: st
@@ -3436,23 +3436,23 @@ undoFromCapturedState: st
 
 !Object methodsFor: 'updating'!
 changed
-	"Receiver changed in a general way; inform all the dependents by
+	"Receiver changed in a general way; inform all the dependents by 
 	sending each dependent an update: message."
 
 	self changed: self! !
 
 !Object methodsFor: 'updating'!
-changed: aParameter
-	"Receiver changed. The change is denoted by the argument aParameter.
-	Usually the argument is a Symbol that is part of the dependent's change
+changed: aParameter 
+	"Receiver changed. The change is denoted by the argument aParameter. 
+	Usually the argument is a Symbol that is part of the dependent's change 
 	protocol. Inform all of the dependents."
 
 	self dependents do: [:aDependent | aDependent update: aParameter]! !
 
 !Object methodsFor: 'updating' stamp: 'nk 2/17/2004 11:12'!
 changed: anAspect with: anObject
-	"Receiver changed. The change is denoted by the argument anAspect.
-	Usually the argument is a Symbol that is part of the dependent's change
+	"Receiver changed. The change is denoted by the argument anAspect. 
+	Usually the argument is a Symbol that is part of the dependent's change 
 	protocol. Inform all of the dependents. Also pass anObject for additional information."
 
 	self dependents do: [:aDependent | aDependent update: anAspect with: anObject]! !
@@ -3478,18 +3478,18 @@ updateListsAndCodeIn: aWindow
 	aWindow updatablePanes do: [:aPane | aPane verifyContents]! !
 
 !Object methodsFor: 'updating' stamp: 'sma 2/29/2000 20:05'!
-update: aParameter
-	"Receive a change notice from an object of whom the receiver is a
-	dependent. The default behavior is to do nothing; a subclass might want
+update: aParameter 
+	"Receive a change notice from an object of whom the receiver is a 
+	dependent. The default behavior is to do nothing; a subclass might want 
 	to change itself in some way."
 
 	^ self! !
 
 !Object methodsFor: 'updating' stamp: 'nk 2/17/2004 11:13'!
 update: anAspect with: anObject
-	"Receive a change notice from an object of whom the receiver is a
+	"Receive a change notice from an object of whom the receiver is a 
 	dependent. The default behavior is to call update:,
-	which by default does nothing; a subclass might want
+	which by default does nothing; a subclass might want 
 	to change itself in some way."
 
 	^ self update: anAspect! !
@@ -3505,7 +3505,7 @@ addModelItemsToWindowMenu: aMenu
 	"aMenu is being constructed to be presented to the user in response to the user's pressing on the menu widget in the title bar of a morphic window.  Here, the model is given the opportunity to add any model-specific items to the menu, whose default target is the SystemWindow itself."! !
 
 !Object methodsFor: 'user interface' stamp: 'sw 10/5/1998 14:39'!
-addModelMenuItemsTo: aCustomMenu forMorph: aMorph hand: aHandMorph
+addModelMenuItemsTo: aCustomMenu forMorph: aMorph hand: aHandMorph 
 	"The receiver serves as the model for aMorph; a menu is being constructed for the morph, and here the receiver is able to add its own items"
 ! !
 
@@ -3516,7 +3516,7 @@ asExplorerString
 !Object methodsFor: 'user interface' stamp: 'sw 7/13/1999 15:53'!
 defaultBackgroundColor
 	"Answer the color to be used as the base window color for a window whose model is an object of the receiver's class"
-
+	
 	^ Preferences windowColorFor: self class name! !
 
 !Object methodsFor: 'user interface'!
@@ -3529,9 +3529,9 @@ defaultLabelForInspector
 eToyStreamedRepresentationNotifying: aWidget
 
 	| outData |
-	[ outData _ SmartRefStream streamedRepresentationOf: self ]
+	[ outData _ SmartRefStream streamedRepresentationOf: self ] 
 		on: ProgressInitiationException
-		do: [ :ex |
+		do: [ :ex | 
 			ex sendNotificationsTo: [ :min :max :curr |
 				aWidget ifNotNil: [aWidget flashIndicator: #working].
 			].
@@ -3564,7 +3564,7 @@ inform: aString
 
 !Object methodsFor: 'user interface'!
 initialExtent
-	"Answer the desired extent for the receiver when a view on it is first opened on the screen.
+	"Answer the desired extent for the receiver when a view on it is first opened on the screen. 
 	5/22/96 sw: in the absence of any override, obtain from RealEstateAgent"
 
 	^ RealEstateAgent standardWindowExtent! !
@@ -3610,7 +3610,7 @@ modelWakeUp
 
 !Object methodsFor: 'user interface' stamp: 'sw 10/16/1999 22:45'!
 modelWakeUpIn: aWindow
-	"A window with me as model is being entered or expanded.  Default response is no-op"
+	"A window with me as model is being entered or expanded.  Default response is no-op" 
 	self modelWakeUp! !
 
 !Object methodsFor: 'user interface' stamp: 'sw 3/8/1999 15:27'!
@@ -3729,7 +3729,7 @@ externalName
 !Object methodsFor: 'viewer' stamp: 'sw 5/4/2001 07:06'!
 graphicForViewerTab
 	"When a Viewer is open on the receiver, its tab needs some graphic to show to the user.  Answer a form or a morph to serve that purpose.  A generic image is used for arbitrary objects, but note my reimplementors"
-
+	
 	^ ScriptingSystem formAtKey: 'Image'! !
 
 !Object methodsFor: 'viewer' stamp: 'sw 5/4/2001 07:08'!
@@ -3793,11 +3793,11 @@ isPlayerLike
 	^false! !
 
 !Object methodsFor: 'viewer' stamp: 'nk 9/11/2004 16:53'!
-methodInterfacesInPresentationOrderFrom: interfaceList forCategory: aCategory
-	"Answer the interface list sorted in desired presentation order, using a
-	static master-ordering list, q.v. The category parameter allows an
-	escape in case one wants to apply different order strategies in different
-	categories, but for now a single master-priority-ordering is used -- see
+methodInterfacesInPresentationOrderFrom: interfaceList forCategory: aCategory 
+	"Answer the interface list sorted in desired presentation order, using a 
+	static master-ordering list, q.v. The category parameter allows an 
+	escape in case one wants to apply different order strategies in different 
+	categories, but for now a single master-priority-ordering is used -- see 
 	the comment in method EToyVocabulary.masterOrderingOfPhraseSymbols"
 
 	| masterOrder ordered unordered index |
@@ -3805,14 +3805,14 @@ methodInterfacesInPresentationOrderFrom: interfaceList forCategory: aCategory
 	ordered := SortedCollection sortBlock: [:a :b | a key < b key].
 	unordered := SortedCollection sortBlock: [:a :b | a wording < b wording].
 
-	interfaceList do: [:interface |
+	interfaceList do: [:interface | 
 		index := masterOrder indexOf: interface elementSymbol.
 		index isZero
 			ifTrue: [unordered add: interface]
 			ifFalse: [ordered add: index -> interface]].
 
 	^ Array
-		streamContents: [:stream |
+		streamContents: [:stream | 
 			ordered do: [:assoc | stream nextPut: assoc value].
 			stream nextPutAll: unordered]! !
 
@@ -3912,7 +3912,7 @@ tilePhrasesForMethodInterfaces: methodInterfaceList inViewer: aViewer
 
 	^ interfaces collect:
 		[:aMethodInterface |
-			((resultType _ aMethodInterface resultType) notNil and: [resultType ~~ #unknown])
+			((resultType _ aMethodInterface resultType) notNil and: [resultType ~~ #unknown]) 
 				ifTrue:
 					[aViewer phraseForVariableFrom: aMethodInterface]
 				ifFalse:
@@ -3946,7 +3946,7 @@ uniqueInstanceVariableNameLike: aString excluding: takenNames
 	usedNames addAll: takenNames.
 	okBase _ Scanner wellFormedInstanceVariableNameFrom: aString.
 
-	uniqueName _ Utilities keyLike: okBase satisfying:
+	uniqueName _ Utilities keyLike: okBase satisfying: 
 		[:aKey | (usedNames includes: aKey) not].
 
 	^ uniqueName! !
@@ -3980,7 +3980,7 @@ uniqueNameForReferenceFrom: proposedName
 	"Answer a satisfactory symbol, similar to the proposedName but obeying the rules, to represent the receiver"
 
 	| aName nameSym stem okay |
-	proposedName = self uniqueNameForReferenceOrNil
+	proposedName = self uniqueNameForReferenceOrNil 
 		ifTrue: [^ proposedName].  "No change"
 
 	stem _ proposedName select: [:ch | ch isLetter or: [ch isDigit]].
@@ -4042,19 +4042,19 @@ errorNotIndexable
 	self error: ('Instances of {1} are not indexable' translated format: {self class name})! !
 
 !Object methodsFor: 'private'!
-errorSubscriptBounds: index
+errorSubscriptBounds: index 
 	"Create an error notification that an improper integer was used as an index."
 
 	self error: 'subscript is out of bounds: ' , index printString! !
 
 !Object methodsFor: 'private' stamp: 'ar 2/6/2004 14:47'!
-primitiveError: aString
-	"This method is called when the error handling results in a recursion in
+primitiveError: aString 
+	"This method is called when the error handling results in a recursion in 
 	calling on error: or halt or halt:."
 
 	| context |
 	(String
-		streamContents:
+		streamContents: 
 			[:s |
 			s nextPutAll: '***System error handling failed***'.
 			s cr; nextPutAll: aString.
@@ -4072,10 +4072,10 @@ primitiveError: aString
 
 !Object methodsFor: 'private'!
 species
-	"Answer the preferred class for reconstructing the receiver.  For example,
-	collections create new collections whenever enumeration messages such as
-	collect: or select: are invoked.  The new kind of collection is determined by
-	the species of the original collection.  Species and class are not always the
+	"Answer the preferred class for reconstructing the receiver.  For example, 
+	collections create new collections whenever enumeration messages such as 
+	collect: or select: are invoked.  The new kind of collection is determined by 
+	the species of the original collection.  Species and class are not always the 
 	same.  For example, the species of Interval is Array."
 
 	^self class! !
@@ -4142,49 +4142,49 @@ reInitializeDependentsFields
 
 !Object class methodsFor: 'documentation'!
 howToModifyPrimitives
-	"You are allowed to write methods which specify primitives, but please use
-	caution.  If you make a subclass of a class which contains a primitive method,
-	the subclass inherits the primitive.  The message which is implemented
-	primitively may be overridden in the subclass (E.g., see at:put: in String's
-	subclass Symbol).  The primitive behavior can be invoked using super (see
-	Symbol string:).
+	"You are allowed to write methods which specify primitives, but please use 
+	caution.  If you make a subclass of a class which contains a primitive method, 
+	the subclass inherits the primitive.  The message which is implemented 
+	primitively may be overridden in the subclass (E.g., see at:put: in String's 
+	subclass Symbol).  The primitive behavior can be invoked using super (see 
+	Symbol string:). 
+	 
+	A class which attempts to mimic the behavior of another class without being 
+	its subclass may or may not be able to use the primitives of the original class.  
+	In general, if the instance variables read or written by a primitive have the 
+	same meanings and are in the same fields in both classes, the primitive will 
+	work.  
 
-	A class which attempts to mimic the behavior of another class without being
-	its subclass may or may not be able to use the primitives of the original class.
-	In general, if the instance variables read or written by a primitive have the
-	same meanings and are in the same fields in both classes, the primitive will
-	work.
-
-	For certain frequently used 'special selectors', the compiler emits a
-	send-special-selector bytecode instead of a send-message bytecode.
-	Special selectors were created because they offer two advantages.  Code
-	which sends special selectors compiles into fewer bytes than normal.  For
-	some pairs of receiver classes and special selectors, the interpreter jumps
-	directly to a primitive routine without looking up the method in the class.
-	This is much faster than a normal message lookup.
-
-	A selector which is a special selector solely in order to save space has a
-	normal behavior.  Methods whose selectors are special in order to
-	gain speed contain the comment, 'No Lookup'.  When the interpreter
-	encounters a send-special-selector bytecode, it checks the class of the
-	receiver and the selector.  If the class-selector pair is a no-lookup pair,
-	then the interpreter swiftly jumps to the routine which implements the
-	corresponding primitive.  (A special selector whose receiver is not of the
-	right class to make a no-lookup pair, is looked up normally).  The pairs are
-	listed below.  No-lookup methods contain a primitive number specification,
-	<primitive: xx>, which is redundant.  Since the method is not normally looked
-	up, deleting the primitive number specification cannot prevent this
-	primitive from running.  If a no-lookup primitive fails, the method is looked
-	up normally, and the expressions in it are executed.
-
-	No Lookup pairs of (class, selector)
-
-	SmallInteger with any of		+ - * /  \\  bitOr: bitShift: bitAnd:  //
-	SmallInteger with any of		=  ~=  >  <  >=  <=
-	Any class with					==
-	Any class with 					@
-	Point with either of				x y
-	ContextPart with					blockCopy:
+	For certain frequently used 'special selectors', the compiler emits a 
+	send-special-selector bytecode instead of a send-message bytecode.  
+	Special selectors were created because they offer two advantages.  Code 
+	which sends special selectors compiles into fewer bytes than normal.  For 
+	some pairs of receiver classes and special selectors, the interpreter jumps 
+	directly to a primitive routine without looking up the method in the class.  
+	This is much faster than a normal message lookup. 
+	 
+	A selector which is a special selector solely in order to save space has a 
+	normal behavior.  Methods whose selectors are special in order to 
+	gain speed contain the comment, 'No Lookup'.  When the interpreter 
+	encounters a send-special-selector bytecode, it checks the class of the 
+	receiver and the selector.  If the class-selector pair is a no-lookup pair, 
+	then the interpreter swiftly jumps to the routine which implements the 
+	corresponding primitive.  (A special selector whose receiver is not of the 
+	right class to make a no-lookup pair, is looked up normally).  The pairs are 
+	listed below.  No-lookup methods contain a primitive number specification, 
+	<primitive: xx>, which is redundant.  Since the method is not normally looked 
+	up, deleting the primitive number specification cannot prevent this 
+	primitive from running.  If a no-lookup primitive fails, the method is looked 
+	up normally, and the expressions in it are executed. 
+	 
+	No Lookup pairs of (class, selector) 
+	 
+	SmallInteger with any of		+ - * /  \\  bitOr: bitShift: bitAnd:  // 
+	SmallInteger with any of		=  ~=  >  <  >=  <= 
+	Any class with					== 
+	Any class with 					@ 
+	Point with either of				x y 
+	ContextPart with					blockCopy: 
 	BlockContext with either of 		value value:
 	"
 
@@ -4192,59 +4192,59 @@ howToModifyPrimitives
 
 !Object class methodsFor: 'documentation'!
 whatIsAPrimitive
-	"Some messages in the system are responded to primitively. A primitive
-	response is performed directly by the interpreter rather than by evaluating
-	expressions in a method. The methods for these messages indicate the
-	presence of a primitive response by including <primitive: xx> before the
-	first expression in the method.
-
-	Primitives exist for several reasons. Certain basic or 'primitive'
-	operations cannot be performed in any other way. Smalltalk without
-	primitives can move values from one variable to another, but cannot add two
-	SmallIntegers together. Many methods for arithmetic and comparison
-	between numbers are primitives. Some primitives allow Smalltalk to
-	communicate with I/O devices such as the disk, the display, and the keyboard.
-	Some primitives exist only to make the system run faster; each does the same
-	thing as a certain Smalltalk method, and its implementation as a primitive is
-	optional.
-
-	When the Smalltalk interpreter begins to execute a method which specifies a
-	primitive response, it tries to perform the primitive action and to return a
-	result. If the routine in the interpreter for this primitive is successful,
-	it will return a value and the expressions in the method will not be evaluated.
-	If the primitive routine is not successful, the primitive 'fails', and the
-	Smalltalk expressions in the method are executed instead. These
-	expressions are evaluated as though the primitive routine had not been
-	called.
-
-	The Smalltalk code that is evaluated when a primitive fails usually
-	anticipates why that primitive might fail. If the primitive is optional, the
-	expressions in the method do exactly what the primitive would have done (See
-	Number @). If the primitive only works on certain classes of arguments, the
-	Smalltalk code tries to coerce the argument or appeals to a superclass to find
-	a more general way of doing the operation (see SmallInteger +). If the
-	primitive is never supposed to fail, the expressions signal an error (see
-	SmallInteger asFloat).
-
-	Each method that specifies a primitive has a comment in it. If the primitive is
-	optional, the comment will say 'Optional'. An optional primitive that is not
-	implemented always fails, and the Smalltalk expressions do the work
-	instead.
-
-	If a primitive is not optional, the comment will say, 'Essential'. Some
-	methods will have the comment, 'No Lookup'. See Object
-	howToModifyPrimitives for an explanation of special selectors which are
-	not looked up.
-
-	For the primitives for +, -, *, and bitShift: in SmallInteger, and truncated
-	in Float, the primitive constructs and returns a 16-bit
-	LargePositiveInteger when the result warrants it. Returning 16-bit
-	LargePositiveIntegers from these primitives instead of failing is
-	optional in the same sense that the LargePositiveInteger arithmetic
-	primitives are optional. The comments in the SmallInteger primitives say,
-	'Fails if result is not a SmallInteger', even though the implementor has the
-	option to construct a LargePositiveInteger. For further information on
-	primitives, see the 'Primitive Methods' part of the chapter on the formal
+	"Some messages in the system are responded to primitively. A primitive   
+	response is performed directly by the interpreter rather than by evaluating   
+	expressions in a method. The methods for these messages indicate the   
+	presence of a primitive response by including <primitive: xx> before the   
+	first expression in the method.   
+	  
+	Primitives exist for several reasons. Certain basic or 'primitive' 
+	operations cannot be performed in any other way. Smalltalk without 
+	primitives can move values from one variable to another, but cannot add two 
+	SmallIntegers together. Many methods for arithmetic and comparison 
+	between numbers are primitives. Some primitives allow Smalltalk to 
+	communicate with I/O devices such as the disk, the display, and the keyboard. 
+	Some primitives exist only to make the system run faster; each does the same 
+	thing as a certain Smalltalk method, and its implementation as a primitive is 
+	optional.  
+	  
+	When the Smalltalk interpreter begins to execute a method which specifies a 
+	primitive response, it tries to perform the primitive action and to return a 
+	result. If the routine in the interpreter for this primitive is successful, 
+	it will return a value and the expressions in the method will not be evaluated. 
+	If the primitive routine is not successful, the primitive 'fails', and the 
+	Smalltalk expressions in the method are executed instead. These 
+	expressions are evaluated as though the primitive routine had not been 
+	called.  
+	  
+	The Smalltalk code that is evaluated when a primitive fails usually 
+	anticipates why that primitive might fail. If the primitive is optional, the 
+	expressions in the method do exactly what the primitive would have done (See 
+	Number @). If the primitive only works on certain classes of arguments, the 
+	Smalltalk code tries to coerce the argument or appeals to a superclass to find 
+	a more general way of doing the operation (see SmallInteger +). If the 
+	primitive is never supposed to fail, the expressions signal an error (see 
+	SmallInteger asFloat).  
+	  
+	Each method that specifies a primitive has a comment in it. If the primitive is 
+	optional, the comment will say 'Optional'. An optional primitive that is not 
+	implemented always fails, and the Smalltalk expressions do the work 
+	instead.  
+	 
+	If a primitive is not optional, the comment will say, 'Essential'. Some 
+	methods will have the comment, 'No Lookup'. See Object 
+	howToModifyPrimitives for an explanation of special selectors which are 
+	not looked up.  
+	  
+	For the primitives for +, -, *, and bitShift: in SmallInteger, and truncated 
+	in Float, the primitive constructs and returns a 16-bit 
+	LargePositiveInteger when the result warrants it. Returning 16-bit 
+	LargePositiveIntegers from these primitives instead of failing is 
+	optional in the same sense that the LargePositiveInteger arithmetic 
+	primitives are optional. The comments in the SmallInteger primitives say, 
+	'Fails if result is not a SmallInteger', even though the implementor has the 
+	option to construct a LargePositiveInteger. For further information on 
+	primitives, see the 'Primitive Methods' part of the chapter on the formal 
 	specification of the interpreter in the Smalltalk book."
 
 	self error: 'comment only'! !
@@ -4302,7 +4302,7 @@ instanceOfUniqueClass
 instanceOfUniqueClassWithInstVarString: instVarString andClassInstVarString: classInstVarString
 	"Create a unique class for the receiver, and answer an instance of it"
 
-	^ (self newUniqueClassInstVars: instVarString
+	^ (self newUniqueClassInstVars: instVarString 
 		classInstVars: classInstVarString) initialInstance! !
 
 !Object class methodsFor: 'instance creation' stamp: 'sw 10/23/1999 22:51'!
@@ -4328,7 +4328,7 @@ newUniqueClassInstVars: instVarString classInstVars: classInstVarString
 	self isSystemDefined ifFalse:
 		[^ superclass newUniqueClassInstVars: instVarString classInstVars: classInstVarString].
 	aName _ self chooseUniqueClassName.
-	aClass _ self subclass: aName instanceVariableNames: instVarString
+	aClass _ self subclass: aName instanceVariableNames: instVarString 
 		classVariableNames: '' poolDictionaries: '' category: self categoryForUniclasses.
 	classInstVarString size > 0 ifTrue:
 		[aClass class instanceVariableNames: classInstVarString].
@@ -4347,7 +4347,7 @@ readCarefullyFrom: textStringOrStream
 	| object |
 	(Compiler couldEvaluate: textStringOrStream)
 		ifFalse: [^ self error: 'expected String, Stream, or Text'].
-	object _ Compiler evaluate: textStringOrStream for: nil
+	object _ Compiler evaluate: textStringOrStream for: nil 
 				notifying: #error: "signal we want errors" logged: false.
 	(object isKindOf: self) ifFalse: [self error: self name, ' expected'].
 	^object! !
@@ -4370,7 +4370,7 @@ createFrom: aSmartRefStream size: varsOnDisk version: instVarList
 
 	^ self isVariable
 		ifFalse: [self basicNew]
-		ifTrue: ["instVarList is names of old class's inst vars plus a version number"
+		ifTrue: ["instVarList is names of old class's inst vars plus a version number" 
 				self basicNew: (varsOnDisk - (instVarList size - 1))]
 ! !
 

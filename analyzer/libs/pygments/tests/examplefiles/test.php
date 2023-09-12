@@ -14,7 +14,7 @@ $test = function($a) { $lambda = 1; }
 // Unlock?
 if(!defined('UNLOCK') || !UNLOCK)
   die();
-
+  
 // Load the parent archive class
 require_once(ROOT_PATH.'/classes/archive.class.php');
 
@@ -130,7 +130,7 @@ class Zip extends Archive {
       $dir_data .= pack("V", 0);            // Compressed size
       $dir_data .= pack("V", 0);            // Uncompressed size
       */
-
+      
       // Append dir data to the central directory data
       $cd_data[] = $dir_data;
     }
@@ -139,12 +139,12 @@ class Zip extends Archive {
     foreach($this->files as $name => $file) {
       // Get values
       $content = $file[0];
-
+    
       // File part
 
       // Reset file data
       $fd = '';
-
+      
       // Detect possible compressions
       // Use deflate
       if(function_exists('gzdeflate')) {
@@ -186,7 +186,7 @@ class Zip extends Archive {
 
       // File data
       $fd .= $compressed_data;
-
+      
       // Data descriptor
       $fd .= pack("V", crc32($content));          // crc-32
       $fd .= pack("V", strlen($compressed_data)); // Compressed size
@@ -268,11 +268,11 @@ class Zip extends Archive {
     // Return content?
     if(!$filename)
       return $data;
-
+      
     // Write to file
     return file_put_contents($filename, $data);
   }
-
+  
  /**
   *  Load a zip file
   *
@@ -300,7 +300,7 @@ class Zip extends Archive {
     // Read the zip
     return $this->load_string($content, $reset);
   }
-
+  
  /**
   *  Load a zip string
   *
@@ -505,11 +505,40 @@ function &byref() {
     return $x;
 }
 
+// Test highlighting of magic methods and variables
+class MagicClass {
+  public $magic_str;
+  public $ordinary_str;
+
+  public function __construct($some_var) {
+    $this->magic_str = __FILE__;
+    $this->ordinary_str = $some_var;
+  }
+
+  public function __toString() {
+    return $this->magic_str;
+  }
+
+  public function nonMagic() {
+    return $this->ordinary_str;
+  }
+}
+
+$magic = new MagicClass(__DIR__);
+__toString();
+$magic->nonMagic();
+$magic->__toString();
+
      echo <<<EOF
 
      Test the heredocs...
 
      EOF;
+
+echo <<<"some_delimiter"
+more heredoc testing
+continues on this line
+some_delimiter;
 
 ?>
 

@@ -59,7 +59,7 @@ to integer! (1 + (x / 4.5) * 1E-4)
 
 ;## some spec comments
 1 + 1
-comment "aa"
+comment "aa"								
 2 + 2
 comment {aa}
 3 + 3
@@ -80,7 +80,7 @@ comment [foo: {^{} ]
 comment [foo: {boo} ]
 10 + 10
 comment 5-May-2014/11:17:34+2:00
-5-May-2014/11:17:34+2:00 11 + 11
+5-May-2014/11:17:34+2:00 11 + 11	
 
 ;## other tests ##
 ---: 1
@@ -92,7 +92,7 @@ REBOL [
     purpose: {
         reads css file and creates html from it
         so one can see how the styles looks like
-    }
+    } 
 ]
 style: %default
 out: rejoin [{

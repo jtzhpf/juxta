@@ -78,7 +78,7 @@ Section "" ; empty string makes it hidden, so would starting with -
   File /a "silent.nsi"
   CreateDirectory "$INSTDIR\MyProjectFamily\MyProject" ; 2 recursively create a directory for fun.
   WriteUninstaller "bt-uninst.exe"
-
+  
   Nop ; for fun
 
 SectionEnd
@@ -93,7 +93,7 @@ SectionIn 1 2 3
   MessageBox MB_OK "Right before MyLabel:"
 
   MyLabel: MessageBox MB_OK "MyLabel:"
-
+  
   MessageBox MB_OK "Right after MyLabel:"
 
   MessageBox MB_YESNO "Goto Start:?" IDYES Start
@@ -135,7 +135,7 @@ SectionIn 1 4 3
   NoError:
     MessageBox MB_OK "read '$1' from HKCR\software\microsoft\xyz_cc_does_not_exist"
   ErrorYay:
-
+  
 SectionEnd
 
 Section "Test CreateShortCut"
@@ -148,19 +148,19 @@ SectionEnd
 
 SectionGroup Group2
 
-Section "Test Branching"
-
+Section "Test Branching" 
+  
   BeginTestSection:
   SectionIn 1 2 3
-
+ 
   SetOutPath $INSTDIR
 
   IfFileExists "$INSTDIR\LogicLib.nsi" 0 BranchTest69
-
+    
     MessageBox MB_YESNO|MB_ICONQUESTION "Would you like to overwrite $INSTDIR\LogicLib.nsi?" IDNO NoOverwrite ; skipped if file doesn't exist
 
     BranchTest69:
-
+  
     SetOverwrite ifnewer ; NOT AN INSTRUCTION, NOT COUNTED IN SKIPPINGS
 
   NoOverwrite:
@@ -182,12 +182,12 @@ Section "Test Branching"
 
     StrCpy $1 "x"
 
-  LoopTest:
-
+  LoopTest: 
+      
     Call myfunc
     StrCpy $1 "x$1"
     StrCmp $1 "xxxxxx" 0 LoopTest
-
+      
   NoRecurse:
 
   EndTestBranch:
@@ -210,7 +210,7 @@ SectionGroupEnd
 Section "Test Exec functions" TESTIDX
 
   SectionIn 1 2 3
-
+  
   SearchPath $1 notepad.exe
 
   MessageBox MB_OK "notepad.exe=$1"
@@ -229,13 +229,13 @@ Section "Test ActiveX control registration"
   Sleep 1000
   RegDLL "$SYSDIR\spin32.ocx"
   Sleep 1000
-
+  
 SectionEnd
 
 ;--------------------------------
 
 Function "CSCTest"
-
+  
   CreateDirectory "$SMPROGRAMS\Big NSIS Test"
   SetOutPath $INSTDIR ; for working directory
   CreateShortCut "$SMPROGRAMS\Big NSIS Test\Uninstall BIG NSIS Test.lnk" "$INSTDIR\bt-uninst.exe" ; use defaults for parameters, icon, etc.
@@ -257,7 +257,7 @@ Function MyFunctionTest
   ReadINIStr $1 "$INSTDIR\test.ini" "MySectionIni" "Value1"
   StrCmp $1 $8 NoFailedMsg
     MessageBox MB_OK "WriteINIStr failed"
-
+  
   NoFailedMsg:
 
 FunctionEnd
@@ -291,12 +291,12 @@ Section "Uninstall"
   Delete "$INSTDIR\test.ini"
   Delete "$SMPROGRAMS\Big NSIS Test\*.*"
   RMDir "$SMPROGRAMS\BiG NSIS Test"
-
+  
   MessageBox MB_YESNO|MB_ICONQUESTION "Would you like to remove the directory $INSTDIR\cpdest?" IDNO NoDelete
     Delete "$INSTDIR\cpdest\*.*"
     RMDir "$INSTDIR\cpdest" ; skipped if no
   NoDelete:
-
+  
   RMDir "$INSTDIR\MyProjectFamily\MyProject"
   RMDir "$INSTDIR\MyProjectFamily"
   RMDir "$INSTDIR"

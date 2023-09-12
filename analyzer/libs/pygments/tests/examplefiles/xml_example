@@ -485,7 +485,7 @@
 				<Detect2Chars char="\" char1='"' attribute="Value" context="#stay"/>
 				<DetectChar char='"' attribute="Value" context="Keyword"/>
 			</context>
-
+			
 			<context name="Comment" attribute="5" lineEndContext="#pop">
 			</context>
 		</contexts>

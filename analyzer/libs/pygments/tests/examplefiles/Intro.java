@@ -1,21 +1,21 @@
 /*
  * Copyright (c) 2003 Sun Microsystems, Inc. All  Rights Reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * -Redistributions of source code must retain the above copyright
  *  notice, this list of conditions and the following disclaimer.
- *
+ * 
  * -Redistribution in binary form must reproduct the above copyright
  *  notice, this list of conditions and the following disclaimer in
  *  the documentation and/or other materials provided with the distribution.
- *
+ * 
  * Neither the name of Sun Microsystems, Inc. or the names of contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * 
  * This software is provided "AS IS," without a warranty of any kind. ALL
  * EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
  * ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
@@ -27,7 +27,7 @@
  * INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER CAUSED AND REGARDLESS OF THE THEORY
  * OF LIABILITY, ARISING OUT OF THE USE OF OR INABILITY TO USE SOFTWARE, EVEN
  * IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
- *
+ * 
  * You acknowledge that Software is not designed, licensed or intended for
  * use in the design, construction, operation or maintenance of any nuclear
  * facility.
@@ -53,17 +53,17 @@ import java.util.Arrays;
 
 
 /**
- * Introduction to the Java2Demo.
+ * Introduction to the Java2Demo.  
  *
  * @version @(#)Intro.java	1.19 03/06/26
  * @author Brian Lichtenwalter
  */
 public class Intro extends JPanel {
 
-    static Color black = new Color(20, 20, 20);
-    static Color white = new Color(240, 240, 255);
+    static Color black = new Color(20, 20, 20); 
+    static Color white = new Color(240, 240, 255); 
     static Color red = new Color(149, 43, 42);
-    static Color blue = new Color(94, 105, 176);
+    static Color blue = new Color(94, 105, 176); 
     static Color yellow = new Color(255, 255, 140);
 
     static Surface surface;
@@ -150,17 +150,17 @@ public class Intro extends JPanel {
             setBackground(Color.white);
             setLayout(new BorderLayout());
             final String[] names = { "", "Scenes", "Pause" };
-
+    
             dataModel = new AbstractTableModel() {
                 public int getColumnCount() { return names.length; }
                 public int getRowCount() { return surface.director.size();}
-                public Object getValueAt(int row, int col) {
-                    Surface.Scene scene = (Surface.Scene) surface.director.get(row);
+                public Object getValueAt(int row, int col) { 
+                    Surface.Scene scene = (Surface.Scene) surface.director.get(row); 
                     if (col == 0) {
                         return scene.participate;
                     } else if (col == 1) {
                         return scene.name;
-                    } else {
+                    } else { 
                         return scene.pauseAmt;
                    }
                 }
@@ -172,17 +172,17 @@ public class Intro extends JPanel {
                     return col != 1 ? true : false;
                 }
                 public void setValueAt(Object aValue, int row, int col) {
-                    Surface.Scene scene = (Surface.Scene) surface.director.get(row);
+                    Surface.Scene scene = (Surface.Scene) surface.director.get(row); 
                     if (col == 0) {
                         scene.participate = aValue;
                     } else if (col == 1) {
                         scene.name = aValue;
-                    } else {
+                    } else { 
                         scene.pauseAmt = aValue;
                     }
                 }
             };
-
+    
             table = new JTable(dataModel);
             TableColumn col = table.getColumn("");
             col.setWidth(16);
@@ -193,10 +193,10 @@ public class Intro extends JPanel {
             col.setMinWidth(60);
             col.setMaxWidth(60);
             table.sizeColumnsToFit(0);
-
+        
             JScrollPane scrollpane = new JScrollPane(table);
             add(scrollpane);
-
+ 
             JPanel panel = new JPanel(new BorderLayout());
             JButton b = new JButton("Unselect All");
             b.setHorizontalAlignment(JButton.LEFT);
@@ -225,7 +225,7 @@ public class Intro extends JPanel {
             b.setSelected(!b.isSelected());
             b.setText(b.isSelected() ? "Select All" : "Unselect All");
             for (int i = 0; i < surface.director.size(); i++) {
-                Surface.Scene scene = (Surface.Scene) surface.director.get(i);
+                Surface.Scene scene = (Surface.Scene) surface.director.get(i); 
                 scene.participate = new Boolean(!b.isSelected());
             }
 	    table.tableChanged(new TableModelEvent(dataModel));
@@ -284,7 +284,7 @@ public class Intro extends JPanel {
 		return;
 	    }
             if (bimg == null || bimg.getWidth() != d.width || bimg.getHeight() != d.height) {
-                bimg = getGraphicsConfiguration().createCompatibleImage(d.width, d.height);
+                bimg = getGraphicsConfiguration().createCompatibleImage(d.width, d.height);  
                 // reset future scenes
                 for (int i = index+1; i < director.size(); i++) {
                     ((Scene) director.get(i)).reset(d.width, d.height);
@@ -298,16 +298,16 @@ public class Intro extends JPanel {
                 }
 
                 Graphics2D g2 = bimg.createGraphics();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                                     RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setBackground(getBackground());
                 g2.clearRect(0, 0, d.width, d.height);
-
+    
                 scene.render(d.width, d.height, g2);
 
                 if (thread != null) {
                     // increment scene.index after scene.render
-                    scene.index++;
+                    scene.index++;      
                 }
                 g2.dispose();
             }
@@ -324,7 +324,7 @@ public class Intro extends JPanel {
                 thread.start();
             }
         }
-
+    
 
         public synchronized void stop() {
             if (thread != null) {
@@ -343,7 +343,7 @@ public class Intro extends JPanel {
             }
         }
 
-
+    
         public void run() {
 
             Thread me = Thread.currentThread();
@@ -501,7 +501,7 @@ public class Intro extends JPanel {
                 }
             }
         }
-
+        
 
 
         /**
@@ -573,16 +573,16 @@ public class Intro extends JPanel {
             static final int RD   = R | DEC;
             static final int SC   = 8;            // scale
             static final int SCI  = SC | INC;
-            static final int SCD  = SC | DEC;
+            static final int SCD  = SC | DEC;    
             static final int SCX  = 16;           // scale invert x
             static final int SCXI = SCX | SC | INC;
-            static final int SCXD = SCX | SC | DEC;
+            static final int SCXD = SCX | SC | DEC; 
             static final int SCY  = 32;           // scale invert y
             static final int SCYI = SCY | SC | INC;
-            static final int SCYD = SCY | SC | DEC;
+            static final int SCYD = SCY | SC | DEC; 
             static final int AC   = 64;           // AlphaComposite
             static final int CLIP = 128;          // Clipping
-            static final int NOP  = 512;          // No Paint
+            static final int NOP  = 512;          // No Paint 
             private int beginning, ending;
             private int type;
             private double rIncr, sIncr;
@@ -593,11 +593,11 @@ public class Intro extends JPanel {
             private Paint paint;
 
 
-            public TxE(String text,
-                           Font font,
-                           int type,
+            public TxE(String text, 
+                           Font font, 
+                           int type, 
                            Paint paint,
-                           int beg,
+                           int beg, 
                            int end) {
                 this.type = type;
                 this.paint = paint;
@@ -605,7 +605,7 @@ public class Intro extends JPanel {
                 this.ending = end;
 
                 setIncrements(2);
-
+                
                 char[] chars = text.toCharArray();
                 shapes = new Shape[chars.length];
                 txShapes = new Shape[chars.length];
@@ -639,16 +639,16 @@ public class Intro extends JPanel {
                 } else if (type == SCYI) {
                     sx = 1.0;  sy = -1.0;
                 } else {
-                    sx = sy = (type & DEC) != 0 ? 1.0 : 0.0;
+                    sx = sy = (type & DEC) != 0 ? 1.0 : 0.0;  
                 }
                 rotate = 0;
             }
 
-
+       
             public void step(int w, int h) {
-
+        
                 float charWidth = w/2-sw/2;
-
+        
                 for (int i = 0; i < shapes.length; i++) {
                     AffineTransform at = new AffineTransform();
                     Rectangle2D maxBounds = shapes[i].getBounds();
@@ -656,16 +656,16 @@ public class Intro extends JPanel {
                     charWidth += (float) maxBounds.getWidth() + 1;
                     Shape shape = at.createTransformedShape(shapes[i]);
                     Rectangle2D b1 = shape.getBounds2D();
-
+        
                     if ((type & R) != 0) {
-                        at.rotate(Math.toRadians(rotate));
+                        at.rotate(Math.toRadians(rotate)); 
                     }
                     if ((type & SC) != 0) {
                         at.scale(sx, sy);
                     }
                     shape = at.createTransformedShape(shapes[i]);
                     Rectangle2D b2 = shape.getBounds2D();
-
+      
                     double xx = (b1.getX()+b1.getWidth()/2)
                                 - (b2.getX()+b2.getWidth()/2);
                     double yy = (b1.getY()+b1.getHeight()/2)
@@ -731,7 +731,7 @@ public class Intro extends JPanel {
 
 
         /**
-         * GradientPaint Effect.  Burst, split, horizontal and
+         * GradientPaint Effect.  Burst, split, horizontal and 
          * vertical gradient fill effects.
          */
         static class GpE implements Part {
@@ -739,20 +739,20 @@ public class Intro extends JPanel {
             static final int INC = 1;             // increasing
             static final int DEC = 2;             // decreasing
             static final int CNT = 4;             // center
-            static final int WID = 8;             // width
-            static final int WI  = WID | INC;
-            static final int WD  = WID | DEC;
+            static final int WID = 8;             // width 
+            static final int WI  = WID | INC;             
+            static final int WD  = WID | DEC;            
             static final int HEI = 16;            // height
-            static final int HI  = HEI | INC;
-            static final int HD  = HEI | DEC;
-            static final int SPL = 32 | CNT;      // split
+            static final int HI  = HEI | INC;            
+            static final int HD  = HEI | DEC;            
+            static final int SPL = 32 | CNT;      // split 
             static final int SIW = SPL | INC | WID;
             static final int SDW = SPL | DEC | WID;
             static final int SIH = SPL | INC | HEI;
             static final int SDH = SPL | DEC | HEI;
-            static final int BUR = 64 | CNT;     // burst
-            static final int BURI = BUR | INC;
-            static final int BURD = BUR | DEC;
+            static final int BUR = 64 | CNT;     // burst 
+            static final int BURI = BUR | INC;    
+            static final int BURD = BUR | DEC;   
             static final int NF = 128;           // no fill
             private Color c1, c2;
             private int beginning, ending;
@@ -787,7 +787,7 @@ public class Intro extends JPanel {
                 index += incr;
             }
 
-
+       
             public void step(int w, int h) {
                 rect.clear();
                 grad.clear();
@@ -852,7 +852,7 @@ public class Intro extends JPanel {
 
 
             public void render(int w, int h, Graphics2D g2) {
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                                 RenderingHints.VALUE_ANTIALIAS_OFF);
                 for (int i = 0; i < grad.size(); i++) {
                     g2.setPaint((GradientPaint) grad.get(i));
@@ -860,7 +860,7 @@ public class Intro extends JPanel {
                         g2.fill((Rectangle2D) rect.get(i));
                     }
                 }
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, 
                                 RenderingHints.VALUE_ANTIALIAS_ON);
             }
 
@@ -876,20 +876,20 @@ public class Intro extends JPanel {
 
 
         /**
-         * TexturePaint Effect.  Expand and collapse a texture.
+         * TexturePaint Effect.  Expand and collapse a texture. 
          */
         static class TpE implements Part {
 
             static final int INC = 1;             // increasing
             static final int DEC = 2;             // decreasing
             static final int OVAL = 4;            // oval
-            static final int RECT = 8;            // rectangle
+            static final int RECT = 8;            // rectangle 
             static final int HAF = 16;            // half oval or rect size
-            static final int OI = OVAL | INC;
+            static final int OI = OVAL | INC; 
             static final int OD = OVAL | DEC;
             static final int RI = RECT | INC;
             static final int RD = RECT | DEC;
-            static final int NF = 32;             // no fill
+            static final int NF = 32;             // no fill 
             private Paint p1, p2;
             private int beginning, ending;
             private float incr, index;
@@ -935,7 +935,7 @@ public class Intro extends JPanel {
                 index += incr;
             }
 
-
+       
             public void step(int w, int h) {
                 Graphics2D g2 = bimg.createGraphics();
                 g2.setPaint(p1);
@@ -971,17 +971,17 @@ public class Intro extends JPanel {
 
 
         /**
-         * Close out effect.  Close out the buffered image with different
+         * Close out effect.  Close out the buffered image with different 
          * geometry shapes.
          */
         static class CoE implements Part {
 
-            static final int WID  = 1;
-            static final int HEI  = 2;
-            static final int OVAL = 4;
-            static final int RECT = 8;
-            static final int RAND = 16;
-            static final int ARC  = 32;
+            static final int WID  = 1;            
+            static final int HEI  = 2;           
+            static final int OVAL = 4;            
+            static final int RECT = 8;           
+            static final int RAND = 16;           
+            static final int ARC  = 32;           
             private int type;
             private int beginning, ending;
             private BufferedImage bimg;
@@ -1010,7 +1010,7 @@ public class Intro extends JPanel {
                         case 2 : type = RECT | WID; break;
                         case 3 : type = RECT | HEI; break;
                         case 4 : type = ARC; break;
-                        default : type = OVAL;
+                        default : type = OVAL; 
                     }
                 }
                 shape = null;
@@ -1064,13 +1064,13 @@ public class Intro extends JPanel {
 
 
         /**
-         * Dither Dissolve Effect. For each successive step in the animation,
-         * a pseudo-random starting horizontal position is chosen using list,
+         * Dither Dissolve Effect. For each successive step in the animation, 
+         * a pseudo-random starting horizontal position is chosen using list, 
          * and then the corresponding points created from xlist and ylist are
          * blacked out for the current "chunk".  The x and y chunk starting
-         * positions are each incremented by the associated chunk size, and
-         * this process is repeated for the number of "steps" in the
-         * animation, causing an equal number of pseudo-randomly picked
+         * positions are each incremented by the associated chunk size, and 
+         * this process is repeated for the number of "steps" in the 
+         * animation, causing an equal number of pseudo-randomly picked 
          * "blocks" to be blacked out during each step of the animation.
          */
         static class DdE implements Part {
@@ -1088,7 +1088,7 @@ public class Intro extends JPanel {
             public DdE(int beg, int end, int blocksize) {
                 this.beginning = beg;
                 this.ending = end;
-                this.blocksize = blocksize;
+                this.blocksize = blocksize; 
             }
 
             private void createShuffledLists() {
@@ -1105,7 +1105,7 @@ public class Intro extends JPanel {
                 }
                 for (int k = 0; k < array.length; k++) {
                     array[k] = new Integer(k);
-                }
+                } 
                 java.util.Collections.shuffle(xlist = Arrays.asList(xarray));
                 java.util.Collections.shuffle(ylist = Arrays.asList(yarray));
                 java.util.Collections.shuffle(list = Arrays.asList(array));
@@ -1135,7 +1135,7 @@ public class Intro extends JPanel {
 
 
             public void render(int w, int h, Graphics2D g2) {
-                big.setColor(black);
+                big.setColor(black); 
 
                 for (int k = 0; k <= (ending - beginning); k++) {
                     if ((xeNum + xcSize) > xlist.size()) {
@@ -1146,7 +1146,7 @@ public class Intro extends JPanel {
                     yeNum += ycSize;
 
                     for (int i = xeNum; i < xeNum+xcSize && i < xlist.size(); i++) {
-                        for (int j = yeNum; j < yeNum+ycSize && j < ylist.size(); j++) {
+                        for (int j = yeNum; j < yeNum+ycSize && j < ylist.size(); j++) {   
                             int xval = ((Integer)xlist.get(i)).intValue();
                             int yval = ((Integer)ylist.get(j)).intValue();
                             if (((xval % blocksize) == 0) &&
@@ -1156,7 +1156,7 @@ public class Intro extends JPanel {
                         }
                     }
                 }
-
+           
                 g2.drawImage(bimg, 0, 0, null);
             }
 
@@ -1196,7 +1196,7 @@ public class Intro extends JPanel {
 
 
             public void reset(int w, int h) {
-                scale = 1.0;
+                scale = 1.0;  
                 rotate = 0.0;
                 bimg = null;
                 subs.clear();
@@ -1215,12 +1215,12 @@ public class Intro extends JPanel {
                         int ww = x+siw < w ? siw : w-x;
                         for (int y = 0; y < h; y+=sih) {
                             int hh = y+sih < h ? sih : h-y;
-                            subs.addElement(bimg.getSubimage(x,y,ww,hh));
+                            subs.addElement(bimg.getSubimage(x,y,ww,hh));    
                             pts.addElement(new Point(x, y));
                         }
                     }
                 }
-
+                
                 rotate += rIncr;
                 scale -= sIncr;
             }
@@ -1235,7 +1235,7 @@ public class Intro extends JPanel {
                     int ww = bi.getWidth();
                     int hh = bi.getHeight();
                     AffineTransform at = new AffineTransform();
-                    at.rotate(Math.toRadians(rotate), p.x+ww/2, p.y+hh/2);
+                    at.rotate(Math.toRadians(rotate), p.x+ww/2, p.y+hh/2); 
                     at.translate(p.x, p.y);
                     at.scale(scale, scale);
 
@@ -1268,8 +1268,8 @@ public class Intro extends JPanel {
 
 
         /**
-         * Line Effect.  Flattened ellipse with lines from the center
-         * to the edge.  Expand or collapse the ellipse.  Fade in or out
+         * Line Effect.  Flattened ellipse with lines from the center 
+         * to the edge.  Expand or collapse the ellipse.  Fade in or out 
          * the lines.
          */
         static class LnE implements Part {
@@ -1281,10 +1281,10 @@ public class Intro extends JPanel {
             static final int RD   = R | DEC;
             static final int ZOOM   = 8;            // zoom
             static final int ZOOMI  = ZOOM | INC;
-            static final int ZOOMD  = ZOOM | DEC;
+            static final int ZOOMD  = ZOOM | DEC;    
             static final int AC   = 32;             // AlphaComposite
             static final int ACI   = 32 | INC;
-            static final int ACD   = 32 | DEC;
+            static final int ACD   = 32 | DEC; 
             private int beginning, ending;
             private double rIncr, rotate;
             private double zIncr, zoom;
@@ -1363,7 +1363,7 @@ public class Intro extends JPanel {
                 if ((type & R) != 0) {
                     saveTx = g2.getTransform();
                     AffineTransform at = new AffineTransform();
-                    at.rotate(Math.toRadians(rotate), w/2, h/2);
+                    at.rotate(Math.toRadians(rotate), w/2, h/2); 
                     g2.setTransform(at);
                 }
                 Point2D p1 = new Point2D.Double(w/2, h/2);
@@ -1417,7 +1417,7 @@ public class Intro extends JPanel {
                 aIncr = 0.9f / (ending - beginning);
                 if ((type & NOANIM) != 0) {
                     alpha = 1.0f;
-                }
+                } 
             }
 
 
@@ -1490,24 +1490,24 @@ public class Intro extends JPanel {
             static Font font2 = new Font("serif", Font.PLAIN, 24);
             static FontMetrics fm1 = Surface.getMetrics(font1);
             static FontMetrics fm2 = Surface.getMetrics(font2);
-            static String table[][] =
-                {{ "Graphics", "Antialiased rendering", "Bezier paths",
+            static String table[][] = 
+                {{ "Graphics", "Antialiased rendering", "Bezier paths", 
                     "Transforms", "Compositing", "Stroking parameters" },
-                 { "Text", "Extended font support",
+                 { "Text", "Extended font support", 
                    "Advanced text layout",  "Dynamic font loading",
                    "AttributeSets for font customization" },
                  { "Images", "Flexible image layouts",
-                    "Extended imaging operations",
+                    "Extended imaging operations", 
                     "   Convolutions, Lookup Tables",
                     "RenderableImage interface"},
-                 { "Color", "ICC profile support", "Color conversion",
+                 { "Color", "ICC profile support", "Color conversion", 
                    "Arbitrary color spaces"} };
             private String list[];
             private int beginning, ending;
             private int strH;
             private int endIndex, listIndex;
             private Vector v = new Vector();
-
+           
 
             public Features(int type, int beg, int end) {
                 list = table[type];
@@ -1565,16 +1565,16 @@ public class Intro extends JPanel {
          */
         static class Contributors implements Part {
 
-            static String members[] =
-            {
-                "Brian Lichtenwalter", "Jeannette Hung",
-                "Thanh Nguyen", "Jim Graham", "Jerry Evans",
-                "John Raley", "Michael Peirce", "Robert Kim",
-                "Jennifer Ball", "Deborah Adair", "Paul Charlton",
-                "Dmitry Feld", "Gregory Stone", "Richard Blanchard",
-                "Link Perry", "Phil Race", "Vincent Hardy",
-                "Parry Kejriwal", "Doug Felt", "Rekha Rangarajan",
-                "Paula Patel", "Michael Bundschuh", "Joe Warzecha",
+            static String members[] = 
+            { 
+                "Brian Lichtenwalter", "Jeannette Hung", 
+                "Thanh Nguyen", "Jim Graham", "Jerry Evans", 
+                "John Raley", "Michael Peirce", "Robert Kim", 
+                "Jennifer Ball", "Deborah Adair", "Paul Charlton", 
+                "Dmitry Feld", "Gregory Stone", "Richard Blanchard", 
+                "Link Perry", "Phil Race", "Vincent Hardy", 
+                "Parry Kejriwal", "Doug Felt", "Rekha Rangarajan", 
+                "Paula Patel", "Michael Bundschuh", "Joe Warzecha", 
                 "Joey Beheler", "Aastha Bhardwaj", "Daniel Rice",
                 "Chris Campbell", "Shinsuke Fukuda", "Dmitri Trembovetski",
                 "Chet Haase", "Jennifer Godinez", "Nicholas Talian",
@@ -1637,7 +1637,7 @@ public class Intro extends JPanel {
                 int y = (int) (incr * strH);
 
                 if (index >= cast.size()) {
-                    y = yh + y;
+                    y = yh + y; 
                 } else {
                     y = yh = height - v.size() * strH + y;
                 }

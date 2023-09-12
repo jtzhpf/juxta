@@ -8,18 +8,18 @@
        } else {
          element.style.display = 'block';
        }
-       return false;
-    }
+       return false;      
+    }          
     // -->
     </script>
     <title>Error</title>
     <style>
-      .path {
+      .path { 
         padding: 5px;
         font-size: 140%;
         background: #ddd;
       }
-      .error {
+      .error { 
         padding: 5px;
         padding-top: 15px;
         font-size: 140%;
@@ -30,7 +30,7 @@
         color: #555;
       }
       .source {
-        border: 1px solid #ccc;
+        border: 1px solid #ccc; 
         padding: 10px;
         margin-top: 10px; margin-bottom: 10px;
       }
@@ -43,19 +43,19 @@
   <body>
     <h1>Error</h1>
 
-<?r
-    if Run.mode == :debug
+<?r 
+    if Run.mode == :debug 
     require 'cgi'
 ?>
     <?r  for error, path in @context.rendering_errors ?>
       <div class="path"><strong>Path:</strong> #{path}</div>
       <div class="error"><strong>#{CGI.escapeHTML(error.to_s)}</strong></div>
       <div class="load">
-        <strong><a href="#{request.uri}">Reload</a></strong> this page.
+        <strong><a href="#{request.uri}">Reload</a></strong> this page. 
         Go to the <strong><a href="#{request.referer}">referer</a></strong> or the <strong><a href="/">home page</a></strong>.
       </div>
       <div class="source">
-      <?r
+      <?r 
         extract = error.source_extract.split("\n")
       ?>
       In file <b>'#{error.hot_file}'</b> #{error.hot_file =~ /\.xhtml$/ ? '(line numbering is aproximate due to template transformation)' : nil}:
@@ -68,8 +68,8 @@
           <div style="background: #eee">#{line}</div>
       <?r  else ?>
           <div>#{line}</div>
-      <?r
-          end
+      <?r  
+          end 
         end
       ?>
       </div>
@@ -78,8 +78,8 @@
         <?r error.backtrace.zip(error.source_for_backtrace).each_with_index do |step,step_idx| ?>
       <div><a href="#" onclick="return toggleVisible(document.getElementById('trace_#{step_idx}'));">#{sanitize(step.first)}</a></div>
       <div class="source" id="trace_#{step_idx}" style="display: none;">
-      <?r
-        extract = step.last.split("\n")
+      <?r 
+        extract = step.last.split("\n")      
         extract.each_with_index do |line, idx|
           line = sanitize(line)
           if 5 == idx
@@ -87,38 +87,38 @@
           <div style="background: #eee">#{line}</div>
       <?r  else ?>
           <div>#{line}</div>
-      <?r
-          end
+      <?r  
+          end 
         end
       ?>
       </div>
 
-
+        
         <?r end ?>
       </div>
     <?r end ?>
 
     <h2><a href="#" onclick="document.getElementById('request').style.display = 'block'; return false">Request</a></h2>
     <div id="request" style="display: none">
-      <p><strong>Parameters:</strong> #{request.params.reject{ |k,v| k == :__RELOADED__ }.inspect}</p>
-      <p><strong>Cookies:</strong> #{request.cookies.inspect}</p>
-      <p><strong>Headers:</strong><br />#{request.headers.collect { |k, v| "#{k} => #{v}" }.join('<br />')}</p>
+      <p><strong>Parameters:</strong> #{request.params.reject{ |k,v| k == :__RELOADED__ }.inspect}</p>  
+      <p><strong>Cookies:</strong> #{request.cookies.inspect}</p>  
+      <p><strong>Headers:</strong><br />#{request.headers.collect { |k, v| "#{k} => #{v}" }.join('<br />')}</p>  
     </div>
 
     <h2><a href="#" onclick="document.getElementById('response').style.display = 'block'; return false">Response</a></h2>
     <div id="response" style="display: none">
-      <p><strong>Headers:</strong> #{request.response_headers.inspect}</p>
-      <p><strong>Cookies:</strong> #{request.response_cookies.inspect}</p>
+      <p><strong>Headers:</strong> #{request.response_headers.inspect}</p>  
+      <p><strong>Cookies:</strong> #{request.response_cookies.inspect}</p>  
     </div>
 
     <h2><a href="#" onclick="document.getElementById('session').style.display = 'block'; return false">Session</a></h2>
     <div id="session" style="display: none">
-      <p><strong>Values:</strong> #{session.inspect}</p>
+      <p><strong>Values:</strong> #{session.inspect}</p>  
     </div>
 
     <br /><br />
     Powered by <a href="http://www.nitrohq.com">Nitro</a> version #{Nitro::Version}
-<?r end ?>
+<?r end ?>    
   </body>
 </html>
 <SystemPage>
@@ -176,7 +176,7 @@
   </table>
   <div class="pager" if="@pager and @pager.navigation?">
     #{@pager.navigation}
-  </div>
+  </div>  
 </SystemPage>
 <SystemPage>
   <?r base = "#{@base}/%base%" ?>
@@ -214,7 +214,7 @@
     </table>
     <div class="pager" if="@pager and @pager.navigation?">
       #{@pager.navigation}
-    </div>
+    </div>  
   <?r end ?>
 </SystemPage>
 <SystemPage>
@@ -222,16 +222,16 @@
   <h1>View %name%</h1>
   <h2><a href="#{base}/list">List of %plural%</a></h2>
   <code>
-    #{@obj.to_yaml}
+    #{@obj.to_yaml} 
   </code>
 </SystemPage>
 <strong>Access denied</strong>
 <SystemPage>
   <?r base = "#{@base}/%base%" ?>
   <h1><a href='/'>Home</a> > System</h1>
-
+  
   <h2>Og managed classes</h2>
-
+  
   <table>
     <tr>
       <th>Class</th>
@@ -249,9 +249,9 @@
     </tr>
   <?r end ?>
   </table>
-
+  
   <h2>System configuration</h2>
-
+  
   <table width="100%">
     <tr>
       <th>Name</th>
@@ -268,7 +268,7 @@
     </tr>
   <?r end ?>
   </table>
-</SystemPage>
+</SystemPage>  
 
 <b><?r $include1 = true ?></b>
 <b><?r $include2 = true ?></b>
@@ -316,7 +316,7 @@ Here is your <b>Token</b>: #{token}
       <p><a href="/ask">Ask a question here.</a></p>
     </div>
     <?r end ?>
-
+    
     <?r if @tips && @tips.size > 0 ?>
     <h1>Tips with Tags: #{@tags.join(" ")}</h1>
     <?r if @ttags ?>
@@ -336,7 +336,7 @@ Here is your <b>Token</b>: #{token}
       #{@tpager.navigation}
     </div>
     <?r end ?>
-
+    
     <?r if @tutorials && @tutorials.size > 0 ?>
     <h1>Tutorials with Tags: #{@tags.join(" ")}</h1>
     <?r if @tuttags ?>
@@ -356,8 +356,8 @@ Here is your <b>Token</b>: #{token}
       #{@tpager.navigation}
     </div>
     <?r end ?>
-
-
+    
+    
     <?r else ?>
       <div class="cloud">
         <?r
@@ -369,7 +369,7 @@ Here is your <b>Token</b>: #{token}
       </div> <!-- #cloud -->
     <?r end ?>
   </div> <!-- #left -->
-
+  
   <render href="/right" />
 </Page>
 

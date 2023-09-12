@@ -32,7 +32,7 @@ public type tree<a> {
 
 function show( t : tree<char> ) : string {
   match(t) {
-    Leaf(c) -> core/show(c)
+    Leaf(c) -> core/show(c)  
     Node(l,r) -> "Node(" + show(l) + "," + show(r) + ")"
   }
 }

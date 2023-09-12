@@ -8,7 +8,7 @@
 
 %define %std_vector_methods(vector...)
   %std_sequence_methods(vector)
-
+  
   void reserve(size_type n);
   size_type capacity() const;
 %enddef
@@ -16,7 +16,7 @@
 
 %define %std_vector_methods_val(vector...)
   %std_sequence_methods_val(vector)
-
+  
   void reserve(size_type n);
   size_type capacity() const;
 %enddef
@@ -24,13 +24,13 @@
 
 // ------------------------------------------------------------------------
 // std::vector
-//
-// The aim of all that follows would be to integrate std::vector with
-// as much as possible, namely, to allow the user to pass and
+// 
+// The aim of all that follows would be to integrate std::vector with 
+// as much as possible, namely, to allow the user to pass and 
 // be returned tuples or lists.
 // const declarations are used to guess the intent of the function being
 // exported; therefore, the following rationale is applied:
-//
+// 
 //   -- f(std::vector<T>), f(const std::vector<T>&):
 //      the parameter being read-only, either a sequence or a
 //      previously wrapped std::vector<T> can be passed.
@@ -38,7 +38,7 @@
 //      the parameter may be modified; therefore, only a wrapped std::vector
 //      can be passed.
 //   -- std::vector<T> f(), const std::vector<T>& f():
-//      the vector is returned by copy; therefore, a sequence of T:s
+//      the vector is returned by copy; therefore, a sequence of T:s 
 //      is returned which is most easily used in other functions
 //   -- std::vector<T>& f(), std::vector<T>* f():
 //      the vector is returned by reference; therefore, a wrapped std::vector
@@ -49,7 +49,7 @@
 
 %{
 #include <vector>
-%}
+%}    
 
 // exported classes
 
@@ -90,7 +90,7 @@ namespace std {
     // Add swig/language extra methods
     %swig_vector_methods(std::vector<_Tp, _Alloc >);
 #endif
-
+  
     %std_vector_methods(vector);
   };
 
@@ -101,7 +101,7 @@ namespace std {
   template<class _Tp, class _Alloc >
   class vector<_Tp*, _Alloc > {
   public:
-    typedef size_t size_type;
+    typedef size_t size_type;    
     typedef ptrdiff_t difference_type;
     typedef _Tp* value_type;
     typedef value_type* pointer;
@@ -141,7 +141,7 @@ namespace std {
   template<class _Tp, class _Alloc >
   class vector<_Tp const *, _Alloc > {
   public:
-    typedef size_t size_type;
+    typedef size_t size_type;    
     typedef ptrdiff_t difference_type;
     typedef _Tp const * value_type;
     typedef value_type* pointer;
@@ -179,10 +179,10 @@ namespace std {
   // bool specialization
   // ***
 
-  template<class _Alloc >
+  template<class _Alloc > 
   class vector<bool,_Alloc > {
   public:
-    typedef size_t size_type;
+    typedef size_t size_type;    
     typedef ptrdiff_t difference_type;
     typedef bool value_type;
     typedef value_type* pointer;
@@ -216,7 +216,7 @@ namespace std {
 
     %std_vector_methods_val(vector);
 
-#if defined(SWIG_STD_MODERN_STL) && !defined(SWIG_STD_NOMODERN_STL)
+#if defined(SWIG_STD_MODERN_STL) && !defined(SWIG_STD_NOMODERN_STL) 
     void flip();
 #endif
 

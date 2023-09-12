@@ -36,7 +36,7 @@ options {
 
 tokens {
 	DOC_COMMENT;
-	PARSER;
+	PARSER;	
     LEXER;
     RULE;
     BLOCK;
@@ -131,7 +131,7 @@ optionsSpec
 option
     :   id '=' optionValue -> ^('=' id optionValue)
  	;
-
+ 	
 optionValue
     :   id
     |   STRING_LITERAL
@@ -302,7 +302,7 @@ terminal
 			)
 		|   STRING_LITERAL				-> STRING_LITERAL
 		|   '.'							-> '.'
-		)
+		)	
 		(	'^'							-> ^('^' $terminal)
 		|	'!' 						-> ^('!' $terminal)
 		)?
@@ -313,7 +313,7 @@ notTerminal
 	|	TOKEN_REF
 	|	STRING_LITERAL
 	;
-
+	
 ebnfSuffix
 @init {
 	Token op = input.LT(1);
@@ -322,7 +322,7 @@ ebnfSuffix
   	|	'*' -> CLOSURE[op]
    	|	'+' -> POSITIVE_CLOSURE[op]
 	;
-
+	
 
 
 // R E W R I T E  S Y N T A X
@@ -342,7 +342,7 @@ rewrite_alternative
 	|	rewrite_tree_alternative
    	|   /* empty rewrite */ -> ^(ALT["ALT"] EPSILON["EPSILON"] EOA["EOA"])
 	;
-
+	
 rewrite_template_block
     :   lp='(' rewrite_template ')' -> ^(BLOCK[$lp,"BLOCK"] rewrite_template EOB[$lp,"EOB"])
     ;
@@ -387,7 +387,7 @@ rewrite_tree_ebnf
 }
 	:	rewrite_tree_block ebnfSuffix -> ^(ebnfSuffix rewrite_tree_block)
 	;
-
+	
 rewrite_tree
 	:	'^(' rewrite_tree_atom rewrite_tree_element* ')'
 		-> ^(TREE_BEGIN rewrite_tree_atom rewrite_tree_element* )
@@ -577,7 +577,7 @@ RULE_REF
 OPTIONS
 	:	'options' WS_LOOP '{' {$channel=DEFAULT_TOKEN_CHANNEL;} // WS_LOOP sets channel
 	;
-
+	
 TOKENS
 	:	'tokens' WS_LOOP '{' {$channel=DEFAULT_TOKEN_CHANNEL;}
 	;

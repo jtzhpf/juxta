@@ -32,12 +32,12 @@ param(
 [Parameter(Position=8, Mandatory=$false)] [Int32]$QueryTimeout=600,
 [Parameter(Position=9, Mandatory=$false)] [Int32]$ConnectionTimeout=15
 )
-
-
+ 
+ 
 #This must be run as administrator on Windows 2008 and higher!
 New-EventLog -LogName Application -Source $Application -EA SilentlyContinue
 $Error.Clear()
-
+ 
 #######################
 function Invoke-SqlCmd2
 {
@@ -50,7 +50,7 @@ function Invoke-SqlCmd2
     [Parameter(Position=5, Mandatory=$false)] [Int32]$QueryTimeout,
     [Parameter(Position=6, Mandatory=$false)] [Int32]$ConnectionTimeout
     )
-
+ 
     try {
         if ($Username)
         { $ConnectionString = "Server={0};Database={1};User ID={2};Password={3};Trusted_Connection=False;Connect Timeout={4}" -f $ServerInstance,$Database,$Username,$Password,$ConnectionTimeout }
@@ -69,9 +69,9 @@ function Invoke-SqlCmd2
     finally {
         $conn.Dispose()
     }
-
+ 
 } #Invoke-SqlCmd2
-
+ 
 #######################
 #       MAIN          #
 #######################
@@ -80,7 +80,7 @@ if ($PSBoundParameters.Count -eq 0)
  get-help $myInvocation.MyCommand.Path -full
  break
 }
-
+ 
 try {
     $msg = $null
     $msg += "Application/Job Name: $Application`n"
@@ -88,7 +88,7 @@ try {
     $msg += "ServerInstance: $ServerInstance`n"
     $msg += "Database: $Database`n"
     $msg += "FilePath: $FilePath`n"
-
+   
     Write-EventLog -LogName Application -Source "$Application" -EntryType Information -EventId 12345 -Message "Starting`n$msg"
     $dt = Invoke-SqlCmd2 -ServerInstance $ServerInstance -Database $Database -Query $Query -UserName $UserName -Password $Password -QueryTimeOut $QueryTimeOut -ConnectionTimeout $ConnectionTimeout
     if ($FilePath)
@@ -98,7 +98,7 @@ try {
         else #Query Returned No Output!
         {Write-EventLog -LogName Application -Source "$Application" -EntryType Warning -EventId 12345 -Message "NoOutput`n$msg" }
     }
-
+ 
     Write-EventLog -LogName Application -Source "$Application" -EntryType Information -EventId 12345 -Message "Completed`n$msg"
 }
 catch {

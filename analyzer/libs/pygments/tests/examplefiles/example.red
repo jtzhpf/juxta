@@ -80,7 +80,7 @@ Red [
         ][
             rl-insert count key
         ]
-
+        
     ]
 ]
 
@@ -108,7 +108,7 @@ init-console: routine [
     #either OS = 'Windows [
         ;ret: AttachConsole -1
         ;if zero? ret [print-line "ReadConsole failed!" halt]
-
+        
         ret: SetConsoleTitle as c-string! string/rs-head str
         if zero? ret [print-line "SetConsoleTitle failed!" halt]
     ][
@@ -147,7 +147,7 @@ count-delimiters: function [
 ][
     list: copy [0 0]
     c: none
-
+    
     foreach c buffer [
         case [
             escaped? [
@@ -177,7 +177,7 @@ do-console: function [][
     buffer: make string! 10000
     prompt: red-prompt: "red>> "
     mode:  'mono
-
+    
     switch-mode: [
         mode: case [
             cnt/1 > 0 ['block]
@@ -194,13 +194,13 @@ do-console: function [][
             mono   [red-prompt]
         ]
     ]
-
+    
     eval: [
         code: load/all buffer
-
+        
         unless tail? code [
             set/any 'result do code
-
+            
             unless unset? :result [
                 if 67 = length? result: mold/part :result 67 [  ;-- optimized for width = 72
                     clear back tail result
@@ -222,7 +222,7 @@ do-console: function [][
             ][
                 append buffer lf                    ;-- Unix
             ]
-
+            
             switch mode [
                 block  [if cnt/1 <= 0 [do switch-mode]]
                 string [if cnt/2 <= 0 [do switch-mode]]
@@ -238,7 +238,7 @@ if script: read-argument [
     script: load script
     either any [
         script/1 <> 'Red
-        not block? script/2
+        not block? script/2 
     ][
         print "*** Error: not a Red program!"
     ][

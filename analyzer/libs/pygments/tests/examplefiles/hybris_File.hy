@@ -19,7 +19,7 @@
 import std.io.file;
 
 class File {
-
+	
 	protected file, fileName, mode;
 
 	public method File( fileName, mode ){
@@ -31,7 +31,7 @@ class File {
 	private method isBinary(){
 		return me.mode.find("b") != false;
 	}
-
+	
 	public method File ( file ){
 		me.file = file;
 	}
@@ -39,11 +39,11 @@ class File {
 	private method __expire() {
 		me.close();
 	}
-
+	
 	public method close(){
 		fclose( me.file );
 	}
-
+	
 	public method readLine(){
 		return line = fgets( me.file );
 	}
@@ -59,7 +59,7 @@ class File {
 	public method getPosition(){
 		return ftell( me.file );
 	}
-
+	
 	public method readAll(){
 		text = "";
 		line = "";
@@ -113,7 +113,7 @@ class File {
 		}
 		if ( fread (me.file, type ) > 0 ) {
 			return type;
-		}
+		} 
 		else {
 			return -1;
 		}
@@ -142,7 +142,7 @@ class File {
 
 		return me.readType( type );
 	}
-
+	
 	public method  readType(  type, bytes, seek, seekType){
 		if ( ( me.isBinary() == false ) | ( me.seek( seek, seekType) == 0 ) ) {
 			return -1;
@@ -150,7 +150,7 @@ class File {
 
 		return me.readType( type, bytes );
 	}
-
+	
 	public method write( data ){
 		return fwrite( me.file, data );
 	}
@@ -162,7 +162,7 @@ class File {
 	public method write ( data, bytes ){
 		return fwrite( me.file, data, bytes);
 	}
-
+	
 	public method seek( pos, mode ){
 		return fseek( me.file, pos, mode );
 	}

@@ -35,7 +35,7 @@ structure S = struct
   exception E1 of int and E2
   fun 'a id (x: 'a) : 'a = x
 
-  val
+  val 
       'a id = fn (x : 'a) => x
 end
 
@@ -51,10 +51,10 @@ structure R : R = struct
   fun 'a id (x: 'a) : 'a = x
 end
 
-signature BA_Z = sig
+signature BA_Z = sig 
    val s: int
    include S R
-end
+end 
 
 structure b______ = struct (* What (* A * strange * name *) for ) a ( struct *)
 
@@ -65,12 +65,12 @@ and 'a sig' = 'a list
 and ('a, 'b) end' = 'b option * 'a list
 
 structure baz = struct
-  structure Bar = struct
+  structure Bar = struct 
     val foo = !%&$#+-/:<=>?@\~`^|*
-  end
+  end  
 end
 
-infixr +!+
+infixr +!+ 
 fun (a +!+ b) = (op +) (a, b)
 
 open baz S R
@@ -90,12 +90,12 @@ val {##=, x, 4=a,...} = w
 val z = #4 w
 val z = # ##= w
 
-fun f x y 0 = 4
+fun f x y 0 = 4 
   | f x y z = 4 + Sv.||
 
 exception Foo of int
 datatype ('0, 'b, '_, ') f'o'o = Bar | baZ12' | dsfa_fad | #@$ | Bug
-and (', ''', '''', ''''') bar =
+and (', ''', '''', ''''') bar = 
    Bee of unit
  | Ben of (', ''', '''', ''''') f'o'o * int
  | X of ''' list
@@ -145,8 +145,8 @@ val _ = 1.4E2
 
 val c = #"\000"
 val st = "foo \
- 	 \ bar" ^ "baz \
-  	 \ and \
+ 	 \ bar" ^ "baz \        
+  	 \ and \ 
    	 \ such\n"
 
 val () = print st

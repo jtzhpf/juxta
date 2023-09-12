@@ -4,7 +4,7 @@ class _PostUnico$deClassá
   void PostUnicodeFunctioná() {
   láb$el:
     break láb$el;
-
+  
   }
 }
 

@@ -1,20 +1,20 @@
-
-/// @section  StringLiteralRef
+
+/// @section  StringLiteralRef 
 
 record StringLiteralRef (
     sizep : Pointer[SizeT],
 );
 
-
-/// @section  predicates
+
+/// @section  predicates 
 
 overload ContiguousSequence?(#StringLiteralRef) : Bool = true;
 [s when StringLiteral?(s)]
 overload ContiguousSequence?(#Static[s]) : Bool = true;
 
 
-
-/// @section  size, begin, end, index
+
+/// @section  size, begin, end, index 
 
 forceinline overload size(a:StringLiteralRef) = a.sizep^;
 

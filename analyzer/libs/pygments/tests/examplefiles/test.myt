@@ -44,7 +44,7 @@
 % else:
     <a href="#<% item.get_page_root().path %>" class="toclink">back to section top</a>
     <& nav.myt:pagenav, item=item, onepage=onepage &>
-%
+% 
 </div>
 
 </%method>
@@ -111,7 +111,7 @@
 
 
 
-<%method popboxlink trim="both">
+<%method popboxlink trim="both"> 
     <%args>
         name=None
         show='show'

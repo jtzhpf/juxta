@@ -104,12 +104,12 @@ class CalculatorGui
 	redef fun signal( sender, user_data )
 	do
 		var after_point = context.after_point
-		if after_point == null then
+		if after_point == null then 
 		    after_point = 0
 		else
 		    after_point = (after_point.abs)
 		end
-
+		
 		if user_data isa Char then # is an operation
 			var c = user_data
 			if c == '.' then
@@ -119,7 +119,7 @@ class CalculatorGui
 			else
 				but_dot.sensitive= true
 				context.push_op( c )
-
+				
 				var s = context.result.to_precision_native(6)
 				var index : nullable Int = null
 				for i in s.length.times do
@@ -286,7 +286,7 @@ end
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample has been implemented to show you how simple is it to play
+# This sample has been implemented to show you how simple is it to play 
 # with native callbacks (C) through an high level with NIT program.
 
 module callback_chimpanze
@@ -299,14 +299,14 @@ class Chimpanze
 	do
 		var monkey = new Monkey
 		print "Hum, I'm sleeping ..."
-		# Invoking method which will take some time to compute, and
+		# Invoking method which will take some time to compute, and 
 		# will be back in wokeUp method with information.
 		# - Callback method defined in MonkeyActionCallable Interface
 		monkey.wokeUpAction(self, "Hey, I'm awake.")
 	end
 
 	# Inherit callback method, defined by MonkeyActionCallable interface
-	# - Back of wokeUpAction method
+	# - Back of wokeUpAction method 
 	redef fun wokeUp( sender:Monkey, message:Object )
 	do
 		print message
@@ -331,7 +331,7 @@ m.create
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample has been implemented to show you how simple is it to play
+# This sample has been implemented to show you how simple is it to play 
 # with native callbacks (C) through an high level with NIT program.
 
 module callback_monkey
@@ -340,7 +340,7 @@ in "C header" `{
 	#include <stdio.h>
 	#include <stdlib.h>
 
-	typedef struct {
+	typedef struct { 
 		int id;
 		int age;
 	} CMonkey;
@@ -376,30 +376,30 @@ end
 
 # Defining my object type Monkey, which is, in a low level, a pointer to a C struct (CMonkey)
 extern class Monkey `{ CMonkey * `}
-
+	
 	new `{
 		CMonkey *monkey = malloc( sizeof(CMonkey) );
 		monkey->age = 10;
 		monkey->id = 1;
 		return monkey;
 	`}
-
+	
 	# Object method which will get a callback in wokeUp method, defined in MonkeyActionCallable interface
 	# Must be defined as Nit/C method because of C call inside
 	fun wokeUpAction( toCall: MonkeyActionCallable, message: Object ) is extern import MonkeyActionCallable.wokeUp `{
 
 		// Allocating memory to keep reference of received parameters :
 		// - Object receiver
-		// - Message
+		// - Message 
 		MonkeyAction *data = malloc( sizeof(MonkeyAction) );
 
 		// Incrementing reference counter to prevent from releasing
 		MonkeyActionCallable_incr_ref( toCall );
 		Object_incr_ref( message );
-
+		
 		data->toCall = toCall;
 		data->message = message;
-
+		
 		// Calling method which reproduce a callback by passing :
 		// - Receiver
 		// - Function pointer to object return method
@@ -661,7 +661,7 @@ class Clock
 
 	# number of minutes in the current hour (from 0 to 59)
 	fun minutes: Int do return self.total_minutes % 60
-
+	
 	# set the number of minutes in the current hour.
 	# if m < 0 or m >= 60, the hour will be changed accordinlgy
 	fun minutes=(m: Int) do self.total_minutes = self.hours * 60 + m
@@ -1270,14 +1270,14 @@ redef class Int
 		else
 			return (self-2).fibonacci + (self-1).fibonacci
 		end
-	end
+	end 
 end
 
 # Print usage and exit.
 fun usage
 do
-	print "Usage: fibonnaci <integer>"
-	exit 0
+	print "Usage: fibonnaci <integer>" 
+	exit 0 
 end
 
 # Main part
@@ -1510,7 +1510,7 @@ print l.pop or else 0 # l.pop gives null, so print the alternative: 0
 # Basic example of OpenGL ES 2.0 usage from the book OpenGL ES 2.0 Programming Guide.
 #
 # Code reference:
-# https://code.google.com/p/opengles-book-samples/source/browse/trunk/LinuxX11/Chapter_2/Hello_Triangle/Hello_Triangle.c
+# https://code.google.com/p/opengles-book-samples/source/browse/trunk/LinuxX11/Chapter_2/Hello_Triangle/Hello_Triangle.c 
 module opengles2_hello_triangle
 
 import glesv2
@@ -1620,10 +1620,10 @@ assert_no_gl_error
 var vertex_shader = new GLVertexShader
 assert vertex_shader.is_ok else print "Vertex shader is not ok: {gl_error}"
 vertex_shader.source = """
-attribute vec4 vPosition;
-void main()
-{
-  gl_Position = vPosition;
+attribute vec4 vPosition;   
+void main()                 
+{                           
+  gl_Position = vPosition;  
 }                           """
 vertex_shader.compile
 assert vertex_shader.is_compiled else print "Vertex shader compilation failed with: {vertex_shader.info_log} {program.info_log}"

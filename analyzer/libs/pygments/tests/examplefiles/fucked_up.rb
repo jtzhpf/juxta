@@ -39,16 +39,16 @@ UE/PR	Do	17-19	wöch.	RUD 25, 3.101	J.-M. Loebel
 Methoden und Modelle des Systementwurfs (32 223)
 Gute Methoden zum Entwurf und zur Verifikation von Systemen sind ein Schlüssel für gute Software. Dieses Seminar betrachtet moderne Entwurfsmethoden.
  VL	Di	09-11	wöch.	RUD 26, 0313	W. Reisig
- VL	Do	09-11	wöch.	RUD 26, 0313
- UE	Di	11-13	wöch.	RUD 26, 0313
+ VL	Do	09-11	wöch.	RUD 26, 0313	
+ UE	Di	11-13	wöch.	RUD 26, 0313	
  PR	Di	13-15	wöch.	RUD 26, 0313	D. Weinberg
 
 
 Komplexitätstheorie (32 229)
 In dieser Vorlesung untersuchen wir eine Reihe von wichtigen algorithmischen Problemstellungen aus verschiedenen Bereichen der Informatik. Unser besonderes Interesse gilt dabei der Abschätzung der Rechenressourcen, die zu ihrer Lösung aufzubringen sind.  Die Vorlesung bildet eine wichtige Grundlage für weiterführende Veranstaltungen in den Bereichen Algorithmen, Kryptologie, Algorithmisches Lernen und Algorithmisches Beweisen.
  VL 	Di	09-11	wöch.	RUD 26, 1303	J. Köbler
- VL	Do	09-11	wöch.	RUD 26, 1305
- UE	Do	11-13	wöch.	RUD 26, 1305
+ VL	Do	09-11	wöch.	RUD 26, 1305	
+ UE	Do	11-13	wöch.	RUD 26, 1305	
 
 
 Zuverlässige Systeme (32 234)

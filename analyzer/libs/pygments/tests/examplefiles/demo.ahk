@@ -9,7 +9,7 @@ string := "hello `"world""! "
 ; single line comment1
 ;;;  single line comment2
 
-::stopi::viper_off()
+::stopi::viper_off()  
 
 a::send, ^a
 mylabel:send, ^{space}  ;; set mark
@@ -17,7 +17,7 @@ e::send, ^e
 n::
   send, ^n
   return
-!i::
+!i::     
 viper("iviper")   ; stdlib
 x = "viper"" "  ; escaped quote
 Return
@@ -30,7 +30,7 @@ FileSelectFile, file,,, Select an image:, Images (*.gif; *.jpg; *.bmp; *.png; *.
 ; viper
 
 
-i::viper_off()
+i::viper_off() 
 #If
 
 ;; keybindings
@@ -43,7 +43,7 @@ return
 ,::send, +!,  ;; beginning of page
 .::send, +!.  ;; end of page
 [::send, !a
-]::send, !e
+]::send, !e  
 d:: ^k  ;; kill line
 x:: send ^d
 \:: ^!k  ;; kill next word or sexp
@@ -51,20 +51,20 @@ x:: send ^d
 
 #IfWinActive
 #Persistent
-
+  
 F2::     ;; hotkey
 start:   ;; label
 start2:   ; label
-  ppm := ppm_new(50, 50, 255)
-  ppm_fill(ppm, 80, 90, 95)
-  msgbox % getPixel(ppm, 1, 1)
+  ppm := ppm_new(50, 50, 255)    
+  ppm_fill(ppm, 80, 90, 95)      
+  msgbox % getPixel(ppm, 1, 1)    
   setPixel(90, 90, 90, ppm, 1, 1)
   msgbox % getPixel(ppm, 1, 1)
   ListVars  ; command
   msgbox % ppm
   return
-
-
+  
+  
   ppm_read(file)
   {
 	fileread, ppm, % file
@@ -82,7 +82,7 @@ ppm_height(ppm)
 {
  regexmatch(ppm, "\R(\d+)\s(\d+)", dim)
     return dim2
-}
+} 
 
 ppm_colors(ppm)
 {
@@ -105,10 +105,10 @@ return header
 
 ppm_fill(ByRef ppm, r, g, b)
 {
-  width := ppm_width(ppm)
+  width := ppm_width(ppm)	
   height := ppm_height(ppm)
   header := ppm_header(ppm)
-  headerLength := strlen(header)
+  headerLength := strlen(header) 
   varsetcapacity(data, width * height, 0)
   loop, % (width * height)
   {
@@ -134,7 +134,7 @@ ppm_new(width, height, colors)
   return ppm
 }
 
-heredoc =
+heredoc = 
 (
   P6
   # lasdjkf

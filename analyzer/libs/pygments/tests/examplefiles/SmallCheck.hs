@@ -50,7 +50,7 @@ s1 >< s2 = \d -> [(x,y) | x <- s1 d, y <- s2 d]
 -- for data values, the depth of nested constructor applications
 -- for functional values, both the depth of nested case analysis
 -- and the depth of results
-
+ 
 class Serial a where
   series   :: Series a
   coseries :: Serial b => Series (a->b)
@@ -95,7 +95,7 @@ instance Serial Float where
                  odd sig || sig==0 && exp==0 ]
   coseries d = [ f . decodeFloat
                | f <- series d ]
-
+             
 instance Serial Double where
   series   d = [ frac (x :: Float)
                | x <- series d ]
@@ -140,7 +140,7 @@ three s = \d -> [(x,y,z) | (x,(y,z)) <- (s >< s >< s) d]
 four  :: Series a -> Series (a,a,a,a)
 four  s = \d -> [(w,x,y,z) | (w,(x,(y,z))) <- (s >< s >< s >< s) d]
 
-cons0 ::
+cons0 :: 
          a -> Series a
 cons0 c _ = [c]
 
@@ -217,7 +217,7 @@ instance Serial a => Serial [a] where
 instance (Serial a, Serial b) => Serial (a->b) where
   series = coseries
   coseries d = [ \f -> g [f x | x <- series d]
-               | g <- series d ]
+               | g <- series d ]              
 
 -- For customising the depth measure.  Use with care!
 
@@ -235,7 +235,7 @@ inc d = d+1
 -- show the extension of a function (in part, bounded both by
 -- the number and depth of arguments)
 instance (Serial a, Show a, Show b) => Show (a->b) where
-  show f =
+  show f = 
     if maxarheight == 1
     && sumarwidth + length ars * length "->;" < widthLimit then
       "{"++(
@@ -248,7 +248,7 @@ instance (Serial a, Show a, Show b) => Show (a->b) where
                            | x <- series depthLimit ]
     maxarheight = maximum  [ max (height a) (height r)
                            | (a,r) <- ars ]
-    sumarwidth = sum       [ length a + length r
+    sumarwidth = sum       [ length a + length r 
                            | (a,r) <- ars]
     indent = unlines . map ("  "++) . lines
     height = length . lines
@@ -303,7 +303,7 @@ thereExists xs f = Property $ \d -> Prop $
   [ Result
       ( Just $ or [ all pass (evaluate (f x) d)
                   | x <- xs d ] )
-      [] ]
+      [] ] 
   where
   pass (Result Nothing _)  = True
   pass (Result (Just b) _) = b
@@ -318,7 +318,7 @@ exists = thereExists series
 existsDeeperBy :: (Serial a, Testable b) =>
                     (Int->Int) -> (a->b) -> Property
 existsDeeperBy f = thereExists (series . f)
-
+ 
 infixr 0 ==>
 
 (==>) :: Testable a => Bool -> a -> Property

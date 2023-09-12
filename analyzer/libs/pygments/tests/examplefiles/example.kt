@@ -30,7 +30,7 @@ class PhoneNumber(
 
 object Countries {
   fun get(id : CountryID) : Country = countryTable[id]
-
+  
   private var table : Map<String, Country>? = null
   private val countryTable : Map<String, Country>
     get() {

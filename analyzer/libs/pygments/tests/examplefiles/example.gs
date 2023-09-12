@@ -7,7 +7,7 @@ uses java.io.File
 class Person extends Contact implements IEmailable {
 
   var _name : String
-  var _age : Integer as Age
+  var _age : Integer as Age 
   var _relationship : Relationship as readonly RelationshipOfPerson
 
   delegate _emailHelper represents IEmailable

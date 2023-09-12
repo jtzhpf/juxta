@@ -1,25 +1,378 @@
 Pygments changelog
 ==================
 
-Issue numbers refer to the tracker at
-<https://bitbucket.org/birkenfeld/pygments-main/issues>,
+Since 2.5.0, issue numbers refer to the tracker at
+<https://github.com/pygments/pygments/issues>,
 pull request numbers to the requests at
-<https://bitbucket.org/birkenfeld/pygments-main/pull-requests/merged>.
+<https://github.com/pygments/pygments/pulls>.
+
+Version 2.5.2
+-------------
+(released November 29, 2019)
+
+- Fix incompatibility with some setuptools versions (PR#1316)
+
+- Fix lexing of ReST field lists (PR#1279)
+- Fix lexing of Matlab keywords as field names (PR#1282)
+- Recognize double-quoted strings in Matlab (PR#1278)
+- Avoid slow backtracking in Vim lexer (PR#1312)
+- Fix Scala highlighting of types (PR#1315)
+- Highlight field lists more consistently in ReST (PR#1279)
+- Fix highlighting Matlab keywords in field names (PR#1282)
+- Recognize Matlab double quoted strings (PR#1278)
+- Add some Terraform keywords
+- Update Modelica lexer to 3.4
+- Update Crystal examples
+
+
+Version 2.5.1
+-------------
+(released November 26, 2019)
+
+- This release fixes a packaging issue. No functional changes.
+
+
+Version 2.5.0
+-------------
+(released November 26, 2019)
+
+- Added lexers:
+
+  * Email (PR#1246)
+  * Erlang, Elxir shells (PR#823, #1521)
+  * Notmuch (PR#1264)
+  * `Scdoc <https://git.sr.ht/~sircmpwn/scdoc>`_ (PR#1268)
+  * `Solidity <https://solidity.readthedocs.io/>`_ (#1214)
+  * `Zeek <https://www.zeek.org>`_ (new name for Bro) (PR#1269)
+  * `Zig <https://ziglang.org/>`_ (PR#820)
+
+- Updated lexers:
+
+  * Apache2 Configuration (PR#1251)
+  * Bash sessions (#1253)
+  * CSound (PR#1250)
+  * Dart
+  * Dockerfile
+  * Emacs Lisp
+  * Handlebars (PR#773)
+  * Java (#1101, #987)
+  * Logtalk (PR#1261)
+  * Matlab (PR#1271)
+  * Praat (PR#1277)
+  * Python3 (PR#1255)
+  * Ruby
+  * YAML (#1528)
+  * Velocity
+
+- Added styles:
+
+  * Inkpot (PR#1276)
+
+- The ``PythonLexer`` class is now an alias for the former ``Python3Lexer``.
+  The old ``PythonLexer`` is available as ``Python2Lexer``.  Same change has
+  been done for the ``PythonTracebackLexer``.  The ``python3`` option for
+  the ``PythonConsoleLexer`` is now true by default.
+
+- Bump ``NasmLexer`` priority over ``TasmLexer`` for ``.asm`` files
+  (fixes #1326)
+- Default font in the ``ImageFormatter`` has been updated (#928, PR#1245)
+- Test suite switched to py.test, removed nose dependency (#1490)
+- Reduce ``TeraTerm`` lexer score -- it used to match nearly all languages
+  (#1256)
+- Treat ``Skylark``/``Starlark`` files as Python files (PR#1259)
+- Image formatter: actually respect ``line_number_separator`` option
+
+- Add LICENSE file to wheel builds
+- Agda: fix lambda highlighting
+- Dart: support ``@`` annotations
+- Dockerfile: accept ``FROM ... AS`` syntax
+- Emacs Lisp: add more string functions
+- GAS: accept registers in directive arguments
+- Java: make structural punctuation (braces, parens, colon, comma) ``Punctuation``, not ``Operator`` (#987)
+- Java: support ``var`` contextual keyword (#1101)
+- Matlab: Fix recognition of ``function`` keyword (PR#1271)
+- Python: recognize ``.jy`` filenames (#976)
+- Python: recognize ``f`` string prefix (#1156)
+- Ruby: support squiggly heredocs
+- Shell sessions: recognize Virtualenv prompt (PR#1266)
+- Velocity: support silent reference syntax
+
+
+Version 2.4.2
+-------------
+(released May 28, 2019)
+
+- Fix encoding error when guessing lexer with given ``encoding`` option
+  (#1438)
+
+
+Version 2.4.1
+-------------
+(released May 24, 2019)
+
+- Updated lexers:
+
+  * Coq (#1430)
+  * MSDOS Session (PR#734)
+  * NASM (#1517)
+  * Objective-C (PR#813, #1508)
+  * Prolog (#1511)
+  * TypeScript (#1515)
+
+- Support CSS variables in stylesheets (PR#814, #1356)
+- Fix F# lexer name (PR#709)
+- Fix ``TerminalFormatter`` using bold for bright text (#1480)
+
+
+Version 2.4.0
+-------------
+(released May 8, 2019)
+
+- Added lexers:
+
+  * Augeas (PR#807)
+  * BBC Basic (PR#806)
+  * Boa (PR#756)
+  * Charm++ CI (PR#788)
+  * DASM16 (PR#807)
+  * FloScript (PR#750)
+  * FreeFem++ (PR#785)
+  * Hspec (PR#790)
+  * Pony (PR#627)
+  * SGF (PR#780)
+  * Slash (PR#807)
+  * Slurm (PR#760)
+  * Tera Term Language (PR#749)
+  * TOML (PR#807)
+  * Unicon (PR#731)
+  * VBScript (PR#673)
+
+- Updated lexers:
+
+  * Apache2 (PR#766)
+  * Cypher (PR#746)
+  * LLVM (PR#792)
+  * Makefiles (PR#766)
+  * PHP (#1482)
+  * Rust
+  * SQL (PR#672)
+  * Stan (PR#774)
+  * Stata (PR#800)
+  * Terraform (PR#787)
+  * YAML
+
+- Add solarized style (PR#708)
+- Add support for Markdown reference-style links (PR#753)
+- Add license information to generated HTML/CSS files (#1496)
+- Change ANSI color names (PR#777)
+- Fix catastrophic backtracking in the bash lexer (#1494)
+- Fix documentation failing to build using Sphinx 2.0 (#1501)
+- Fix incorrect links in the Lisp and R lexer documentation (PR#775)
+- Fix rare unicode errors on Python 2.7 (PR#798, #1492)
+- Fix lexers popping from an empty stack (#1506)
+- TypoScript uses ``.typoscript`` now (#1498)
+- Updated Trove classifiers and ``pip`` requirements (PR#799)
+
+
+
+Version 2.3.1
+-------------
+(released Dec 16, 2018)
+
+- Updated lexers:
+
+  * ASM (PR#784)
+  * Chapel (PR#735)
+  * Clean (PR#621)
+  * CSound (PR#684)
+  * Elm (PR#744)
+  * Fortran (PR#747)
+  * GLSL (PR#740)
+  * Haskell (PR#745)
+  * Hy (PR#754)
+  * Igor Pro (PR#764)
+  * PowerShell (PR#705)
+  * Python (PR#720, #1299, PR#715)
+  * SLexer (PR#680)
+  * YAML (PR#762, PR#724)
+
+- Fix invalid string escape sequences
+- Fix `FutureWarning` introduced by regex changes in Python 3.7
+
+
+Version 2.3.0
+-------------
+(released Nov 25, 2018)
+
+- Added lexers:
+
+  * Fennel (PR#783)
+  * HLSL (PR#675)
+
+- Updated lexers:
+
+  * Dockerfile (PR#714)
+
+- Minimum Python versions changed to 2.7 and 3.5
+- Added support for Python 3.7 generator changes (PR#772)
+- Fix incorrect token type in SCSS for single-quote strings (#1322)
+- Use `terminal256` formatter if `TERM` contains `256` (PR#666)
+- Fix incorrect handling of GitHub style fences in Markdown (PR#741, #1389)
+- Fix `%a` not being highlighted in Python3 strings (PR#727)
+
+
+Version 2.2.0
+-------------
+(released Jan 22, 2017)
+
+- Added lexers:
+
+  * AMPL
+  * TypoScript (#1173)
+  * Varnish config (PR#554)
+  * Clean (PR#503)
+  * WDiff (PR#513)
+  * Flatline (PR#551)
+  * Silver (PR#537)
+  * HSAIL (PR#518)
+  * JSGF (PR#546)
+  * NCAR command language (PR#536)
+  * Extempore (PR#530)
+  * Cap'n Proto (PR#595)
+  * Whiley (PR#573)
+  * Monte (PR#592)
+  * Crystal (PR#576)
+  * Snowball (PR#589)
+  * CapDL (PR#579)
+  * NuSMV (PR#564)
+  * SAS, Stata (PR#593)
+
+- Added the ability to load lexer and formatter classes directly from files
+  with the `-x` command line option and the `lexers.load_lexer_from_file()`
+  and `formatters.load_formatter_from_file()` functions. (PR#559)
+
+- Added `lexers.find_lexer_class_by_name()`. (#1203)
+
+- Added new token types and lexing for magic methods and variables in Python
+  and PHP.
+
+- Added a new token type for string affixes and lexing for them in Python, C++
+  and Postgresql lexers.
+
+- Added a new token type for heredoc (and similar) string delimiters and
+  lexing for them in C++, Perl, PHP, Postgresql and Ruby lexers.
+
+- Styles can now define colors with ANSI colors for use in the 256-color
+  terminal formatter. (PR#531)
+
+- Improved the CSS lexer. (#1083, #1130)
+
+- Added "Rainbow Dash" style. (PR#623)
+
+- Delay loading `pkg_resources`, which takes a long while to import. (PR#690)
+
+
+Version 2.1.3
+-------------
+(released Mar 2, 2016)
+
+- Fixed regression in Bash lexer (PR#563)
+
+
+Version 2.1.2
+-------------
+(released Feb 29, 2016)
+
+- Fixed Python 3 regression in image formatter (#1215)
+- Fixed regression in Bash lexer (PR#562)
+
+
+Version 2.1.1
+-------------
+(relased Feb 14, 2016)
+
+- Fixed Jython compatibility (#1205)
+- Fixed HTML formatter output with leading empty lines (#1111)
+- Added a mapping table for LaTeX encodings and added utf8 (#1152)
+- Fixed image formatter font searching on Macs (#1188)
+- Fixed deepcopy-ing of Token instances (#1168)
+- Fixed Julia string interpolation (#1170)
+- Fixed statefulness of HttpLexer between get_tokens calls
+- Many smaller fixes to various lexers
 
 
 Version 2.1
 -----------
-(not released yet)
+(released Jan 17, 2016)
 
 - Added lexers:
 
   * Emacs Lisp (PR#431)
   * Arduino (PR#442)
+  * Modula-2 with multi-dialect support (#1090)
+  * Fortran fixed format (PR#213)
+  * Archetype Definition language (PR#483)
+  * Terraform (PR#432)
+  * Jcl, Easytrieve (PR#208)
+  * ParaSail (PR#381)
+  * Boogie (PR#420)
+  * Turtle (PR#425)
+  * Fish Shell (PR#422)
+  * Roboconf (PR#449)
+  * Test Anything Protocol (PR#428)
+  * Shen (PR#385)
+  * Component Pascal (PR#437)
+  * SuperCollider (PR#472)
+  * Shell consoles (Tcsh, PowerShell, MSDOS) (PR#479)
+  * Elm and J (PR#452)
+  * Crmsh (PR#440)
+  * Praat (PR#492)
+  * CSound (PR#494)
+  * Ezhil (PR#443)
+  * Thrift (PR#469)
+  * QVT Operational (PR#204)
+  * Hexdump (PR#508)
+  * CAmkES Configuration (PR#462)
 
+- Added styles:
 
-Version 2.0.3
--------------
-(not released yet)
+  * Lovelace (PR#456)
+  * Algol and Algol-nu (#1090)
+
+- Added formatters:
+
+  * IRC (PR#458)
+  * True color (24-bit) terminal ANSI sequences (#1142)
+    (formatter alias: "16m")
+
+- New "filename" option for HTML formatter (PR#527).
+
+- Improved performance of the HTML formatter for long lines (PR#504).
+
+- Updated autopygmentize script (PR#445).
+
+- Fixed style inheritance for non-standard token types in HTML output.
+
+- Added support for async/await to Python 3 lexer.
+
+- Rewrote linenos option for TerminalFormatter (it's better, but slightly
+  different output than before) (#1147).
+
+- Javascript lexer now supports most of ES6 (#1100).
+
+- Cocoa builtins updated for iOS 8.1 (PR#433).
+
+- Combined BashSessionLexer and ShellSessionLexer, new version should support
+  the prompt styles of either.
+
+- Added option to pygmentize to show a full traceback on exceptions.
+
+- Fixed incomplete output on Windows and Python 3 (e.g. when using iPython
+  Notebook) (#1153).
+
+- Allowed more traceback styles in Python console lexer (PR#253).
+
+- Added decorators to TypeScript (PR#509).
 
 - Fix highlighting of certain IRC logs formats (#1076).
 

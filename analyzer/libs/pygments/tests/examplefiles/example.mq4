@@ -30,7 +30,7 @@ void OnStart()
    int      i_digits=Digits;
    int      i_unused[13];
    MqlRates rate;
-//---
+//---  
    ExtHandle=FileOpenHistory(c_symbol+(string)i_period+".hst",FILE_BIN|FILE_WRITE|FILE_SHARE_WRITE|FILE_SHARE_READ|FILE_ANSI);
    if(ExtHandle<0)
       return;
@@ -105,7 +105,7 @@ void OnStart()
             rate.high=High[i];
          rate.close=Close[i];
         }
-     }
+     } 
    FileFlush(ExtHandle);
    Print(cnt," record(s) written");
 //--- collect incoming ticks
@@ -122,7 +122,7 @@ void OnStart()
          if(time0<rate.time+periodseconds)
            {
             rate.tick_volume+=(long)Volume[0]-last_volume;
-            last_volume=(long)Volume[0];
+            last_volume=(long)Volume[0]; 
             if(rate.low>Low[0])
                rate.low=Low[0];
             if(rate.high<High[0])
@@ -167,8 +167,8 @@ void OnStart()
             last_time=cur_time;
            }
         }
-      Sleep(50);
-     }
+      Sleep(50); 
+     }      
 //---
   }
 //+------------------------------------------------------------------+

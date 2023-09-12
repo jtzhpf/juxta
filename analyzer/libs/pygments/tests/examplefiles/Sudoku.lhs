@@ -87,8 +87,8 @@ number {\tt n}, {\tt r}, or {\tt b}.
 
 \begin{code}
 getNeighbors :: Eq a => Grid a -> Coords -> [(Coords,CellState a)]
-getNeighbors grid l@(r,c) = filter ((/=l).fst)
-                          $ foldr (union.($grid)) []
+getNeighbors grid l@(r,c) = filter ((/=l).fst) 
+                          $ foldr (union.($grid)) [] 
                           [(`getRow`r),(`getCol`c),(`getBoxOf`l)]
 \end{code}
 
@@ -148,8 +148,8 @@ eliminate :: Eq a => Sudoku a -> Maybe (Sudoku a)
 eliminate (Sudoku grid) = fmap Sudoku $ updateGrid grid changes >>= sanitize
     where
         changes = concatMap findChange $ assocs grid
-        findChange (l,Unknown xs)
-            = map ((,) l)
+        findChange (l,Unknown xs) 
+            = map ((,) l) 
             $ case filter (not.(`elem`impossible grid l)) xs of
                 [] -> return Impossible
                 [x] -> return $ Known x
@@ -157,7 +157,7 @@ eliminate (Sudoku grid) = fmap Sudoku $ updateGrid grid changes >>= sanitize
                     | xs' /= xs -> return $ Unknown xs'
                     | otherwise -> mzero
         findChange _ = mzero
-        sanitize grid = return $ grid // [(l,Impossible) |
+        sanitize grid = return $ grid // [(l,Impossible) | 
             (l,x) <- justKnowns changes, x `elem` impossible grid l]
 \end{code}
 
@@ -209,9 +209,9 @@ functions simplify most puzzles enough that the backtracking phase has to do har
 
 \begin{code}
 solve :: (MonadPlus m, Eq a) => Sudoku a -> m (Sudoku a)
-solve sudoku =
+solve sudoku = 
     case eliminate sudoku of
-        Just new
+        Just new 
             | any (==Impossible) (elems (unSudoku new))-> mzero
             | otherwise -> solve new
         Nothing -> case analyze sudoku of
@@ -230,7 +230,7 @@ the puzzle is already solved.)
 showsCell :: Show a => CellState a -> ShowS
 showsCell (Known x) = shows x
 showsCell (Impossible) = showChar 'X'
-showsCell (Unknown xs) = \rest -> ('(':)
+showsCell (Unknown xs) = \rest -> ('(':) 
                        $ foldr id (')':rest)
                        $ intersperse (showChar ' ')
                        $ map shows xs
@@ -333,7 +333,7 @@ testHard2 = makeSudoku [
 
 testHW :: Sudoku Int
 testHW = makeSudoku [
-    [0,0,0,1,0,0,7,0,2],
+    [0,0,0,1,0,0,7,0,2],    
     [0,3,0,9,5,0,0,0,0],
     [0,0,1,0,0,2,0,0,3],
     [5,9,0,0,0,0,3,0,1],
@@ -355,7 +355,7 @@ testTough = makeSudoku $ map (map read . words) $ lines $
  "0 6 0  3 0 8  0 7 0\n"++
  "9 5 0  0 0 0  0 6 2\n"
 
-testDiabolical :: Sudoku Int
+testDiabolical :: Sudoku Int 
 testDiabolical = makeSudoku $ map (map read . words) $ lines $
   "8 0 0  7 0 1  0 0 2\n"++
   "0 0 6  0 0 0  7 0 0\n"++

@@ -12,8 +12,8 @@ $end{table_row}
     $for{ i, row in enumerate(rows) }
         <tr$if{i%2} class="odd"$fi> #[ "odd" rows get a special style ]#
             $evoque{#table_row}
-            $evoque{
-                #table_row
+            $evoque{ 
+                #table_row 
             }
             $evoque{'#table_row'}
             $evoque{ '#table_row', collection=None, quoting="str"}
@@ -29,5 +29,5 @@ $evoque{disclaimer, collection="legals"}
 $evoque{ disclaimer , collection="legals", abc=123}
 $evoque{% disclaimer, collection="legals"%}
 
-$test{% site_base="site.html",
+$test{% site_base="site.html", 
         rows=[("a", "b", 3.0, {"one":1}, "<escape-me/>", "i", "j")] %}

@@ -177,8 +177,8 @@ class AnsiGenerator : public highlight::CodeGenerator
  *
  * The "Artistic Style" project, including all files needed to compile it,
  * is free software; you can redistribute it and/or use it and/or modify it
- * under the terms of the GNU General Public License as published
- * by the Free Software Foundation; either version 2 of the License,
+ * under the terms of the GNU General Public License as published 
+ * by the Free Software Foundation; either version 2 of the License, 
  * or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -191,7 +191,7 @@ class AnsiGenerator : public highlight::CodeGenerator
  * Patches:
  * 18 March 1999 - Brian Rampel -
  *       Fixed inverse insertion of spaces vs. tabs when in -t mode.
- * 08 may 2004
+ * 08 may 2004 
  *       applied ASBeautifier.cpp.BITFIELD.patch.bz2
  */
 
@@ -559,7 +559,7 @@ namespace astyle
   }
 
   /**
-   * set indentation style to ANSI C/C++.
+   * set indentation style to ANSI C/C++.  
    */
   void ASBeautifier::setCStyle()
   {
@@ -567,7 +567,7 @@ namespace astyle
   }
 
   /**
-   * set indentation style to Java / K&R.
+   * set indentation style to Java / K&R.  
    */
   void ASBeautifier::setJavaStyle()
   {
@@ -588,7 +588,7 @@ namespace astyle
   }
 
   /**
-
+   
    * indent using a number of spaces per indentation.
    *
    * @param   length     number of spaces per indent.
@@ -624,7 +624,7 @@ namespace astyle
   }
 
   /**
-   * set the state of the bracket indentation option. If true, brackets will
+   * set the state of the bracket indentation option. If true, brackets will 
    * be indented one additional indent.
    *
    * @param   state             state of option.
@@ -635,7 +635,7 @@ namespace astyle
   }
 
   /**
-   * set the state of the block indentation option. If true, entire blocks
+   * set the state of the block indentation option. If true, entire blocks 
    * will be indented one additional indent, similar to the GNU indent style.
    *
    * @param   state             state of option.
@@ -659,7 +659,7 @@ namespace astyle
   }
 
   /**
-   * set the state of the switch indentation option. If true, blocks of 'switch'
+   * set the state of the switch indentation option. If true, blocks of 'switch' 
    * statements will be indented one additional indent.
    *
    * @param   state             state of option.
@@ -670,7 +670,7 @@ namespace astyle
   }
 
   /**
-   * set the state of the case indentation option. If true, lines of 'case'
+   * set the state of the case indentation option. If true, lines of 'case' 
    * statements will be indented one additional indent.
    *
    * @param   state             state of option.
@@ -680,8 +680,8 @@ namespace astyle
     caseIndent = state;
   }
   /**
-   * set the state of the namespace indentation option.
-   * If true, blocks of 'namespace' statements will be indented one
+   * set the state of the namespace indentation option. 
+   * If true, blocks of 'namespace' statements will be indented one 
    * additional indent. Otherwise, NO indentation will be added.
    *
    * @param   state             state of option.
@@ -692,7 +692,7 @@ namespace astyle
   }
 
   /**
-   * set the state of the label indentation option.
+   * set the state of the label indentation option. 
    * If true, labels will be indented one indent LESS than the
    * current indentation level.
    * If false, labels will be flushed to the left with NO
@@ -706,7 +706,7 @@ namespace astyle
   }
 
   /**
-   * set the state of the preprocessor indentation option.
+   * set the state of the preprocessor indentation option. 
    * If true, multiline #define statements will be indented.
    *
    * @param   state             state of option.
@@ -717,7 +717,7 @@ namespace astyle
   }
 
   /**
-   * set the state of the empty line fill option.
+   * set the state of the empty line fill option. 
    * If true, empty lines will be filled with the whitespace.
    * of their previous lines.
    * If false, these lines will remain empty.
@@ -1510,7 +1510,7 @@ namespace astyle
             else if (isCStyle && isInClass && prevNonSpaceCh != ')')
               {
               // BEGIN Content of ASBeautifier.cpp.BITFIELD.patch:
-
+              
                 unsigned int chIndex;
    			    char nextCh = 0;
                 for (chIndex = i+1; chIndex < line.length(); chIndex++)
@@ -1525,12 +1525,12 @@ namespace astyle
 					{
 						nWord ++;
 						while (!isWhiteSpace(line[++chIndex]));
-					}
+					}									
 				}
 				if ((nextCh >= '0' && nextCh <= '9') || (nWord >1))
 					continue;
               // END Content of ASBeautifier.cpp.BITFIELD.patch:
-
+                
                 --tabCount;
                 // found a 'private:' or 'public:' inside a class definition
                 // so do nothing special
@@ -1560,7 +1560,7 @@ namespace astyle
                   {
                     isInCase = false;
                     ch = ';'; // from here on, treat char as ';'
-                  }
+                  } 
               // BEGIN content of ASBeautifier.cpp.BITFIELD.patch.bz2
               else // bitfield or labels
 								{
@@ -1579,7 +1579,7 @@ namespace astyle
 					{
 						nWord ++;
 						while (!isWhiteSpace(line[++chIndex]));
-					}
+					}									
 				}
          		if (isCStyle &&  (nextCh >= '0' && nextCh <= '9') || (nWord >1))
 				{
@@ -1804,7 +1804,7 @@ namespace astyle
                                 outBuffer.append(assignmentOperators[a]->substr(1));
                                 i += assignmentOperators[a]->length() - 1;
                             }
-
+         
                             if (!isInOperator && !isInTemplate)
                             {
                                 registerInStatementIndent(line, i, spaceTabCount, 0, false);
@@ -2155,8 +2155,8 @@ namespace astyle
  *
  * The "Artistic Style" project, including all files needed to compile it,
  * is free software; you can redistribute it and/or use it and/or modify it
- * under the terms of the GNU General Public License as published
- * by the Free Software Foundation; either version 2 of the License,
+ * under the terms of the GNU General Public License as published 
+ * by the Free Software Foundation; either version 2 of the License, 
  * or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -2322,8 +2322,8 @@ namespace astyle
  *
  * The "Artistic Style" project, including all files needed to compile it,
  * is free software; you can redistribute it and/or use it and/or modify it
- * under the terms of the GNU General Public License as published
- * by the Free Software Foundation; either version 2 of the License,
+ * under the terms of the GNU General Public License as published 
+ * by the Free Software Foundation; either version 2 of the License, 
  * or (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
@@ -2337,7 +2337,7 @@ namespace astyle
  * Patches:
  * 26 November 1998 - Richard Bullington -
  *        A correction of line-breaking in headers following '}',
-
+ 
  *        was created using a variation of a  patch by Richard Bullington.
  * 08 May 2004
  *        applied   ASFormatter450670.patch.bz2, ASFormatter.cpp.patch.bz2,

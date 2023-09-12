@@ -47,8 +47,8 @@ include $(topsrcdir)/build/unix/modules.mk
 ifeq ($(BUILD_MODULES),all)
 #
 # And now for something completely different...
-# Divide the default build into tiers.
-# Tiers must be defined on module boundaries
+# Divide the default build into tiers. 
+# Tiers must be defined on module boundaries 
 #
 SUPPRESS_DEFAULT_RULES = 1
 
@@ -82,7 +82,7 @@ DIRS	+= $(tier_99_dirs)
 
 #
 # tier 0 - base build config dirs
-#
+# 
 tier_0_dirs = \
 	config \
 	build \
@@ -117,7 +117,7 @@ endif
 
 #
 # tier 2 - base libraries
-#
+# 
 tier_2_dirs	= \
 		js \
 		xpcom \
@@ -205,7 +205,7 @@ ifdef ACCESSIBILITY
 tier_9_dirs    += accessible
 endif
 
-#
+# 
 # tier 50 - xpfe & toolkit
 #
 
@@ -417,7 +417,7 @@ tier_99_dirs += \
 	$(NULL)
 endif
 
-# test harnesses
+# test harnesses 
 ifdef ENABLE_TESTS
 tier_99_dirs += tools/test-harness
 endif
@@ -448,7 +448,7 @@ GARBAGE_DIRS += dist
 DIST_GARBAGE = config.cache config.log config.status config-defs.h \
    dependencies.beos config/autoconf.mk config/myrules.mk config/myconfig.mk \
    unallmakefiles mozilla-config.h \
-   $(topsrcdir)/.mozconfig.mk $(topsrcdir)/.mozconfig.out
+   $(topsrcdir)/.mozconfig.mk $(topsrcdir)/.mozconfig.out 
 
 # Build pseudo-external modules first when export is explicitly called
 export::

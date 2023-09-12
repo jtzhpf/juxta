@@ -1,19 +1,19 @@
 ;--------------------------------------
 ; Lychrel numbers.
-;
+; 
 ; :author: Marc 'BlackJack' Rintsch
 ; :date: 2008-03-07
 ; :version: 0.1
-;
+; 
 ; Prints all `Lychrel numbers`_ between 1 and 100000.
-;
+; 
 ; The numbers are stored as array of "digits" in little endian
 ; order.  Each digit is a byte with a value between 0 and 9.
-;
+; 
 ; Runtime on C64: 00:21:01
-;
+; 
 ; .. _Lychrel numbers: http://en.wikipedia.org/wiki/Lychrel_number
-;
+; 
 ; .. cl65 -l -tnone -C simple.cfg lychrel.s -o lychrel.prg
 ;--------------------------------------
 
@@ -34,30 +34,30 @@
 ; Global variables.
 ;--------------------------------------
 .zeropage
-;
+; 
 ; Length of the currently tested `n` in digits.
-;
+; 
 n_length:
 	.res 1
-;
+; 
 ; Length of the number(s) `xa` and `xb` while testing.
-;
+; 
 length:
 	.res 1
 
 .bss
-;
+; 
 ; Number to be tested as digits i.e. bytes with values between
 ; 0 and 9.  The length is stored in `n_length`.
-;
+; 
 n:
 	.res TO_DIGITS
-;
+; 
 ; Space for calculating the reversed and added values.
 ; In the `main` code the current number is copied into `xa`
 ; and then repeatedly `reverse_add`\ed to itself with the
 ; result of that adding stored in `xb`.
-;
+; 
 xa:
 	.res MAX_DIGITS
 xb:
@@ -83,16 +83,16 @@ xb:
 .proc main
 
 .zeropage
-;
+; 
 ; Three byte counter for `TO` iterations (100000 = $0186a0).
-;
+; 
 i:
 	.res 3
 
 .code
-;
+; 
 ; Clear and set `n` and `i` to 1.
-;
+; 
 	lda #0		; n := 0; n := 1; i := 1
 	sta i+1
 	sta i+2
@@ -105,14 +105,14 @@ clear_n:
 	stx i
 	stx n
 	stx n_length
-
+	
 mainloop:
 	jsr is_lychrel
 	bcc no_lychrel
 	jsr print_n
 no_lychrel:
 	jsr increase_n
-
+	
 	inc i		; INC(i)
 	bne skip
 	inc i+1
@@ -128,7 +128,7 @@ skip:
 	lda i+2
 	cmp #^TO
 	bne mainloop
-
+	
 	rts
 .endproc
 
@@ -145,17 +145,17 @@ L1:
 	jsr chrout
 	dey
 	bne L1
-
+	
 	lda #13
 	jmp chrout
 .endproc
 
 ;--------------------------------------
 ; Increase `n` by one.
-;
+; 
 ; This procedure expects n[n_length] == 0 in case the number gets
 ; one digit longer.
-;
+; 
 ; :in: `n`, `n_length`
 ; :out: `n`, `n_length`
 ;--------------------------------------
@@ -180,7 +180,7 @@ skip:
 
 ;--------------------------------------
 ; Tests if `n` is a Lychrel number.
-;
+; 
 ; :in: `n`, `n_length`
 ; :out: C is set if yes, cleared otherwise.
 ; :uses: `length`, `xa`, `xb`
@@ -198,7 +198,7 @@ L1:
 	sta xa-1,x
 	dex
 	bne L1
-
+	
 	lda #ITERATIONS		; i := ITERATIONS
 	sta i
 L2:
@@ -214,17 +214,17 @@ L3:
 	sta xa-1,x
 	dex
 	bne L3
-
+	
 	dec i			; Loop body end.
 	bne L2
-
+	
 	sec
 	rts
 .endproc
 
 ;--------------------------------------
 ; Add the reverse to `xa` to itself and store the result in `xb`.
-;
+; 
 ; :in: `length`, `xa`
 ; :out: `length`, `xb`
 ;--------------------------------------
@@ -236,19 +236,19 @@ L3:
 L1:
 	lda xa,x
 	adc xa-1,y
-
+	
 	cmp #10
 	bcc no_adjust
 	sbc #10
 no_adjust:
 	sta xb,x
-
+	
 	dey
 	inx
 	txa		; ``eor`` instead of ``cpx`` to keep the carry flag
 	eor length	; of the addition above.
 	bne L1
-
+	
 	bcc no_carry
 	lda #1
 	sta xb,x
@@ -259,7 +259,7 @@ no_carry:
 
 ;--------------------------------------
 ; Checks if `xb` is a palindrome.
-;
+; 
 ; :in: `length`, `xb`
 ; :out: Z flag set if `xb` is a palindrome, cleared otherwise.
 ;--------------------------------------

@@ -12,7 +12,7 @@ unit YTools;
 
    licenser@cYcnus.de (Heinz N. Gies)
    murphy@cYcnus.de (Kornelius Kalnbach)
-
+   
    this unit is published under the terms of the GPL
 
 ===============================================================================}
@@ -314,7 +314,7 @@ function WinXP: Boolean;
 var
   MyDir: string = '';
   LastSuccessRes: Integer = 0;
-
+  
 { Backward compatibility }
 {$IFNDEF VER130}
 function SameText(const S1, S2: string): Boolean;
@@ -888,7 +888,7 @@ begin
 end;
 
 procedure Split(const S, Separator: string; Strings: TStrings;
-  IgnoreMultiSep: Boolean = True);
+  IgnoreMultiSep: Boolean = True); 
 var
   p, fin, SepLen: Integer;
 
@@ -1658,7 +1658,7 @@ begin
 
   len := Length(S);
   o := 1;
-
+  
   if S[1] = '-' then begin
     if len = 1 then
       Exit;
@@ -1726,7 +1726,7 @@ begin
 
   len := Length(S);
   o := 1;
-
+  
   while (o <= len) and (S[o] = '0') do
     Inc(o);
   if o <= len then begin

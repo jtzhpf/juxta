@@ -37,7 +37,7 @@ define json_serialize(e::trait_forEach)::string => {
 	return('[' + #output + ']');
 }
 define json_serialize(e::map)::string => {
-	local(output = with pr in #e->eachPair
+	local(output = with pr in #e->eachPair 
 					select json_serialize(#pr->first->asString) + ': ' + json_serialize(#pr->second))
 	return '{' + #output->join(',') + '}'
 }
@@ -86,7 +86,7 @@ define json_consume_token(ibytes::bytes, temp::integer) => {
 //	Is also end of token if end of array[]
 	#temp == 93? // ]
 		#ibytes->marker -= 1
-//............................................................................
+//............................................................................		
 
 	local(output = string(#obytes))
 	#output == 'true'?
@@ -168,8 +168,8 @@ define json_deserialize(ibytes::bytes)::any => {
 //============================================================================
 //	Reset marker on provided bytes
 	#ibytes->marker = 0
-//............................................................................
-
+//............................................................................		
+	
 	Local(temp) = #ibytes->export8bits;
 	If(#temp == 91); // [
 		Return(json_consume_array(#ibytes));

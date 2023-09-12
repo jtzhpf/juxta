@@ -57,10 +57,5 @@ Pygments documentation
    changelog
    authors
 
-
-If you find bugs or have suggestions for the documentation, please look
-:ref:`here <contribute>` for info on how to contact the team.
-
-.. XXX You can download an offline version of this documentation from the
-   :doc:`download page </download>`.
-
+If you find bugs or have suggestions for the documentation, please submit them
+on `GitHub <https://github.com/pygments/pygments>`.

@@ -210,10 +210,10 @@ Twig supports the .. operator
 --DATA--
 return array('foo' => array(1, 10))
 --EXPECT--
-0 1 2 3 4 5 6 7 8 9 10
-a b c d e f g h i j k l m n o p q r s t u v w x y z
-A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-1 2 3 4 5 6 7 8 9 10
+0 1 2 3 4 5 6 7 8 9 10 
+a b c d e f g h i j k l m n o p q r s t u v w x y z 
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 
+1 2 3 4 5 6 7 8 9 10 
 1 2 3 4 5 6 7 8 9
 --TEST--
 Twig supports the "ends with" operator
@@ -265,12 +265,12 @@ return array()
 --EXPECT--
 1 1
 2 1
-3
-4
-5
-6
-7
-8
+3 
+4 
+5 
+6 
+7 
+8 
 --TEST--
 Twig supports __call() for attributes
 --TEMPLATE--
@@ -2235,12 +2235,12 @@ Twig
 (escape_and_nl2br is an escaper filter)
 
 1. Don't escape escaper filter output
-( var is escaped by |escape_and_nl2br, line-breaks are added,
+( var is escaped by |escape_and_nl2br, line-breaks are added, 
   the output is not escaped )
 {{ var|escape_and_nl2br }}
 
 2. Don't escape escaper filter output
-( var is escaped by |escape_and_nl2br, line-breaks are added,
+( var is escaped by |escape_and_nl2br, line-breaks are added, 
   the output is not escaped, |raw is redundant )
 {{ var|escape_and_nl2br|raw }}
 
@@ -2296,13 +2296,13 @@ return array('var' => "<Fabien>\nTwig")
 (escape_and_nl2br is an escaper filter)
 
 1. Don't escape escaper filter output
-( var is escaped by |escape_and_nl2br, line-breaks are added,
+( var is escaped by |escape_and_nl2br, line-breaks are added, 
   the output is not escaped )
 &lt;Fabien&gt;<br />
 Twig
 
 2. Don't escape escaper filter output
-( var is escaped by |escape_and_nl2br, line-breaks are added,
+( var is escaped by |escape_and_nl2br, line-breaks are added, 
   the output is not escaped, |raw is redundant )
 &lt;Fabien&gt;<br />
 Twig
@@ -2640,7 +2640,7 @@ return array()
 A
             block1
 
-
+        
 A
                     block1
 
@@ -2700,7 +2700,7 @@ A
         blockc2base
 
 
-
+    
 A
                 block1
 
@@ -3034,7 +3034,7 @@ return array('items' => new ItemsIterator())
 
   * foo
   * 2/1
-  *
+  * 
 
 
   * foo/bar
@@ -3507,7 +3507,7 @@ return array()
 --EXPECT--
 
 INSIDE OVERRIDDEN
-
+  
   BEFORE
     BAR
 
@@ -3916,9 +3916,9 @@ Trim on output tag:
 
 
 Trim comments:
-
+      
 {#- Invisible -#}
-
+       
 After the comment.
 
 Trim leading space:
@@ -3934,7 +3934,7 @@ Trim leading space:
 
 
 Trim trailing space:
-{% if trailing -%}
+{% if trailing -%}          
 	{{ trailing -}}
 
 {% endif -%}

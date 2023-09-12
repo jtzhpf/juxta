@@ -40,7 +40,7 @@ controlPoint = (
 definition = (
 	^ column: {
           canvas: {
-               at: 10 @ 10 display: controlPoint.
+               at: 10 @ 10 display: controlPoint. 
                at: 15 @ 10 display: controlPoint.
           }
       }

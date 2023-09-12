@@ -111,7 +111,7 @@
  the problem description from a data file and builds the structure
  based on that.  Rather than short strings, I will use HeadName as the
  identifier.
-
+ 
  The columns are (0,4,5) for nodes that put some value in Row 4 Col 5
                  (1,2,3) for nodes that put Val 3 in Row 2 and some column
                  (2,7,4) for nodes that put Val 4 in Col 7 and some row
@@ -121,7 +121,7 @@
  will be put in an array with the HeadName as an index.
 
 > headNames :: [HeadName]
-> headNames = let names = [0,1,2,3]
+> headNames = let names = [0,1,2,3] 
 >             in (0,0,0):[ (l,i,j) | l<-names,i<-rng,j<-rng]
 
  A "row" of left-right linked nodes is a move.  It is defined by a
@@ -136,7 +136,7 @@
 > parseSpec :: Spec -> [Move]
 > parseSpec spec =
 >   let rowsFrom :: Hint -> [Move]
->       rowsFrom (rc@(R r,C c),mv@(V v')) =
+>       rowsFrom (rc@(R r,C c),mv@(V v')) = 
 >           if mv == u then [ rsyms v | v <- rng ]
 >           else [ rsyms v' ]
 >         where (B b) = lookupBlock ! rc
@@ -168,7 +168,7 @@
 > toSingle step header = loop =<< (read . step) header
 >     where loop y = if header/=y then liftM (y:) (read (step y) >>= loop)
 >                                 else return []
->
+>        
 
  forEach is an optimization of (toSimple step header >>= mapM_ act)
 
@@ -183,7 +183,7 @@
 >     where makeHead before name after = mdo
 >             ~newTopNode <- liftM4 (Node ((R 0,C 0),V 0) newHead) (new newTopNode) (new newTopNode)
 >                                                                 (new newTopNode) (new newTopNode)
->             newHead <- liftM3 (Head name newTopNode)
+>             newHead <- liftM3 (Head name newTopNode)                         
 >                                    (new 0) (new after) (new before)
 >             return newHead
 
@@ -339,7 +339,7 @@
 >                 Just head -> do cover head
 >                                 startRow <- readSTRef (down (topNode head))
 >                                 advance (startRow:choices)
->
+> 
 >         advance choices@(newRow:oldChoices) = do
 >             let endOfRows = topNode (getHead newRow)
 >             if (newRow == endOfRows)
@@ -349,12 +349,12 @@
 >                         else recover oldChoices
 >               else do coverOthers newRow
 >                       forward choices
->
+> 
 >         recover (oldRow:oldChoices) = do
 >             uncoverOthers oldRow
 >             newRow <- readSTRef (down oldRow)
 >             advance (newRow:oldChoices)
->
+> 
 >     in forward []
 
 
@@ -378,7 +378,7 @@
 > groupTake n b = unfoldr foo b
 >     where foo [] = Nothing
 >           foo b = Just (splitAt n b)
-
+ 
  Make a nice 2D ascii board from the Spec (not used at the moment)
 
 > showSpec :: Spec -> String
@@ -400,8 +400,8 @@
 >   root <- stToIO initHA
 >   let act :: (Int,Spec) -> IO ()
 >       act (i,spec) = do
->         answer <- stToIO (do initRoot root spec
->                              answer <- gdance (fst root)
+>         answer <- stToIO (do initRoot root spec 
+>                              answer <- gdance (fst root) 
 >                              resetRoot root
 >                              return answer)
 >         print (i,showCompact  answer)

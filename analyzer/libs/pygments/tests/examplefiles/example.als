@@ -106,7 +106,7 @@ pred allocates [pre, post: State, rs: set Ref] {
   post.refs = pre.refs + rs
   }
 
-/**
+/** 
  * models frame condition that limits change to view object from v to v' when backing object changes to b'
  */
 pred viewFrame [t: ViewType, v, v', b': Object] {
@@ -211,7 +211,7 @@ pred precondition [pre: State, ks, vs, m: Ref] {
 
 check zippishOK for 6 but 8 State, 3 ViewType expect 1
 
-/**
+/** 
  * experiment with controlling heap size
  */
 fact {all s: State | #s.obj < 5}

@@ -283,7 +283,7 @@ typedef union YYSTYPE {
    TemplateParameter templateParameter;
    TemplateArgument templateArgument;
    TemplateDatatype templateDatatype;
-
+   
    DBTableEntry dbtableEntry;
    DBIndexItem dbindexItem;
    DBTableDef dbtableDef;

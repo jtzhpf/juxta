@@ -90,7 +90,7 @@ init(ctxt: ref Draw->Context, argv: list of string)
 	w.startinput("kbd" :: "ptr" :: nil);
 	spawn ptrproc(rq := chan of Sys->Rread, ptr := chan[10] of ref Pointer, reshape := chan[1] of int);
 
-
+		
 	fwinname := sys->file2chan(ld, "winname");
 	fconsctl := sys->file2chan(ld, "consctl");
 	fcons := sys->file2chan(ld, "cons");

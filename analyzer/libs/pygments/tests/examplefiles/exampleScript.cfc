@@ -36,7 +36,7 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 	property name="authorService"			inject="authorService@cb";
 	property name="populator"				inject="wirebox:populator";
 	property name="systemUtil"				inject="SystemUtil@cb";
-
+	
 	/*
 	* Constructor
 	* @entityName.hint The content entity name to bind this service to.
@@ -116,12 +116,12 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 	* @searchActiveContent.hint Search only content titles or both title and active content. Defaults to both.
 	*/
 	function searchContent(
-		any searchTerm="",
-		numeric max=0,
-		numeric offset=0,
-		boolean asQuery=false,
-		any sortOrder="publishedDate DESC",
-		any isPublished=true,
+		any searchTerm="", 
+		numeric max=0, 
+		numeric offset=0, 
+		boolean asQuery=false, 
+		any sortOrder="publishedDate DESC", 
+		any isPublished=true, 
 		boolean searchActiveContent=true){
 
 		var results = {};
@@ -149,7 +149,7 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 				  	  c.restrictions.like("ac.content", "%#arguments.searchTerm#%") );
 			}
 			else{
-				c.like( "title", "%#arguments.searchTerm#%" );
+				c.like( "title", "%#arguments.searchTerm#%" ); 
 			}
 		}
 
@@ -157,12 +157,12 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 		results.count = c.count( "contentID" );
 		results.content = c.resultTransformer( c.DISTINCT_ROOT_ENTITY )
 							.list(offset=arguments.offset, max=arguments.max, sortOrder=arguments.sortOrder, asQuery=arguments.asQuery);
-
+	
 		return results;
 	}
 
 /********************************************* PRIVATE *********************************************/
-
+	
 
 	/**
 	* Update the content hits
@@ -172,8 +172,8 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 		var q = new Query(sql="UPDATE cb_content SET hits = hits + 1 WHERE contentID = #arguments.contentID#").execute();
 		return this;
 	}
-
-
+	
+	
 	private function closureTest(){
 		methodCall(
 			param1,
@@ -187,7 +187,7 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 			param1
 		);
 	}
-
+	
 	private function StructliteralTest(){
 		return {
 			foo = bar,
@@ -217,7 +217,7 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 			last = "final"
 		};
 	}
-
+	
 	private function arrayliteralTest(){
 		return [
 			1,
@@ -236,6 +236,6 @@ component extends="coldbox.system.orm.hibernate.VirtualEntityService" singleton{
 			'testy-von-testavich'
 		];
 	}
-
+	
 }
 </cfscript>

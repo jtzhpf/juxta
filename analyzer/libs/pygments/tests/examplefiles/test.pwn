@@ -8,7 +8,7 @@
 /**
 
 	documentation multi line
-
+	
 **/
 
 public OnGameModeInit() {
@@ -26,24 +26,24 @@ stock Float:test_func()
 {
 	new a = 5, Float:b = 10.3;
 	if (a == b) {
-
+		
 	} else {
-
+		
 	}
-
+	
 	for (new i = 0; i < 10; i++) {
 		continue;
 	}
-
+	
 	do {
 		a--;
 	} while (a > 0);
-
+	
 	while (a < 5) {
 		a++;
 		break;
 	}
-
+	
 	switch (a) {
 		case 0: {
 		}
@@ -52,7 +52,7 @@ stock Float:test_func()
 		case 5, 6: {
 		}
 	}
-
+	
 	static x;
 	new xx = a > 5 ? 5 : 0;
 	new array[sizeof arr] = {0};
@@ -61,7 +61,7 @@ stock Float:test_func()
 	goto label;
 	new byte[2 char];
 	byte{0} = 'a';
-
+	
 	return (float(a) + b);
 }
 

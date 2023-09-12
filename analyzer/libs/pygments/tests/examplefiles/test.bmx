@@ -68,10 +68,10 @@ Local myinst:MyClass = New MyClass
 myinst.TestMethod()
 
 Type MyClass Extends TFooBar
-
+	
 	Field m_foo:MyClass
 	Field m_bar:MyClass
-
+	
 	Rem
 		abc
 		def
@@ -81,21 +81,21 @@ Type MyClass Extends TFooBar
 			abcdef
 		endrem
 	End Method
-
+	
 	Method TestMethod() ' foobar
 		m_foo = Self
 		m_bar = MyClass(m_foo)
 		m_foo.m_bar.m_foo.m_bar.Yell()
 	End Method
-
+	
 	Method Yell()
 		Print("huzzah!")
 	End Method
-
+	
 	Function Wakka$(foo:String)
 		Return foo + "bar"
 	End Function
-
+	
 End Type
 
 Extern "c"

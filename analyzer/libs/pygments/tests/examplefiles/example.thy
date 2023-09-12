@@ -395,7 +395,7 @@ lemma power_strict_decreasing [rule_format]:
 proof (induct N)
   case 0 then show ?case by simp
 next
-  case (Suc N) then show ?case
+  case (Suc N) then show ?case 
   apply (auto simp add: power_Suc_less less_Suc_eq)
   apply (subgoal_tac "a * a^N < 1 * a^n")
   apply simp
@@ -409,7 +409,7 @@ lemma power_decreasing [rule_format]:
 proof (induct N)
   case 0 then show ?case by simp
 next
-  case (Suc N) then show ?case
+  case (Suc N) then show ?case 
   apply (auto simp add: le_Suc_eq)
   apply (subgoal_tac "a * a^N \<le> 1 * a^n", simp)
   apply (rule mult_mono) apply auto
@@ -426,7 +426,7 @@ lemma power_increasing [rule_format]:
 proof (induct N)
   case 0 then show ?case by simp
 next
-  case (Suc N) then show ?case
+  case (Suc N) then show ?case 
   apply (auto simp add: le_Suc_eq)
   apply (subgoal_tac "1 * a^n \<le> a * a^N", simp)
   apply (rule mult_mono) apply (auto simp add: order_trans [OF zero_le_one])
@@ -443,7 +443,7 @@ lemma power_strict_increasing [rule_format]:
 proof (induct N)
   case 0 then show ?case by simp
 next
-  case (Suc N) then show ?case
+  case (Suc N) then show ?case 
   apply (auto simp add: power_less_power_Suc less_Suc_eq)
   apply (subgoal_tac "1 * a^n < a * a^N", simp)
   apply (rule mult_strict_mono) apply (auto simp add: less_trans [OF zero_less_one] less_imp_le)
@@ -456,7 +456,7 @@ lemma power_increasing_iff [simp]:
 
 lemma power_strict_increasing_iff [simp]:
   "1 < b \<Longrightarrow> b ^ x < b ^ y \<longleftrightarrow> x < y"
-by (blast intro: power_less_imp_less_exp power_strict_increasing)
+by (blast intro: power_less_imp_less_exp power_strict_increasing) 
 
 lemma power_le_imp_le_base:
   assumes le: "a ^ Suc n \<le> b ^ Suc n"
@@ -580,7 +580,7 @@ qed
 lemma odd_0_le_power_imp_0_le:
   "0 \<le> a ^ Suc (2*n) \<Longrightarrow> 0 \<le> a"
   using odd_power_less_zero [of a n]
-    by (force simp add: linorder_not_less [symmetric])
+    by (force simp add: linorder_not_less [symmetric]) 
 
 lemma zero_le_even_power'[simp]:
   "0 \<le> a ^ (2*n)"
@@ -589,7 +589,7 @@ proof (induct n)
     show ?case by simp
 next
   case (Suc n)
-    have "a ^ (2 * Suc n) = (a*a) * a ^ (2*n)"
+    have "a ^ (2 * Suc n) = (a*a) * a ^ (2*n)" 
       by (simp add: mult_ac power_add power2_eq_square)
     thus ?case
       by (simp add: Suc zero_le_mult_iff)
@@ -678,10 +678,10 @@ text {* Simprules for comparisons where common factors can be cancelled. *}
 
 lemmas zero_compare_simps =
     add_strict_increasing add_strict_increasing2 add_increasing
-    zero_le_mult_iff zero_le_divide_iff
-    zero_less_mult_iff zero_less_divide_iff
-    mult_le_0_iff divide_le_0_iff
-    mult_less_0_iff divide_less_0_iff
+    zero_le_mult_iff zero_le_divide_iff 
+    zero_less_mult_iff zero_less_divide_iff 
+    mult_le_0_iff divide_le_0_iff 
+    mult_less_0_iff divide_less_0_iff 
     zero_le_power2 power2_less_0
 
 
@@ -695,7 +695,7 @@ lemma nat_zero_less_power_iff [simp]:
   "x ^ n > 0 \<longleftrightarrow> x > (0::nat) \<or> n = 0"
   by (induct n) auto
 
-lemma nat_power_eq_Suc_0_iff [simp]:
+lemma nat_power_eq_Suc_0_iff [simp]: 
   "x ^ m = Suc 0 \<longleftrightarrow> m = 0 \<or> x = Suc 0"
   by (induct m) auto
 

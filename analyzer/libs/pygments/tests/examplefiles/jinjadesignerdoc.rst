@@ -128,7 +128,7 @@ functions added by the application or framewhere there are two functions
 available per default:
 
 `range`
-
+    
     Works like the python `range function`_ just that it doesn't support
     ranges greater than ``1000000``.
 
@@ -363,7 +363,7 @@ create a macro from it:
 Now you can use it from everywhere in the code by passing it an item:
 
 .. sourcecode:: jinja
-
+    
     {% for user in users %}
         {{ show_user(user) }}
     {% endfor %}
@@ -441,7 +441,7 @@ A child template might look like this:
         }
       </style>
     {% endblock %}
-
+    
     {% block content %}
         <h1>Index</h1>
         <p class="important">
@@ -698,7 +698,7 @@ defined in the ``trans`` header. Filters must be applied in the header.
 
     Please make sure that you always use pluralize blocks where required.
     Many languages have more complex plural forms than the English language.
-
+    
     Never try to workaround that issue by using something like this:
 
     .. sourcecode:: jinja

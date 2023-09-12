@@ -41,7 +41,7 @@ domain Dom::AlternatingGroup(n: Type::PosInt)
     elif n mod 2=0   then generators:=[dom([[1,2,3]]), dom([[$2..n]])];
     else		  generators:=[dom([[1,2,3]]), dom([[$1..n]])];
     end_if;
-
+    
 /*--
     allElements
 

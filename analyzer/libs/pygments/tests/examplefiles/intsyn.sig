@@ -1,4 +1,4 @@
-(* Internal Syntax *)
+(* Internal Syntax *)  
 (* Author: Frank Pfenning, Carsten Schuermann *)
 (* Modified: Roberto Virga *)
 
@@ -24,7 +24,7 @@ sig
   datatype 'a Ctx =			(* Contexts                   *)
     Null				(* G ::= .                    *)
   | Decl of 'a Ctx * 'a			(*     | G, D                 *)
-
+    
   val ctxPop : 'a Ctx -> 'a Ctx
   val ctxLookup: 'a Ctx * int -> 'a
   val ctxLength: 'a Ctx -> int
@@ -53,7 +53,7 @@ sig
 
   | FgnExp of csid * FgnExp             (*     | (foreign expression) *)
 
-  | NVar  of int			(*     | n (linear,
+  | NVar  of int			(*     | n (linear, 
                                                fully applied variable
                                                used in indexing       *)
 
@@ -87,7 +87,7 @@ sig
     Dec of string option * Exp		(* D ::= x:V                  *)
   | BDec of string option * (cid * Sub)	(*     | v:l[s]               *)
   | ADec of string option * int	        (*     | v[^-d]               *)
-  | NDec of string option
+  | NDec of string option 
 
   and Block =				(* Blocks:                    *)
     Bidx of int				(* b ::= v                    *)
@@ -95,10 +95,10 @@ sig
                                         (*     | L(l[^k],t)           *)
   | Inst of Exp list                    (*     | U1, ..., Un          *)
   (* It would be better to consider having projections count
-     like substitutions, then we could have Inst of Sub here,
-     which would simplify a lot of things.
+     like substitutions, then we could have Inst of Sub here, 
+     which would simplify a lot of things.  
 
-     I suggest however to wait until the next big overhaul
+     I suggest however to wait until the next big overhaul 
      of the system -- cs *)
 
 
@@ -208,7 +208,7 @@ sig
     structure Simplify : FGN_OPN where type arg = unit
                                  where type result = bool
   end
-
+  
   val conDecName   : ConDec -> string
   val conDecParent : ConDec -> mid option
   val conDecImp    : ConDec -> int
@@ -240,7 +240,7 @@ sig
   (* Declaration Contexts *)
 
   val ctxDec    : dctx * int -> Dec	(* get variable declaration   *)
-  val blockDec  : dctx * Block * int -> Dec
+  val blockDec  : dctx * Block * int -> Dec 
 
   (* Explicit substitutions *)
 
@@ -259,11 +259,11 @@ sig
 
   (* EVar related functions *)
 
-  val newEVar    : dctx * Exp -> Exp	(* creates X:G|-V, []         *)
-  val newAVar    : unit ->  Exp	        (* creates A (bare)           *)
+  val newEVar    : dctx * Exp -> Exp	(* creates X:G|-V, []         *) 
+  val newAVar    : unit ->  Exp	        (* creates A (bare)           *) 
   val newTypeVar : dctx -> Exp		(* creates X:G|-type, []      *)
-  val newLVar    : Sub * (cid * Sub) -> Block
-					(* creates B:(l[^k],t)        *)
+  val newLVar    : Sub * (cid * Sub) -> Block	
+					(* creates B:(l[^k],t)        *) 
 
   (* Definition related functions *)
   val headOpt : Exp -> Head option

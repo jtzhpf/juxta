@@ -1525,7 +1525,7 @@ config FREETZ_REMOVE_ASSISTANT
 		Removes the installation assistant from the web menu.
 
 config FREETZ_REMOVE_AURA_USB
-	bool "Remove remote USB connection (AURA = AVM USB Remote-Architcture)" if FREETZ_SHOW_ADVANCED
+	bool "Remove remote USB connection (AURA = AVM USB Remote-Architcture)" if FREETZ_SHOW_ADVANCED 
 	default n
 	depends on FREETZ_HAS_AVM_AURA_USB
 	help
@@ -1535,7 +1535,7 @@ config FREETZ_REMOVE_AURA_USB
 		This patch only removes the files, not the settings in AVM's web interface.
 
 config FREETZ_REMOVE_USB_MODULE
-	bool "Remove avalanche_usb.ko" if FREETZ_SHOW_ADVANCED
+	bool "Remove avalanche_usb.ko" if FREETZ_SHOW_ADVANCED 
 	depends on FREETZ_HAS_USB_CLIENT
 	default n
 	help
@@ -1549,7 +1549,7 @@ config FREETZ_REMOVE_NAS
 		Removes the AVM NAS Webinterface and internal memory file (saves about 390 KB in compressed image).
 
 config FREETZ_REMOVE_AVM_VPN
-	bool "Remove AVM vpn" if FREETZ_SHOW_ADVANCED
+	bool "Remove AVM vpn" if FREETZ_SHOW_ADVANCED 
 	default n
 	depends on \
 		FREETZ_TYPE_2170 || \

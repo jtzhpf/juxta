@@ -19,7 +19,7 @@ using net.onthewings.Test;
 // Haxe code specific for javascript plaform
 #elseif neko
 // Haxe code specific for neko plaform
-#else
+#else 
 // do something else
     #error  // will display an error "Not implemented on this platform"
     #error "Custom error message" // will display an error "Custom error message"
@@ -81,10 +81,10 @@ class Test <T:Void->Void> {
 		inline function innerFun(a:Int, b:Int):Int {
 			return readOnlyField = a + b;
 		}
-
+		
 		_innerFun(1, 2.3);
 	}
-
+	
 	static public var instance(get,null):Test;
 	static function get_instance():Test {
 		return instance != null ? instance : instance = new Test();
@@ -150,7 +150,7 @@ private var attr(get, set) = 1;
 //pre-proc number
 public static inline function indexOf<T>(arr:Array<T>, v:T) : Int
 {
-	#if (haxe_ver >= 3.1)
+	#if (haxe_ver >= 3.1) 
 	return arr.indexOf(v);
 	#else
 		#if (flash || js)

@@ -129,7 +129,7 @@ install "%{SOURCE1}"						\
 
 (cd "${RPM_BUILD_ROOT}"; ls -d ."%{_myadminpath}"/*) |
 	sed -e '/\/config\.inc\.php$/d' -e 's/^.//' > files.list
-
+	
 
 
 %clean

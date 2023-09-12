@@ -44,7 +44,7 @@
  * CONTRACT,  STRICT LIABILITY,  OR TORT  (INCLUDING NEGLIGENCE  OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
+ *  
  *)
 
 
@@ -108,38 +108,38 @@ PROCEDURE new ( initialSize : StackSize; VAR status : Status ) : Stack;
 
 VAR
     newStack : Stack;
-
+    
 BEGIN
 
     (* zero size means default *)
     IF initialSize = 0 THEN
         initialSize := defaultStackSize;
     END; (* IF *)
-
+    
     (* bail out if initial size is too high *)
     IF initialSize > maximumStackSize THEN
         status := invalidSize;
         RETURN NIL;
     END; (* IF *)
-
+    
     (* allocate new stack object *)
     ALLOCATE(newStack, TSIZE(Stack) + TSIZE(DataPtr) * (initialSize - 1));
-
+    
     (* bail out if allocation failed *)
     IF newStack = NIL THEN
         status := allocationFailed;
         RETURN NIL;
     END; (* IF *)
-
+        
     (* initialise meta data *)
     newStack^.arraySize := initialSize;
     newStack^.entryCount := 0;
     newStack^.overflow := NIL;
-
+    
     (* pass status and new stack to caller *)
     status := success;
     RETURN newStack
-
+    
 END new;
 
 
@@ -170,7 +170,7 @@ BEGIN
         status := invalidStack;
         RETURN;
     END; (* IF *)
-
+    
     (* bail out if value is NIL *)
     IF value = NIL THEN
         status := invalidData;
@@ -185,36 +185,36 @@ BEGIN
 
     (* check if index falls within array segment *)
     IF stack^.entryCount < stack^.arraySize THEN
-
+    
         (* store value in array segment *)
-
+        
         (* stack^.array^[stack^.entryCount] := value; *)
         valuePtr := ADR(stack^.array) + TSIZE(DataPtr) * stack^.entryCount;
         valuePtr^ := value;
-
+        
     ELSE (* index falls within overflow segment *)
-
+    
         (* allocate new entry slot *)
         NEW(newEntry);
-
+        
         (* bail out if allocation failed *)
         IF newEntry = NIL THEN
             status := allocationFailed;
             RETURN;
         END; (* IF *)
-
+        
         (* initialise new entry *)
         newEntry^.value := value;
-
+        
         (* link new entry into overflow list *)
         newEntry^.next := stack^.overflow;
         stack^.overflow := newEntry;
-
+    
     END; (* IF *)
-
+    
     (* update entry counter *)
     INC(stack^.entryCount);
-
+    
     (* pass status to caller *)
     status := success;
     RETURN
@@ -249,7 +249,7 @@ BEGIN
         status := invalidStack;
         RETURN NIL;
     END; (* IF *)
-
+    
     (* bail out if stack is empty *)
     IF stack^.entryCount = 0 THEN
         status := stackEmpty;
@@ -257,28 +257,28 @@ BEGIN
     END; (* IF *)
 
     DEC(stack^.entryCount);
-
+    
     (* check if index falls within array segment *)
     IF stack^.entryCount < stack^.arraySize THEN
-
+        
         (* obtain value at index entryCount in array segment *)
-
+        
         (* thisValue := stack^.array^[stack^.entryCount]; *)
         valuePtr := ADR(stack^.array) + TSIZE(DataPtr) * stack^.entryCount;
         thisValue := valuePtr^;
-
+        
     ELSE (* index falls within overflow segment *)
-
+        
         (* obtain value of first entry in overflow list *)
         thisValue := stack^.overflow^.value;
-
+        
         (* isolate first entry in overflow list *)
         thisEntry := stack^.overflow;
         stack^.overflow := stack^.overflow^.next;
-
+        
         (* remove the entry from overflow list *)
         DISPOSE(thisEntry);
-
+                
     END; (* IF *)
 
     (* return value and status to caller *)
@@ -309,7 +309,7 @@ BEGIN
     ELSE
         RETURN stack^.entryCount;
     END; (* IF *)
-
+    
 END stackSize;
 
 
@@ -330,7 +330,7 @@ BEGIN
     END; (* IF *)
 
     RETURN stack^.entryCount
-
+    
 END stackEntries;
 
 
@@ -351,19 +351,19 @@ BEGIN
     IF stack = NIL THEN
         RETURN NIL;
     END; (* IF *)
-
+    
     (* deallocate any entries in stack's overflow list *)
     WHILE stack^.overflow # NIL DO
-
+        
         (* isolate first entry in overflow list *)
         thisEntry := stack^.overflow;
         stack^.overflow := stack^.overflow^.next;
-
+        
         (* deallocate the entry *)
         DISPOSE(thisEntry);
-
+        
     END; (* WHILE *)
-
+    
     (* deallocate stack object and pass NIL to caller *)
     DEALLOCATE(stack, TSIZE(Stack) + TSIZE(DataPtr) * (stack^.arraySize - 1));
     RETURN NIL

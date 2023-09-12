@@ -16,22 +16,22 @@ with Binary_Search;
 with Ada.Containers.Generic_Array_Sort;
 
 package body Scanner is
-
+   
    Constant_123   : constant Character := Character'Val (16#00#);
    MAX_KEYWORD_LENGTH_C : constant Natural := 24;
-
+   
    New_Constant : constant New_Type
      := 2;
-
+   
    KEYWORDS_C : constant Keyword_Array_T :=
      (To_BS("description"),
       To_BS("with"));
-
+   
    procedure Blah;
-
+   
    procedure blah is
    begin
-
+      
       Declaration:
       declare
          Joe : Type_Type := Random;
@@ -51,23 +51,23 @@ package body Scanner is
          Panic;
       end if;
    end blah;
-
+   
    function "*" (Left, Right : in Integer) return Integer is
    begin
       <<Goto_Label>>
       goto Goto_Label;
       return Left + Right;
    end "*";
-
+   
    function Function_Specification
-     (Param_1        : in Blah;
+     (Param_1        : in Blah; 
       Param2, param3 : in access Blah_Type := 0)
      return It_Type;
-
+   
    package Rename_Check renames Ada.Text_IO;
 
    type New_Float is delta 0.001 digits 12;
-
+   
    package Package_Inst is new Ada.Strings.Bounded.Generic_Bounded_Length
      (Max => MAX_KEYWORD_LENGTH_C);
 
@@ -79,7 +79,7 @@ package body Scanner is
       End_Error);
 
    subtype Sub_Type_check is Character range '0' .. '9';
-
+   
    Initialized_Array : constant Transistion_Array_T :=
      (Start =>
         (Letter_Lower | Letter_Upper => Saw_Alpha,
@@ -94,48 +94,48 @@ package body Scanner is
       Advance      : Boolean;
       Return_Token : Token_T;
    end record;
-
+   
    for Recorder use 8;
-
+   
    type Null_Record is null record;
-
-   type Discriminated_Record (Size : Natural) is
+   
+   type Discriminated_Record (Size : Natural) is 
       record
          A : String (1 .. Size);
       end record;
-
+   
    pragma Unchecked_Union (Union);
    pragma Convention (C, Union);
-
-   type Person is tagged
+   
+   type Person is tagged 
       record
          Name   : String (1 .. 10);
          Gender : Gender_Type;
       end record;
-
+   
    type Programmer is new Person with
       record
          Skilled_In : Language_List;
          Favorite_Langauge : Python_Type;
       end record;
-
-   type Programmer is new Person
-     and Printable
-     with
+   
+   type Programmer is new Person 
+     and Printable 
+     with 
       record
          Skilled_In : Language_List;
          Blah : aliased Integer;
       end record;
-
+   
    ---------------------
    -- Scan_Next_Token --
    ---------------------
-
+   
    task Cyclic_Buffer_Task_Type is
       entry Insert (An_Item : in  Item);
       entry Remove (An_Item : out Item);
    end Cyclic_Buffer_Task_Type;
-
+   
    task body Cyclic_Buffer_Task_Type is
       Q_Size : constant := 100;
       subtype Q_Range is Positive range 1 .. Q_Size;
@@ -161,16 +161,16 @@ package body Scanner is
          end select;
       end loop;
    end Cyclic_Buffer_Task_Type;
-
-
-
+     
+     
+   
    procedure Scan_Next_Token
      (S           : in     String;
       Start_Index :    out Positive;
       End_Index   : in out Natural;     --  Tricky comment
       Line_Number : in out Positive;
       Token       :    out Token_T);
-
+   
    procedure Scan_Next_Token
      (S           : in     String;
       Start_Index :    out Positive;
@@ -190,12 +190,12 @@ package body Scanner is
          end if;
       end loop Scanner_Loop;
    end Scan_Next_Token;
-
+   
    procedure Advance is
    begin
       Peek_Index := Peek_Index + 1;
    end Advance;
-
+      
 
    -- Eliminate the leading space that Ada puts in front of positive
    -- integer images.

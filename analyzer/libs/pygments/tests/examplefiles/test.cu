@@ -15,7 +15,7 @@ __global__ static void reduction(const float* __restrict__ input, float *output,
 
     const int tid = threadIdx.x;
     const int bid = blockIdx.x;
-
+    
     if (threadIdx.x == 0) {
         __threadfence();
     }

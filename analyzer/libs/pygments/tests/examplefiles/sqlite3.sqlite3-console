@@ -24,4 +24,4 @@ sqlite> select count(language), language from paste group by language order
 2|html+php
 1|cpp
 1|scheme
-sqlite>
+sqlite> 

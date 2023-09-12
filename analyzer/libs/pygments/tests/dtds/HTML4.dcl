@@ -1,14 +1,14 @@
 <!SGML  "ISO 8879:1986 (WWW)"
     --
          SGML Declaration for HyperText Markup Language version 4.0
-
+ 
          With support for the first 17 planes of ISO 10646 and
          increased limits for tag and literal lengths etc.
 
          Modified by jjc to work around SP's 16-bit character limit.
          Modified by jjc to support hex character references.
     --
-
+ 
     CHARSET
           BASESET  "ISO Registration Number 177//CHARSET
                     ISO/IEC 10646-1:1993 UCS-4 with
@@ -51,7 +51,7 @@ SYNTAX
 
          NAMING   LCNMSTRT ""
                   UCNMSTRT ""
-                  LCNMCHAR ".-_:"
+                  LCNMCHAR ".-_:"    
                   UCNMCHAR ".-_:"
                   NAMECASE GENERAL YES
                            ENTITY  NO

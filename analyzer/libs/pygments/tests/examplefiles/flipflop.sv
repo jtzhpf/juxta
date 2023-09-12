@@ -1,10 +1,10 @@
 module toplevel(clock,reset);
  input clock;
  input reset;
-
+ 
  reg flop1;
  reg flop2;
-
+ 
  always @ (posedge reset or posedge clock)
  if (reset)
    begin

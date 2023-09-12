@@ -75,7 +75,7 @@ inline void write( const char *data, int len )
 	EOF = 0;
 
 	# Handles comments in outside code and inline blocks.
-	c_comment :=
+	c_comment := 
 		( default* :>> '*/' )
 		${ escapeXML( fc ); }
 		@{ fret; };
@@ -100,12 +100,12 @@ inline void write( const char *data, int len )
 
 		'{' {
 			write( '{' );
-			inline_depth += 1;
+			inline_depth += 1; 
 		};
 
 		'}' {
 			write( '}' );
-			/* If dropping down to the last } then return
+			/* If dropping down to the last } then return 
 			 * to ragel code. */
 			if ( --inline_depth == 0 ) {
 				write( "</inline>\n" );
@@ -199,7 +199,7 @@ inline void write( const char *data, int len )
 			escapeXML( fc );
 			write( "</symbol>\n" );
 		};
-
+		
 		default;
 	*|;
 
@@ -219,19 +219,19 @@ inline void write( const char *data, int len )
 
 		'//' [^\n]* '\n' => emit;
 
-		'%%{' {
+		'%%{' { 
 			write( "<section>\n" );
 			single_line = false;
 			fgoto rlscan;
 		};
 
 		'%%' {
-			write( "<section>\n" );
-			single_line = true;
+			write( "<section>\n" ); 
+			single_line = true; 
 			fgoto rlscan;
 		};
 
-		default {
+		default { 
 			escapeXML( *ts );
 		};
 

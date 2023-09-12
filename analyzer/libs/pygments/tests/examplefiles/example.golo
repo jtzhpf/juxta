@@ -1,5 +1,5 @@
 #
-# Comments
+# Comments 
 #
 
 module pygments.Example
@@ -49,10 +49,10 @@ function add = |x| -> |y| -> x + y
 
 let aChar = 'a'
 
-let multiline =
+let multiline = 
 """
-foo
-bar
+foo 
+bar 
 baz
 """
 

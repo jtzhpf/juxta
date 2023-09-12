@@ -88,10 +88,55 @@ one.
 Adding and testing a new lexer
 ==============================
 
-To make Pygments aware of your new lexer, you have to perform the following
-steps:
+The easiest way to use a new lexer is to use Pygments' support for loading
+the lexer from a file relative to your current directory.
 
-First, change to the current directory containing the Pygments source code:
+First, change the name of your lexer class to CustomLexer:
+
+.. code-block:: python
+
+    from pygments.lexer import RegexLexer
+    from pygments.token import *
+
+    class CustomLexer(RegexLexer):
+        """All your lexer code goes here!"""
+
+Then you can load the lexer from the command line with the additional
+flag ``-x``:
+
+.. code-block:: console
+
+    $ pygmentize -l your_lexer_file.py -x
+
+To specify a class name other than CustomLexer, append it with a colon:
+
+.. code-block:: console
+
+    $ pygmentize -l your_lexer.py:SomeLexer -x
+
+Or, using the Python API:
+
+.. code-block:: python
+
+    # For a lexer named CustomLexer
+    your_lexer = load_lexer_from_file(filename, **options)
+
+    # For a lexer named MyNewLexer
+    your_named_lexer = load_lexer_from_file(filename, "MyNewLexer", **options)
+
+When loading custom lexers and formatters, be extremely careful to use only
+trusted files; Pygments will perform the equivalent of ``eval`` on them.
+
+If you only want to use your lexer with the Pygments API, you can import and
+instantiate the lexer yourself, then pass it to :func:`pygments.highlight`.
+
+To prepare your new lexer for inclusion in the Pygments distribution, so that it
+will be found when passing filenames or lexer aliases from the command line, you
+have to perform the following steps.
+
+First, change to the current directory containing the Pygments source code.  You
+will need to have either an unpacked source tarball, or (preferably) a copy
+cloned from GitHub.
 
 .. code-block:: console
 
@@ -101,11 +146,13 @@ Select a matching module under ``pygments/lexers``, or create a new module for
 your lexer class.
 
 Next, make sure the lexer is known from outside of the module.  All modules in
-the ``pygments.lexers`` specify ``__all__``. For example, ``esoteric.py`` sets::
+the ``pygments.lexers`` package specify ``__all__``. For example,
+``esoteric.py`` sets::
 
     __all__ = ['BrainfuckLexer', 'BefungeLexer', ...]
 
-Simply add the name of your lexer class to this list.
+Add the name of your lexer class to this list (or create the list if your lexer
+is the only class in the module).
 
 Finally the lexer can be made publicly known by rebuilding the lexer mapping:
 
@@ -145,7 +192,7 @@ Regex Flags
 
 You can either define regex flags locally in the regex (``r'(?x)foo bar'``) or
 globally by adding a `flags` attribute to your lexer class.  If no attribute is
-defined, it defaults to `re.MULTILINE`.  For more informations about regular
+defined, it defaults to `re.MULTILINE`.  For more information about regular
 expression flags see the page about `regular expressions`_ in the Python
 documentation.
 
@@ -345,16 +392,15 @@ There are a few more things you can do with states:
   `PythonLexer`'s string literal processing.
 
 - If you want your lexer to start lexing in a different state you can modify the
-  stack by overloading the `get_tokens_unprocessed()` method::
+  stack by overriding the `get_tokens_unprocessed()` method::
 
       from pygments.lexer import RegexLexer
 
       class ExampleLexer(RegexLexer):
           tokens = {...}
 
-          def get_tokens_unprocessed(self, text):
-              stack = ['root', 'otherstate']
-              for item in RegexLexer.get_tokens_unprocessed(text, stack):
+          def get_tokens_unprocessed(self, text, stack=('root', 'otherstate')):
+              for item in RegexLexer.get_tokens_unprocessed(self, text, stack):
                   yield item
 
   Some lexers like the `PhpLexer` use this to make the leading ``<?php``
@@ -565,7 +611,7 @@ possibility to influence the position.
 There are not really any simple examples for lexer callbacks, but you can see
 them in action e.g. in the `SMLLexer` class in `ml.py`_.
 
-.. _ml.py: http://bitbucket.org/birkenfeld/pygments-main/src/tip/pygments/lexers/ml.py
+.. _ml.py: https://github.com/pygments/pygments/blob/master/pygments/lexers/ml.py
 
 
 The ExtendedRegexLexer class
@@ -621,7 +667,7 @@ For example, this is how the hypothetical lexer above would be written with the
 This might sound confusing (and it can really be). But it is needed, and for an
 example look at the Ruby lexer in `ruby.py`_.
 
-.. _ruby.py: https://bitbucket.org/birkenfeld/pygments-main/src/tip/pygments/lexers/ruby.py
+.. _ruby.py: https://github.com/pygments/pygments/blob/master/pygments/lexers/ruby.py
 
 
 Handling Lists of Keywords

@@ -12,7 +12,7 @@
 ;; TODO:
 ;;   the following Markdown tests fail:
 ;;   Inline HTML (Advanced) ... FAILED
-;;   Links, reference style ... FAILED -- nested brackets
+;;   Links, reference style ... FAILED -- nested brackets 
 ;;   Links, shortcut references ... FAILED
 ;;   Markdown Documentation - Syntax ... FAILED
 ;;   Ordered and unordered lists ... FAILED -- a nested ordered list error
@@ -23,7 +23,7 @@
 (define HashTable:HashTable)
 
 (define (build-escape-table)
-   (set '*escape-chars* [text]\`*_{}[]()>#+-.![/text])
+   (set '*escape-chars* [text]\`*_{}[]()>#+-.![/text])   
    (dolist (c (explode *escape-chars*))
         (HashTable c (hash c))))
 
@@ -44,17 +44,17 @@
 (define (markdown:markdown txt)
   (initialize)
   (Hash:init-hash txt)
-  (unescape-special-chars
-    (block-transforms
-      (strip-link-definitions
-         (protect
+  (unescape-special-chars 
+    (block-transforms 
+      (strip-link-definitions 
+         (protect 
             (cleanup txt))))))
 
 (define (initialize)
   (set '*escape-pairs*   '(
        ({\\\\} {\})
        ({\\`}  {`})
-       ({\\\*} {*})
+       ({\\\*} {*}) 
        ({\\_}  {_})
        ([text]\\\{[/text] [text]{[/text])
        ([text]\\\}[/text] [text]}[/text])
@@ -72,22 +72,22 @@
   (set '*list-level* 0))
 
 (define (block-transforms txt)
-   (form-paragraphs
-    (protect
-     (block-quotes
-      (code-blocks
-       (lists
-        (horizontal-rules
+   (form-paragraphs 
+    (protect 
+     (block-quotes 
+      (code-blocks 
+       (lists 
+        (horizontal-rules 
          (headers txt))))))))
 
 (define (span-transforms txt)
-  (line-breaks
-   (emphasis
-    (amps-and-angles
-     (auto-links
-      (anchors
-       (images
-        (escape-special-chars
+  (line-breaks 
+   (emphasis 
+    (amps-and-angles 
+     (auto-links 
+      (anchors 
+       (images 
+        (escape-special-chars 
          (escape-special-chars (code-spans txt) 'inside-attributes)))))))))
 
 (define (tokenize-html xhtml)
@@ -118,11 +118,11 @@
 
 (define (escape-special-chars txt (within-tag-attributes nil))
   (let ((temp (tokenize-html txt))
-        (new-text {}))
+        (new-text {}))    
     (dolist (pair temp)
         (if (= (first pair) 'tag)
              ; 'tag
-             (begin
+             (begin              
               (set 'new-text (replace {\\} (last pair) (HashTable {\\}) 0))
               (replace [text](?<=.)</?code>(?=.)[/text] new-text (HashTable {`}) 0)
               (replace {\*} new-text (HashTable {*}) 0)
@@ -152,10 +152,10 @@
   (replace {\\} s   (HashTable "\\") 0))
 
 (define (code-spans s)
-  (replace
-    {(?<!\\)(`+)(.+?)(?<!`)\1(?!`)}
-    s
-    (string {<code>} (encode-code (trim $2)) {</code>})
+  (replace  
+    {(?<!\\)(`+)(.+?)(?<!`)\1(?!`)} 
+    s 
+    (string {<code>} (encode-code (trim $2)) {</code>}) 
     2))
 
 (define (encode-alt s)
@@ -173,23 +173,23 @@
        (id-ref {})
        (url    {}))
   ;  reference links ![alt text][id]
-  (replace
-    ref-regex
-    txt
+  (replace 
+    ref-regex 
+    txt 
     (begin
-       (set 'whole-match $1 'alt-text $2 'id-ref $3)
+       (set 'whole-match $1 'alt-text $2 'id-ref $3)       
        (if alt-text
              (replace {"} alt-text {&quot;} 0))
        (if (empty? id-ref)
-            (set 'id-ref (lower-case alt-text)))
+            (set 'id-ref (lower-case alt-text)))     
        (if (lookup id-ref *link-database*)
            (set 'url (first (lookup id-ref *link-database*)))
            (set 'url nil))
        (if url
-           (begin
+           (begin 
               (replace {\*} url (HashTable {*}) 0)
-              (replace {_}  url (HashTable {_}) 0)
-            ))
+              (replace {_}  url (HashTable {_}) 0) 
+            ))             
        (if (last (lookup id-ref *link-database*))
             ; title
            (begin
@@ -199,12 +199,12 @@
              (replace {_}  title (HashTable {_}) 0))
            ; no title
            (set 'title {})
-           )
+           )       
        (if url
-        (set 'result (string
-          {<img src="}
-          (trim url)
-          {" alt="}
+        (set 'result (string 
+          {<img src="} 
+          (trim url) 
+          {" alt="} 
           alt-text {" }
           (if (not (empty? title))
                (string { title="} title {"}) {})
@@ -214,9 +214,9 @@
      0
    )
    ; inline image refs:  ![alt text](url "optional title")
-    (replace
-      inline-regex
-      txt
+    (replace 
+      inline-regex 
+      txt 
       (begin
         (set 'whole-match $1)
         (set 'alt-text $2)
@@ -224,19 +224,19 @@
         (set 'title $6)
         (if alt-text
              (replace {"} alt-text {&quot;} 0)
-             (set 'alt-text {}))
-        (if  title
-             (begin
+             (set 'alt-text {}))          
+        (if  title 
+             (begin 
                (replace {"}  title {&quot;} 0)
                (replace {\*} title (HashTable {*}) 0)
                (replace {_}  title (HashTable {_}) 0))
-             (set 'title {}))
+             (set 'title {}))           
         (replace {\*} url (HashTable {*}) 0)
         (replace {_} url (HashTable {_}) 0)
-        (string
-           {<img src="}
-           (trim url)
-           {" alt="}
+        (string 
+           {<img src="} 
+           (trim url) 
+           {" alt="} 
            alt-text {" }
            (if title (string {title="} title {"}) {}) { />})
         )
@@ -244,8 +244,8 @@
      )
     ; empty ones are possible
     (set '$1 {})
-    (replace {!\[(.*?)\]\([ \t]*\)}
-     txt
+    (replace {!\[(.*?)\]\([ \t]*\)} 
+     txt 
      (string {<img src="" alt="} $1 {" title="" />})
      0)))
 
@@ -262,7 +262,7 @@
           (begin
              (replace {"} link-text {&quot;} 0)
              (replace {\n} link-text { } 0)
-             (replace {[ ]?\n} link-text { } 0)))
+             (replace {[ ]?\n} link-text { } 0)))   
       (if (null? id ) (set 'id  (lower-case link-text)))
       (if (not (nil? (lookup id *link-database*)))
           (begin
@@ -270,14 +270,14 @@
              (replace {\*} url (HashTable {*}) 0)
              (replace {_}  url (HashTable {_}) 0)
              (if (set 'title (last (lookup id  *link-database*)))
-                 (begin
+                 (begin 
                       (replace {"}  title {&quot;} 0)
                       (replace {\*} title (HashTable {*}) 0)
                       (replace {_}  title (HashTable {_}) 0))
                 (set 'title {})))
            (set 'url nil))
       (if url
-          (string {<a href="} (trim url)
+          (string {<a href="} (trim url) 
                {"}
                (if (not (= title {})) (string { title="} (trim title) {"}) {})
                {>} link-text {</a>})
@@ -289,39 +289,39 @@
          (inline-regex {(\[(.*?)\]\([ ]*<?(.*?\)?)>?[ ]*((['"])(.*?)\5[ \t]*)?\))})
          (link-text {})
          (url {})
-         (title {}))
+         (title {}))         
   ; reference-style links: [link text] [id]
   (set '$1 {} '$2 {} '$3 {} '$4 {} '$5 {} '$6 {})    ; i still don't think I should have to do this...
-
+  
   ; what about this regex instead?
   (set 'ref-link-regex {(\[(.*?)\][ ]?\[(.*?)\])})
-
+   
   (replace ref-link-regex txt (make-anchor $2 $3) 8) ; $2 is link text, $3 is id
   ; inline links: [link text](url "optional title")
   (set '$1 {} '$2 {} '$3 {} '$4 {} '$5 {} '$6 {})
-  (replace
-     inline-regex
-     txt
+  (replace 
+     inline-regex 
+     txt 
     (begin
       (set 'link-text $2)
       (set 'url $3)
       (set 'title $6)
-      (if link-text (replace {"} link-text {&quot;} 0))
-      (if title
-           (begin
+      (if link-text (replace {"} link-text {&quot;} 0))          
+      (if title 
+           (begin 
              (replace {"}  title {&quot;} 0)
              (replace {\*} title  (HashTable {*}) 0)
              (replace {_}  title  (HashTable {_}) 0))
-           (set 'title {}))
+           (set 'title {}))           
       (replace {\*} url (HashTable {*}) 0)
       (replace {_}  url (HashTable {_}) 0)
       (replace {^<(.*)>$} url $1 0)
-      (string
-         {<a href="}
+      (string 
+         {<a href="} 
          (trim url)
          {"}
          (if (not (= title {}))
-                 (string { title="} (trim title) {"})
+                 (string { title="} (trim title) {"}) 
                  {})
          {>} link-text {</a>}
          ))
@@ -330,10 +330,10 @@
  ) txt)
 
 (define (auto-links txt)
- (replace
-    [text]<((https?|ftp):[^'">\s]+)>[/text]
-    txt
-    (string {<a href="} $1 {">} $1 {</a>})
+ (replace 
+    [text]<((https?|ftp):[^'">\s]+)>[/text] 
+    txt 
+    (string {<a href="} $1 {">} $1 {</a>})  
     0
  )
   ; to-do: email ...
@@ -341,13 +341,13 @@
 
 (define (amps-and-angles txt)
 ; Smart processing for ampersands and angle brackets
-  (replace
+  (replace 
     [text]&(?!\#?[xX]?(?:[0-9a-fA-F]+|\w+);)[/text]
     txt
     {&amp;}
     10
   )
-  (replace
+  (replace 
     [text]<(?![a-z/?\$!])[/text]
     txt
     {&lt;}
@@ -355,17 +355,17 @@
 
 (define (emphasis txt)
   ; italics/bold: strong first
-  (replace
+  (replace 
     [text] (\*\*|__) (?=\S) (.+?[*_]*) (?<=\S) \1 [/text]
     txt
     (string {<strong>} $2 {</strong>})
-    8
+    8   
   )
-  (replace
+  (replace 
     [text] (\*|_) (?=\S) (.+?) (?<=\S) \1 [/text]
     txt
     (string {<em>} $2 {</em>})
-    8
+    8  
   ))
 
 (define (line-breaks txt)
@@ -378,7 +378,7 @@
    (char (int (string "0x" (1 strng)) 0 16)))
 
 (define (ustring s)
-  ; any four digit string preceded by U
+  ; any four digit string preceded by U 
   (replace "U[0-9a-f]{4,}" s (hex-str-to-unicode-char $0) 0))
 
 (define (cleanup txt)
@@ -386,14 +386,14 @@
   (replace "\r\n|\r" txt "\n" 0)      ; standardize line ends
   (push "\n\n" txt -1)                ; end with two returns
   (set 'txt (detab txt))              ; convert tabs to spaces
-
+  
   ; convert inline Unicode:
   (set 'txt (ustring txt))
   (replace "\n[ \t]+\n" txt "\n\n" 0) ; lines with only spaces and tabs
   )
 
 (define (protect txt)
- ; protect or "hash html blocks"
+ ; protect or "hash html blocks" 
  (letn ((nested-block-regex  [text](^<(p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del)\b(.*\n)*?</\2>[ \t]*(?=\n+|\Z))[/text])
        (liberal-tag-regex [text](^<(p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math)\b(.*\n)*?.*</\2>[ \t]*(?=\n+|\Z))[/text])
        (hr-regex  [text](?:(?<=\n\n)|\A\n?)([ ]{0,3}<(hr)\b([^<>])*?/?>[ \t]*(?=\n{2,}|\Z))[/text])
@@ -401,17 +401,17 @@
        (results '())
        (chunk-count (length (set 'chunks (parse txt "\n\n"))))
        (chunk-size 500))
-
+   
    ; due to a limitation in PCRE, long sections have to be divided up otherwise we'll crash
    ; so divide up long texts into chunks, then do the regex on each chunk
-   ; not an ideal solution, but it works ok :(
-
+   ; not an ideal solution, but it works ok :( 
+  
    (for (i 0 chunk-count chunk-size)
        ; do a chunk
        (set 'text-chunk (join (i (- (min chunk-count (- (+ i chunk-size) 1)) i) chunks) "\n\n"))
        (dolist (rgx (list nested-block-regex liberal-tag-regex hr-regex html-comment-regex))
-         (replace
-            rgx
+         (replace 
+            rgx 
             text-chunk
             (begin
               (set 'key (Hash:hash $1))
@@ -425,7 +425,7 @@
   (join results "\n\n")))
 
 (define (unescape-special-chars t)
- ; Swap back in all the special characters we've hidden.
+ ; Swap back in all the special characters we've hidden. 
   (dolist (pair (HashTable))
     (replace (last pair) t (first pair) 10)) t)
 
@@ -437,32 +437,32 @@
         (url {})
         (id {})
         (title {}))
-     (replace
+     (replace 
        [text]^[ ]{0,3}\[(.+)\]:[ \t]*\n?[ \t]*<?(\S+?)>?[ \t]*\n?[ \t]*(?:(?<=\s)["(](.+?)[")][ \t]*)?(?:\n+|\Z)[/text]
-       txt
-       (begin
+       txt 
+       (begin 
          (set 'id (lower-case $1) 'url (amps-and-angles $2) 'title $3)
          (if title (replace {"} title {&quot;} 0))
          (push (list id (list url title)) link-db)
          (set '$3 {}) ; necessary?
          (string {}) ; remove from text
-         )
+         ) 
        10)
      (set '*link-database* link-db)
      txt))
 
 (define (horizontal-rules txt)
-   (replace
+   (replace 
    [text]^[ ]{0,2}([ ]?\*[ ]?){3,}[ \t]*$[/text]
     txt
     "\n<hr />"
-    14)
-   (replace
+    14)  
+   (replace 
    [text]^[ ]{0,2}([ ]? -[ ]?){3,}[ \t]*$[/text]
    txt
    "\n<hr />"
-   14)
-   (replace
+   14)  
+   (replace 
     [text]^[ ]{0,2}([ ]? _[ ]?){3,}[ \t]*$[/text]
     txt
     "\n<hr />"
@@ -471,21 +471,21 @@
 (define (headers txt)
   ; setext headers
  (let ((level 1))
-    (replace
+    (replace 
       [text]^(.+)[ \t]*\n=+[ \t]*\n+[/text]
-      txt
+      txt 
       (string "<h1>" (span-transforms $1) "</h1>\n\n")
-      2)
-
-    (replace
+      2)  
+  
+    (replace 
       [text]^(.+)[ \t]*\n-+[ \t]*\n+[/text]
-      txt
+      txt 
       (string "<h2>" (span-transforms $1) "</h2>\n\n")
-      2)
+      2) 
    ; atx headers
-    (replace
+    (replace 
       [text]^(\#{1,6})\s*(.+?)[ ]*\#*(\n+)[/text]
-      txt
+      txt 
       (begin
        (set 'level (length $1))
        (string "<h" level ">" (span-transforms $2) "</h" level ">\n\n")
@@ -500,15 +500,15 @@
         (my-list {})
         (list-type {})
         (my-result {}))
-   (replace
+   (replace 
       (if (> *list-level* 0)
-          (string {^} whole-list-regex)
+          (string {^} whole-list-regex) 
           (string {(?:(?<=\n\n)|\A\n?)} whole-list-regex))
       txt
       (begin
          (set 'my-list $1)
-         (if (find $3 marker-ul)
-            (set 'list-type "ul" 'marker-type marker-ul)
+         (if (find $3 marker-ul) 
+            (set 'list-type "ul" 'marker-type marker-ul) 
             (set 'list-type "ol" 'marker-type marker-ol))
          (replace [text]\n{2,}[/text] my-list "\n\n\n" 0)
          (set 'my-result (process-list-items my-list marker-any))
@@ -517,7 +517,7 @@
       10 ; must be multiline
       )))
 
-(define (process-list-items list-text marker-any)
+(define (process-list-items list-text marker-any)    
   (let ((list-regex (string [text](\n)?(^[ \t]*)([/text] marker-any [text])[ \t]+((?s:.+?)(\n{1,2}))(?=\n*(\z|\2([/text] marker-any [text])[ \t]+))[/text]))
         (item {})
         (leading-line {})
@@ -526,7 +526,7 @@
      (inc *list-level*)
      (replace [text]\n{2,}\z[/text] list-text "\n" 0)
      (set '$1 {} '$2 {} '$3 {} '$4 {} '$5 {})
-     (replace
+     (replace 
        list-regex
        list-text
        (begin
@@ -536,8 +536,8 @@
          (if (or (not (empty? leading-line)) (ends-with item "\n{2,}" 0))
              (set 'item (block-transforms (outdent item)))
            ; recurse for sub lists
-           (begin
-              (set 'item (lists (outdent item)))
+           (begin 
+              (set 'item (lists (outdent item))) 
               (set 'item (span-transforms (trim item "\n")))
               ))
        (string {<li>} item {</li>} "\n"))
@@ -548,20 +548,20 @@
 (define (code-blocks txt)
  (let ((code-block {})
        (token-list '()))
-  (replace
+  (replace 
     [text](?:\n\n|\A)((?:(?:[ ]{4}|\t).*\n+)+)((?=^[ ]{0,3}\S)|\Z)[/text]
-    txt
-    (begin
+    txt 
+    (begin 
       (set 'code-block $1)
       ; format if Nestor module is loaded and it's not marked as plain
       (if (and (not (starts-with code-block "    ;plain\n")) (context? Nestor))
           ; format newlisp
-          (begin
+          (begin 
              ; remove flag if present
-            (replace "[ ]{4};newlisp\n" code-block {} 0)
+            (replace "[ ]{4};newlisp\n" code-block {} 0)       
             (set 'code-block (protect (Nestor:nlx-to-html (Nestor:my-read (trim (detab (outdent code-block)) "\n")))))
             code-block)
-          ; don't format
+          ; don't format 
           (begin
             ; trim leading and trailing newlines
             (replace "[ ]{4};plain\n" code-block {} 0)
@@ -572,18 +572,18 @@
 
 (define (block-quotes txt)
   (let ((block-quote {}))
-     (replace
+     (replace 
        [text]((^[ \t]*>[ \t]?.+\n(.+\n)*\n*)+)[/text]
-       txt
-       (begin
+       txt 
+       (begin 
          (set 'block-quote $1)
          (replace {^[ ]*>[ ]?} block-quote {} 2)
          (replace {^[ ]+$} block-quote {} 2)
-         (set 'block-quote (block-transforms block-quote)) ; recurse
+         (set 'block-quote (block-transforms block-quote)) ; recurse     
          ; remove leading spaces
-         (replace
-             {(\s*<pre>.+?</pre>)}
-             block-quote
+         (replace 
+             {(\s*<pre>.+?</pre>)} 
+             block-quote 
              (trim $1)
              2)
          (string "<blockquote>\n" block-quote "\n</blockquote>\n\n"))
@@ -593,8 +593,8 @@
   (replace [text]^(\t|[ ]{1,4})[/text] s {} 2))
 
 (define (detab s)
-  (replace [text](.*?)\t[/text]
-    s
+  (replace [text](.*?)\t[/text] 
+    s   
     (string $1 (dup { } (- 4 (% (length $1) 4))))
     2))
 
@@ -602,7 +602,7 @@
   (let ((grafs '())
         (original nil))
     (set 'txt   (trim txt "\n"))            ; strip blank lines before and after
-    (set 'grafs (parse txt "\n{2,}" 0))     ; split
+    (set 'grafs (parse txt "\n{2,}" 0))     ; split    
     (dolist (p grafs)
       (if (set 'original (lookup p *hashed-html-blocks*))
         ; html blocks
@@ -622,7 +622,7 @@
 
 ; if level is 2, then we're probably invoking markdown.lsp directly
 ; if level is > 3, then we're probably loading it into another script...
-
+    
 (when (= level 2)
    ; running on command line, read STDIN and execute:
    (while (read-line)
@@ -638,8 +638,8 @@
 ;;
 ;; version 2011-08-18 15:04:40
 ;;   various fixes, and added hack for running this from the command-line:
-;;     echo "hi there"     | newlisp markdown.lsp
-;;     echo "hello world"  | markdown.lsp
+;;     echo "hi there"     | newlisp markdown.lsp 
+;;     echo "hello world"  | markdown.lsp 
 ;;     cat file.text       | newlisp markdown.lsp
 ;;
 ;; version 2010-11-14 17:34:52
@@ -655,7 +655,7 @@
 ;;    fixed bug in tokenize.html
 ;;
 ;; version date 2008-10-08 18:44:46
-;;    changed nth-set to setf to be version-10 ready.
+;;    changed nth-set to setf to be version-10 ready. 
 ;;    This means that now this script will NOT work with
 ;;    earlier versions of newLISP!!!!!!!!!!!
 ;;    requires Nestor if you want source code colouring...
@@ -671,7 +671,7 @@
 ;;
 ;; version date 2007-11-17 16:20:57
 ;;    added syntax colouring module
-;;
+;; 
 ;; version date  2007-11-14 09:19:42
 ;;    removed reliance on dostring for compatibility with 9.1
 

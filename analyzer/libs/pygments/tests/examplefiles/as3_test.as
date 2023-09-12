@@ -6,14 +6,14 @@
 			// constants for the different "states" of the song form
 			private static const ADD_SONG:uint = 1;
 			private static const SONG_DETAIL:uint = 2;
-
+			
 			private var playList:PlayList = new PlayList.<T>();
 
 			private function initApp():void
 			{
 				// set the initial state of the song form, for adding a new song
 				setFormState(ADD_SONG);
-
+				
 				// prepopulate the list with a few songs
 				playList.addSong(new Song("Nessun Dorma", "Luciano Pavarotti", 1990, "nessundorma.mp3", ["90's", "Opera"]));
 				playList.addSong(new Song("Come Undone", "Duran Duran", 1993, "comeundone.mp3", ["90's", "Pop"]));
@@ -46,7 +46,7 @@
 				}
 
 				playList.sortList(sortField);
-
+				
 				refreshList();
 			}
 
@@ -55,11 +55,11 @@
 			{
 				// remember which song was selected
 				var selectedSong:Song = Song(songList.selectedItem);
-
+				
 				// re-assign the song list as the dataprovider to get the newly sorted list
 				// and force the List control to refresh itself
 				songList.dataProvider = playList.songList;
-
+				
 				// reset the song selection
 				if (selectedSong != null)
 				{
@@ -93,7 +93,7 @@
 				playList.addSong(new Song(title, artist, year, filename, genres));
 
 				refreshList();
-
+	
 				// clear out the "add song" form fields
 				setFormState(ADD_SONG);
 			}
@@ -124,7 +124,7 @@
 						// deselect the currently selected song (if any)
 						songList.selectedIndex = -1;
 						break;
-
+						
 					case SONG_DETAIL:
 						formTitle.text = "Song Details";
 						// populate the form with the selected item's data

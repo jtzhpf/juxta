@@ -25,24 +25,24 @@ model {
 
   # Priors
   for (k in 1:T) {
-     eta[k] ~ dnorm(0,0.0001);
+     eta[k] ~ dnorm(0,0.0001);       
      e[k] <- eta[k] - mean(eta[]);  # sum-to-zero constraint
 
      delta[k] ~ dnorm(0,1) T(0,);   # constrain variance to 1, slope +ve
      d[k] <- delta[k]/pow(prod(delta), 1/T); # PRODUCT_k (d_k) = 1
-
+ 
      g[k] <- e[k]/d[k];   # equivalent to B&A's threshold parameters
   }
 
   # Compute probability of response pattern i, for later use in computing G^2
-  theta.new ~ dnorm(0,1);          # ability parameter for random student
+  theta.new ~ dnorm(0,1);          # ability parameter for random student 
   for(k in 1:T) {
        probit(p.theta[k]) <- delta[k]*theta.new - eta[k];
        for(i in 1:R) {
           p.item[i,k] <- p.theta[k]^response[i,k] * (1-p.theta[k])^(1-response[i,k]);
        }
-  }
-  for(i in 1:R) {
+  } 
+  for(i in 1:R) {    
      P.theta[i] <- prod(p.item[i,])
   }
 }

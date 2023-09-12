@@ -3,7 +3,7 @@
     <ul class="chat-messages">
       {{#each message in content}}
       <li>
-        [{{formatTimestamp "message.timestamp" fmtString="h:mm:ss A"}}]
+        [{{formatTimestamp "message.timestamp" fmtString="h:mm:ss A"}}] 
         <strong>{{message.sender}}</strong>: {{message.content}}
       </li>
       {{/each}}

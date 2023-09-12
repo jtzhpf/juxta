@@ -1,5 +1,5 @@
 
-=head1 NAME
+=head1 NAME 
 
 perl5db.pl - the perl debugger
 
@@ -173,7 +173,7 @@ command prompt.  The prompt will show: C<[0]> when running under threads, but
 not actually in a thread.  C<[tid]> is consistent with C<gdb> usage.
 
 While running under threads, when you set or delete a breakpoint (etc.), this
-will apply to all threads, not just the currently running one.  When you are
+will apply to all threads, not just the currently running one.  When you are 
 in a currently executing thread, you will stay there until it completes.  With
 the current implementation it is not currently possible to hop from one thread
 to another.
@@ -255,8 +255,8 @@ $inhibit_exit = $option{PrintRet} = 1;
 
 =head1 OPTION PROCESSING
 
-The debugger's options are actually spread out over the debugger itself and
-C<dumpvar.pl>; some of these are variables to be set, while others are
+The debugger's options are actually spread out over the debugger itself and 
+C<dumpvar.pl>; some of these are variables to be set, while others are 
 subs to be called with a value. To try to make this a little easier to
 manage, the debugger uses a few data structures to define what options
 are legal and how they are to be processed.
@@ -320,7 +320,7 @@ state.
 Third, C<%optionAction> defines the subroutine to be called to process each
 option.
 
-=cut
+=cut 
 
 %optionAction = (
     compactDump   => \&dumpvar::compactDump,
@@ -530,10 +530,10 @@ $pidprompt = '';
 
 =head2 READING THE RC FILE
 
-The debugger will read a file of initialization options if supplied. If
+The debugger will read a file of initialization options if supplied. If    
 running interactively, this is C<.perldb>; if not, it's C<perldb.ini>.
 
-=cut
+=cut      
 
 # As noted, this test really doesn't check accurately that the debugger
 # is running at a terminal or not.
@@ -569,7 +569,7 @@ sub safe_do {
     unless ( is_safe_file($file) ) {
         CORE::warn <<EO_GRIPE;
 perldb: Must not source insecure rcfile $file.
-        You or the superuser must be the owner, and it must not
+        You or the superuser must be the owner, and it must not 
         be writable by anyone but its owner.
 EO_GRIPE
         return;
@@ -661,7 +661,7 @@ then sets C<PERLDB_RESTART>. When we start executing again, we check to see
 if C<PERLDB_RESTART> is there; if so, we reload all the information that
 the R command stuffed into the environment variables.
 
-  PERLDB_RESTART   - flag only, contains no restart data itself.
+  PERLDB_RESTART   - flag only, contains no restart data itself.       
   PERLDB_HIST      - command history, if it's available
   PERLDB_ON_LOAD   - breakpoints set by the rc file
   PERLDB_POSTPONE  - subs that have been loaded/not executed, and have actions
@@ -853,7 +853,7 @@ If there is a TTY hanging around from a parent, we use that as the console.
 
     $console = $tty if defined $tty;
 
-=head2 SOCKET HANDLING
+=head2 SOCKET HANDLING   
 
 The debugger is capable of opening a socket and carrying out a debugging
 session over the socket.
@@ -947,7 +947,7 @@ and if we can.
     $LINEINFO = $OUT     unless defined $LINEINFO;
     $lineinfo = $console unless defined $lineinfo;
 	# share($LINEINFO); # <- unable to share globs
-	share($lineinfo);   #
+	share($lineinfo);   # 
 
 =pod
 

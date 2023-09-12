@@ -41,5 +41,5 @@ Example: * Exempli Gratia - A simple example.
 
 	Before dropping the egg:
 		now the egg is tested.
-
+	
 	Test me with "get egg / drop egg".

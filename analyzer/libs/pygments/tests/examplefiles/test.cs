@@ -26,7 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 namespace Diva.Core {
-
+        
         using System;
         using Widgets;
         using System.Xml;
@@ -38,14 +38,14 @@ namespace Diva.Core {
         public class OpenerTask : Task, IBoilProvider {
 
                 // Private structs ////////////////////////////////////////////
-
+                
                 struct ObjectInfo {
 
                         public ObjectContainer Container;
                         public int[] Depends;
                         public string SystemType;
                         public int RefId;
-
+                        
                         /* CONSTRUCTOR */
                         public ObjectInfo (ObjectContainer container)
                         {
@@ -54,35 +54,35 @@ namespace Diva.Core {
                                 SystemType = container.SystemType;
                                 RefId = container.RefId;
                         }
-
+                        
                         public override string ToString ()
                         {
                                 return String.Format ("Type: {0} Deps count: {1} Id: {2}",
                                                       SystemType, Depends.Length, RefId);
                         }
-
+                        
                         public bool IsUnBoilable (IBoilProvider provider)
                         {
                                 if (Depends.Length == 0)
                                         return true;
-
+                                
                                 foreach (int id in Depends)
                                         if (! (provider.Contains (id)))
                                                 return false;
-
+                                
                                 return true;
                         }
-
+                        
                 }
-
+                                 
                 // Enums //////////////////////////////////////////////////////
-
+                
                 enum OpenerTaskStep { Init, Header, ProjectInfoRead, ObjectListRead,
                                       ObjectListParse, ObjectListUnBoil, FindRoots,
                                       Finished };
-
+                
                 // Fields /////////////////////////////////////////////////////
-
+                
                 string fileName;                         // Filename we're reading
                 XmlDocument xmlDocument;                 // Our document
                 //XmlNode projectInfoNode;               // <projectinfo> node
@@ -90,7 +90,7 @@ namespace Diva.Core {
                 List <ObjectInfo> objectsList;           // Objects list
                 ObjectListContainer objectListContainer;
                 OpenerTaskStep currentStep;              // Our current step
-
+                
                 Dictionary <int, object> idToObject;     // Id -> object
                 Dictionary <object, int> objectToId;     // Object -> Id
 
@@ -104,25 +104,25 @@ namespace Diva.Core {
                 Commander projectCommander;
                 Gdv.Pipeline projectPipeline;
                 Gdv.ProjectFormat projectFormat;
-
+                
                 // Properties /////////////////////////////////////////////////
-
+                
                 public string ProjectName {
                         get { return projectName; }
                 }
-
+                
                 public string ProjectDirectory {
                         get { return projectDirectory; }
                 }
-
+                
                 public TagList ProjectTagList {
                         get { return projectTagList; }
                 }
-
+                
                 public StuffList ProjectStuffList {
                         get { return projectStuffList; }
                 }
-
+                
                 public TrackList ProjectTrackList {
                         get { return projectTrackList; }
                 }
@@ -130,15 +130,15 @@ namespace Diva.Core {
                 public ClipList ProjectClipList {
                         get { return projectClipList; }
                 }
-
+                
                 public MediaItemList ProjectMediaItemList {
                         get { return projectMediaItemList; }
                 }
-
+                
                 public Commander ProjectCommander {
                         get { return projectCommander; }
                 }
-
+                
                 public Gdv.Pipeline ProjectPipeline {
                         get { return projectPipeline; }
                 }
@@ -148,7 +148,7 @@ namespace Diva.Core {
                 }
 
                 // Public methods /////////////////////////////////////////////
-
+                
                 /* CONSTRUCTOR */
                 public OpenerTask (string fileName)
                 {
@@ -177,51 +177,51 @@ c";
                                        join mn in moreNumbers on n equals mn + 2
                                        select new {n, mn};
                 }
-
+                
                 public override void Reset ()
                 {
                         objectToId = new Dictionary <object, int> ();
                         idToObject = new Dictionary <int, object> ();
-
+                        
                         xmlDocument = null;
                         //projectInfoNode = null;
-
+                        
                         currentStep = OpenerTaskStep.Init;
-
+                        
                         base.Reset ();
                 }
-
+                
                 public int GetIdForObject (object o)
                 {
                         return objectToId [o];
                 }
-
+                
                 public object GetObjectForId (int id)
                 {
                         return idToObject [id];
                 }
-
+                
                 public bool Contains (int id)
                 {
                         return idToObject.ContainsKey (id);
                 }
-
+                
                 // Private methods ////////////////////////////////////////////
-
+                
                 protected override TaskStatus ExecuteStep (int s)
                 {
                         bool cont = true;
-
+                        
                         // Main
                         switch (currentStep) {
-
+                                        
                                 case OpenerTaskStep.Init:
                                         objectsList = new List <ObjectInfo> ();
                                         xmlDocument = new XmlDocument ();
                                         xmlDocument.Load (fileName);
                                         currentStep = OpenerTaskStep.Header;
                                         break;
-
+                                        
                                 case OpenerTaskStep.Header:
                                         //ReadHeader ();
                                         currentStep = OpenerTaskStep.ProjectInfoRead;
@@ -229,19 +229,19 @@ c";
 
                                 case OpenerTaskStep.ProjectInfoRead:
                                         foreach (XmlNode node in xmlDocument.DocumentElement.ChildNodes)
-                                                if (node.Name == "projectinfo")
+                                                if (node.Name == "projectinfo") 
                                                         ResolveProjectInfoNode (node);
 
                                         // FIXME: Fail if not found/not resolved
                                         currentStep = OpenerTaskStep.ObjectListRead;
                                         break;
-
+                                        
                                 case OpenerTaskStep.ObjectListRead:
                                         foreach (XmlNode node in xmlDocument.DocumentElement.ChildNodes)
-                                                if (node.Name == "objectlist")
+                                                if (node.Name == "objectlist") 
                                                         objectListContainer = (ObjectListContainer)
                                                                 DataFactory.MakeDataElement  (node as XmlElement);
-
+                                                        
                                         if (objectListContainer == null)
                                                 throw new Exception ("ObjectListContainer not found!");
 
@@ -259,8 +259,8 @@ c";
                                         if (done)
                                                 currentStep = OpenerTaskStep.FindRoots;
                                         break;
-
-
+                                        
+                                        
                                 case OpenerTaskStep.FindRoots:
                                         projectTrackList = (TrackList) FindRoot ("tracklist");
                                         projectTagList = (TagList) FindRoot ("taglist");
@@ -270,20 +270,20 @@ c";
                                         projectPipeline = (Gdv.Pipeline) FindRoot ("pipeline");
                                         projectCommander = (Commander) FindRoot ("commander");
                                         projectFormat = (Gdv.ProjectFormat) FindRoot ("projectformat");
-
+                                        
                                         currentStep = OpenerTaskStep.Finished;
                                         break;
-
+                                        
                                 case OpenerTaskStep.Finished:
                                         cont = false;
                                         break;
-
+                                        
                                 default:
                                         break;
                         }
-
-                        // Post
-                        if (cont)
+                                                
+                        // Post 
+                        if (cont) 
                                 return TaskStatus.Running;
                         else
                                 return TaskStatus.Done;
@@ -298,13 +298,13 @@ c";
                 void ResolveProjectInfoNode (XmlNode node)
                 {
                         foreach (XmlNode childNode in node) {
-
+                                
                                 switch (childNode.Name) {
-
+                                        
                                         case "name":
                                                 projectName = childNode.FirstChild.Value;
                                                 break;
-
+                                        
                                         case "directory":
                                                 projectDirectory = childNode.FirstChild.Value;
                                                 break;
@@ -313,23 +313,23 @@ c";
                                 }
                         }
                 }
-
+                
                 bool EnumerateSomeObjects ()
                 {
                         if (objectsEnumerator == null)
                                 objectsEnumerator = objectListContainer.FindAllObjects ().GetEnumerator ();
-
+                        
                         for (int i = 0; i < 10; i++) {
                                 if (objectsEnumerator.MoveNext () == false)
                                         return true;
 
                                 ObjectContainer container = (ObjectContainer)
                                         objectsEnumerator.Current;
-
+                                
                                 ObjectInfo newInfo = new ObjectInfo (container);
                                 objectsList.Add (newInfo);
                         }
-
+                        
                         return false;
                 }
 
@@ -338,17 +338,17 @@ c";
                         foreach (ObjectInfo objInfo in objectsList)
                                 if (objInfo.IsUnBoilable (this))
                                         return objInfo;
-
+                        
                         throw new Exception ("FIXME: No more unboilable objects found. Recursive?");
                 }
-
+                
                 bool UnBoilSomeObjects ()
                 {
                         for (int i = 0; i < 5; i++) {
                                 // All unboiled
                                 if (objectsList.Count == 0)
                                         return true;
-
+                                
                                 ObjectInfo objInfo = GetNextCandidate ();
 
                                 object o = BoilFactory.UnBoil (objInfo.Container, this);
@@ -359,7 +359,7 @@ c";
                                 objectToId [o] = objInfo.RefId;
 
                         }
-
+                        
                         return false;
                 }
 
@@ -368,7 +368,7 @@ c";
                         ObjectContainer container = objectListContainer.FindObjectContainer (rootString);
                         return idToObject [container.RefId];
                 }
-
+                
         }
-
+        
 }

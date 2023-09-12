@@ -24,19 +24,19 @@ This section explains the basic concept of functional programming; if
 you're just interested in learning about Python language features,
 skip to the next section.
 
-Programming languages support decomposing problems in several different
+Programming languages support decomposing problems in several different 
 ways:
 
-* Most programming languages are **procedural**:
+* Most programming languages are **procedural**: 
   programs are lists of instructions that tell the computer what to
   do with the program's input.
   C, Pascal, and even Unix shells are procedural languages.
 
-* In **declarative** languages, you write a specification that describes
-  the problem to be solved, and the language implementation figures out
-  how to perform the computation efficiently.  SQL is the declarative
+* In **declarative** languages, you write a specification that describes 
+  the problem to be solved, and the language implementation figures out 
+  how to perform the computation efficiently.  SQL is the declarative 
   language you're most likely to be familiar with; a SQL query describes
-  the data set you want to retrieve, and the SQL engine decides whether to
+  the data set you want to retrieve, and the SQL engine decides whether to 
   scan tables or use indexes, which subclauses should be performed first,
   etc.
 
@@ -44,16 +44,16 @@ ways:
   Objects have internal state and support methods that query or modify
   this internal state in some way. Smalltalk and Java are
   object-oriented languages.  C++ and Python are languages that
-  support object-oriented programming, but don't force the use
+  support object-oriented programming, but don't force the use 
   of object-oriented features.
 
 * **Functional** programming decomposes a problem into a set of functions.
-  Ideally, functions only take inputs and produce outputs, and don't have any
+  Ideally, functions only take inputs and produce outputs, and don't have any 
   internal state that affects the output produced for a given input.
   Well-known functional languages include the ML family (Standard ML,
   OCaml, and other variants) and Haskell.
 
-The designers of some computer languages have chosen one approach to
+The designers of some computer languages have chosen one approach to 
 programming that's emphasized.  This often makes it difficult to
 write programs that use a different approach.  Other languages are
 multi-paradigm languages that support several different approaches.  Lisp,
@@ -67,10 +67,10 @@ In a functional program, input flows through a set of functions. Each
 function operates on its input and produces some output.  Functional
 style frowns upon functions with side effects that modify internal
 state or make other changes that aren't visible in the function's
-return value.  Functions that have no side effects at all are
+return value.  Functions that have no side effects at all are 
 called **purely functional**.
 Avoiding side effects means not using data structures
-that get updated as a program runs; every function's output
+that get updated as a program runs; every function's output 
 must only depend on its input.
 
 Some languages are very strict about purity and don't even have
@@ -120,17 +120,17 @@ correct, or reading a program's source code and concluding that the
 code looks right; the goal is instead a rigorous proof that a program
 produces the right result for all possible inputs.
 
-The technique used to prove programs correct is to write down
-**invariants**, properties of the input data and of the program's
-variables that are always true.  For each line of code, you then show
-that if invariants X and Y are true **before** the line is executed,
+The technique used to prove programs correct is to write down 
+**invariants**, properties of the input data and of the program's 
+variables that are always true.  For each line of code, you then show 
+that if invariants X and Y are true **before** the line is executed, 
 the slightly different invariants X' and Y' are true **after**
 the line is executed.  This continues until you reach the end of the
-program, at which point the invariants should match the desired
+program, at which point the invariants should match the desired 
 conditions on the program's output.
 
-Functional programming's avoidance of assignments arose because
-assignments are difficult to handle with this technique;
+Functional programming's avoidance of assignments arose because 
+assignments are difficult to handle with this technique; 
 assignments can break invariants that were true before the assignment
 without producing any new invariants that can be propagated onward.
 
@@ -155,7 +155,7 @@ complicated transformation.  Small functions are also easier to read
 and to check for errors.
 
 
-Ease of debugging and testing
+Ease of debugging and testing 
 ''''''''''''''''''''''''''''''''''
 
 Testing and debugging a functional-style program is easier.
@@ -209,7 +209,7 @@ The built-in ``iter()`` function takes an arbitrary object and tries
 to return an iterator that will return the object's contents or
 elements, raising ``TypeError`` if the object doesn't support
 iteration.  Several of Python's built-in data types support iteration,
-the most common being lists and dictionaries.  An object is called
+the most common being lists and dictionaries.  An object is called 
 an **iterable** object if you can get an iterator for it.
 
 You can experiment with the iteration interface manually::
@@ -228,11 +228,11 @@ You can experiment with the iteration interface manually::
     Traceback (most recent call last):
       File "<stdin>", line 1, in ?
     StopIteration
-    >>>
+    >>>      
 
-Python expects iterable objects in several different contexts, the
+Python expects iterable objects in several different contexts, the 
 most important being the ``for`` statement.  In the statement ``for X in Y``,
-Y must be an iterator or some object for which ``iter()`` can create
+Y must be an iterator or some object for which ``iter()`` can create 
 an iterator.  These two statements are equivalent::
 
         for i in iter(obj):
@@ -250,7 +250,7 @@ Iterators can be materialized as lists or tuples by using the
     >>> t
     (1, 2, 3)
 
-Sequence unpacking also supports iterators: if you know an iterator
+Sequence unpacking also supports iterators: if you know an iterator 
 will return N elements, you can unpack them into an N-tuple::
 
     >>> L = [1,2,3]
@@ -379,7 +379,7 @@ Generator expressions are surrounded by parentheses ("()") and list
 comprehensions are surrounded by square brackets ("[]").  Generator
 expressions have the form::
 
-    ( expression for expr in sequence1
+    ( expression for expr in sequence1 
                  if condition1
                  for expr2 in sequence2
                  if condition2
@@ -407,7 +407,7 @@ The ``for...in`` clauses contain the sequences to be iterated over.
 The sequences do not have to be the same length, because they are
 iterated over from left to right, **not** in parallel.  For each
 element in ``sequence1``, ``sequence2`` is looped over from the
-beginning.  ``sequence3``  is then looped over for each
+beginning.  ``sequence3``  is then looped over for each 
 resulting pair of elements from ``sequence1`` and ``sequence2``.
 
 To put it another way, a list comprehension or generator expression is
@@ -424,7 +424,7 @@ equivalent to the following Python code::
                  if not (conditionN):
                      continue   # Skip this element
 
-                 # Output the value of
+                 # Output the value of 
                  # the expression.
 
 This means that when there are multiple ``for...in`` clauses but no
@@ -435,8 +435,8 @@ lists of length 3, the output list is 9 elements long::
     seq1 = 'abc'
     seq2 = (1,2,3)
     >>> [ (x,y) for x in seq1 for y in seq2]
-    [('a', 1), ('a', 2), ('a', 3),
-     ('b', 1), ('b', 2), ('b', 3),
+    [('a', 1), ('a', 2), ('a', 3), 
+     ('b', 1), ('b', 2), ('b', 3), 
      ('c', 1), ('c', 2), ('c', 3)]
 
 To avoid introducing an ambiguity into Python's grammar, if
@@ -486,7 +486,7 @@ statement.  The big difference between ``yield`` and a
 ``return`` statement is that on reaching a ``yield`` the
 generator's state of execution is suspended and local variables are
 preserved.  On the next call to the generator's ``.next()`` method,
-the function will resume executing.
+the function will resume executing.  
 
 Here's a sample usage of the ``generate_ints()`` generator::
 
@@ -581,7 +581,7 @@ use parentheses when there's an operation, as in ``val = (yield i)
 + 12``.)
 
 Values are sent into a generator by calling its
-``send(value)`` method.  This method resumes the
+``send(value)`` method.  This method resumes the 
 generator's code and the ``yield`` expression returns the specified
 value.  If the regular ``next()`` method is called, the
 ``yield`` returns ``None``.
@@ -631,16 +631,16 @@ generators:
   where the generator's execution is paused.
 
 * ``close()`` raises a ``GeneratorExit``
-  exception inside the generator to terminate the iteration.
+  exception inside the generator to terminate the iteration.  
   On receiving this
   exception, the generator's code must either raise
-  ``GeneratorExit`` or ``StopIteration``; catching the
+  ``GeneratorExit`` or ``StopIteration``; catching the 
   exception and doing anything else is illegal and will trigger
-  a ``RuntimeError``.  ``close()`` will also be called by
+  a ``RuntimeError``.  ``close()`` will also be called by 
   Python's garbage collector when the generator is garbage-collected.
 
   If you need to run cleanup code when a ``GeneratorExit`` occurs,
-  I suggest using a ``try: ... finally:`` suite instead of
+  I suggest using a ``try: ... finally:`` suite instead of 
   catching ``GeneratorExit``.
 
 The cumulative effect of these changes is to turn generators from
@@ -650,7 +650,7 @@ Generators also become **coroutines**, a more generalized form of
 subroutines.  Subroutines are entered at one point and exited at
 another point (the top of the function, and a ``return``
 statement), but coroutines can be entered, exited, and resumed at
-many different points (the ``yield`` statements).
+many different points (the ``yield`` statements).  
 
 
 Built-in functions
@@ -660,10 +660,10 @@ Let's look in more detail at built-in functions often used with iterators.
 
 Two Python's built-in functions, ``map()`` and ``filter()``, are
 somewhat obsolete; they duplicate the features of list comprehensions
-but return actual lists instead of iterators.
+but return actual lists instead of iterators.  
 
 ``map(f, iterA, iterB, ...)`` returns a list containing ``f(iterA[0],
-iterB[0]), f(iterA[1], iterB[1]), f(iterA[2], iterB[2]), ...``.
+iterB[0]), f(iterA[1], iterB[1]), f(iterA[2], iterB[2]), ...``.  
 
 ::
 
@@ -677,15 +677,15 @@ iterB[0]), f(iterA[1], iterB[1]), f(iterA[2], iterB[2]), ...``.
 
 As shown above, you can achieve the same effect with a list
 comprehension.  The ``itertools.imap()`` function does the same thing
-but can handle infinite iterators; it'll be discussed later, in the section on
+but can handle infinite iterators; it'll be discussed later, in the section on 
 the ``itertools`` module.
 
-``filter(predicate, iter)`` returns a list
+``filter(predicate, iter)`` returns a list 
 that contains all the sequence elements that meet a certain condition,
 and is similarly duplicated by list comprehensions.
 A **predicate** is a function that returns the truth value of
-some condition; for use with ``filter()``, the predicate must take a
-single value.
+some condition; for use with ``filter()``, the predicate must take a 
+single value.  
 
 ::
 
@@ -701,7 +701,7 @@ This can also be written as a list comprehension::
     [0, 2, 4, 6, 8]
 
 ``filter()`` also has a counterpart in the ``itertools`` module,
-``itertools.ifilter()``, that returns an iterator and
+``itertools.ifilter()``, that returns an iterator and 
 can therefore handle infinite sequences just as ``itertools.imap()`` can.
 
 ``reduce(func, iter, [initial_value])`` doesn't have a counterpart in
@@ -729,7 +729,7 @@ value is supplied, it's used as a starting point and
     reduce(operator.mul, [], 1) =>
       1
 
-If you use ``operator.add`` with ``reduce()``, you'll add up all the
+If you use ``operator.add`` with ``reduce()``, you'll add up all the 
 elements of the iterable.  This case is so common that there's a special
 built-in called ``sum()`` to compute it::
 
@@ -760,7 +760,7 @@ the obvious ``for`` loop::
     enumerate(['subject', 'verb', 'object']) =>
       (0, 'subject'), (1, 'verb'), (2, 'object')
 
-``enumerate()`` is often used when looping through a list
+``enumerate()`` is often used when looping through a list 
 and recording the indexes at which certain conditions are met::
 
     f = open('data.txt', 'r')
@@ -768,10 +768,10 @@ and recording the indexes at which certain conditions are met::
         if line.strip() == '':
             print 'Blank line at line #%i' % i
 
-``sorted(iterable, [cmp=None], [key=None], [reverse=False)``
-collects all the elements of the iterable into a list, sorts
-the list, and returns the sorted result.  The ``cmp``, ``key``,
-and ``reverse`` arguments are passed through to the
+``sorted(iterable, [cmp=None], [key=None], [reverse=False)`` 
+collects all the elements of the iterable into a list, sorts 
+the list, and returns the sorted result.  The ``cmp``, ``key``, 
+and ``reverse`` arguments are passed through to the 
 constructed list's ``.sort()`` method.
 
 ::
@@ -789,9 +789,9 @@ constructed list's ``.sort()`` method.
 (For a more detailed discussion of sorting, see the Sorting mini-HOWTO
 in the Python wiki at http://wiki.python.org/moin/HowTo/Sorting.)
 
-The ``any(iter)`` and ``all(iter)`` built-ins look at
-the truth values of an iterable's contents.  ``any()`` returns
-True if any element in the iterable is a true value, and ``all()``
+The ``any(iter)`` and ``all(iter)`` built-ins look at 
+the truth values of an iterable's contents.  ``any()`` returns 
+True if any element in the iterable is a true value, and ``all()`` 
 returns True if all of the elements are true values::
 
     any([0,1,0]) =>
@@ -802,7 +802,7 @@ returns True if all of the elements are true values::
       True
     all([0,1,0]) =>
       False
-    all([0,0,0]) =>
+    all([0,0,0]) => 
       False
     all([1,1,1]) =>
       True
@@ -879,7 +879,7 @@ Or the ``sum()`` built-in and a generator expression::
 
 Many uses of ``reduce()`` are clearer when written as ``for`` loops.
 
-Fredrik Lundh once suggested the following set of rules for refactoring
+Fredrik Lundh once suggested the following set of rules for refactoring 
 uses of ``lambda``:
 
 1) Write a lambda function.
@@ -889,7 +889,7 @@ uses of ``lambda``:
 4) Convert the lambda to a def statement, using that name.
 5) Remove the comment.
 
-I really like these rules, but you're free to disagree that this
+I really like these rules, but you're free to disagree that this 
 lambda-free style is better.
 
 
@@ -957,7 +957,7 @@ and returns them in a tuple::
 It's similiar to the built-in ``zip()`` function, but doesn't
 construct an in-memory list and exhaust all the input iterators before
 returning; instead tuples are constructed and returned only if they're
-requested.  (The technical term for this behaviour is
+requested.  (The technical term for this behaviour is 
 `lazy evaluation <http://en.wikipedia.org/wiki/Lazy_evaluation>`__.)
 
 This iterator is intended to be used with iterables that are all of
@@ -975,7 +975,7 @@ to use the iterators further because you risk skipping a discarded
 element.
 
 ``itertools.islice(iter, [start], stop, [step])`` returns a stream
-that's a slice of the iterator.  With a single ``stop`` argument,
+that's a slice of the iterator.  With a single ``stop`` argument, 
 it will return the first ``stop``
 elements.  If you supply a starting index, you'll get ``stop-start``
 elements, and if you supply a value for ``step``, elements will be
@@ -1016,26 +1016,26 @@ Calling functions on elements
 Two functions are used for calling other functions on the contents of an
 iterable.
 
-``itertools.imap(f, iterA, iterB, ...)`` returns
+``itertools.imap(f, iterA, iterB, ...)`` returns 
 a stream containing ``f(iterA[0], iterB[0]), f(iterA[1], iterB[1]),
 f(iterA[2], iterB[2]), ...``::
 
     itertools.imap(operator.add, [5, 6, 5], [1, 2, 3]) =>
       6, 8, 8
 
-The ``operator`` module contains a set of functions
-corresponding to Python's operators.  Some examples are
-``operator.add(a, b)`` (adds two values),
+The ``operator`` module contains a set of functions 
+corresponding to Python's operators.  Some examples are 
+``operator.add(a, b)`` (adds two values), 
 ``operator.ne(a, b)`` (same as ``a!=b``),
-and
+and 
 ``operator.attrgetter('id')`` (returns a callable that
 fetches the ``"id"`` attribute).
 
-``itertools.starmap(func, iter)`` assumes that the iterable will
-return a stream of tuples, and calls ``f()`` using these tuples as the
+``itertools.starmap(func, iter)`` assumes that the iterable will 
+return a stream of tuples, and calls ``f()`` using these tuples as the 
 arguments::
 
-    itertools.starmap(os.path.join,
+    itertools.starmap(os.path.join, 
                       [('/usr', 'bin', 'java'), ('/bin', 'python'),
                        ('/usr', 'bin', 'perl'),('/usr', 'bin', 'ruby')])
     =>
@@ -1057,14 +1057,14 @@ which the predicate returns true::
     itertools.ifilter(is_even, itertools.count()) =>
       0, 2, 4, 6, 8, 10, 12, 14, ...
 
-``itertools.ifilterfalse(predicate, iter)`` is the opposite,
+``itertools.ifilterfalse(predicate, iter)`` is the opposite, 
 returning all elements for which the predicate returns false::
 
     itertools.ifilterfalse(is_even, itertools.count()) =>
       1, 3, 5, 7, 9, 11, 13, 15, ...
 
 ``itertools.takewhile(predicate, iter)`` returns elements for as long
-as the predicate returns true.  Once the predicate returns false,
+as the predicate returns true.  Once the predicate returns false, 
 the iterator will signal the end of its results.
 
 ::
@@ -1103,13 +1103,13 @@ element itself.
 ``groupby()`` collects all the consecutive elements from the
 underlying iterable that have the same key value, and returns a stream
 of 2-tuples containing a key value and an iterator for the elements
-with that key.
+with that key.  
 
 ::
 
-    city_list = [('Decatur', 'AL'), ('Huntsville', 'AL'), ('Selma', 'AL'),
+    city_list = [('Decatur', 'AL'), ('Huntsville', 'AL'), ('Selma', 'AL'), 
                  ('Anchorage', 'AK'), ('Nome', 'AK'),
-                 ('Flagstaff', 'AZ'), ('Phoenix', 'AZ'), ('Tucson', 'AZ'),
+                 ('Flagstaff', 'AZ'), ('Phoenix', 'AZ'), ('Tucson', 'AZ'), 
                  ...
                 ]
 
@@ -1124,7 +1124,7 @@ with that key.
     where
     iterator-1 =>
       ('Decatur', 'AL'), ('Huntsville', 'AL'), ('Selma', 'AL')
-    iterator-2 =>
+    iterator-2 => 
       ('Anchorage', 'AK'), ('Nome', 'AK')
     iterator-3 =>
       ('Flagstaff', 'AZ'), ('Phoenix', 'AZ'), ('Tucson', 'AZ')
@@ -1147,7 +1147,7 @@ For programs written in a functional style, you'll sometimes want to
 construct variants of existing functions that have some of the
 parameters filled in.  Consider a Python function ``f(a, b, c)``; you
 may wish to create a new function ``g(b, c)`` that's equivalent to
-``f(1, b, c)``; you're filling in a value for one of ``f()``'s parameters.
+``f(1, b, c)``; you're filling in a value for one of ``f()``'s parameters.  
 This is called "partial function application".
 
 The constructor for ``partial`` takes the arguments ``(function, arg1,
@@ -1172,8 +1172,8 @@ The operator module
 -------------------
 
 The ``operator`` module was mentioned earlier.  It contains a set of
-functions corresponding to Python's operators.  These functions
-are often useful in functional-style code because they save you
+functions corresponding to Python's operators.  These functions 
+are often useful in functional-style code because they save you 
 from writing trivial functions that perform a single operation.
 
 Some of the functions in this module are:
@@ -1193,7 +1193,7 @@ list.
 The functional module
 ---------------------
 
-Collin Winter's `functional module <http://oakwinter.com/code/functional/>`__
+Collin Winter's `functional module <http://oakwinter.com/code/functional/>`__ 
 provides a number of more
 advanced tools for functional programming. It also reimplements
 several Python built-ins, trying to make them more intuitive to those
@@ -1226,7 +1226,7 @@ is equivalent to
 
         >>> double(add(5, 6))
         22
-
+                    
 The ``unpack`` keyword is provided to work around the fact that Python functions are not always
 `fully curried <http://en.wikipedia.org/wiki/Currying>`__.
 By default, it is expected that the ``inner`` function will return a single object and that the ``outer``
@@ -1236,17 +1236,17 @@ tuple from ``inner`` which will be expanded before being passed to ``outer``. Pu
 ::
 
         compose(f, g)(5, 6)
-
+                    
 is equivalent to::
 
         f(g(5, 6))
-
+                    
 while
 
 ::
 
         compose(f, g, unpack=True)(5, 6)
-
+                    
 is equivalent to::
 
         f(*g(5, 6))
@@ -1259,21 +1259,21 @@ is provided by both ``functional`` and ``functools``).
 ::
 
         from functional import compose, partial
-
+        
         multi_compose = partial(reduce, compose)
-
-
+        
+    
 We can also use ``map()``, ``compose()`` and ``partial()`` to craft a
 version of ``"".join(...)`` that converts its arguments to string::
 
         from functional import compose, partial
-
+        
         join = compose("".join, partial(map, str))
 
 
 ``flip(func)``
-
-``flip()`` wraps the callable in ``func`` and
+                    
+``flip()`` wraps the callable in ``func`` and  
 causes it to receive its non-keyword arguments in reverse order.
 
 ::
@@ -1289,7 +1289,7 @@ causes it to receive its non-keyword arguments in reverse order.
         (7, 6, 5)
 
 ``foldl(func, start, iterable)``
-
+                    
 ``foldl()`` takes a binary function, a starting value (usually some kind of 'zero'), and an iterable.
 The function is applied to the starting value and the first element of the list, then the result of
 that and the second element of the list, then the result of that and the third element of the list,
@@ -1303,7 +1303,7 @@ is equivalent to::
 
         f(f(f(0, 1), 2), 3)
 
-
+    
 ``foldl()`` is roughly equivalent to the following recursive function::
 
         def foldl(func, start, seq):
@@ -1324,7 +1324,7 @@ write a cleaner, more aesthetically-pleasing version of Python's
 
         from functional import foldl, partial
         from operator import concat
-
+        
         join = partial(foldl, concat, "")
 
 
@@ -1334,7 +1334,7 @@ Revision History and Acknowledgements
 The author would like to thank the following people for offering
 suggestions, corrections and assistance with various drafts of this
 article: Ian Bicking, Nick Coghlan, Nick Efford, Raymond Hettinger,
-Jim Jewett, Mike Krell, Leandro Lameiro, Jussi Salmela,
+Jim Jewett, Mike Krell, Leandro Lameiro, Jussi Salmela, 
 Collin Winter, Blake Winton.
 
 Version 0.1: posted June 30 2006.
@@ -1357,7 +1357,7 @@ References
 General
 '''''''''''''''
 
-**Structure and Interpretation of Computer Programs**, by
+**Structure and Interpretation of Computer Programs**, by 
 Harold Abelson and Gerald Jay Sussman with Julie Sussman.
 Full text at http://mitpress.mit.edu/sicp/.
 In this classic textbook of computer science,  chapters 2 and 3 discuss the
@@ -1366,7 +1366,7 @@ program.  The book uses Scheme for its examples, but many of the
 design approaches described in these chapters are applicable to
 functional-style Python code.
 
-http://www.defmacro.org/ramblings/fp.html: A general
+http://www.defmacro.org/ramblings/fp.html: A general 
 introduction to functional programming that uses Java examples
 and has a lengthy historical introduction.
 
@@ -1383,12 +1383,12 @@ Python-specific
 '''''''''''''''''''''''''''
 
 http://gnosis.cx/TPiP/:
-The first chapter of David Mertz's book :title-reference:`Text Processing in Python`
+The first chapter of David Mertz's book :title-reference:`Text Processing in Python` 
 discusses functional programming for text processing, in the section titled
 "Utilizing Higher-Order Functions in Text Processing".
 
 Mertz also wrote a 3-part series of articles on functional programming
-for IBM's DeveloperWorks site; see
+for IBM's DeveloperWorks site; see 
 `part 1 <http://www-128.ibm.com/developerworks/library/l-prog.html>`__,
 `part 2 <http://www-128.ibm.com/developerworks/library/l-prog2.html>`__, and
 `part 3 <http://www-128.ibm.com/developerworks/linux/library/l-prog3.html>`__,

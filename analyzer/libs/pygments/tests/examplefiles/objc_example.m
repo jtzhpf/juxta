@@ -125,13 +125,13 @@ typedef id B;
   NSNumber *n13 = @3.14F;
   // double
   NSNumber *n14 = @3.14F;
-
+  
   // Array literals
   NSArray *arr = @[ @"1", @"2" ];
   arr = @[ @[ @"1", @"2" ], [arr lastObject] ];
   [arr lastObject];
   [@[ @"1", @"2" ] lastObject];
-
+  
   // Dictionary literals
   NSDictionary *d = @{ @"key": @"value" };
   [[d allKeys] lastObject];
@@ -144,7 +144,7 @@ typedef id B;
 
   NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
                               @"1", @"one", @"2", @"two", @"3", @"three", nil];
-
+  
   NSString *key;
   for (key in dictionary) {
     NSLog(@"Number: %@, Word: %@", key, [dictionary valueForKey:key]);

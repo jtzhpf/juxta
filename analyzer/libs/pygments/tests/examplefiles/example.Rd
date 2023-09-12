@@ -14,7 +14,7 @@ foo(x, y)
   \item{y}{Another number}
 }
 \details{
-  I just adds \code{x} and \code{y},
+  I just adds \code{x} and \code{y}, 
 }
 \value{\code{numeric}. The sum of \code{x} and \code{y}.}
 \references{
@@ -32,7 +32,7 @@ foo(x, y)
   \option{-d}, \dfn{something new}, \acronym{GNU}.
 
   Escaped symbols: \\ \{ \} \% not comment. \\NotAMacro.
-
+  
    \tabular{rlll}{
          [,1] \tab alpha   \tab numeric \tab A (ppb)\cr
          [,2] \tab bravo \tab integer \tab B \cr
@@ -46,11 +46,11 @@ foo(x, y)
          \item foxtrot
          \item golf
        }
-
+  
   \deqn{p(x; \mu, \sigma^2) = \frac{1}{\sigma \sqrt{2 \pi}} \exp \frac{-(x - \mu)^2}{2 \sigma}{%
              p(\mu; x) = 1/\sigma (2 \pi)^(-1/2)  exp( -(x - \mu)^2 / (2 \sigma)) }
        for \eqn{x = 0, 1, 2, \ldots}.
-
+  
   \if{latex}{\out{\beta}}\ifelse{html}{\out{&beta;}}{beta}
 
 #ifdef unix

@@ -86,7 +86,7 @@ START kevin=node:node_auto_index(name="Kevin Bacon"),
 MATCH (kevin)-[:ACTED_IN]->(movie)
 RETURN DISTINCT movie.title;
 
-CREATE (n
+CREATE (n 
 	{
        title:"Mystic River",
        released:1993,
@@ -106,7 +106,7 @@ MATCH (a)-[:ACTED_IN]->()<-[:ACTED_IN]-(b)
 CREATE UNIQUE (a)-[:KNOWS]->(b);
 
 START keanu=node:node_auto_index(name="Keanu Reeves")
-MATCH (keanu)-[:KNOWS*2]->(fof)
+MATCH (keanu)-[:KNOWS*2]->(fof) 
 WHERE keanu <> fof
 RETURN distinct fof.name;
 

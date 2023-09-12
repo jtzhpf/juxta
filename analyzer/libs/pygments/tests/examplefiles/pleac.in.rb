@@ -137,7 +137,7 @@ ascii = hal.unpack("C*")
 # We can't use Array#each since we can't mutate a Fixnum
 ascii.collect! { |i|
     i + 1                         # add one to each ASCII value
-}
+}                
 ibm = ascii.pack("C*")
 puts ibm
 
@@ -213,7 +213,7 @@ EOF
 
 # @@PLEAC@@_1.12
 string = "Folding and splicing is the work of an editor,\n"+
-    "not a mere collection of silicon\n"+
+    "not a mere collection of silicon\n"+ 
     "and\n"+
     "mobile electrons!"
 
@@ -231,12 +231,12 @@ def wrap(str, max_size)
 end
 
 print wrap(string, 20)
-#=> Folding and
-#=> splicing is the
-#=> work of an editor,
-#=> not a mere
-#=> collection of
-#=> silicon and mobile
+#=> Folding and 
+#=> splicing is the 
+#=> work of an editor, 
+#=> not a mere 
+#=> collection of 
+#=> silicon and mobile 
 #=> electrons!
 
 
@@ -257,7 +257,7 @@ def parse_csv(text)
     new = text.scan(/"([^\"\\]*(?:\\.[^\"\\]*)*)",?|([^,]+),?|,/)
     new << nil if text[-1] == ?,
     new.flatten.compact
-end
+end  
 
 line = %q<XYZZY,"","O'Reilly, Inc","Wall, Larry","a \"glug\" bit,",5,"Error, Core Dumped">
 fields = parse_csv(line)
@@ -400,7 +400,7 @@ print "\n"
 # We can add conversion methods to the Integer class,
 # this makes a roman number just a representation for normal numbers.
 class Integer
-
+    
     @@romanlist = [["M", 1000],
                    ["CM", 900],
                    ["D",  500],
@@ -414,7 +414,7 @@ class Integer
                    ["V",    5],
                    ["IV",   4],
                    ["I",    1]]
-
+    
     def to_roman
         remains = self
         roman = ""
@@ -426,7 +426,7 @@ class Integer
         end
         roman
     end
-
+    
     def Integer.from_roman(roman)
         ustr = roman.upcase
         sum = 0
@@ -439,7 +439,7 @@ class Integer
         end
         sum
     end
-
+    
 end
 
 
@@ -471,7 +471,7 @@ srand(val)   # for repeatable behaviour
 
 
 # @@PLEAC@@_2.9
-# from the randomr lib:
+# from the randomr lib: 
 # http://raa.ruby-lang.org/project/randomr/
 ----> http://raa.ruby-lang.org/project/randomr/
 
@@ -484,7 +484,7 @@ puts mers.rand(10)   # 2
 # http://raa.ruby-lang.org/project/realrand/
 # **Note**
 # The following online services are used in this package:
-#   http://www.random.org - source: atmospheric noise
+#   http://www.random.org - source: atmospheric noise 
 #   http://www.fourmilab.ch/hotbits - source: radioactive decay timings
 #   http://random.hd.org - source: entropy from local and network noise
 # Please visit the sites and respect the rules of each service.
@@ -615,7 +615,7 @@ number = octal.oct
 print "Gimme a number in decimal, octal, or hex: "
 num = gets.chomp
 exit unless defined?(num)
-num = num.oct if num =~ /^0/  # does both oct and hex
+num = num.oct if num =~ /^0/  # does both oct and hex  
 printf "%d %x %o\n", num, num, num
 
 print "Enter file permission in octal: "
@@ -660,7 +660,7 @@ def factorize(orig)
         sqi += 2 * i + 1
         i += 1
     end
-
+    
     if (n != 1) && (n != orig)
         factors[n] += 1
     end
@@ -830,7 +830,7 @@ class MailHopDelta
     end
 
     def puts_hops
-        puts out(@topline)
+        puts out(@topline) 
         puts out(['Start', @start_from, hop_date(@date),''])
         @head.split(/\n/).reverse.grep(/^Received:/).each do |hop|
             hop.gsub!(/\bon (.*?) (id.*)/,'; \1')
@@ -856,7 +856,7 @@ class MailHopDelta
         rtn =  "%3ds" % [secs  * sign]
         rtn << "%3dm" % [mins  * sign] if mins  != 0
         rtn << "%3dh" % [hours * sign] if hours != 0
-        rtn << "%3dd" % [days  * sign] if days  != 0
+        rtn << "%3dd" % [days  * sign] if days  != 0 
         rtn
     end
 end
@@ -992,7 +992,7 @@ for user in all_users
 end
 
 for l in IO.popen("who").readlines
-    print l if l =~ /^gc/
+    print l if l =~ /^gc/ 
 end
 
 # we can mimic the obfuscated Perl way

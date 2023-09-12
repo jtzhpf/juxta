@@ -62,7 +62,7 @@ For more information, see Info node `(elisp)Declaring Functions'."
   ;; Does nothing - byte-compile-declare-function does the work.
   nil)
 
-
+
 ;;;; Basic Lisp macros.
 
 (defalias 'not 'null)
@@ -279,7 +279,7 @@ See also `with-demoted-errors' that does something similar
 without silencing all errors."
   (declare (debug t) (indent 0))
   `(condition-case nil (progn ,@body) (error nil)))
-
+
 ;;;; Basic Lisp functions.
 
 (defun ignore (&rest _ignore)
@@ -336,7 +336,7 @@ configuration."
   (and (consp object)
        (eq (car object) 'frame-configuration)))
 
-
+
 ;;;; List functions.
 
 (defsubst caar (x)
@@ -478,7 +478,7 @@ argument VECP, this copies vectors as well as conses."
 	    (aset tree i (copy-tree (aref tree i) vecp)))
 	  tree)
       tree)))
-
+
 ;;;; Various list-search functions.
 
 (defun assoc-default (key alist &optional test default)
@@ -582,7 +582,7 @@ side-effects, and the argument LIST is not modified."
   (if (memq elt list)
       (delq elt (copy-sequence list))
     list))
-
+
 ;;;; Keymap support.
 
 (defun kbd (keys)
@@ -800,7 +800,7 @@ and then modifies one entry in it."
       (setq keyboard-translate-table
 	    (make-char-table 'keyboard-translate-table nil)))
   (aset keyboard-translate-table from to))
-
+
 ;;;; Key binding commands.
 
 (defun global-set-key (key command)
@@ -850,7 +850,7 @@ KEY is a string or vector representing a sequence of keystrokes."
   (if (current-local-map)
       (local-set-key key nil))
   nil)
-
+
 ;;;; substitute-key-definition and its subroutines.
 
 (defvar key-substitution-in-progress nil
@@ -924,7 +924,7 @@ in a cleaner way with command remapping, like this:
 	  ;; If this one isn't being scanned already, scan it now.
 	  (substitute-key-definition olddef newdef keymap inner-def prefix)))))
 
-
+
 ;;;; The global keymap tree.
 
 ;; global-map, esc-map, and ctl-x-map have their values set up in
@@ -953,7 +953,7 @@ The normal global definition of the character C-x indirects to this keymap.")
 (defalias 'ctl-x-5-prefix ctl-x-5-map)
 (define-key ctl-x-map "5" 'ctl-x-5-prefix)
 
-
+
 ;;;; Event manipulation functions.
 
 (defconst listify-key-sequence-1 (logior 128 ?\M-\C-@))
@@ -1078,7 +1078,7 @@ See `event-start' for a description of the value returned."
   "Return the multi-click count of EVENT, a click or drag event.
 The return value is a positive integer."
   (if (and (consp event) (integerp (nth 2 event))) (nth 2 event) 1))
-
+
 ;;;; Extracting fields of the positions in an event.
 
 (defun posnp (obj)
@@ -1234,7 +1234,7 @@ The return value has the form (WIDTH . HEIGHT).  POSITION should
 be a list of the form returned by `event-start' and `event-end'."
   (nth 9 position))
 
-
+
 ;;;; Obsolescent names for functions.
 
 (define-obsolete-function-alias 'window-dot 'window-point "22.1")
@@ -1278,7 +1278,7 @@ is converted into a string by expressing it in decimal."
 (set-advertised-calling-convention 'redirect-frame-focus '(frame focus-frame) "24.3")
 (set-advertised-calling-convention 'decode-char '(ch charset) "21.4")
 (set-advertised-calling-convention 'encode-char '(ch charset) "21.4")
-
+
 ;;;; Obsolescence declarations for variables, and aliases.
 
 ;; Special "default-FOO" variables which contain the default value of
@@ -1345,7 +1345,7 @@ is converted into a string by expressing it in decimal."
 (make-obsolete-variable 'translation-table-for-input nil "23.1")
 
 (defvaralias 'messages-buffer-max-lines 'message-log-max)
-
+
 ;;;; Alternate names for functions - these are not being phased out.
 
 (defalias 'send-string 'process-send-string)
@@ -1370,7 +1370,7 @@ is converted into a string by expressing it in decimal."
 
 (defalias 'user-original-login-name 'user-login-name)
 
-
+
 ;;;; Hook manipulation functions.
 
 (defun add-hook (hook function &optional append local)
@@ -1675,7 +1675,7 @@ if it is empty or a duplicate."
 	    (setcdr tail nil)))))
     (set history-var history)))
 
-
+
 ;;;; Mode hooks.
 
 (defvar delay-mode-hooks nil
@@ -1729,7 +1729,7 @@ Uses the `derived-mode-parent' property of the symbol to trace backwards."
     (while (and (not (memq parent modes))
 		(setq parent (get parent 'derived-mode-parent))))
     parent))
-
+
 ;;;; Minor modes.
 
 ;; If a minor mode is not defined with define-minor-mode,
@@ -1815,7 +1815,7 @@ If TOGGLE has a `:menu-tag', that is used for the menu item's label."
 		(setcdr found nil)
 		(nconc found (list (cons toggle keymap)) rest))
 	    (push (cons toggle keymap) minor-mode-map-alist)))))))
-
+
 ;;;; Load history
 
 (defsubst autoloadp (object)
@@ -1898,7 +1898,7 @@ and the file name is displayed in the echo area."
 	  (message "No library %s in search path" library)))
     file))
 
-
+
 ;;;; Process stuff.
 
 (defun process-lines (program &rest args)
@@ -1966,7 +1966,7 @@ It can be retrieved with `(process-get PROCESS PROPNAME)'."
   (set-process-plist process
 		     (plist-put (process-plist process) propname value)))
 
-
+
 ;;;; Input and display facilities.
 
 (defconst read-key-empty-map (make-sparse-keymap))
@@ -2320,7 +2320,7 @@ is nil and `use-dialog-box' is non-nil."
         (message "%s%c" prompt (if ret ?y ?n)))
       ret)))
 
-
+
 ;;; Atomic change groups.
 
 (defmacro atomic-change-group (&rest body)
@@ -2432,7 +2432,7 @@ This finishes the change group by reverting all of its changes."
 	    (setcdr elt old-cdr))
 	  ;; Revert the undo info to what it was when we grabbed the state.
 	  (setq buffer-undo-list elt))))))
-
+
 ;;;; Display-related functions.
 
 ;; For compatibility.
@@ -2472,7 +2472,7 @@ If MESSAGE is nil, instructions to type EXIT-CHAR are displayed there."
                       (append (this-single-command-raw-keys))))))
       (delete-overlay ol))))
 
-
+
 ;;;; Overlay operations
 
 (defun copy-overlay (o)
@@ -2516,7 +2516,7 @@ BEG and END default respectively to the beginning and end of buffer."
 	  (if (> (overlay-end o) end)
 	      (move-overlay o end (overlay-end o))
 	    (delete-overlay o)))))))
-
+
 ;;;; Miscellanea.
 
 (defvar suspend-hook nil
@@ -2545,7 +2545,7 @@ mode.")
 Various programs in Emacs store information in this directory.
 Note that this should end with a directory separator.
 See also `locate-user-emacs-file'.")
-
+
 ;;;; Misc. useful functions.
 
 (defsubst buffer-narrowed-p ()
@@ -2756,7 +2756,7 @@ if it's an autoloaded macro."
             nil                         ;Re-try `get' on the same `f'.
           (setq f fundef))))
     val))
-
+
 ;;;; Support for yanking and text properties.
 ;; Why here in subr.el rather than in simple.el?  --Stef
 
@@ -2894,7 +2894,7 @@ Do nothing if FACE is nil."
 	  (add-text-properties start2 end2 original)
 	  (setq start2 end2))))))
 
-
+
 ;;;; Synchronous shell commands.
 
 (defun start-process-shell-command (name buffer &rest args)
@@ -2970,7 +2970,7 @@ Similar to `call-process-shell-command', but calls `process-file'."
    infile buffer display
    (if (file-remote-p default-directory) "-c" shell-command-switch)
    (mapconcat 'identity (cons command args) " ")))
-
+
 ;;;; Lisp macros to do various things temporarily.
 
 (defmacro track-mouse (&rest body)
@@ -3376,7 +3376,7 @@ MODES is as for `set-default-file-modes'."
              ,@body)
          (set-default-file-modes ,umask)))))
 
-
+
 ;;; Matching and match data.
 
 (defvar save-match-data-internal)
@@ -3531,7 +3531,7 @@ than POS, and known to be in a subregexp context."
   ;;   "Matches any prefix that corresponds to a normal subregexp context.")
   ;; (string-match re-context-re (substring regexp (or start 0) pos))
   )
-
+
 ;;;; split-string
 
 (defconst split-string-default-separators "[ \f\t\n\r\v]+"
@@ -3656,7 +3656,7 @@ The SEPARATOR regexp defaults to \"\\s-+\"."
 		      (split-string-and-unquote (substring string (cdr rfs))
 						sep)))))))
 
-
+
 ;;;; Replacement in strings.
 
 (defun subst-char-in-string (fromchar tochar string &optional inplace)
@@ -3726,7 +3726,7 @@ and replace a sub-expression, e.g.
       ;; Reconstruct a string from the pieces.
       (setq matches (cons (substring string start l) matches)) ; leftover
       (apply #'concat (nreverse matches)))))
-
+
 (defun string-prefix-p (prefix string &optional ignore-case)
   "Return non-nil if PREFIX is a prefix of STRING.
 If IGNORE-CASE is non-nil, the comparison is done without paying attention
@@ -3762,7 +3762,7 @@ consisting of STR followed by an invisible left-to-right mark
   (if (string-match "\\cR" str)
       (concat str (propertize (string ?\x200e) 'invisible t))
     str))
-
+
 ;;;; Specifying things to do later.
 
 (defun load-history-regexp (file)
@@ -3933,7 +3933,7 @@ FILE should be the name of a library, with no directory name."
   (declare (obsolete eval-after-load "23.2"))
   (eval-after-load file (read)))
 
-
+
 (defun display-delayed-warnings ()
   "Display delayed warnings from `delayed-warnings-list'.
 Used from `delayed-warnings-hook' (which see)."
@@ -3973,7 +3973,7 @@ Aside from going through `delayed-warnings-list', this is equivalent
 to `display-warning'."
   (push (list type message level buffer-name) delayed-warnings-list))
 
-
+
 ;;;; invisibility specs
 
 (defun add-to-invisibility-spec (element)
@@ -3990,7 +3990,7 @@ that can be added."
   (if (consp buffer-invisibility-spec)
       (setq buffer-invisibility-spec
 	    (delete element buffer-invisibility-spec))))
-
+
 ;;;; Syntax tables.
 
 (defmacro with-syntax-table (table &rest body)
@@ -4037,7 +4037,7 @@ node `(elisp)Syntax Table Internals' for a list of codes.
 
 If SYNTAX is nil, return nil."
   (and syntax (logand (car syntax) 65535)))
-
+
 ;; Utility motion commands
 
 ;;  Whitespace
@@ -4089,7 +4089,7 @@ backwards ARG times if negative."
     (skip-syntax-forward (char-to-string (char-syntax (char-after))))
     (setq arg (1- arg))))
 
-
+
 ;;;; Text clones
 
 (defvar text-clone--maintaining nil)
@@ -4189,7 +4189,7 @@ clone should be incorporated in the clone."
     ;;(overlay-put ol2 'face 'underline)
     (overlay-put ol2 'evaporate t)
     (overlay-put ol2 'text-clones dups)))
-
+
 ;;;; Mail user agents.
 
 ;; Here we include just enough for other packages to be able
@@ -4229,7 +4229,7 @@ The properties used on SYMBOL are `composefunc', `sendfunc',
   (put symbol 'sendfunc sendfunc)
   (put symbol 'abortfunc (or abortfunc 'kill-buffer))
   (put symbol 'hookvar (or hookvar 'mail-send-hook)))
-
+
 (defvar called-interactively-p-functions nil
   "Special hook called to skip special frames in `called-interactively-p'.
 The functions are called with 3 arguments: (I FRAME1 FRAME2),
@@ -4592,7 +4592,7 @@ convenience wrapper around `make-progress-reporter' and friends.
        (progress-reporter-done ,temp2)
        nil ,@(cdr (cdr spec)))))
 
-
+
 ;;;; Comparing version strings.
 
 (defconst version-separator "."
@@ -4837,7 +4837,7 @@ as a list.")
                 (match-string 1 subdir) subdir))
           "-pkg.el"))
 
-
+
 ;;; Misc.
 (defconst menu-bar-separator '("--")
   "Separator for menus.")

@@ -2,7 +2,7 @@
 uniform float waveTime;
 uniform float waveWidth;
 uniform float waveHeight;
-
+ 
 void main(void)
 {
     vec4 v = vec4(gl_Vertex);

@@ -31,7 +31,7 @@ date!: alias struct! [
     ; CLOCKS_PER_SEC value for Syllable, Linux (XSI-conformant systems)
     ; TODO: check for other systems
     #define clocks-per-second   1000'000
-]
+] 
 
 #import [LIBC-file cdecl [
 
@@ -59,12 +59,12 @@ date!: alias struct! [
         return:         [binary!]
     ]
  ]
-
+ 
  JVM!: alias struct! [
     reserved0                   [int-ptr!]
     reserved1                   [int-ptr!]
     reserved2                   [int-ptr!]
-
+    
     DestroyJavaVM               [function! [[JNICALL] vm [JVM-ptr!] return: [jint!]]]
     AttachCurrentThread         [function! [[JNICALL] vm [JVM-ptr!] penv [struct! [p [int-ptr!]]] args [byte-ptr!] return: [jint!]]]
     DetachCurrentThread         [function! [[JNICALL] vm [JVM-ptr!] return: [jint!]]]
@@ -73,11 +73,11 @@ date!: alias struct! [
 ]
 
  ;just some datatypes for testing:
-
+ 
  #some-hash
  10-1-2013
  quit
-
+ 
  ;binary:
  #{00FF0000}
  #{00FF0000 FF000000}
@@ -86,8 +86,8 @@ date!: alias struct! [
  64#{/wAAAA==}
  64#{/wAAA A==} ;with space	 inside
  64#{/wAAA	A==} ;with tab inside
-
-
+ 
+ 
  ;string with char
  {bla ^(ff) foo}
  {bla ^(( foo}
@@ -96,7 +96,7 @@ date!: alias struct! [
  1'000
  1.2
  FF00FF00h
-
+ 
  ;some tests of hexa number notation with not common ending
  [ff00h ff00h] ff00h{} FFh"foo" 00h(1 + 2) (AEh)
 
@@ -105,13 +105,13 @@ foo char
 
 ;get-word
 :foo
-
+ 
 ;lit-word:
 'foo 'foo
 
 ;multiple comment tests...
 1 + 1
-comment "aa"
+comment "aa"								
 2 + 2
 comment {aa}
 3 + 3
@@ -141,7 +141,7 @@ foo/(a + 1)/b
 call/output reform ['which interpreter] path: copy ""
 
  version-1.1:   00010001h
-
+ 
  #if type = 'exe [
     push system/stack/frame                 ;-- save previous frame pointer
     system/stack/frame: system/stack/top    ;-- @@ reposition frame pointer just after the catch flag

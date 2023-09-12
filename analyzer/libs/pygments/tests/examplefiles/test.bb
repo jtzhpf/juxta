@@ -40,10 +40,10 @@ Local myinst.MyClass = New MyClass
 TestMethod(myinst)
 
 Type MyClass
-
+	
 	Field m_foo.MyClass
 	Field m_bar.MyClass
-
+	
 ;	abc
 ;	def
 End Type

@@ -17,10 +17,10 @@ let getBit (b:byte) (bit:int) =
 type BitReader(sin:Stream) =
     let mutable bit = 8
     let mutable cur = 0uy
-
+    
     member x.Skip() =
         bit <- 8
-
+    
     member x.ReadBit() =
         if bit = 8 then
             bit <- 0
@@ -31,19 +31,19 @@ type BitReader(sin:Stream) =
         let ret = if cur &&& (1uy <<< bit) = 0uy then 0 else 1
         bit <- bit + 1
         ret
-
+    
     member x.ReadLE n =
         let mutable ret = 0
         for i = 0 to n - 1 do
             if x.ReadBit() = 1 then ret <- ret ||| (1 <<< i)
         ret
-
+    
     member x.ReadBE n =
         let mutable ret = 0
         for i = 0 to n - 1 do
             ret <- (ret <<< 1) ||| x.ReadBit()
         ret
-
+    
     member x.ReadBytes len =
         if bit <> 8 then bit <- 8
         let buf = Array.zeroCreate<byte> len
@@ -54,19 +54,19 @@ type WriteBuffer(sout:Stream) =
     let mutable prev:byte[] = null
     let mutable buf = Array.zeroCreate<byte> maxbuf
     let mutable p = 0
-
+    
     let next newbuf =
         prev <- buf
         buf <- if newbuf then Array.zeroCreate<byte> maxbuf else null
         p <- 0
-
+    
     member x.Close() =
         next false
         next false
-
+    
     interface IDisposable with
         member x.Dispose() = x.Close()
-
+    
     member x.WriteByte (b:byte) =
         buf.[p] <- b
         sout.WriteByte b
@@ -83,7 +83,7 @@ type WriteBuffer(sout:Stream) =
         else
             x.Write src start maxlen
             x.Write src (start + maxlen) (len - maxlen)
-
+    
     member x.Copy len dist =
         if dist < 1 then
             failwith <| sprintf "dist too small: %d < 1" dist
@@ -125,7 +125,7 @@ type Huffman(lens:int[]) =
     let firsts = Array.zeroCreate<int>  (max + 1)
     let nexts  = Array.zeroCreate<int>  (max + 1)
     let tables = Array.zeroCreate<int[]>(max + 1)
-
+    
     do
         for len in lens do
             if len > 0 then counts.[len] <- counts.[len] + 1
@@ -137,7 +137,7 @@ type Huffman(lens:int[]) =
             if len > 0 then
                 vals.[i] <- nexts.[len]
                 nexts.[len] <- nexts.[len] + 1
-
+        
         for i = 0 to vals.Length - 1 do
             let len = lens.[i]
             if len > 0 then
@@ -146,7 +146,7 @@ type Huffman(lens:int[]) =
                     let count = nexts.[len] - start
                     tables.[len] <- Array.zeroCreate<int> count
                 tables.[len].[vals.[i] - start] <- i
-
+    
     member x.GetValue h =
         let rec getv i =
             if i > max then -1 else
@@ -155,7 +155,7 @@ type Huffman(lens:int[]) =
                 else
                     getv (i + 1)
         getv min
-
+    
     member x.Read(br:BitReader) =
         let rec read h i =
             if h < nexts.[i] then
@@ -170,7 +170,7 @@ type [<AbstractClass>] HuffmanDecoder() =
 
 type FixedHuffman(br:BitReader) =
     inherit HuffmanDecoder()
-
+    
     override x.GetValue() =
         let v = br.ReadBE 7
         if v < 24 then v + 256 else
@@ -178,28 +178,28 @@ type FixedHuffman(br:BitReader) =
             if v < 192 then v - 48
             elif v < 200 then v + 88
             else ((v <<< 1) ||| br.ReadBit()) - 256
-
+    
     override x.GetDistance() = br.ReadBE 5
 
 type DynamicHuffman(br:BitReader) =
     inherit HuffmanDecoder()
-
+    
     let lit, dist =
         let hlit =
             let hlit = (br.ReadLE 5) + 257
             if hlit > 286 then failwith <| sprintf "hlit: %d > 286" hlit
             hlit
-
+        
         let hdist =
             let hdist = (br.ReadLE 5) + 1
             if hdist > 32 then failwith <| sprintf "hdist: %d > 32" hdist
             hdist
-
+        
         let hclen =
             let hclen = (br.ReadLE 4) + 4
             if hclen > 19 then failwith <| sprintf "hclen: %d > 19" hclen
             hclen
-
+        
         let clen =
             let hclens = Array.zeroCreate<int> 19
             let order = [| 16; 17; 18; 0; 8; 7; 9; 6; 10; 5;
@@ -207,7 +207,7 @@ type DynamicHuffman(br:BitReader) =
             for i = 0 to hclen - 1 do
                 hclens.[order.[i]] <- br.ReadLE 3
             new Huffman(hclens)
-
+        
         let ld = Array.zeroCreate<int>(hlit + hdist)
         let mutable i = 0
         while i < ld.Length do
@@ -225,10 +225,10 @@ type DynamicHuffman(br:BitReader) =
                 for j = 0 to r - 1 do
                     ld.[i + j] <- v
                 i <- i + r
-
+        
         new Huffman(ld.[0 .. hlit - 1]),
         new Huffman(ld.[hlit .. hlit + hdist - 1])
-
+    
     override x.GetValue() = lit.Read br
     override x.GetDistance() = dist.Read br
 
@@ -254,13 +254,13 @@ let distlens =
 
 type Reader(sin:Stream) =
     inherit Stream()
-
+    
     let br = new BitReader(sin)
     let fh = new FixedHuffman(br)
-
+    
     let sout = new MemoryStream()
     let dbuf = new WriteBuffer(sout)
-
+    
     let mutable cache:byte[] = null
     let mutable canRead = true
 
@@ -280,16 +280,16 @@ type Reader(sin:Stream) =
                     distlens.[d] + (br.ReadLE (getDistExLen d))
             dbuf.Copy len dist
         if v <> 256 then read h
-
+    
     override x.CanRead  = canRead
     override x.CanWrite = false
     override x.CanSeek  = false
     override x.Flush()  = ()
-
+    
     override x.Close() =
         dbuf.Close()
         canRead <- false
-
+    
     override x.Read(buffer, offset, count) =
         let offset =
             if cache = null then 0 else
@@ -313,16 +313,16 @@ type Reader(sin:Stream) =
                     cache <- data.[len..]
                 len
         offset + len
-
+    
     override x.Position
         with get() = raise <| new NotImplementedException()
         and set(v) = raise <| new NotImplementedException()
-
+    
     override x.Length         = raise <| new NotImplementedException()
     override x.Seek(_, _)     = raise <| new NotImplementedException()
     override x.Write(_, _, _) = raise <| new NotImplementedException()
     override x.SetLength(_)   = raise <| new NotImplementedException()
-
+    
     member private x.readBlock() =
         let bfinal = br.ReadBit()
         match br.ReadLE 2 with
@@ -342,18 +342,18 @@ type Reader(sin:Stream) =
 type BitWriter(sout:Stream) =
     let mutable bit = 0
     let mutable cur = 0uy
-
+    
     member x.Skip() =
         if bit > 0 then
             sout.WriteByte(cur)
             bit <- 0
             cur <- 0uy
-
+    
     interface IDisposable with
         member x.Dispose() =
             x.Skip()
             sout.Flush()
-
+    
     member x.WriteBit(b:int) =
         cur <- cur ||| ((byte b) <<< bit)
         bit <- bit + 1
@@ -361,15 +361,15 @@ type BitWriter(sout:Stream) =
             sout.WriteByte(cur)
             bit <- 0
             cur <- 0uy
-
+    
     member x.WriteLE (len:int) (b:int) =
         for i = 0 to len - 1 do
             x.WriteBit <| if (b &&& (1 <<< i)) = 0 then 0 else 1
-
+    
     member x.WriteBE (len:int) (b:int) =
         for i = len - 1 downto 0 do
             x.WriteBit <| if (b &&& (1 <<< i)) = 0 then 0 else 1
-
+    
     member x.WriteBytes(data:byte[]) =
         x.Skip()
         sout.Write(data, 0, data.Length)
@@ -384,7 +384,7 @@ type FixedHuffmanWriter(bw:BitWriter) =
             bw.WriteBE 7 (b - 256)
         elif b < 288 then
             bw.WriteBE 8 (b - 280 + 0b11000000)
-
+    
     member x.WriteLen (len:int) =
         if len < 3 || len > maxlen then
             failwith <| sprintf "不正な長さ: %d" len
@@ -393,7 +393,7 @@ type FixedHuffmanWriter(bw:BitWriter) =
             ll <- ll - 1
         x.Write ll
         bw.WriteLE (getLitExLen ll) (len - litlens.[ll - 257])
-
+    
     member x.WriteDist (d:int) =
         if d < 1 || d > maxbuf then
             failwith <| sprintf "不正な距離: %d" d
@@ -427,7 +427,7 @@ type Writer(t:int, sin:Stream) =
         if t = 2 then Array2D.zeroCreate<int> 4096 16, Array.create 4096 0 else null, null
     let hash = if tables = null then [| for _ in 0..4095 -> new List<int>() |] else null
     let mutable crc = ~~~0u
-
+    
     let read pos len =
         let rlen = sin.Read(buf, pos, len)
         if rlen < len then length <- pos + rlen
@@ -438,10 +438,10 @@ type Writer(t:int, sin:Stream) =
             for list in hash do list.Clear()
         else
             Array.fill counts 0 counts.Length 0
-
+    
     do
         read 0 buflen
-
+    
     let search (pos:int) =
         let mutable maxp = -1
         let mutable maxl = 2
@@ -476,7 +476,7 @@ type Writer(t:int, sin:Stream) =
                         maxl <- len
                 i <- i - 1
         maxp, maxl
-
+    
     member x.Crc = ~~~crc
 
     member x.Compress (sout:Stream) =

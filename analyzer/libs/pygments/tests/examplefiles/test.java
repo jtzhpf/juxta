@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- *
+ * 
  * AELITIS, SAS au capital de 46,603.30 euros
  * 8 Allee Lenotre, La Grille Royale, 78600 Le Mesnil le Roi, France.
  *
@@ -109,7 +109,7 @@ public class PlatformManagerImpl implements PlatformManager
         capabilitySet.add(PlatformManagerCapabilities.GetUserDataDirectory);
         capabilitySet.add(PlatformManagerCapabilities.UseNativeScripting);
         capabilitySet.add(PlatformManagerCapabilities.PlaySystemAlert);
-
+        
         if (OSXAccess.isLoaded()) {
 	        capabilitySet.add(PlatformManagerCapabilities.GetVersion);
         }
@@ -131,7 +131,7 @@ public class PlatformManagerImpl implements PlatformManager
     	if (!OSXAccess.isLoaded()) {
         throw new PlatformManagerException("Unsupported capability called on platform manager");
     	}
-
+    	
     	return OSXAccess.getVersion();
     }
 
@@ -147,14 +147,14 @@ public class PlatformManagerImpl implements PlatformManager
 	public File
 	getLocation(
 		long	location_id )
-
+	
 		throws PlatformManagerException
 	{
 		if ( location_id == LOC_USER_DATA ){
-
+			
 			return( new File( USERDATA_PATH ));
 		}
-
+		
 		return( null );
 	}
     /**
@@ -165,67 +165,67 @@ public class PlatformManagerImpl implements PlatformManager
         return true;
     }
 
-
+    
 	public String
 	getApplicationCommandLine()
 		throws PlatformManagerException
 	{
-		try{
+		try{	    
 			String	bundle_path = System.getProperty("user.dir") +SystemProperties.SEP+ SystemProperties.getApplicationName() + ".app";
 
 			File osx_app_bundle = new File( bundle_path ).getAbsoluteFile();
-
+			
 			if( !osx_app_bundle.exists() ) {
 				String msg = "OSX app bundle not found: [" +osx_app_bundle.toString()+ "]";
 				System.out.println( msg );
 				if (Logger.isEnabled())
-					Logger.log(new LogEvent(LOGID, msg));
+					Logger.log(new LogEvent(LOGID, msg));		
 				throw new PlatformManagerException( msg );
 			}
-
+			
 			return "open -a \"" +osx_app_bundle.toString()+ "\"";
 			//return osx_app_bundle.toString() +"/Contents/MacOS/JavaApplicationStub";
-
+			
 		}
-		catch( Throwable t ){
+		catch( Throwable t ){	
 			t.printStackTrace();
 			return null;
 		}
 	}
-
-
+	
+	
 	public boolean
 	isAdditionalFileTypeRegistered(
 		String		name,				// e.g. "BitTorrent"
 		String		type )				// e.g. ".torrent"
-
+	
 		throws PlatformManagerException
 	{
 	    throw new PlatformManagerException("Unsupported capability called on platform manager");
 	}
-
+	
 	public void
 	unregisterAdditionalFileType(
 		String		name,				// e.g. "BitTorrent"
 		String		type )				// e.g. ".torrent"
-
+		
 		throws PlatformManagerException
 	{
 		throw new PlatformManagerException("Unsupported capability called on platform manager");
 	}
-
+	
 	public void
 	registerAdditionalFileType(
 		String		name,				// e.g. "BitTorrent"
 		String		description,		// e.g. "BitTorrent File"
 		String		type,				// e.g. ".torrent"
 		String		content_type )		// e.g. "application/x-bittorrent"
-
+	
 		throws PlatformManagerException
 	{
 	   throw new PlatformManagerException("Unsupported capability called on platform manager");
 	}
-
+	
     /**
      * Not implemented; does nothing
      */
@@ -313,12 +313,12 @@ public class PlatformManagerImpl implements PlatformManager
     copyFilePermissions(
 		String	from_file_name,
 		String	to_file_name )
-
+	
 		throws PlatformManagerException
 	{
-	    throw new PlatformManagerException("Unsupported capability called on platform manager");
+	    throw new PlatformManagerException("Unsupported capability called on platform manager");		
 	}
-
+	
     /**
      * {@inheritDoc}
      */
@@ -629,22 +629,22 @@ public class PlatformManagerImpl implements PlatformManager
             return "Finder";
         }
     }
-
+    
 	public boolean
 	testNativeAvailability(
 		String	name )
-
+	
 		throws PlatformManagerException
 	{
-	    throw new PlatformManagerException("Unsupported capability called on platform manager");
+	    throw new PlatformManagerException("Unsupported capability called on platform manager");		
 	}
-
+    
     public void
     addListener(
     	PlatformManagerListener		listener )
     {
     }
-
+    
     public void
     removeListener(
     	PlatformManagerListener		listener )

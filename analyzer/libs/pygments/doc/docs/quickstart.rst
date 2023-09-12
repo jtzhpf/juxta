@@ -39,7 +39,7 @@ Here is a small example for highlighting Python code:
     from pygments.formatters import HtmlFormatter
 
     code = 'print "Hello World"'
-    print highlight(code, PythonLexer(), HtmlFormatter())
+    print(highlight(code, PythonLexer(), HtmlFormatter()))
 
 which prints something like this:
 
@@ -56,7 +56,7 @@ can be produced by:
 
 .. sourcecode:: python
 
-    print HtmlFormatter().get_style_defs('.highlight')
+    print(HtmlFormatter().get_style_defs('.highlight'))
 
 The argument to :func:`get_style_defs` is used as an additional CSS selector:
 the output may look like this:
@@ -166,7 +166,7 @@ If only one lexer matches, it is returned, else the guessing mechanism of
 :func:`.guess_lexer()` is used with the matching lexers.
 
 As usual, keyword arguments to these functions are given to the created lexer
-as options.
+as options.    
 
 
 Command line usage

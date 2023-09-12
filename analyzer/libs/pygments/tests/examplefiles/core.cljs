@@ -9,8 +9,8 @@
             [clojure.string :as s])
   (:require-macros [enfocus.macros :as em]))
 
-(def filter-input
-  (single-node
+(def filter-input 
+  (single-node 
     (sel ".search input")))
 
 (defn project-matches [query project]
@@ -23,13 +23,13 @@
 
 (defn apply-filter-for [projects]
  (let [query (value filter-input)]
-   (html/render-projects
+   (html/render-projects 
      (filter (partial project-matches query)
              projects))))
 
 (defn filter-category [projects evt]
   (let [target (.-currentTarget evt)]
-    (set-value! filter-input
+    (set-value! filter-input 
                 (.-innerHTML target))
     (apply-filter-for projects)))
 

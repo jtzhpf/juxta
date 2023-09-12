@@ -1,6 +1,6 @@
 library ieee;
 use ieee.std_logic_unsigned.all;
-use ieee.std_logic_1164.all;
+use ieee.std_logic_1164.all;   
 use ieee.numeric_std.all;
 
 
@@ -11,7 +11,7 @@ entity top_testbench is --test
 end top_testbench; -- test
 
 
-architecture top_testbench_arch of top_testbench is
+architecture top_testbench_arch of top_testbench is  
 
     component top is
         generic (
@@ -33,7 +33,7 @@ architecture top_testbench_arch of top_testbench is
     signal d1 : std_logic_vector (n-1 downto 0);
     signal d2 : std_logic_vector (n-1 downto 0);
     signal result : std_logic_vector (2*n-1 downto 0);
-
+    
     type test_type is ( a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
     attribute enum_encoding of my_state : type is "001 010 011 100 111";
 begin
@@ -55,40 +55,40 @@ begin
     end process;
 
     data_process : process
-    begin
-
-		-- test case #1
+    begin       
+		
+		-- test case #1	
 	   	operation <= '0';
-
+		
         rst <= '1';
         wait for 5 ns;
         rst <= '0';
         wait for 5 ns;
-
+		
 		d1 <= std_logic_vector(to_unsigned(60, d1'length));
 		d2 <= std_logic_vector(to_unsigned(12, d2'length));
 		wait for 360 ns;
-
+		
 		assert (result = std_logic_vector(to_unsigned(720, result'length)))
-			report "Test case #1 failed" severity error;
-
-		-- test case #2
+			report "Test case #1 failed" severity error; 
+            
+		-- test case #2	
 	   	operation <= '0';
-
+		
         rst <= '1';
         wait for 5 ns;
         rst <= '0';
         wait for 5 ns;
-
+		
 		d1 <= std_logic_vector(to_unsigned(55, d1'length));
 		d2 <= std_logic_vector(to_unsigned(1, d2'length));
 		wait for 360 ns;
-
+		
 		assert (result = std_logic_vector(to_unsigned(55, result'length)))
 			report "Test case #2 failed" severity error;
-
-        -- etc
-
+            
+        -- etc 
+            
     end process;
 
 end top_testbench_arch;
@@ -144,7 +144,7 @@ end add32csa;
 ARCHITECTURE circuits of add32csa IS
   SIGNAL zero : STD_LOGIC_VECTOR(31 downto 0) := X"00000000";
   SIGNAL aa : std_logic_vector(31 downto 0) := X"00000000";
-
+  
   COMPONENT fadd    -- duplicates entity port
     PoRT(a    : in  std_logic;
          b    : in  std_logic;
@@ -152,10 +152,10 @@ ARCHITECTURE circuits of add32csa IS
          s    : out std_logic;
          cout : out std_logic);
   end comPonent fadd;
-
+  
 begin  -- circuits of add32csa
   aa <= a when b='1' else zero after 1 ns;
   stage: for I in 0 to 31 generate
     sta: fadd port map(aa(I), sum_in(I), cin(I) , sum_out(I), cout(I));
-  end generate stage;
+  end generate stage;  
 end architecture circuits; -- of add32csa

@@ -6,9 +6,9 @@
 
 %include <javahead.swg>
 
-/* The jni, jtype and jstype typemaps work together and so there should be one of each.
- * The jni typemap contains the JNI type used in the JNI (C/C++) code.
- * The jtype typemap contains the Java type used in the JNI intermediary class.
+/* The jni, jtype and jstype typemaps work together and so there should be one of each. 
+ * The jni typemap contains the JNI type used in the JNI (C/C++) code. 
+ * The jtype typemap contains the Java type used in the JNI intermediary class. 
  * The jstype typemap contains the Java type used in the Java proxy classes, type wrapper classes and module class. */
 
 /* Fragments */
@@ -39,14 +39,14 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
       uu = ((d - '0') << 4);
     else if ((d >= 'a') && (d <= 'f'))
       uu = ((d - ('a'-10)) << 4);
-    else
+    else 
       return (char *) 0;
     d = *(c++);
     if ((d >= '0') && (d <= '9'))
       uu |= (d - '0');
     else if ((d >= 'a') && (d <= 'f'))
       uu |= (d - ('a'-10));
-    else
+    else 
       return (char *) 0;
     *u = uu;
   }
@@ -202,31 +202,31 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 %typemap(javadirectorin) bool "$jniinput"
 %typemap(javadirectorout) bool "$javacall"
 
-%typemap(in) char,
-             signed char,
-             unsigned char,
-             short,
-             unsigned short,
-             int,
-             unsigned int,
-             long,
-             unsigned long,
-             long long,
-             float,
+%typemap(in) char, 
+             signed char, 
+             unsigned char, 
+             short, 
+             unsigned short, 
+             int, 
+             unsigned int, 
+             long, 
+             unsigned long, 
+             long long, 
+             float, 
              double
 %{ $1 = ($1_ltype)$input; %}
 
-%typemap(directorout) char,
-             signed char,
-             unsigned char,
-             short,
-             unsigned short,
-             int,
-             unsigned int,
-             long,
-             unsigned long,
-             long long,
-             float,
+%typemap(directorout) char, 
+             signed char, 
+             unsigned char, 
+             short, 
+             unsigned short, 
+             int, 
+             unsigned int, 
+             long, 
+             unsigned long, 
+             long long, 
+             float, 
              double
 %{ $result = ($1_ltype)$input; %}
 
@@ -244,31 +244,31 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 %typemap(directorin, descriptor="F") float            "$input = (jfloat) $1;"
 %typemap(directorin, descriptor="D") double           "$input = (jdouble) $1;"
 
-%typemap(javadirectorin) char,
-                         signed char,
-                         unsigned char,
-                         short,
-                         unsigned short,
-                         int,
-                         unsigned int,
-                         long,
-                         unsigned long,
-                         long long,
-                         float,
+%typemap(javadirectorin) char, 
+                         signed char, 
+                         unsigned char, 
+                         short, 
+                         unsigned short, 
+                         int, 
+                         unsigned int, 
+                         long, 
+                         unsigned long, 
+                         long long, 
+                         float, 
                          double
   "$jniinput"
 
-%typemap(javadirectorout) char,
-                          signed char,
-                          unsigned char,
-                          short,
-                          unsigned short,
-                          int,
-                          unsigned int,
-                          long,
-                          unsigned long,
-                          long long,
-                          float,
+%typemap(javadirectorout) char, 
+                          signed char, 
+                          unsigned char, 
+                          short, 
+                          unsigned short, 
+                          int, 
+                          unsigned int, 
+                          long, 
+                          unsigned long, 
+                          long long, 
+                          float, 
                           double
   "$javacall"
 
@@ -288,7 +288,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 /* unsigned long long */
 /* Convert from BigInteger using the toByteArray member function */
-%typemap(in) unsigned long long {
+%typemap(in) unsigned long long { 
   jclass clazz;
   jmethodID mid;
   jbyteArray ba;
@@ -312,7 +312,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
   JCALL3(ReleaseByteArrayElements, jenv, ba, bae, 0);
 }
 
-%typemap(directorout) unsigned long long {
+%typemap(directorout) unsigned long long { 
   jclass clazz;
   jmethodID mid;
   jbyteArray ba;
@@ -338,7 +338,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 
 /* Convert to BigInteger - byte array holds number in 2's complement big endian format */
-%typemap(out) unsigned long long {
+%typemap(out) unsigned long long { 
   jbyteArray ba = JCALL1(NewByteArray, jenv, 9);
   jbyte* bae = JCALL2(GetByteArrayElements, jenv, ba, 0);
   jclass clazz = JCALL1(FindClass, jenv, "java/math/BigInteger");
@@ -427,30 +427,30 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 /* primitive types by reference */
 %typemap(in) const bool & ($*1_ltype temp)
-%{ temp = $input ? true : false;
+%{ temp = $input ? true : false; 
    $1 = &temp; %}
 
 %typemap(directorout,warning=SWIGWARN_TYPEMAP_THREAD_UNSAFE_MSG) const bool &
 %{ static $*1_ltype temp;
-   temp = $input ? true : false;
+   temp = $input ? true : false; 
    $result = &temp; %}
 
 %typemap(javadirectorin) const bool & "$jniinput"
 %typemap(javadirectorout) const bool & "$javacall"
 
-%typemap(in) const char & ($*1_ltype temp),
-             const signed char & ($*1_ltype temp),
-             const unsigned char & ($*1_ltype temp),
-             const short & ($*1_ltype temp),
-             const unsigned short & ($*1_ltype temp),
-             const int & ($*1_ltype temp),
-             const unsigned int & ($*1_ltype temp),
-             const long & ($*1_ltype temp),
-             const unsigned long & ($*1_ltype temp),
-             const long long & ($*1_ltype temp),
-             const float & ($*1_ltype temp),
+%typemap(in) const char & ($*1_ltype temp), 
+             const signed char & ($*1_ltype temp), 
+             const unsigned char & ($*1_ltype temp), 
+             const short & ($*1_ltype temp), 
+             const unsigned short & ($*1_ltype temp), 
+             const int & ($*1_ltype temp), 
+             const unsigned int & ($*1_ltype temp), 
+             const long & ($*1_ltype temp), 
+             const unsigned long & ($*1_ltype temp), 
+             const long long & ($*1_ltype temp), 
+             const float & ($*1_ltype temp), 
              const double & ($*1_ltype temp)
-%{ temp = ($*1_ltype)$input;
+%{ temp = ($*1_ltype)$input; 
    $1 = &temp; %}
 
 %typemap(directorout,warning=SWIGWARN_TYPEMAP_THREAD_UNSAFE_MSG) const char &,
@@ -466,7 +466,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
              const float &,
              const double &
 %{ static $*1_ltype temp;
-   temp = ($*1_ltype)$input;
+   temp = ($*1_ltype)$input; 
    $result = &temp; %}
 
 %typemap(directorin, descriptor="Z") const bool &           "$input = (jboolean)$1;"
@@ -483,31 +483,31 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 %typemap(directorin, descriptor="F") const float &          "$input = (jfloat)$1;"
 %typemap(directorin, descriptor="D") const double &         "$input = (jdouble)$1;"
 
-%typemap(javadirectorin) const char & ($*1_ltype temp),
-                         const signed char & ($*1_ltype temp),
-                         const unsigned char & ($*1_ltype temp),
-                         const short & ($*1_ltype temp),
-                         const unsigned short & ($*1_ltype temp),
-                         const int & ($*1_ltype temp),
-                         const unsigned int & ($*1_ltype temp),
-                         const long & ($*1_ltype temp),
-                         const unsigned long & ($*1_ltype temp),
-                         const long long & ($*1_ltype temp),
-                         const float & ($*1_ltype temp),
+%typemap(javadirectorin) const char & ($*1_ltype temp), 
+                         const signed char & ($*1_ltype temp), 
+                         const unsigned char & ($*1_ltype temp), 
+                         const short & ($*1_ltype temp), 
+                         const unsigned short & ($*1_ltype temp), 
+                         const int & ($*1_ltype temp), 
+                         const unsigned int & ($*1_ltype temp), 
+                         const long & ($*1_ltype temp), 
+                         const unsigned long & ($*1_ltype temp), 
+                         const long long & ($*1_ltype temp), 
+                         const float & ($*1_ltype temp), 
                          const double & ($*1_ltype temp)
   "$jniinput"
 
-%typemap(javadirectorout) const char & ($*1_ltype temp),
-                          const signed char & ($*1_ltype temp),
-                          const unsigned char & ($*1_ltype temp),
-                          const short & ($*1_ltype temp),
-                          const unsigned short & ($*1_ltype temp),
-                          const int & ($*1_ltype temp),
-                          const unsigned int & ($*1_ltype temp),
-                          const long & ($*1_ltype temp),
-                          const unsigned long & ($*1_ltype temp),
-                          const long long & ($*1_ltype temp),
-                          const float & ($*1_ltype temp),
+%typemap(javadirectorout) const char & ($*1_ltype temp), 
+                          const signed char & ($*1_ltype temp), 
+                          const unsigned char & ($*1_ltype temp), 
+                          const short & ($*1_ltype temp), 
+                          const unsigned short & ($*1_ltype temp), 
+                          const int & ($*1_ltype temp), 
+                          const unsigned int & ($*1_ltype temp), 
+                          const long & ($*1_ltype temp), 
+                          const unsigned long & ($*1_ltype temp), 
+                          const long long & ($*1_ltype temp), 
+                          const float & ($*1_ltype temp), 
                           const double & ($*1_ltype temp)
   "$javacall"
 
@@ -528,7 +528,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 /* const unsigned long long & */
 /* Similar to unsigned long long */
-%typemap(in) const unsigned long long & ($*1_ltype temp) {
+%typemap(in) const unsigned long long & ($*1_ltype temp) { 
   jclass clazz;
   jmethodID mid;
   jbyteArray ba;
@@ -553,7 +553,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
   JCALL3(ReleaseByteArrayElements, jenv, ba, bae, 0);
 }
 
-%typemap(directorout,warning=SWIGWARN_TYPEMAP_THREAD_UNSAFE_MSG) const unsigned long long & {
+%typemap(directorout,warning=SWIGWARN_TYPEMAP_THREAD_UNSAFE_MSG) const unsigned long long & { 
   static $*1_ltype temp;
   jclass clazz;
   jmethodID mid;
@@ -579,7 +579,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
   JCALL3(ReleaseByteArrayElements, jenv, ba, bae, 0);
 }
 
-%typemap(out) const unsigned long long & {
+%typemap(out) const unsigned long long & { 
   jbyteArray ba = JCALL1(NewByteArray, jenv, 9);
   jbyte* bae = JCALL2(GetByteArrayElements, jenv, ba, 0);
   jclass clazz = JCALL1(FindClass, jenv, "java/math/BigInteger");
@@ -602,7 +602,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 /* Default handling. Object passed by value. Convert to a pointer */
 %typemap(in) SWIGTYPE ($&1_type argp)
-%{ argp = *($&1_ltype*)&$input;
+%{ argp = *($&1_ltype*)&$input; 
    if (!argp) {
      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Attempt to dereference null $1_type");
      return $null;
@@ -610,14 +610,14 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
    $1 = *argp; %}
 
 %typemap(directorout) SWIGTYPE ($&1_type argp)
-%{ argp = *($&1_ltype*)&$input;
+%{ argp = *($&1_ltype*)&$input; 
    if (!argp) {
      SWIG_JavaThrowException(jenv, SWIG_JavaNullPointerException, "Unexpected null return for type $1_type");
      return $null;
    }
    $result = *argp; %}
 
-%typemap(out) SWIGTYPE
+%typemap(out) SWIGTYPE 
 #ifdef __cplusplus
 %{ *($&1_ltype*)&$result = new $1_ltype((const $1_ltype &)$1); %}
 #else
@@ -628,7 +628,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 }
 #endif
 
-%typemap(directorin,descriptor="L$packagepath/$&javaclassname;") SWIGTYPE
+%typemap(directorin,descriptor="L$packagepath/$&javaclassname;") SWIGTYPE 
 %{ $input = 0;
    *(($&1_ltype*)&$input) = &$1; %}
 %typemap(javadirectorin) SWIGTYPE "new $&javaclassname($jniinput, false)"
@@ -636,7 +636,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 /* Generic pointers and references */
 %typemap(in) SWIGTYPE * %{ $1 = *($&1_ltype)&$input; %}
-%typemap(in, fragment="SWIG_UnPackData") SWIGTYPE (CLASS::*) {
+%typemap(in, fragment="SWIG_UnPackData") SWIGTYPE (CLASS::*) { 
   const char *temp = 0;
   if ($input) {
     temp = JCALL2(GetStringUTFChars, jenv, $input, 0);
@@ -650,7 +650,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
     return $null;
   } %}
 %typemap(out) SWIGTYPE *
-%{ *($&1_ltype)&$result = $1; %}
+%{ *($&1_ltype)&$result = $1; %} 
 %typemap(out, fragment="SWIG_PackData", noblock=1) SWIGTYPE (CLASS::*) {
   char buf[128];
   char *data = SWIG_PackData(buf, (void *)&$1, sizeof($1));
@@ -658,7 +658,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
   $result = JCALL1(NewStringUTF, jenv, buf);
 }
 %typemap(out) SWIGTYPE &
-%{ *($&1_ltype)&$result = $1; %}
+%{ *($&1_ltype)&$result = $1; %} 
 
 %typemap(directorout, warning=SWIGWARN_TYPEMAP_DIRECTOROUT_PTR_MSG) SWIGTYPE *
 %{ $result = *($&1_ltype)&$input; %}
@@ -685,7 +685,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 /* Default array handling */
 %typemap(in) SWIGTYPE [] %{ $1 = *($&1_ltype)&$input; %}
-%typemap(out) SWIGTYPE [] %{ *($&1_ltype)&$result = $1; %}
+%typemap(out) SWIGTYPE [] %{ *($&1_ltype)&$result = $1; %} 
 %typemap(freearg) SWIGTYPE [ANY], SWIGTYPE [] ""
 
 /* char arrays - treat as String */
@@ -845,7 +845,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
                           jobjectArray
   "$javacall"
 
-/* Typecheck typemaps - The purpose of these is merely to issue a warning for overloaded C++ functions
+/* Typecheck typemaps - The purpose of these is merely to issue a warning for overloaded C++ functions 
  * that cannot be overloaded in Java as more than one C++ type maps to a single Java type */
 
 %typecheck(SWIG_TYPECHECK_BOOL) /* Java boolean */
@@ -856,7 +856,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 %typecheck(SWIG_TYPECHECK_CHAR) /* Java char */
     jchar,
-    char,
+    char, 
     const char &
     ""
 
@@ -868,29 +868,29 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 %typecheck(SWIG_TYPECHECK_INT16) /* Java short */
     jshort,
-    unsigned char,
-    short,
-    const unsigned char &,
+    unsigned char, 
+    short, 
+    const unsigned char &, 
     const short &
     ""
 
 %typecheck(SWIG_TYPECHECK_INT32) /* Java int */
     jint,
-    unsigned short,
-    int,
-    long,
-    const unsigned short &,
-    const int &,
+    unsigned short, 
+    int, 
+    long, 
+    const unsigned short &, 
+    const int &, 
     const long &
     ""
 
 %typecheck(SWIG_TYPECHECK_INT64) /* Java long */
     jlong,
-    unsigned int,
-    unsigned long,
-    long long,
-    const unsigned int &,
-    const unsigned long &,
+    unsigned int, 
+    unsigned long, 
+    long long, 
+    const unsigned int &, 
+    const unsigned long &, 
     const long long &
     ""
 
@@ -956,10 +956,10 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
     ""
 
 %typecheck(SWIG_TYPECHECK_POINTER) /* Default */
-    SWIGTYPE,
-    SWIGTYPE *,
-    SWIGTYPE &,
-    SWIGTYPE *const&,
+    SWIGTYPE, 
+    SWIGTYPE *, 
+    SWIGTYPE &, 
+    SWIGTYPE *const&, 
     SWIGTYPE [],
     SWIGTYPE (CLASS::*)
     ""
@@ -967,11 +967,11 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 /* Exception handling */
 
-%typemap(throws) int,
-                 long,
-                 short,
-                 unsigned int,
-                 unsigned long,
+%typemap(throws) int, 
+                 long, 
+                 short, 
+                 unsigned int, 
+                 unsigned long, 
                  unsigned short
 %{ char error_msg[256];
    sprintf(error_msg, "C++ $1_type exception thrown, value: %d", $1);
@@ -990,7 +990,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 
 /* Typemaps for code generation in proxy classes and Java type wrapper classes */
 
-/* The javain typemap is used for converting function parameter types from the type
+/* The javain typemap is used for converting function parameter types from the type 
  * used in the proxy, module or type wrapper class to the type used in the JNI class. */
 %typemap(javain) bool,               const bool &,
                  char,               const char &,
@@ -1105,7 +1105,7 @@ SWIGINTERN const char * SWIG_UnpackData(const char *c, void *ptr, size_t sz) {
 %{ temp = *($1_ltype)&$input;
    $1 = ($1_ltype)&temp; %}
 %typemap(out) SWIGTYPE *const&
-%{ *($1_ltype)&$result = *$1; %}
+%{ *($1_ltype)&$result = *$1; %} 
 
 /* Typemaps used for the generation of proxy and type wrapper class code */
 %typemap(javabase)             SWIGTYPE, SWIGTYPE *, SWIGTYPE &, SWIGTYPE [], SWIGTYPE (CLASS::*) ""

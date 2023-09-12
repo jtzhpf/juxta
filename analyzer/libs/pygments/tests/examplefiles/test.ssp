@@ -8,5 +8,5 @@
 <%= for (person <- people) { %>
   <li>${person.name}</li>
 <% } %>
-</ul>
+</ul>  
 

@@ -8,6 +8,6 @@ partition([X|Xs], Pivot, Smalls, Bigs) :-
     ).
 
 quicksort([])     --> [].
-quicksort([X|Xs]) -->
+quicksort([X|Xs]) --> 
     { partition(Xs, X, Smaller, Bigger) },
     quicksort(Smaller), [X], quicksort(Bigger).

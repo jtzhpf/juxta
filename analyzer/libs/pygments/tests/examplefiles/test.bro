@@ -24,17 +24,17 @@ export {
 		client:          string       &log &optional;
 		server:          string       &log &optional;
 		resp_size:       count        &log &default=0;
-
+		
 		## Indicate if the SSH session is done being watched.
 		done:            bool         &default=F;
 	};
 
 	const password_guesses_limit = 30 &redef;
-
+	
 	# The size in bytes at which the SSH connection is presumed to be
 	# successful.
 	const authentication_data_size = 5500 &redef;
-
+	
 	# The amount of time to remember presumed non-successful logins to build
 	# model of a password guesser.
 	const guessing_timeout = 30 mins &redef;
@@ -55,15 +55,15 @@ export {
 
 	# This is a table with orig subnet as the key, and subnet as the value.
 	const ignore_guessers: table[subnet] of subnet &redef;
-
+	
 	# If true, we tell the event engine to not look at further data
 	# packets after the initial SSH handshake. Helps with performance
 	# (especially with large file transfers) but precludes some
 	# kinds of analyses (e.g., tracking connection size).
 	const skip_processing_after_detection = F &redef;
-
+	
 	# Keeps count of how many rejections a host has had
-	global password_rejections: table[addr] of TrackCount
+	global password_rejections: table[addr] of TrackCount 
 		&write_expire=guessing_timeout
 		&synchronized;
 
@@ -71,7 +71,7 @@ export {
 	# TODO: guessing_timeout doesn't work correctly here.  If a user redefs
 	#       the variable, it won't take effect.
 	global password_guessers: set[addr] &read_expire=guessing_timeout+1hr &synchronized;
-
+	
 	global log_ssh: event(rec: Info);
 }
 
@@ -105,7 +105,7 @@ function check_ssh_connection(c: connection, done: bool)
 	# If done watching this connection, just return.
 	if ( c$ssh$done )
 		return;
-
+	
 	# If this is still a live connection and the byte count has not
 	# crossed the threshold, just return and let the resheduled check happen later.
 	if ( !done && c$resp$size < authentication_data_size )
@@ -121,18 +121,18 @@ function check_ssh_connection(c: connection, done: bool)
 	local direction = Site::is_local_addr(c$id$orig_h) ? "to" : "from";
 	local location: geo_location;
 	location = (direction == "to") ? lookup_location(c$id$resp_h) : lookup_location(c$id$orig_h);
-
+	
 	if ( done && c$resp$size < authentication_data_size )
 		{
 		# presumed failure
 		if ( c$id$orig_h !in password_rejections )
 			password_rejections[c$id$orig_h] = new_track_count();
-
+			
 		# Track the number of rejections
 		if ( !(c$id$orig_h in ignore_guessers &&
 		       c$id$resp_h in ignore_guessers[c$id$orig_h]) )
 			++password_rejections[c$id$orig_h]$n;
-
+			
 		if ( default_check_threshold(password_rejections[c$id$orig_h]) )
 			{
 			add password_guessers[c$id$orig_h];
@@ -142,12 +142,12 @@ function check_ssh_connection(c: connection, done: bool)
 			        $sub=fmt("%d failed logins", password_rejections[c$id$orig_h]$n),
 			        $n=password_rejections[c$id$orig_h]$n]);
 			}
-		}
-	# TODO: This is to work around a quasi-bug in Bro which occasionally
+		} 
+	# TODO: This is to work around a quasi-bug in Bro which occasionally 
 	#       causes the byte count to be oversized.
 	#   Watch for Gregors work that adds an actual counter of bytes transferred.
-	else if ( c$resp$size < 20000000 )
-		{
+	else if ( c$resp$size < 20000000 ) 
+		{ 
 		# presumed successful login
 		status = "success";
 		c$ssh$done = T;
@@ -163,7 +163,7 @@ function check_ssh_connection(c: connection, done: bool)
 			        $msg=fmt("Successful SSH login by password guesser %s", c$id$orig_h),
 			        $sub=fmt("%d failed logins", password_rejections[c$id$orig_h]$n)]);
 			}
-
+		
 		local message = fmt("SSH login %s %s \"%s\" \"%s\" %f %f %s (triggered with %d bytes)",
 		              direction, location$country_code, location$region, location$city,
 		              location$latitude, location$longitude,
@@ -172,7 +172,7 @@ function check_ssh_connection(c: connection, done: bool)
 		        $conn=c,
 		        $msg=message,
 		        $sub=location$country_code]);
-
+		
 		# Check to see if this login came from an interesting hostname
 		when ( local hostname = lookup_addr(c$id$orig_h) )
 			{
@@ -184,14 +184,14 @@ function check_ssh_connection(c: connection, done: bool)
 				        $sub=hostname]);
 				}
 			}
-
+			
 		if ( location$country_code in watched_countries )
 			{
-
+			
 			}
-
+			
 		}
-	else if ( c$resp$size >= 200000000 )
+	else if ( c$resp$size >= 200000000 ) 
 		{
 		NOTICE([$note=Bytecount_Inconsistency,
 		        $conn=c,
@@ -203,13 +203,13 @@ function check_ssh_connection(c: connection, done: bool)
 	c$ssh$status = status;
 	c$ssh$direction = direction;
 	c$ssh$resp_size = c$resp$size;
-
+	
 	Log::write(SSH, c$ssh);
-
+	
 	# Set the "done" flag to prevent the watching event from rescheduling
 	# after detection is done.
 	c$ssh$done;
-
+	
 	# Stop watching this connection, we don't care about it anymore.
 	if ( skip_processing_after_detection )
 		{
@@ -241,7 +241,7 @@ event ssh_server_version(c: connection, version: string) &priority=5
 	set_session(c);
 	c$ssh$server = version;
 	}
-
+	
 event ssh_client_version(c: connection, version: string) &priority=5
 	{
 	set_session(c);

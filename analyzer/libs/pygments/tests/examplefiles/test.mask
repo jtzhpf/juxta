@@ -3,7 +3,7 @@
 h4.class-1#id.class-2.other checked='true' disabled name = x param > 'Enter  ..'
 input placeholder=Password type=password >
     :dualbind x-signal='dom:create' value=user.passord;
-% each='flowers' >
+% each='flowers' > 
     div style='
         position: absolute;
         display: inline-block;

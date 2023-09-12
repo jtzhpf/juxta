@@ -14,33 +14,47 @@ Programming languages
 * AppleScript
 * Assembly (various)
 * Asymptote
+* `Augeas <http://augeas.net>`_
 * Awk
+* BBC Basic
 * Befunge
+* `Boa <http://boa.cs.iastate.edu/docs/index.php>`_
 * Boo
 * BrainFuck
 * C, C++
 * C#
+* `Charm++ CI <http://charmplusplus.org/>`_
 * Clojure
 * CoffeeScript
 * ColdFusion
 * Common Lisp
 * Coq
 * Cryptol (incl. Literate Cryptol)
+* `Crystal <http://crystal-lang.org>`_
 * `Cython <http://cython.org>`_
 * `D <http://dlang.org>`_
 * Dart
+* DCPU-16
 * Delphi
 * Dylan
+* `Elm <http://elm-lang.org/>`_
+* Email
 * Erlang
+* `Ezhil <http://ezhillang.org>`_ Ezhil - A Tamil programming language
 * Factor
 * Fancy
+* `Fennel <https://fennel-lang.org/>`_
+* `FloScript <http://ioflo.com/>`_
 * Fortran
+* `FreeFEM++ <https://freefem.org/>`_
 * F#
 * GAP
 * Gherkin (Cucumber)
 * GL shaders
 * Groovy
 * `Haskell <http://www.haskell.org>`_ (incl. Literate Haskell)
+* HLSL
+* `HSpec <http://hackage.haskell.org/package/hspec>`_
 * IDL
 * Io
 * Java
@@ -56,12 +70,14 @@ Programming languages
 * MuPad
 * Nemerle
 * Nimrod
+* Notmuch
 * Objective-C
 * Objective-J
 * Octave
 * OCaml
 * PHP
-* `Perl <http://perl.org>`_
+* `Perl 5 <http://perl.org>`_ and `Perl 6 <https://perl6.org>`_
+* `Pony <https://www.ponylang.io/>`_
 * PovRay
 * PostScript
 * PowerShell
@@ -74,19 +90,27 @@ Programming languages
 * Rust
 * S, S-Plus, R
 * Scala
+* `Scdoc <https://git.sr.ht/~sircmpwn/scdoc>`_
 * Scheme
 * Scilab
+* `SGF <https://www.red-bean.com/sgf/>`_
+* `Slash <https://github.com/arturadib/Slash-A>`_
+* `Slurm <https://slurm.schedmd.com/overview.html>`_
 * Smalltalk
 * SNOBOL
+* `Solidity <https://solidity.readthedocs.io/>`_
 * Tcl
+* `Tera Term language <https://ttssh2.osdn.jp/>`_
+* `TOML <https://github.com/toml-lang/toml>`_
 * Vala
 * Verilog
 * VHDL
 * Visual Basic.NET
 * Visual FoxPro
 * XQuery
+* `Zeek <https://www.zeek.org>`_
 * Zephir
-  </ul>
+* `Zig <https://ziglang.org/>`_
 
 Template languages
 ------------------
@@ -144,9 +168,9 @@ Other markup
 ... that's all?
 ---------------
 
-Well, why not write your own? Contributing to Pygments is easy and fun.  Look
-:doc:`here <docs/lexerdevelopment>` for the docs on lexer development and
-:ref:`here <contribute>` for contact details.
+Well, why not write your own? Contributing to Pygments is easy and fun.  Take a
+look at the :doc:`docs on lexer development <docs/lexerdevelopment>`.  Pull
+requests are welcome on `GitHub <https://github.com/pygments/pygments>`.
 
 Note: the languages listed here are supported in the development version. The
 latest release may lack a few of them.

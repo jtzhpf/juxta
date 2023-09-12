@@ -22,7 +22,7 @@
 
 (define (register-callback callback-name callback-function)
     (println {registering callback for } callback-name { : } (sym (term callback-function) (prefix callback-function)))
-    (push (list callback-name (sym (term callback-function) (prefix callback-function))) Icallbacks))
+    (push (list callback-name (sym (term callback-function) (prefix callback-function))) Icallbacks)) 
 
 (define (do-callback callback-name data)
    (when (set 'func (lookup callback-name Icallbacks)) ; find first callback
@@ -93,7 +93,7 @@
             ; do a quit
             (if (starts-with (lower-case the-message) "quit")
                 (do-quit { enough})))
-        (true
+        (true 
             (if (nil? channel)
                 ; say to all channels
                 (dolist (c Ichannels)
@@ -122,24 +122,24 @@
         (set 'username (first (clean empty? (parse sender {!|:} 0))))
         (set 'target   (trim  (first (clean empty? (parse text {!|:} 0)))))
         (set 'message  (slice text (+ (find {:} text) 1)))
-        (cond
+        (cond 
             ((starts-with message "\001")
                 (process-ctcp username target message))
             ((find target Ichannels)
-                (cond
+                (cond 
                     ((= command {PRIVMSG})
                         (do-callbacks "channel-message" (list (list "channel" target) (list "username" username) (list "message" message))))
                     ((= command {NOTICE})
                         (do-callbacks "channel-notice"  (list (list "channel" target) (list "username" username) (list "message" message))))))
             ((= target Inickname)
-                (cond
+                (cond 
                     ((= command {PRIVMSG})
                         (do-callbacks "private-message" (list (list "username" username) (list "message" message))))
                     ((= command {NOTICE})
                         (do-callbacks "private-notice"  (list (list "username" username) (list "message" message))))))
-            (true
+            (true                
                 nil))))
-
+  
 (define (process-ctcp username target message)
     (cond
         ((starts-with message "\001VERSION\001")
@@ -162,12 +162,12 @@
 (define (parse-buffer raw-buffer)
     (let ((messages (clean empty? (parse raw-buffer "\r\n" 0)))
           (sender {} command {} text {}))
-        ; check for elapsed time since last activity
+        ; check for elapsed time since last activity    
         (when (> (sub (time-of-day) Itime-stamp) (mul Idle-time 1000))
               (do-callbacks "idle-event")
               (set 'Itime-stamp (time-of-day)))
         (dolist (message messages)
-            (set 'message-parts (parse message { }))
+            (set 'message-parts (parse message { }))           
             (unless (empty? message-parts)
                 (set 'sender (first message-parts))
                 (catch (set 'command (first (rest message-parts))) 'error)
@@ -176,14 +176,14 @@
 
 (define (read-irc)
     (let ((buffer {}))
-        (when (!= (net-peek Iserver) 0)
+        (when (!= (net-peek Iserver) 0) 
               (net-receive Iserver buffer 8192 "\n")
               (unless (empty? buffer)
                 (parse-buffer buffer)))))
 
 (define (read-irc-loop) ; monitoring
-    (let ((buffer {}))
-        (while Iconnected
+    (let ((buffer {}))       
+        (while Iconnected    
             (read-irc)
             (sleep 1000))))
 
