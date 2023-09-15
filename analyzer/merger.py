@@ -34,7 +34,8 @@ FS_FORCE_REWRITE = {
     "nfsd" : ["NFSDDBG_FACILITY", "nfs3_ftypes"],
 }
 
-def _load_btrfs(pn):
+def _load_btrfs(pn):    # never used
+    print("_load_btrfs")
     # XXX. move build_backref_tree relocation.c at the end
     if os.path.basename(pn) == "relocation.c":
         code = open(pn).readlines()
@@ -54,6 +55,7 @@ def _load_btrfs(pn):
             if backref_dec and l.startswith("}"):
                 backref_end = i
                 break
+        print("assert")
         assert(all([backref_dec, backref_beg, backref_end]))
 
         # basically, move it to the end
@@ -128,10 +130,10 @@ class StaticDecl(Formatter):
         # NOTE. nothing yet
         self.blacklist = set(["nfsd3_voidargs"])
 
-    def is_dot_tok(self, token, value):
+    def is_dot_tok(self, token, value):     # it seems never used
         return token is Token.Punctuation and value == "."
 
-    def format(self, tokensource, outfile):
+    def format(self, tokensource, outfile): # outfile never used
         lookup = []
         for ttype, value in tokensource:
             # strong blacklisting
@@ -147,7 +149,7 @@ class StaticDecl(Formatter):
 
                 # NOTE. arbitrary tokens can be inserted before static
                 # shows up, but usually 5.
-                is_static = False
+                is_static = False   # never used
                 for i in range(8):
                     if lookup[-i][0] is Token.Keyword \
                        and lookup[-i][1] == "static":
@@ -416,14 +418,15 @@ def preprocess_headers(fs, src_d, code, headers):
 
                 continue
 
-            if inc in headers:
-                l = "// %s" % l
+            # to make sure that header files not duplicated
+            if inc in headers: 
+                l = "// %s" % l 
             else:
                 headers.add(inc)
                 prev_inc = True
         elif prev_inc:
             yield "#include \"../../inc/__fss.h\""
-            if os.path.exists(os.path.join(ROOT, "inc", "__%s.h" % fs)):
+            if os.path.exists(os.path.join(ROOT, "inc", "__%s.h" % fs)):    # seems never used
                 yield "#include \"../../inc/__%s.h\"" % fs
             prev_inc = False
         yield l
@@ -449,6 +452,7 @@ def rewrite(fs, codes, out):
         for (pn, code) in codes:
             # reschedule static symbols
             rewritten = highlight(code, CLexer(), TokenRewritter(pn, rewriting_plan))
+
             for l in rewritten.splitlines():
                 fd.write(l.encode("utf8"))
                 fd.write("\n")
