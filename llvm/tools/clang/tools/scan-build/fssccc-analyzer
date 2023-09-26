@@ -27,6 +27,7 @@ use Text::ParseWords;
 
 # Search in the PATH if the compiler exists
 sub SearchInPath {
+    print "SearchInPath\n";
     my $file = shift;
     foreach my $dir (split (':', $ENV{PATH})) {
         if (-x "$dir/$file") {
@@ -50,7 +51,7 @@ if (`uname -a` =~ m/Darwin/) {
   $DefaultCXXCompiler = 'g++';
 }
 
-if ($FindBin::Script =~ /c\+\+-analyzer/) {
+if ($FindBin::Script =~ /c\+\+-analyzer/) {   # never used
   $Compiler = $ENV{'CCC_CXX'};
   if (!defined $Compiler || (! -x $Compiler && ! SearchInPath($Compiler))) { $Compiler = $DefaultCXXCompiler; }
 
@@ -94,6 +95,7 @@ END {
 ##----------------------------------------------------------------------------##
 
 sub GetPPExt {
+  print "GetPPExt\n";
   my $Lang = shift;
   if ($Lang =~ /objective-c\+\+/) { return ".mii" };
   if ($Lang =~ /objective-c/) { return ".mi"; }
@@ -108,6 +110,7 @@ my $AttributeIgnored = "Attribute Ignored";
 my $OtherError = "Other Error";
 
 sub ProcessClangFailure {
+  print "ProcessClangFailure\n";
   my ($Clang, $Lang, $file, $Args, $HtmlDir, $ErrorType, $ofile) = @_;
   my $Dir = "$HtmlDir/failures";
   mkpath $Dir;
@@ -147,8 +150,16 @@ sub ProcessClangFailure {
 ##----------------------------------------------------------------------------##
 
 sub GetCCArgs {
+  print "GetCCArgs\n";
+  print "\t\$Clang: $Clang\n";
   my $mode = shift;
   my $Args = shift;
+  print "\t\$mode: $mode\n";
+  print "\t\$Args:\n\t\t";
+  foreach my $key (@{$Args}) {
+      print "$key ";
+  }
+  print "\n\n";
 
   pipe (FROM_CHILD, TO_PARENT);
   my $pid = fork();
@@ -161,8 +172,10 @@ sub GetCCArgs {
   close(TO_PARENT);
   my $line;
   while (<FROM_CHILD>) {
+    print "\t\$line:$_\n";
     next if (!/\s"?-cc1"?\s/);
     $line = $_;
+    print "\t\$choosen_line:$line\n";
   }
 
   waitpid($pid,0);
@@ -180,13 +193,30 @@ sub GetCCArgs {
 sub Analyze {
   my ($Clang, $OriginalArgs, $AnalyzeArgs, $Lang, $Output, $Verbose, $HtmlDir,
       $file) = @_;
+  print "\nAnalyze\n";
+  print "\t\$Clang: $Clang\n";
+  print "\t\$OriginalArgs: $OriginalArgs\n\t\t";
+  foreach my $key (@{$OriginalArgs}) {
+      print "$key ";
+  }
+  print "\n";
+  print "\t\$AnalyzeArgs: $AnalyzeArgs\n\t\t";
+  foreach my $key (@{$AnalyzeArgs}) {
+      print "$key ";
+  }
+  print "\n";
+  print "\t\$Lang: $Lang\n";
+  print "\t\$Output: $Output\n";
+  print "\t\$Verbose: $Verbose\n";
+  print "\t\$HtmlDir: $HtmlDir\n";
+  print "\t\$file: $file\n\n";
 
   my @Args = @$OriginalArgs;
   my $Cmd;
   my @CmdArgs;
   my @CmdArgsSansAnalyses;
 
-  if ($Lang =~ /header/) {
+  if ($Lang =~ /header/) {  # not used
     exit 0 if (!defined ($Output));
     $Cmd = 'cp';
     push @CmdArgs, $file;
@@ -203,13 +233,13 @@ sub Analyze {
     @CmdArgsSansAnalyses = @$SyntaxArgs;
 
     # Create arguments for doing static analysis.
-    if (defined $ResultFile) {
+    if (defined $ResultFile) {  # ResultFile represent clang-log/fss_output dir
       push @Args, '-o', $ResultFile;
     }
-    elsif (defined $HtmlDir) {
+    elsif (defined $HtmlDir) {  # not used
       push @Args, '-o', $HtmlDir;
     }
-    if ($Verbose) {
+    if ($Verbose) { # not used
       push @Args, "-Xclang", "-analyzer-display-progress";
     }
 
@@ -218,7 +248,7 @@ sub Analyze {
     }
 
     # Display Ubiviz graph?
-    if (defined $ENV{'CCC_UBI'}) {
+    if (defined $ENV{'CCC_UBI'}) {  # not used
       push @Args, "-Xclang", "-analyzer-viz-egraph-ubigraph";
     }
 
@@ -720,7 +750,7 @@ if ($Action eq 'compile' or $Action eq 'link') {
       push @AnalyzeArgs, split '\s+', $Plugins;
     }
 
-    if (defined $OutputFormat) {
+    if (defined $OutputFormat) {  # never used
       push @AnalyzeArgs, "-analyzer-output=" . $OutputFormat;
       if ($OutputFormat =~ /plist/) {
         # Change "Output" to be a file.
@@ -740,7 +770,7 @@ if ($Action eq 'compile' or $Action eq 'link') {
     push @CmdArgs, @CompileOpts;
     push @CmdArgs, $file;
 
-    if (scalar @Archs) {
+    if (scalar @Archs) {  # never used
       foreach my $arch (@Archs) {
         my @NewArgs;
         push @NewArgs, '-arch', $arch;

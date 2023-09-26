@@ -906,6 +906,15 @@ sub AddIfNotPresent {
     }
   }
 
+  print "AddIfNotPresent\n";
+  print "\t\$Args:\n\t\t";
+  foreach my $key (@{$Args}) {
+      print "$key ";
+  }
+  print "\n";
+  print "\t\$Arg: $Arg\n";
+  print "\t\$found: $found\n\n";
+
   if ($found == 0) {
     push @$Args, $Arg;
   }
@@ -1029,6 +1038,24 @@ sub RunBuildCommand {
     return RunXcodebuild($Args, $IgnoreErrors, $CCAnalyzer, $CXXAnalyzer, $Options);
   }
 
+  print "RunBuildCommand\n";
+  print "\t\$Args:\n\t\t";
+  foreach my $key (@{$Args}) {
+      print "$key ";
+  }
+  print "\n";
+  print "\t\$IgnoreErrors: $IgnoreErrors\n";
+  print "\t\$Cmd: $Cmd\n";
+  print "\t\$CCAnalyzer: $CCAnalyzer\n";
+  print "\t\$CXXAnalyzer: $CXXAnalyzer\n";
+  print "\t\$Options: $Options\n";
+
+  foreach my $key (keys %{$Options}) {
+      my $value = $Options->{$key};
+      print "\t\t$key: $value\n";
+  }
+  print "\n";
+
   # Setup the environment.
   SetEnv($Options);
 
@@ -1065,6 +1092,30 @@ sub RunBuildCommand {
     }
   }
 
+  print "\$Cmd:$Cmd\n";
+  print "\$ENV{\"CCC_CC\"}:";print $ENV{"CCC_CC"};print "\n";
+  print "\$ENV{\"CCC_CXX\"}:";print $ENV{"CCC_CXX"};print "\n\n";
+
+  print "RunBuildCommand\n";
+  print "\t\$Args:\n\t\t";
+  foreach my $key (@{$Args}) {
+      print "$key ";
+  }
+  print "\n";
+  print "\t\$IgnoreErrors: $IgnoreErrors\n";
+  print "\t\$Cmd: $Cmd\n";
+  print "\t\$CCAnalyzer: $CCAnalyzer\n";
+  print "\t\$CXXAnalyzer: $CXXAnalyzer\n";
+  print "\t\$Options: $Options\n";
+
+  foreach my $key (keys %{$Options}) {
+      my $value = $Options->{$key};
+      print "\t\t$key: $value\n";
+  }
+  print "\n";
+  
+  # `@$Args`;
+  # return 0;
   return (system(@$Args) >> 8);
 }
 
@@ -1637,6 +1688,7 @@ while (@ARGV) {
   last;
 }
 
+print "After processing \@ARGV";
 if (!@ARGV and !$RequestDisplayHelp) {
   ErrorDiag("No build command specified.\n\n");
   $ForceDisplayHelp = 1;
