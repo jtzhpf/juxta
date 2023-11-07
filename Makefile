@@ -19,7 +19,7 @@ MERGER_BUILD = $(PWD)/merger
 # build type
 CLANG_BUILD_TYPE := Release
 ifeq ("$(origin BUILD)", "command line")
-  CLANG_BUILD_TYPE = $(BUILD}
+  CLANG_BUILD_TYPE = $(BUILD)
 endif
 
 # run static fsck

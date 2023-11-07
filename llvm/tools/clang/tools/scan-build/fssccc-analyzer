@@ -172,7 +172,7 @@ sub GetCCArgs {
   close(TO_PARENT);
   my $line;
   while (<FROM_CHILD>) {
-    print "\t\$line:$_\n";
+    print "\t\$line:$_";
     next if (!/\s"?-cc1"?\s/);
     $line = $_;
     print "\t\$choosen_line:$line\n";
@@ -259,7 +259,7 @@ sub Analyze {
   my @PrintArgs;
   my $dir;
 
-  if ($Verbose) {
+  if ($Verbose) {   # not used
     $dir = getcwd();
     print STDERR "\n[LOCATION]: $dir\n";
     push @PrintArgs,"'$Cmd'";
@@ -282,6 +282,7 @@ sub Analyze {
   # We save the output file in the 'crashes' directory if clang encounters
   # any problems with the file.
   pipe (FROM_CHILD, TO_PARENT);
+  print STDOUT "exec: $Cmd @CmdArgs\n";
   my $pid = fork();
   if ($pid == 0) {
     close FROM_CHILD;
@@ -292,10 +293,15 @@ sub Analyze {
 
   close TO_PARENT;
   my ($ofh, $ofile) = tempfile("clang_output_XXXXXX", DIR => $HtmlDir);
+  print "\$ofile: $ofile\n";
   my $fss_file = abs_path($file);
   my @dentry = split(/\//, $fss_file);
+  print "\@dentry: @dentry\n";
   my $start = ($#dentry >= 3) ? $#dentry - 3 : 0;
-  $fss_file  = "${HtmlDir}/";
+  print "\$start: $start\n";
+  #$fss_file  = "${HtmlDir}/";
+  $fss_file  = "${HtmlDir}";
+  print "\$fss_file: $fss_file\n";
   for my $i ($start .. $#dentry)
   {
       if ($i == $#dentry) {
@@ -303,6 +309,7 @@ sub Analyze {
 	  print "[XXXX] ${fss_file}\n";
       }
       $fss_file = "${fss_file}/${dentry[$i]}";
+      print "\t\$fss_file: $fss_file\n";
   }
   open(my $fss_fh, '>', "${fss_file}.fss")  or die "Cannot open $fss_file\n";
 
@@ -497,6 +504,12 @@ my %Uniqued;
 
 # Forward arguments to gcc.
 my $Status = system($Compiler,@ARGV);
+#print STDOUT "\$Compiler: $Compiler \n\@ARGV: @ARGV\n\n";
+print STDOUT "\n";
+print STDOUT "\$Status: $Status\n";
+print STDOUT "\$Compiler: $Compiler\n";
+print STDOUT "\@ARGV: @ARGV\n";
+
 if (defined $ENV{'CCC_ANALYZER_LOG'}) {
   print STDERR "$Compiler @ARGV\n";
 }
