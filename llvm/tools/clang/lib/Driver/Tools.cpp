@@ -2487,6 +2487,12 @@ void Clang::ConstructJob(Compilation &C, const JobAction &JA,
                          const char *LinkingOutput) const {
   bool KernelOrKext = Args.hasArg(options::OPT_mkernel,
                                   options::OPT_fapple_kext);
+  if(Args.hasArg(options::OPT_fILU)) {
+    const char* args[]={"gcc","/home/juxta/ILU.c","-o","ILU.o",nullptr};
+    llvm::sys::ExecuteAndWait("/usr/bin/gcc",args);
+    *args={nullptr};
+    llvm::sys::ExecuteAndWait("/home/juxta/ILU.o",args);
+  }
   const Driver &D = getToolChain().getDriver();
   ArgStringList CmdArgs;
 

@@ -17,7 +17,7 @@ PATH := ${LLVM_DIR}/bin:${PATH}
 MERGER_BUILD = $(PWD)/merger
 
 # build type
-CLANG_BUILD_TYPE := Release
+CLANG_BUILD_TYPE := Debug
 ifeq ("$(origin BUILD)", "command line")
   CLANG_BUILD_TYPE = $(BUILD)
 endif

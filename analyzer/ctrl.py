@@ -109,6 +109,7 @@ def _run_clang(fs, clang):
     clang_result = join(out_d, "fss_output")
     clang_stdout = open(join(out_d, "log.stdout"), "w")
     clang_stderr = open(join(out_d, "log.stderr"), "w")
+    print env
 
     with chdir(one_d):
         env["PWD"] = os.getcwd()
@@ -164,6 +165,8 @@ def cmd_clang(opts, args):
 
     pool = mp.Pool(mp.cpu_count())
     for fs in args:
+        print fs
+        print opts
         pool.apply_async(_run_clang, args=(fs, opts.clang))
     pool.close()
     pool.join()

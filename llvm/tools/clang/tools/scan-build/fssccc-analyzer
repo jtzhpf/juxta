@@ -20,6 +20,7 @@ use File::Temp qw/ tempfile /;
 use File::Path qw / mkpath /;
 use File::Basename;
 use Text::ParseWords;
+use Data::Dumper;
 
 ##===----------------------------------------------------------------------===##
 # Compiler command setup.
@@ -506,9 +507,9 @@ my %Uniqued;
 my $Status = system($Compiler,@ARGV);
 #print STDOUT "\$Compiler: $Compiler \n\@ARGV: @ARGV\n\n";
 print STDOUT "\n";
-print STDOUT "\$Status: $Status\n";
-print STDOUT "\$Compiler: $Compiler\n";
-print STDOUT "\@ARGV: @ARGV\n";
+#print STDOUT "\$Status: $Status\n";
+#print STDOUT "\$Compiler: $Compiler\n";
+#print STDOUT "\@ARGV: @ARGV\n";
 
 if (defined $ENV{'CCC_ANALYZER_LOG'}) {
   print STDERR "$Compiler @ARGV\n";

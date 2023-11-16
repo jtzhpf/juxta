@@ -24,6 +24,7 @@ use Term::ANSIColor;
 use Term::ANSIColor qw(:constants);
 use Cwd qw/ getcwd abs_path /;
 use Sys::Hostname;
+use Data::Dumper;
 
 my $Verbose = 0;       # Verbose output from this script.
 my $Prog = "fss-build";
@@ -922,6 +923,8 @@ sub AddIfNotPresent {
 
 sub SetEnv {
   my $Options = shift @_;
+  print "\nSetEnv:\n";
+  print Dumper($Options);
   foreach my $opt ('CC', 'CXX', 'CLANG', 'CLANG_CXX',
                     'CCC_ANALYZER_ANALYSIS', 'CCC_ANALYZER_PLUGINS',
                     'CCC_ANALYZER_CONFIG') {
@@ -1096,7 +1099,6 @@ sub RunBuildCommand {
   print "\$ENV{\"CCC_CC\"}:";print $ENV{"CCC_CC"};print "\n";
   print "\$ENV{\"CCC_CXX\"}:";print $ENV{"CCC_CXX"};print "\n\n";
 
-  print "RunBuildCommand\n";
   print "\t\$Args:\n\t\t";
   foreach my $key (@{$Args}) {
       print "$key ";
@@ -1688,7 +1690,7 @@ while (@ARGV) {
   last;
 }
 
-print "After processing \@ARGV";
+print "After processing \@ARGV: @ARGV\n";
 if (!@ARGV and !$RequestDisplayHelp) {
   ErrorDiag("No build command specified.\n\n");
   $ForceDisplayHelp = 1;
@@ -1818,8 +1820,10 @@ if (defined $OutputFormat) {
 }
 
 # Run the build.
+print "call RunBuildCommand\n";
 my $ExitStatus = RunBuildCommand(\@ARGV, $IgnoreErrors, $Cmd, $CmdCXX,
                                 \%Options);
+print "return from RunBuildCommand\n";
 if (defined $OutputFormat) {
   if ($OutputFormat =~ /plist/) {
     Diag "Analysis run complete.\n";

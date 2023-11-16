@@ -1,0 +1,66 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/analyzer",
+            "args": ["clang","ext3"],
+            "justMyCode": true
+        },
+        {
+            "type": "perl",
+            "request": "launch",
+            "name": "Perl-Debug local",
+            "console": "integratedTerminal",
+            "program": "${workspaceFolder}/${relativeFile}",
+            "exec": "perl",
+            "execArgs": [],
+            "root": "${workspaceRoot}/",
+            "inc": [],
+            "args": [],
+            "env": {},
+            "debugRaw": false,
+            "debugLog": false,
+            "stopOnEntry": true,
+            "sessions": "single"
+        },
+        {
+            "type": "perl",
+            "request": "launch",
+            "name": "Perl-Debug remote",
+            "console": "remote",
+            "program": "${workspaceFolder}/${relativeFile}",
+            "root": "${workspaceRoot}/",
+            "stopOnEntry": true,
+            "port": 5000,
+            "sessions": "single"
+        },
+        {
+            "name": "(gdb) 启动", //配置名称，显示在配置下拉菜单中
+            "type": "cppdbg", //配置类型
+            "request": "launch", //请求配置类型，可以是启动或者是附加
+            "program": "/home/juxta/bin/llvm/bin/clang", //程序可执行文件的完整路径，${workspaceFolder}表示远程连接的初始路径
+            "args": ["-cc1", "-triple", "x86_64-unknown-linux-gnu", "-analyze", "-disable-free", "-main-file-name", "one.c", "-analyzer-store=region", "-analyzer-opt-analyze-nested-blocks", "-analyzer-eagerly-assume", "-analyzer-checker=core", "-analyzer-checker=unix", "-analyzer-checker=deadcode", "-analyzer-checker=security.insecureAPI.UncheckedReturn", "-analyzer-checker=security.insecureAPI.getpw", "-analyzer-checker=security.insecureAPI.gets", "-analyzer-checker=security.insecureAPI.mktemp", "-analyzer-checker=security.insecureAPI.mkstemp", "-analyzer-checker=security.insecureAPI.vfork", "-analyzer-output", "plist", "-w", "-mrelocation-model", "static", "-mthread-model", "posix", "-mdisable-fp-elim", "-relaxed-aliasing", "-mdisable-tail-calls", "-fmath-errno", "-masm-verbose", "-mconstructor-aliases", "-fuse-init-array", "-mcode-model", "kernel", "-target-cpu", "x86-64", "-target-feature", "-sse", "-target-feature", "-mmx", "-target-feature", "-sse2", "-target-feature", "-3dnow", "-target-feature", "-avx", "-disable-red-zone", "-momit-leaf-frame-pointer", "-dwarf-column-info", "-nostdsysteminc", "-nobuiltininc", "-resource-dir", "/home/juxta/bin/llvm/bin/../lib/clang/3.6.0", "-isystem", "/home/juxta/bin/llvm/bin/../lib/clang/3.6.0/include", "-include", "./include/linux/kconfig.h", "-D", "__KERNEL__", "-D", "CONFIG_X86_X32_ABI", "-D", "CONFIG_AS_CFI=1", "-D", "CONFIG_AS_CFI_SIGNAL_FRAME=1", "-D", "CONFIG_AS_CFI_SECTIONS=1", "-D", "CONFIG_AS_FXSAVEQ=1", "-D", "CONFIG_AS_SSSE3=1", "-D", "CONFIG_AS_CRC32=1", "-D", "CONFIG_AS_AVX=1", "-D", "CONFIG_AS_AVX2=1", "-D", "MODULE", "-D", "KBUILD_BASENAME=#one", "-D", "KBUILD_MODNAME=#minix", "-I", "./arch/x86/include", "-I", "arch/x86/include/generated/uapi", "-I", "arch/x86/include/generated", "-I", "include", "-I", "./arch/x86/include/uapi", "-I", "arch/x86/include/generated/uapi", "-I", "./include/uapi", "-I", "include/generated/uapi", "-O2", "-Wno-unknown-warning-option", "-Wno-trigraphs", "-Wno-format-security", "-Wno-sign-compare", "-Wno-unused-variable", "-Wno-format-invalid-specifier", "-Wno-gnu", "-Wno-tautological-compare", "-Wno-pointer-sign", "-Wno-initializer-overrides", "-Wno-unused-value", "-Wno-format", "-Wno-unknown-warning-option", "-Wno-sign-compare", "-Wno-format-zero-length", "-Wno-uninitialized", "-std=gnu89", "-fdebug-compilation-dir", "/home/linux", "-ferror-limit", "19", "-fmessage-length", "0", "-fwrapv", "-mstackrealign", "-fobjc-runtime=gcc", "-fno-common", "-fdiagnostics-show-option", "-vectorize-loops", "-vectorize-slp", "-analyzer-checker", "alpha.unix.PathCondExtract", "-analyzer-config", "ipa=inlining", "-analyzer-config", "ipa-always-inline-size=3", "-analyzer-config", "max-inlinable-size=50", "-analyzer-config", "max-times-inline-large=32", "-analyzer-disable-checker", "core.CallAndMessage", "-analyzer-disable-checker", "core.DivideZero", "-analyzer-disable-checker", "core.DynamicTypePropagation", "-analyzer-disable-checker", "core.NonNullParamChecker", "-analyzer-disable-checker", "core.NullDereference", "-analyzer-disable-checker", "core.StackAddressEscape", "-analyzer-disable-checker", "core.UndefinedBinaryOperatorResult", "-analyzer-disable-checker", "core.VLASize", "-analyzer-disable-checker", "core.builtin.BuiltinFunctions", "-analyzer-disable-checker", "core.builtin.NoReturnFunctions", "-analyzer-disable-checker", "core.uninitialized.ArraySubscript", "-analyzer-disable-checker", "core.uninitialized.Assign", "-analyzer-disable-checker", "core.uninitialized.Branch", "-analyzer-disable-checker", "core.uninitialized.CapturedBlockVariable", "-analyzer-disable-checker", "core.uninitialized.UndefReturn", "-analyzer-disable-checker", "cplusplus.NewDelete", "-analyzer-disable-checker", "deadcode.DeadStores", "-analyzer-disable-checker", "security.insecureAPI.UncheckedReturn", "-analyzer-disable-checker", "security.insecureAPI.getpw", "-analyzer-disable-checker", "security.insecureAPI.gets", "-analyzer-disable-checker", "security.insecureAPI.mkstemp", "-analyzer-disable-checker", "security.insecureAPI.mktemp", "-analyzer-disable-checker", "security.insecureAPI.vfork", "-analyzer-disable-checker", "unix.API", "-analyzer-disable-checker", "unix.Malloc", "-analyzer-disable-checker", "unix.MallocSizeof", "-analyzer-disable-checker", "unix.MismatchedDeallocator", "-analyzer-disable-checker", "unix.cstring.BadSizeArg", "-analyzer-disable-checker", "unix.cstring.NullArg", "-o", "/home/juxta/analyzer/out/minix/clang-log/fss_output", "-x", "c", "/home/juxta/analyzer/out/minix/one.c"], //传递给程序的命令行参数
+            "stopAtEntry": true,//可选参数，如果为true,调试程序应该在入口（main）处停止
+            "cwd": "/home/linux", //目标的工作目录
+            "environment": [], //表示要预设的环境变量
+            "externalConsole": false,//如果为true，则为调试对象启动控制台
+            "MIMode": "gdb",//要连接到的控制台启动程序
+            "setupCommands": [ //为了安装基础调试程序而执行的一个或多个GDB/LLDB命令
+                {
+                    "description": "为 gdb 启用整齐打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
